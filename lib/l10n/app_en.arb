@@ -67,7 +67,6 @@
   "languageTitle": "Language",
   "languageSystem": "System default",
   "languageSubtitle": "Applies to the whole app immediately. No restart needed.",
-  "hostFormMachineName": "Machine name",
   "appearanceTitle": "Appearance",
   "appearanceSubtitle": "Pick a developer palette. The home screen, editor, and dialogs share the same look.",
   "appearanceShowLocalShell": "Show local shell",
@@ -101,7 +100,7 @@
   "@appearanceKeyRowsCount": {
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -109,7 +108,7 @@
   "@appearanceRowLabel": {
     "placeholders": {
       "index": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -117,7 +116,7 @@
   "@appearanceRowKeysTitle": {
     "placeholders": {
       "index": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -250,7 +249,7 @@
   "@hardwareKeysCount": {
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -291,6 +290,24 @@
   "terminalBackToMachines": "Back to machines",
   "terminalFunctionKeys": "Function keys",
   "terminalTmuxActions": "Tmux actions",
+  "tmuxActionNewWindow": "New window",
+  "tmuxActionPreviousWindow": "Previous window",
+  "tmuxActionNextWindow": "Next window",
+  "tmuxActionWindowList": "Window list",
+  "tmuxActionLastWindow": "Last window",
+  "tmuxActionRenameWindow": "Rename window",
+  "tmuxActionSplitHorizontal": "Split horizontal",
+  "tmuxActionSplitVertical": "Split vertical",
+  "tmuxActionPaneLeft": "Pane left",
+  "tmuxActionPaneRight": "Pane right",
+  "tmuxActionPaneUp": "Pane up",
+  "tmuxActionPaneDown": "Pane down",
+  "tmuxActionZoomPane": "Zoom pane",
+  "tmuxActionCommandPrompt": "Command prompt",
+  "tmuxActionScrollback": "Scrollback",
+  "tmuxActionClosePane": "Close pane",
+  "tmuxActionCloseWindow": "Close window",
+  "tmuxActionDetach": "Detach",
   "terminalNoSnippets": "No snippets saved",
   "commonWorking": "Working…",
   "trustedKeysTitle": "Trusted host keys",
@@ -306,7 +323,7 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -320,7 +337,7 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -331,13 +348,12 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
   "keyChecking": "Checking key…",
   "keyCheckingPassphrase": "Checking passphrase…",
-  "keySectionTitle": "Section key",
   "localShellReadyBody": "Open a shell, or run several sessions side by side.",
   "localShellUpdateHint": "Update packages from inside the shell with  {command} . ",
   "@localShellUpdateHint": {
@@ -420,6 +436,9 @@
   "lockSubtitle": "Private SSH workspaces, protected locally.",
   "lockFooter": "Encrypted SSH sessions • zero cloud sync",
   "lockContinueWithoutAuth": "Continue without auth",
+  "lockNoticeNotConfigured": "Device authentication is not configured. Set a screen lock to keep saved hosts private.",
+  "lockNoticeCancelled": "Authentication was cancelled.",
+  "lockNoticeUnavailable": "Device authentication is unavailable on this device. Set a screen lock for better protection.",
   "localShellNew": "New local shell",
   "localShellRenameTitle": "Rename shell",
   "localShellNewSession": "New session",
@@ -508,5 +527,255 @@
       }
     }
   },
-  "commonUnknown": "unknown"
+  "commonUnknown": "unknown",
+  "commonRequired": "Required",
+  "brandTagline": "SSH workspaces",
+  "terminalFontSystemMonospace": "System mono",
+  "terminalFontNerdFont": "Nerd Font",
+  "terminalEnterCr": "Carriage return",
+  "terminalEnterLf": "Line feed",
+  "terminalEnterCrlf": "Carriage return + line feed",
+  "hostsEmptyBody": "Add an SSH or Mosh server and Conduit will keep its credentials in your device’s secure storage.",
+  "hostsSortLastConnected": "Last connected",
+  "hostsSortAdded": "Added",
+  "hostsSortManual": "Manual",
+  "publicKeyCreatedTitle": "Key created",
+  "publicKeyTitle": "Public key",
+  "authExternalBody": "Let the SSH server authenticate without saved credentials.",
+  "hardwareKeyItemTitle": "Hardware key {index}",
+  "@hardwareKeyItemTitle": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardJustNow": "just now",
+  "hostCardMinutesAgo": "{count}m ago",
+  "@hostCardMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardHoursAgo": "{count}h ago",
+  "@hostCardHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardDaysAgo": "{count}d ago",
+  "@hostCardDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardMonthsAgo": "{count}mo ago",
+  "@hostCardMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostFormConnectionHint": "Where to reach this machine.",
+  "hostFormAuthenticationHint": "Credentials are stored in platform secure storage.",
+  "hostFormAdvancedHint": "Optional tagging and connection timing.",
+  "sshKeyEncryptedHint": "This key is encrypted. Enter its passphrase below to unlock it.",
+  "addHardwareKeyNormalKey": "This is a normal private key. Use it with the Private key method instead.",
+  "addHardwareKeyNotStub": "This is not a recognized OpenSSH security-key stub (id_ed25519_sk or id_ecdsa_sk).",
+  "addHardwareKeyDuplicate": "This key is already added to this host.",
+  "addHardwareKeyNotTextStub": "That file isn't a text key stub.",
+  "commonFilePickerFailed": "Could not open the file picker.",
+  "commonFileReadFailed": "That file could not be read.",
+  "hostFormImported": "Imported {name}",
+  "@hostFormImported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hostFormGenerateFailed": "Could not generate a key.",
+  "hostFormNeedHardwareKey": "Add at least one hardware key.",
+  "hostFormEnterKeyPassphrase": "Enter the key passphrase to unlock it.",
+  "hostFormInvalidPrivateKey": "Use a valid PEM or OpenSSH private key.",
+  "hostFormStubUseHardwareKey": "This is a hardware-key stub. Choose Hardware key instead.",
+  "hostFormNotTextKey": "That file isn't a text private key.",
+  "hostFormNotPrivateKey": "That file isn't a recognized private key.",
+  "hostFormInvalidPort": "Use a port or low:high range within 1-65535.",
+  "sftpNoMatchQuery": "Nothing in this folder matches “{query}”.",
+  "@sftpNoMatchQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpCopiedPath": "Copied path",
+  "sftpSavedTar": "Saved {name}.tar",
+  "@sftpSavedTar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpSavedFile": "Saved {name}",
+  "sftpUploadedFile": "Uploaded {name}",
+  "@sftpUploadedFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@sftpSavedFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpFileUnreadable": "One of those files could not be read.",
+  "sftpUploadedCount": "{count, plural, one{Uploaded 1 file} other{Uploaded {count} files}}",
+  "@sftpUploadedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sftpDeleteTitle": "Delete {kind}?",
+  "@sftpDeleteTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpVisibleOfTotal": "{visible} of {total}",
+  "@sftpVisibleOfTotal": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sftpCountsSummary": "{item}  ·  {folders} folders  ·  {files} files",
+  "@sftpCountsSummary": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "folders": {
+        "type": "String"
+      },
+      "files": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpTransferProgress": "{action} {name}",
+  "@sftpTransferProgress": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "snippetWithEnter": "{text} + Enter",
+  "@snippetWithEnter": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellFullBuildOnly": "Full build only",
+  "localShellPermissionNeeded": "Permission needed",
+  "localShellMountHint": "Grant file access to mount phone storage at /mnt/android.",
+  "localShellMountUnavailable": "Phone storage mounting is available in the full build.",
+  "localShellSetupFailedBody": "Something went wrong during setup.",
+  "localShellErrorDownload": "Download failed",
+  "localShellErrorStorage": "Not enough storage",
+  "localShellErrorCorrupt": "Download was corrupted",
+  "localShellErrorUnpack": "Could not unpack the image",
+  "localShellErrorConfigure": "Configuration failed",
+  "localShellErrorUnavailable": "Not available on this device",
+  "localShellErrorGeneric": "Setup failed",
+  "localShellIncompleteBody": "This shell was added but its image never finished installing. Resume to pick up where it left off, or remove it.",
+  "localShellStatusDownloading": "Downloading… {percent}%",
+  "@localShellStatusDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusUnpacking": "Unpacking…",
+  "localShellStatusConfiguring": "Configuring…",
+  "localShellStatusFailed": "Setup failed - tap to retry",
+  "localShellStatusChecking": "{distro} · checking…",
+  "@localShellStatusChecking": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusIncomplete": "{distro} · setup incomplete, tap to resume",
+  "@localShellStatusIncomplete": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusReady": "{distro} · {size}",
+  "@localShellStatusReady": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "backupExportCancelled": "Export cancelled.",
+  "backupExported": "Backup exported.",
+  "backupImportCancelled": "Import cancelled.",
+  "backupImported": "Imported {hosts} machines and {keys} trusted keys.",
+  "@backupImported": {
+    "placeholders": {
+      "hosts": {
+        "type": "int"
+      },
+      "keys": {
+        "type": "int"
+      }
+    }
+  },
+  "backupFailed": "Backup failed: {error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupPasswordMismatch": "Passwords do not match.",
+  "backupPasswordRequired": "Enter the backup password."
 }

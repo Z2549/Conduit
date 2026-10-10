@@ -212,9 +212,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Applies to the whole app immediately. No restart needed.';
 
   @override
-  String get hostFormMachineName => 'Machine name';
-
-  @override
   String get appearanceTitle => 'Appearance';
 
   @override
@@ -311,17 +308,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appearanceRunOnConnect => 'Run on connect';
 
   @override
-  String appearanceKeyRowsCount(String count) {
+  String appearanceKeyRowsCount(int count) {
     return 'Key Rows ($count)';
   }
 
   @override
-  String appearanceRowLabel(String index) {
+  String appearanceRowLabel(int index) {
     return 'Row $index';
   }
 
   @override
-  String appearanceRowKeysTitle(String index) {
+  String appearanceRowKeysTitle(int index) {
     return 'Row $index Keys';
   }
 
@@ -640,7 +637,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'No hardware keys yet. Add the OpenSSH *_sk stub for each security key you want to use with this host. Any of them will unlock the connection.';
 
   @override
-  String hardwareKeysCount(String count) {
+  String hardwareKeysCount(int count) {
     return 'Hardware keys ($count)';
   }
 
@@ -744,6 +741,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get terminalTmuxActions => 'Tmux actions';
 
   @override
+  String get tmuxActionNewWindow => 'New window';
+
+  @override
+  String get tmuxActionPreviousWindow => 'Previous window';
+
+  @override
+  String get tmuxActionNextWindow => 'Next window';
+
+  @override
+  String get tmuxActionWindowList => 'Window list';
+
+  @override
+  String get tmuxActionLastWindow => 'Last window';
+
+  @override
+  String get tmuxActionRenameWindow => 'Rename window';
+
+  @override
+  String get tmuxActionSplitHorizontal => 'Split horizontal';
+
+  @override
+  String get tmuxActionSplitVertical => 'Split vertical';
+
+  @override
+  String get tmuxActionPaneLeft => 'Pane left';
+
+  @override
+  String get tmuxActionPaneRight => 'Pane right';
+
+  @override
+  String get tmuxActionPaneUp => 'Pane up';
+
+  @override
+  String get tmuxActionPaneDown => 'Pane down';
+
+  @override
+  String get tmuxActionZoomPane => 'Zoom pane';
+
+  @override
+  String get tmuxActionCommandPrompt => 'Command prompt';
+
+  @override
+  String get tmuxActionScrollback => 'Scrollback';
+
+  @override
+  String get tmuxActionClosePane => 'Close pane';
+
+  @override
+  String get tmuxActionCloseWindow => 'Close window';
+
+  @override
+  String get tmuxActionDetach => 'Detach';
+
+  @override
   String get terminalNoSnippets => 'No snippets saved';
 
   @override
@@ -769,7 +820,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hostKeyPreviouslyTrusted => 'Previously trusted:';
 
   @override
-  String trustedKeysForgetBody(String host, String port) {
+  String trustedKeysForgetBody(String host, int port) {
     return 'Conduit will prompt again the next time you connect to $host:$port.';
   }
 
@@ -783,12 +834,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hostKeyTrustNew => 'Trust new key';
 
   @override
-  String hostKeyUnknownBody(String host, String port) {
+  String hostKeyUnknownBody(String host, int port) {
     return 'Conduit has not connected to $host:$port before. Verify the fingerprint matches the one reported by the server (e.g. `ssh-keygen -E md5 -lf <key>`).';
   }
 
   @override
-  String hostKeyMismatchBody(String host, String port) {
+  String hostKeyMismatchBody(String host, int port) {
     return 'The server at $host:$port is presenting a different key than the one you previously trusted. This can indicate a man-in-the-middle attack, or the server may have been legitimately rekeyed.';
   }
 
@@ -797,9 +848,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get keyCheckingPassphrase => 'Checking passphrase…';
-
-  @override
-  String get keySectionTitle => 'Section key';
 
   @override
   String get localShellReadyBody =>
@@ -978,6 +1026,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lockContinueWithoutAuth => 'Continue without auth';
 
   @override
+  String get lockNoticeNotConfigured =>
+      'Device authentication is not configured. Set a screen lock to keep saved hosts private.';
+
+  @override
+  String get lockNoticeCancelled => 'Authentication was cancelled.';
+
+  @override
+  String get lockNoticeUnavailable =>
+      'Device authentication is unavailable on this device. Set a screen lock for better protection.';
+
+  @override
   String get localShellNew => 'New local shell';
 
   @override
@@ -1077,4 +1136,303 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonUnknown => 'unknown';
+
+  @override
+  String get commonRequired => 'Required';
+
+  @override
+  String get brandTagline => 'SSH workspaces';
+
+  @override
+  String get terminalFontSystemMonospace => 'System mono';
+
+  @override
+  String get terminalFontNerdFont => 'Nerd Font';
+
+  @override
+  String get terminalEnterCr => 'Carriage return';
+
+  @override
+  String get terminalEnterLf => 'Line feed';
+
+  @override
+  String get terminalEnterCrlf => 'Carriage return + line feed';
+
+  @override
+  String get hostsEmptyBody =>
+      'Add an SSH or Mosh server and Conduit will keep its credentials in your device’s secure storage.';
+
+  @override
+  String get hostsSortLastConnected => 'Last connected';
+
+  @override
+  String get hostsSortAdded => 'Added';
+
+  @override
+  String get hostsSortManual => 'Manual';
+
+  @override
+  String get publicKeyCreatedTitle => 'Key created';
+
+  @override
+  String get publicKeyTitle => 'Public key';
+
+  @override
+  String get authExternalBody =>
+      'Let the SSH server authenticate without saved credentials.';
+
+  @override
+  String hardwareKeyItemTitle(int index) {
+    return 'Hardware key $index';
+  }
+
+  @override
+  String get hostCardJustNow => 'just now';
+
+  @override
+  String hostCardMinutesAgo(int count) {
+    return '${count}m ago';
+  }
+
+  @override
+  String hostCardHoursAgo(int count) {
+    return '${count}h ago';
+  }
+
+  @override
+  String hostCardDaysAgo(int count) {
+    return '${count}d ago';
+  }
+
+  @override
+  String hostCardMonthsAgo(int count) {
+    return '${count}mo ago';
+  }
+
+  @override
+  String get hostFormConnectionHint => 'Where to reach this machine.';
+
+  @override
+  String get hostFormAuthenticationHint =>
+      'Credentials are stored in platform secure storage.';
+
+  @override
+  String get hostFormAdvancedHint => 'Optional tagging and connection timing.';
+
+  @override
+  String get sshKeyEncryptedHint =>
+      'This key is encrypted. Enter its passphrase below to unlock it.';
+
+  @override
+  String get addHardwareKeyNormalKey =>
+      'This is a normal private key. Use it with the Private key method instead.';
+
+  @override
+  String get addHardwareKeyNotStub =>
+      'This is not a recognized OpenSSH security-key stub (id_ed25519_sk or id_ecdsa_sk).';
+
+  @override
+  String get addHardwareKeyDuplicate =>
+      'This key is already added to this host.';
+
+  @override
+  String get addHardwareKeyNotTextStub => 'That file isn\'t a text key stub.';
+
+  @override
+  String get commonFilePickerFailed => 'Could not open the file picker.';
+
+  @override
+  String get commonFileReadFailed => 'That file could not be read.';
+
+  @override
+  String hostFormImported(String name) {
+    return 'Imported $name';
+  }
+
+  @override
+  String get hostFormGenerateFailed => 'Could not generate a key.';
+
+  @override
+  String get hostFormNeedHardwareKey => 'Add at least one hardware key.';
+
+  @override
+  String get hostFormEnterKeyPassphrase =>
+      'Enter the key passphrase to unlock it.';
+
+  @override
+  String get hostFormInvalidPrivateKey =>
+      'Use a valid PEM or OpenSSH private key.';
+
+  @override
+  String get hostFormStubUseHardwareKey =>
+      'This is a hardware-key stub. Choose Hardware key instead.';
+
+  @override
+  String get hostFormNotTextKey => 'That file isn\'t a text private key.';
+
+  @override
+  String get hostFormNotPrivateKey =>
+      'That file isn\'t a recognized private key.';
+
+  @override
+  String get hostFormInvalidPort =>
+      'Use a port or low:high range within 1-65535.';
+
+  @override
+  String sftpNoMatchQuery(String query) {
+    return 'Nothing in this folder matches “$query”.';
+  }
+
+  @override
+  String get sftpCopiedPath => 'Copied path';
+
+  @override
+  String sftpSavedTar(String name) {
+    return 'Saved $name.tar';
+  }
+
+  @override
+  String sftpSavedFile(String name) {
+    return 'Saved $name';
+  }
+
+  @override
+  String sftpUploadedFile(String name) {
+    return 'Uploaded $name';
+  }
+
+  @override
+  String get sftpFileUnreadable => 'One of those files could not be read.';
+
+  @override
+  String sftpUploadedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Uploaded $count files',
+      one: 'Uploaded 1 file',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sftpDeleteTitle(String kind) {
+    return 'Delete $kind?';
+  }
+
+  @override
+  String sftpVisibleOfTotal(int visible, int total) {
+    return '$visible of $total';
+  }
+
+  @override
+  String sftpCountsSummary(String item, String folders, String files) {
+    return '$item  ·  $folders folders  ·  $files files';
+  }
+
+  @override
+  String sftpTransferProgress(String action, String name) {
+    return '$action $name';
+  }
+
+  @override
+  String snippetWithEnter(String text) {
+    return '$text + Enter';
+  }
+
+  @override
+  String get localShellFullBuildOnly => 'Full build only';
+
+  @override
+  String get localShellPermissionNeeded => 'Permission needed';
+
+  @override
+  String get localShellMountHint =>
+      'Grant file access to mount phone storage at /mnt/android.';
+
+  @override
+  String get localShellMountUnavailable =>
+      'Phone storage mounting is available in the full build.';
+
+  @override
+  String get localShellSetupFailedBody => 'Something went wrong during setup.';
+
+  @override
+  String get localShellErrorDownload => 'Download failed';
+
+  @override
+  String get localShellErrorStorage => 'Not enough storage';
+
+  @override
+  String get localShellErrorCorrupt => 'Download was corrupted';
+
+  @override
+  String get localShellErrorUnpack => 'Could not unpack the image';
+
+  @override
+  String get localShellErrorConfigure => 'Configuration failed';
+
+  @override
+  String get localShellErrorUnavailable => 'Not available on this device';
+
+  @override
+  String get localShellErrorGeneric => 'Setup failed';
+
+  @override
+  String get localShellIncompleteBody =>
+      'This shell was added but its image never finished installing. Resume to pick up where it left off, or remove it.';
+
+  @override
+  String localShellStatusDownloading(String percent) {
+    return 'Downloading… $percent%';
+  }
+
+  @override
+  String get localShellStatusUnpacking => 'Unpacking…';
+
+  @override
+  String get localShellStatusConfiguring => 'Configuring…';
+
+  @override
+  String get localShellStatusFailed => 'Setup failed - tap to retry';
+
+  @override
+  String localShellStatusChecking(String distro) {
+    return '$distro · checking…';
+  }
+
+  @override
+  String localShellStatusIncomplete(String distro) {
+    return '$distro · setup incomplete, tap to resume';
+  }
+
+  @override
+  String localShellStatusReady(String distro, String size) {
+    return '$distro · $size';
+  }
+
+  @override
+  String get backupExportCancelled => 'Export cancelled.';
+
+  @override
+  String get backupExported => 'Backup exported.';
+
+  @override
+  String get backupImportCancelled => 'Import cancelled.';
+
+  @override
+  String backupImported(int hosts, int keys) {
+    return 'Imported $hosts machines and $keys trusted keys.';
+  }
+
+  @override
+  String backupFailed(String error) {
+    return 'Backup failed: $error';
+  }
+
+  @override
+  String get backupPasswordMismatch => 'Passwords do not match.';
+
+  @override
+  String get backupPasswordRequired => 'Enter the backup password.';
 }

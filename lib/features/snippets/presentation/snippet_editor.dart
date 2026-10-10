@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/l10n.dart';
 import 'package:conduit/features/snippets/domain/terminal_snippet.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class SnippetListEditor extends StatelessWidget {
               TextButton.icon(
                 onPressed: () => _add(context),
                 icon: const Icon(Icons.add_rounded, size: 17),
-                label: const Text('Add'),
+                label: Text(context.l10n.actionAdd),
               ),
             ],
           ),
@@ -57,7 +58,7 @@ class SnippetListEditor extends StatelessWidget {
                 border: Border.all(color: colorScheme.outlineVariant),
               ),
               child: Text(
-                'No snippets saved.',
+                context.l10n.snippetEmpty,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -135,9 +136,9 @@ class _SnippetTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final visiblePreview = snippet.hidden
-        ? 'Hidden'
+        ? context.l10n.snippetHidden
         : snippet.submit
-        ? '${snippet.text} + Enter'
+        ? context.l10n.snippetWithEnter(snippet.text)
         : snippet.text;
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
@@ -164,8 +165,8 @@ class _SnippetTile extends StatelessWidget {
             if (canRunOnConnect)
               IconButton(
                 tooltip: runOnConnect
-                    ? 'Disable run on connect'
-                    : 'Run on connect',
+                    ? context.l10n.appearanceDisableRunOnConnect
+                    : context.l10n.appearanceRunOnConnect,
                 onPressed: onToggleRunOnConnect,
                 icon: Icon(
                   runOnConnect
@@ -174,12 +175,12 @@ class _SnippetTile extends StatelessWidget {
                 ),
               ),
             IconButton(
-              tooltip: 'Edit',
+              tooltip: context.l10n.actionEdit,
               onPressed: onEdit,
               icon: const Icon(Icons.edit_rounded),
             ),
             IconButton(
-              tooltip: 'Remove',
+              tooltip: context.l10n.actionRemove,
               onPressed: onRemove,
               icon: const Icon(Icons.remove_circle_outline_rounded),
             ),
@@ -236,7 +237,11 @@ class _SnippetDialogState extends State<_SnippetDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
-      title: Text(widget.initial == null ? 'Add snippet' : 'Edit snippet'),
+      title: Text(
+        widget.initial == null
+            ? context.l10n.snippetAdd
+            : context.l10n.snippetEdit,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -244,9 +249,9 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             controller: _labelController,
             autofocus: true,
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
-            decoration: const InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: context.l10n.labelName,
+              border: const OutlineInputBorder(),
             ),
             textInputAction: TextInputAction.next,
           ),
@@ -254,9 +259,9 @@ class _SnippetDialogState extends State<_SnippetDialog> {
           TextField(
             controller: _textController,
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
-            decoration: const InputDecoration(
-              labelText: 'Command or text',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: context.l10n.snippetCommandLabel,
+              border: const OutlineInputBorder(),
             ),
             obscureText: _hidden,
             minLines: _hidden ? 1 : 3,
@@ -266,25 +271,29 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             contentPadding: EdgeInsets.zero,
             value: _submit,
             onChanged: (value) => setState(() => _submit = value ?? true),
-            title: const Text('Send Enter after snippet'),
+            title: Text(context.l10n.snippetSendEnter),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: _hidden,
             onChanged: (value) => setState(() => _hidden = value),
-            title: const Text('Hidden snippet'),
-            subtitle: const Text('Use for passwords or other secrets.'),
+            title: Text(context.l10n.snippetHidden),
+            subtitle: Text(context.l10n.snippetHiddenHint),
           ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.actionCancel),
         ),
         FilledButton(
           onPressed: _submitSnippet,
-          child: Text(widget.initial == null ? 'Add' : 'Save'),
+          child: Text(
+            widget.initial == null
+                ? context.l10n.actionAdd
+                : context.l10n.actionSave,
+          ),
         ),
       ],
     );

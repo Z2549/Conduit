@@ -500,12 +500,6 @@ abstract class AppLocalizations {
   /// **'Applies to the whole app immediately. No restart needed.'**
   String get languageSubtitle;
 
-  /// No description provided for @hostFormMachineName.
-  ///
-  /// In en, this message translates to:
-  /// **'Machine name'**
-  String get hostFormMachineName;
-
   /// No description provided for @appearanceTitle.
   ///
   /// In en, this message translates to:
@@ -684,19 +678,19 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Key Rows ({count})'**
-  String appearanceKeyRowsCount(String count);
+  String appearanceKeyRowsCount(int count);
 
   /// No description provided for @appearanceRowLabel.
   ///
   /// In en, this message translates to:
   /// **'Row {index}'**
-  String appearanceRowLabel(String index);
+  String appearanceRowLabel(int index);
 
   /// No description provided for @appearanceRowKeysTitle.
   ///
   /// In en, this message translates to:
   /// **'Row {index} Keys'**
-  String appearanceRowKeysTitle(String index);
+  String appearanceRowKeysTitle(int index);
 
   /// No description provided for @appearanceKeyCount.
   ///
@@ -1242,7 +1236,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Hardware keys ({count})'**
-  String hardwareKeysCount(String count);
+  String hardwareKeysCount(int count);
 
   /// No description provided for @hardwareKeysOptions.
   ///
@@ -1424,6 +1418,114 @@ abstract class AppLocalizations {
   /// **'Tmux actions'**
   String get terminalTmuxActions;
 
+  /// No description provided for @tmuxActionNewWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'New window'**
+  String get tmuxActionNewWindow;
+
+  /// No description provided for @tmuxActionPreviousWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous window'**
+  String get tmuxActionPreviousWindow;
+
+  /// No description provided for @tmuxActionNextWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Next window'**
+  String get tmuxActionNextWindow;
+
+  /// No description provided for @tmuxActionWindowList.
+  ///
+  /// In en, this message translates to:
+  /// **'Window list'**
+  String get tmuxActionWindowList;
+
+  /// No description provided for @tmuxActionLastWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Last window'**
+  String get tmuxActionLastWindow;
+
+  /// No description provided for @tmuxActionRenameWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename window'**
+  String get tmuxActionRenameWindow;
+
+  /// No description provided for @tmuxActionSplitHorizontal.
+  ///
+  /// In en, this message translates to:
+  /// **'Split horizontal'**
+  String get tmuxActionSplitHorizontal;
+
+  /// No description provided for @tmuxActionSplitVertical.
+  ///
+  /// In en, this message translates to:
+  /// **'Split vertical'**
+  String get tmuxActionSplitVertical;
+
+  /// No description provided for @tmuxActionPaneLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Pane left'**
+  String get tmuxActionPaneLeft;
+
+  /// No description provided for @tmuxActionPaneRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Pane right'**
+  String get tmuxActionPaneRight;
+
+  /// No description provided for @tmuxActionPaneUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pane up'**
+  String get tmuxActionPaneUp;
+
+  /// No description provided for @tmuxActionPaneDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Pane down'**
+  String get tmuxActionPaneDown;
+
+  /// No description provided for @tmuxActionZoomPane.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom pane'**
+  String get tmuxActionZoomPane;
+
+  /// No description provided for @tmuxActionCommandPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Command prompt'**
+  String get tmuxActionCommandPrompt;
+
+  /// No description provided for @tmuxActionScrollback.
+  ///
+  /// In en, this message translates to:
+  /// **'Scrollback'**
+  String get tmuxActionScrollback;
+
+  /// No description provided for @tmuxActionClosePane.
+  ///
+  /// In en, this message translates to:
+  /// **'Close pane'**
+  String get tmuxActionClosePane;
+
+  /// No description provided for @tmuxActionCloseWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Close window'**
+  String get tmuxActionCloseWindow;
+
+  /// No description provided for @tmuxActionDetach.
+  ///
+  /// In en, this message translates to:
+  /// **'Detach'**
+  String get tmuxActionDetach;
+
   /// No description provided for @terminalNoSnippets.
   ///
   /// In en, this message translates to:
@@ -1476,7 +1578,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Conduit will prompt again the next time you connect to {host}:{port}.'**
-  String trustedKeysForgetBody(String host, String port);
+  String trustedKeysForgetBody(String host, int port);
 
   /// No description provided for @hostKeyChangedTitle.
   ///
@@ -1500,13 +1602,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Conduit has not connected to {host}:{port} before. Verify the fingerprint matches the one reported by the server (e.g. `ssh-keygen -E md5 -lf <key>`).'**
-  String hostKeyUnknownBody(String host, String port);
+  String hostKeyUnknownBody(String host, int port);
 
   /// No description provided for @hostKeyMismatchBody.
   ///
   /// In en, this message translates to:
   /// **'The server at {host}:{port} is presenting a different key than the one you previously trusted. This can indicate a man-in-the-middle attack, or the server may have been legitimately rekeyed.'**
-  String hostKeyMismatchBody(String host, String port);
+  String hostKeyMismatchBody(String host, int port);
 
   /// No description provided for @keyChecking.
   ///
@@ -1519,12 +1621,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Checking passphrase…'**
   String get keyCheckingPassphrase;
-
-  /// No description provided for @keySectionTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Section key'**
-  String get keySectionTitle;
 
   /// No description provided for @localShellReadyBody.
   ///
@@ -1808,6 +1904,24 @@ abstract class AppLocalizations {
   /// **'Continue without auth'**
   String get lockContinueWithoutAuth;
 
+  /// No description provided for @lockNoticeNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Device authentication is not configured. Set a screen lock to keep saved hosts private.'**
+  String get lockNoticeNotConfigured;
+
+  /// No description provided for @lockNoticeCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication was cancelled.'**
+  String get lockNoticeCancelled;
+
+  /// No description provided for @lockNoticeUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Device authentication is unavailable on this device. Set a screen lock for better protection.'**
+  String get lockNoticeUnavailable;
+
   /// No description provided for @localShellNew.
   ///
   /// In en, this message translates to:
@@ -1963,6 +2077,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'unknown'**
   String get commonUnknown;
+
+  /// No description provided for @commonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get commonRequired;
+
+  /// No description provided for @brandTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH workspaces'**
+  String get brandTagline;
+
+  /// No description provided for @terminalFontSystemMonospace.
+  ///
+  /// In en, this message translates to:
+  /// **'System mono'**
+  String get terminalFontSystemMonospace;
+
+  /// No description provided for @terminalFontNerdFont.
+  ///
+  /// In en, this message translates to:
+  /// **'Nerd Font'**
+  String get terminalFontNerdFont;
+
+  /// No description provided for @terminalEnterCr.
+  ///
+  /// In en, this message translates to:
+  /// **'Carriage return'**
+  String get terminalEnterCr;
+
+  /// No description provided for @terminalEnterLf.
+  ///
+  /// In en, this message translates to:
+  /// **'Line feed'**
+  String get terminalEnterLf;
+
+  /// No description provided for @terminalEnterCrlf.
+  ///
+  /// In en, this message translates to:
+  /// **'Carriage return + line feed'**
+  String get terminalEnterCrlf;
+
+  /// No description provided for @hostsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an SSH or Mosh server and Conduit will keep its credentials in your device’s secure storage.'**
+  String get hostsEmptyBody;
+
+  /// No description provided for @hostsSortLastConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Last connected'**
+  String get hostsSortLastConnected;
+
+  /// No description provided for @hostsSortAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get hostsSortAdded;
+
+  /// No description provided for @hostsSortManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get hostsSortManual;
+
+  /// No description provided for @publicKeyCreatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Key created'**
+  String get publicKeyCreatedTitle;
+
+  /// No description provided for @publicKeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Public key'**
+  String get publicKeyTitle;
+
+  /// No description provided for @authExternalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the SSH server authenticate without saved credentials.'**
+  String get authExternalBody;
+
+  /// No description provided for @hardwareKeyItemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware key {index}'**
+  String hardwareKeyItemTitle(int index);
+
+  /// No description provided for @hostCardJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get hostCardJustNow;
+
+  /// No description provided for @hostCardMinutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m ago'**
+  String hostCardMinutesAgo(int count);
+
+  /// No description provided for @hostCardHoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h ago'**
+  String hostCardHoursAgo(int count);
+
+  /// No description provided for @hostCardDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}d ago'**
+  String hostCardDaysAgo(int count);
+
+  /// No description provided for @hostCardMonthsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}mo ago'**
+  String hostCardMonthsAgo(int count);
+
+  /// No description provided for @hostFormConnectionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to reach this machine.'**
+  String get hostFormConnectionHint;
+
+  /// No description provided for @hostFormAuthenticationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials are stored in platform secure storage.'**
+  String get hostFormAuthenticationHint;
+
+  /// No description provided for @hostFormAdvancedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional tagging and connection timing.'**
+  String get hostFormAdvancedHint;
+
+  /// No description provided for @sshKeyEncryptedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This key is encrypted. Enter its passphrase below to unlock it.'**
+  String get sshKeyEncryptedHint;
+
+  /// No description provided for @addHardwareKeyNormalKey.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a normal private key. Use it with the Private key method instead.'**
+  String get addHardwareKeyNormalKey;
+
+  /// No description provided for @addHardwareKeyNotStub.
+  ///
+  /// In en, this message translates to:
+  /// **'This is not a recognized OpenSSH security-key stub (id_ed25519_sk or id_ecdsa_sk).'**
+  String get addHardwareKeyNotStub;
+
+  /// No description provided for @addHardwareKeyDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'This key is already added to this host.'**
+  String get addHardwareKeyDuplicate;
+
+  /// No description provided for @addHardwareKeyNotTextStub.
+  ///
+  /// In en, this message translates to:
+  /// **'That file isn\'t a text key stub.'**
+  String get addHardwareKeyNotTextStub;
+
+  /// No description provided for @commonFilePickerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the file picker.'**
+  String get commonFilePickerFailed;
+
+  /// No description provided for @commonFileReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That file could not be read.'**
+  String get commonFileReadFailed;
+
+  /// No description provided for @hostFormImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {name}'**
+  String hostFormImported(String name);
+
+  /// No description provided for @hostFormGenerateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not generate a key.'**
+  String get hostFormGenerateFailed;
+
+  /// No description provided for @hostFormNeedHardwareKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one hardware key.'**
+  String get hostFormNeedHardwareKey;
+
+  /// No description provided for @hostFormEnterKeyPassphrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the key passphrase to unlock it.'**
+  String get hostFormEnterKeyPassphrase;
+
+  /// No description provided for @hostFormInvalidPrivateKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a valid PEM or OpenSSH private key.'**
+  String get hostFormInvalidPrivateKey;
+
+  /// No description provided for @hostFormStubUseHardwareKey.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a hardware-key stub. Choose Hardware key instead.'**
+  String get hostFormStubUseHardwareKey;
+
+  /// No description provided for @hostFormNotTextKey.
+  ///
+  /// In en, this message translates to:
+  /// **'That file isn\'t a text private key.'**
+  String get hostFormNotTextKey;
+
+  /// No description provided for @hostFormNotPrivateKey.
+  ///
+  /// In en, this message translates to:
+  /// **'That file isn\'t a recognized private key.'**
+  String get hostFormNotPrivateKey;
+
+  /// No description provided for @hostFormInvalidPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a port or low:high range within 1-65535.'**
+  String get hostFormInvalidPort;
+
+  /// No description provided for @sftpNoMatchQuery.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in this folder matches “{query}”.'**
+  String sftpNoMatchQuery(String query);
+
+  /// No description provided for @sftpCopiedPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied path'**
+  String get sftpCopiedPath;
+
+  /// No description provided for @sftpSavedTar.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}.tar'**
+  String sftpSavedTar(String name);
+
+  /// No description provided for @sftpSavedFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {name}'**
+  String sftpSavedFile(String name);
+
+  /// No description provided for @sftpUploadedFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded {name}'**
+  String sftpUploadedFile(String name);
+
+  /// No description provided for @sftpFileUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'One of those files could not be read.'**
+  String get sftpFileUnreadable;
+
+  /// No description provided for @sftpUploadedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{Uploaded 1 file} other{Uploaded {count} files}}'**
+  String sftpUploadedCount(int count);
+
+  /// No description provided for @sftpDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {kind}?'**
+  String sftpDeleteTitle(String kind);
+
+  /// No description provided for @sftpVisibleOfTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'{visible} of {total}'**
+  String sftpVisibleOfTotal(int visible, int total);
+
+  /// No description provided for @sftpCountsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{item}  ·  {folders} folders  ·  {files} files'**
+  String sftpCountsSummary(String item, String folders, String files);
+
+  /// No description provided for @sftpTransferProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{action} {name}'**
+  String sftpTransferProgress(String action, String name);
+
+  /// No description provided for @snippetWithEnter.
+  ///
+  /// In en, this message translates to:
+  /// **'{text} + Enter'**
+  String snippetWithEnter(String text);
+
+  /// No description provided for @localShellFullBuildOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Full build only'**
+  String get localShellFullBuildOnly;
+
+  /// No description provided for @localShellPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission needed'**
+  String get localShellPermissionNeeded;
+
+  /// No description provided for @localShellMountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant file access to mount phone storage at /mnt/android.'**
+  String get localShellMountHint;
+
+  /// No description provided for @localShellMountUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone storage mounting is available in the full build.'**
+  String get localShellMountUnavailable;
+
+  /// No description provided for @localShellSetupFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong during setup.'**
+  String get localShellSetupFailedBody;
+
+  /// No description provided for @localShellErrorDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download failed'**
+  String get localShellErrorDownload;
+
+  /// No description provided for @localShellErrorStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough storage'**
+  String get localShellErrorStorage;
+
+  /// No description provided for @localShellErrorCorrupt.
+  ///
+  /// In en, this message translates to:
+  /// **'Download was corrupted'**
+  String get localShellErrorCorrupt;
+
+  /// No description provided for @localShellErrorUnpack.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not unpack the image'**
+  String get localShellErrorUnpack;
+
+  /// No description provided for @localShellErrorConfigure.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration failed'**
+  String get localShellErrorConfigure;
+
+  /// No description provided for @localShellErrorUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not available on this device'**
+  String get localShellErrorUnavailable;
+
+  /// No description provided for @localShellErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup failed'**
+  String get localShellErrorGeneric;
+
+  /// No description provided for @localShellIncompleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This shell was added but its image never finished installing. Resume to pick up where it left off, or remove it.'**
+  String get localShellIncompleteBody;
+
+  /// No description provided for @localShellStatusDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {percent}%'**
+  String localShellStatusDownloading(String percent);
+
+  /// No description provided for @localShellStatusUnpacking.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpacking…'**
+  String get localShellStatusUnpacking;
+
+  /// No description provided for @localShellStatusConfiguring.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuring…'**
+  String get localShellStatusConfiguring;
+
+  /// No description provided for @localShellStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup failed - tap to retry'**
+  String get localShellStatusFailed;
+
+  /// No description provided for @localShellStatusChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'{distro} · checking…'**
+  String localShellStatusChecking(String distro);
+
+  /// No description provided for @localShellStatusIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'{distro} · setup incomplete, tap to resume'**
+  String localShellStatusIncomplete(String distro);
+
+  /// No description provided for @localShellStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'{distro} · {size}'**
+  String localShellStatusReady(String distro, String size);
+
+  /// No description provided for @backupExportCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Export cancelled.'**
+  String get backupExportCancelled;
+
+  /// No description provided for @backupExported.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup exported.'**
+  String get backupExported;
+
+  /// No description provided for @backupImportCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Import cancelled.'**
+  String get backupImportCancelled;
+
+  /// No description provided for @backupImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported {hosts} machines and {keys} trusted keys.'**
+  String backupImported(int hosts, int keys);
+
+  /// No description provided for @backupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup failed: {error}'**
+  String backupFailed(String error);
+
+  /// No description provided for @backupPasswordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get backupPasswordMismatch;
+
+  /// No description provided for @backupPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the backup password.'**
+  String get backupPasswordRequired;
 }
 
 class _AppLocalizationsDelegate

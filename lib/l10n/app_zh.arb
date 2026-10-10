@@ -67,7 +67,6 @@
   "languageTitle": "语言",
   "languageSystem": "跟随系统",
   "languageSubtitle": "立即对整个应用生效，无需重启。",
-  "hostFormMachineName": "设备名称",
   "appearanceTitle": "外观",
   "appearanceSubtitle": "挑选一套开发者配色。主界面、编辑器和对话框共用同一套外观。",
   "appearanceShowLocalShell": "显示本地 Shell",
@@ -101,7 +100,7 @@
   "@appearanceKeyRowsCount": {
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -109,7 +108,7 @@
   "@appearanceRowLabel": {
     "placeholders": {
       "index": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -117,7 +116,7 @@
   "@appearanceRowKeysTitle": {
     "placeholders": {
       "index": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -250,7 +249,7 @@
   "@hardwareKeysCount": {
     "placeholders": {
       "count": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -291,6 +290,24 @@
   "terminalBackToMachines": "返回设备列表",
   "terminalFunctionKeys": "功能键",
   "terminalTmuxActions": "Tmux 操作",
+  "tmuxActionNewWindow": "新建窗口",
+  "tmuxActionPreviousWindow": "上一个窗口",
+  "tmuxActionNextWindow": "下一个窗口",
+  "tmuxActionWindowList": "窗口列表",
+  "tmuxActionLastWindow": "切换回上一个窗口",
+  "tmuxActionRenameWindow": "重命名窗口",
+  "tmuxActionSplitHorizontal": "水平分屏",
+  "tmuxActionSplitVertical": "垂直分屏",
+  "tmuxActionPaneLeft": "光标移到左窗格",
+  "tmuxActionPaneRight": "光标移到右窗格",
+  "tmuxActionPaneUp": "光标移到上窗格",
+  "tmuxActionPaneDown": "光标移到下窗格",
+  "tmuxActionZoomPane": "窗格最大化",
+  "tmuxActionCommandPrompt": "命令提示符",
+  "tmuxActionScrollback": "回滚缓冲",
+  "tmuxActionClosePane": "关闭窗格",
+  "tmuxActionCloseWindow": "关闭窗口",
+  "tmuxActionDetach": "分离会话",
   "terminalNoSnippets": "没有保存的片段",
   "commonWorking": "处理中…",
   "trustedKeysTitle": "已信任的主机密钥",
@@ -306,7 +323,7 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -320,7 +337,7 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
@@ -331,13 +348,12 @@
         "type": "String"
       },
       "port": {
-        "type": "String"
+        "type": "int"
       }
     }
   },
   "keyChecking": "正在检查密钥…",
   "keyCheckingPassphrase": "正在检查口令…",
-  "keySectionTitle": "密钥",
   "localShellReadyBody": "打开一个 Shell，或同时运行多个会话。",
   "localShellUpdateHint": "在 Shell 内用  {command}  更新软件包。 ",
   "@localShellUpdateHint": {
@@ -420,6 +436,9 @@
   "lockSubtitle": "私密 SSH 工作区，本地保护。",
   "lockFooter": "加密的 SSH 会话 • 零云同步",
   "lockContinueWithoutAuth": "跳过验证继续",
+  "lockNoticeNotConfigured": "未配置设备认证。请设置屏幕锁以保护已保存的主机。",
+  "lockNoticeCancelled": "认证已取消。",
+  "lockNoticeUnavailable": "此设备无法使用设备认证。设置屏幕锁可获得更好的保护。",
   "localShellNew": "新建本地 Shell",
   "localShellRenameTitle": "重命名 Shell",
   "localShellNewSession": "新建会话",
@@ -508,5 +527,248 @@
       }
     }
   },
-  "commonUnknown": "未知"
+  "commonUnknown": "未知",
+  "commonRequired": "必填",
+  "brandTagline": "SSH 工作区",
+  "terminalFontSystemMonospace": "系统等宽",
+  "terminalFontNerdFont": "Nerd Font",
+  "terminalEnterCr": "回车",
+  "terminalEnterLf": "换行",
+  "terminalEnterCrlf": "回车 + 换行",
+  "hostsEmptyBody": "添加一台 SSH 或 Mosh 服务器，Conduit 会把凭据保存在本机的安全存储中。",
+  "hostsSortLastConnected": "最近连接",
+  "hostsSortAdded": "添加时间",
+  "hostsSortManual": "手动",
+  "publicKeyCreatedTitle": "密钥已创建",
+  "publicKeyTitle": "公钥",
+  "authExternalBody": "由 SSH 服务器自行认证，不在本机保存任何凭据。",
+  "hardwareKeyItemTitle": "硬件密钥 {index}",
+  "@hardwareKeyItemTitle": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardJustNow": "刚刚",
+  "hostCardMinutesAgo": "{count} 分钟前",
+  "@hostCardMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardHoursAgo": "{count} 小时前",
+  "@hostCardHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardDaysAgo": "{count} 天前",
+  "@hostCardDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostCardMonthsAgo": "{count} 个月前",
+  "@hostCardMonthsAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hostFormConnectionHint": "该设备的访问地址。",
+  "hostFormAuthenticationHint": "凭据存放在系统安全存储中。",
+  "hostFormAdvancedHint": "可选的标签与连接超时设置。",
+  "sshKeyEncryptedHint": "该密钥已加密，请在下方填入口令解锁。",
+  "addHardwareKeyNormalKey": "这是普通私钥，请改用「私钥」方式。",
+  "addHardwareKeyNotStub": "无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。",
+  "addHardwareKeyDuplicate": "该密钥已添加到此主机。",
+  "addHardwareKeyNotTextStub": "该文件不是文本格式的安全密钥存根。",
+  "commonFilePickerFailed": "无法打开文件选择器。",
+  "commonFileReadFailed": "无法读取该文件。",
+  "hostFormImported": "已导入 {name}",
+  "@hostFormImported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hostFormGenerateFailed": "无法生成密钥。",
+  "hostFormNeedHardwareKey": "请至少添加一个硬件密钥。",
+  "hostFormEnterKeyPassphrase": "请填入口令以解锁密钥。",
+  "hostFormInvalidPrivateKey": "请使用有效的 PEM 或 OpenSSH 私钥。",
+  "hostFormStubUseHardwareKey": "这是硬件密钥存根，请改选「硬件密钥」。",
+  "hostFormNotTextKey": "该文件不是文本格式的私钥。",
+  "hostFormNotPrivateKey": "该文件不是可识别的私钥。",
+  "hostFormInvalidPort": "请填写 1-65535 之间的端口，或「低:高」范围。",
+  "sftpNoMatchQuery": "该文件夹中没有与“{query}”匹配的内容。",
+  "@sftpNoMatchQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpCopiedPath": "已复制路径",
+  "sftpSavedTar": "已保存 {name}.tar",
+  "@sftpSavedTar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpSavedFile": "已保存 {name}",
+  "sftpUploadedFile": "已上传 {name}",
+  "@sftpSavedFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpFileUnreadable": "其中有一个文件无法读取。",
+  "sftpUploadedCount": "{count, plural, other{已上传 {count} 个文件}}",
+  "@sftpUploadedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sftpDeleteTitle": "删除{kind}？",
+  "@sftpDeleteTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpVisibleOfTotal": "共 {total} 项，显示 {visible} 项",
+  "@sftpVisibleOfTotal": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sftpCountsSummary": "{item}  ·  {folders}  ·  {files}",
+  "@sftpCountsSummary": {
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "folders": {
+        "type": "String"
+      },
+      "files": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpTransferProgress": "{action} {name}",
+  "@sftpTransferProgress": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "snippetWithEnter": "{text} + 回车",
+  "@snippetWithEnter": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellFullBuildOnly": "仅完整版可用",
+  "localShellPermissionNeeded": "需要权限",
+  "localShellMountHint": "授予文件访问权限，才能把手机存储挂载到 /mnt/android。",
+  "localShellMountUnavailable": "手机存储挂载仅在完整版中可用。",
+  "localShellSetupFailedBody": "设置过程中出现错误。",
+  "localShellErrorDownload": "下载失败",
+  "localShellErrorStorage": "存储空间不足",
+  "localShellErrorCorrupt": "下载文件已损坏",
+  "localShellErrorUnpack": "无法解压镜像",
+  "localShellErrorConfigure": "配置失败",
+  "localShellErrorUnavailable": "该设备不支持",
+  "localShellErrorGeneric": "设置失败",
+  "localShellIncompleteBody": "该 Shell 已添加，但镜像未安装完成。可继续安装，或将其移除。",
+  "localShellStatusDownloading": "正在下载… {percent}%",
+  "@localShellStatusDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusUnpacking": "正在解压…",
+  "localShellStatusConfiguring": "正在配置…",
+  "localShellStatusFailed": "设置失败 - 点击重试",
+  "localShellStatusChecking": "{distro} · 检查中…",
+  "@localShellStatusChecking": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusIncomplete": "{distro} · 设置未完成，点击继续",
+  "@localShellStatusIncomplete": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellStatusReady": "{distro} · {size}",
+  "@localShellStatusReady": {
+    "placeholders": {
+      "distro": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "backupExportCancelled": "已取消导出。",
+  "backupExported": "备份已导出。",
+  "backupImportCancelled": "已取消导入。",
+  "backupImported": "已导入 {hosts} 台设备和 {keys} 个已信任密钥。",
+  "@backupImported": {
+    "placeholders": {
+      "hosts": {
+        "type": "int"
+      },
+      "keys": {
+        "type": "int"
+      }
+    }
+  },
+  "backupFailed": "备份失败：{error}",
+  "@backupFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupPasswordMismatch": "两次输入的密码不一致。",
+  "backupPasswordRequired": "请输入备份密码。"
 }

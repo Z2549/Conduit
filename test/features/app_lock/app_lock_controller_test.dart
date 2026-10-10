@@ -19,7 +19,7 @@ void main() {
       );
       await controller.unlock();
       expect(controller.status, AppLockStatus.locked);
-      expect(controller.message, isNotNull);
+      expect(controller.notice, isNotNull);
     });
 
     test('successful auth unlocks', () async {
@@ -32,7 +32,7 @@ void main() {
       final controller = AppLockController(const ThrowingAuthenticator());
       await controller.unlock();
       expect(controller.status, AppLockStatus.locked);
-      expect(controller.message, isNotNull);
+      expect(controller.notice, isNotNull);
     });
 
     test('availability errors show the unavailable path', () async {

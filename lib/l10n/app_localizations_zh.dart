@@ -210,9 +210,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get languageSubtitle => '立即对整个应用生效，无需重启。';
 
   @override
-  String get hostFormMachineName => '设备名称';
-
-  @override
   String get appearanceTitle => '外观';
 
   @override
@@ -300,17 +297,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appearanceRunOnConnect => '连接时执行';
 
   @override
-  String appearanceKeyRowsCount(String count) {
+  String appearanceKeyRowsCount(int count) {
     return '按键行（$count）';
   }
 
   @override
-  String appearanceRowLabel(String index) {
+  String appearanceRowLabel(int index) {
     return '第 $index 行';
   }
 
   @override
-  String appearanceRowKeysTitle(String index) {
+  String appearanceRowKeysTitle(int index) {
     return '第 $index 行的按键';
   }
 
@@ -609,7 +606,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '还没有硬件密钥。为该主机要使用的每个安全密钥添加 OpenSSH *_sk 存根，任意一个都能解锁连接。';
 
   @override
-  String hardwareKeysCount(String count) {
+  String hardwareKeysCount(int count) {
     return '硬件密钥（$count）';
   }
 
@@ -708,6 +705,60 @@ class AppLocalizationsZh extends AppLocalizations {
   String get terminalTmuxActions => 'Tmux 操作';
 
   @override
+  String get tmuxActionNewWindow => '新建窗口';
+
+  @override
+  String get tmuxActionPreviousWindow => '上一个窗口';
+
+  @override
+  String get tmuxActionNextWindow => '下一个窗口';
+
+  @override
+  String get tmuxActionWindowList => '窗口列表';
+
+  @override
+  String get tmuxActionLastWindow => '切换回上一个窗口';
+
+  @override
+  String get tmuxActionRenameWindow => '重命名窗口';
+
+  @override
+  String get tmuxActionSplitHorizontal => '水平分屏';
+
+  @override
+  String get tmuxActionSplitVertical => '垂直分屏';
+
+  @override
+  String get tmuxActionPaneLeft => '光标移到左窗格';
+
+  @override
+  String get tmuxActionPaneRight => '光标移到右窗格';
+
+  @override
+  String get tmuxActionPaneUp => '光标移到上窗格';
+
+  @override
+  String get tmuxActionPaneDown => '光标移到下窗格';
+
+  @override
+  String get tmuxActionZoomPane => '窗格最大化';
+
+  @override
+  String get tmuxActionCommandPrompt => '命令提示符';
+
+  @override
+  String get tmuxActionScrollback => '回滚缓冲';
+
+  @override
+  String get tmuxActionClosePane => '关闭窗格';
+
+  @override
+  String get tmuxActionCloseWindow => '关闭窗口';
+
+  @override
+  String get tmuxActionDetach => '分离会话';
+
+  @override
   String get terminalNoSnippets => '没有保存的片段';
 
   @override
@@ -732,7 +783,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostKeyPreviouslyTrusted => '之前信任的是：';
 
   @override
-  String trustedKeysForgetBody(String host, String port) {
+  String trustedKeysForgetBody(String host, int port) {
     return '下次连接到 $host:$port 时会重新询问。';
   }
 
@@ -746,12 +797,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostKeyTrustNew => '信任新密钥';
 
   @override
-  String hostKeyUnknownBody(String host, String port) {
+  String hostKeyUnknownBody(String host, int port) {
     return 'Conduit 之前从未连接过 $host:$port。请确认该指纹与服务器报告的指纹一致（例如 `ssh-keygen -E md5 -lf <key>`）。';
   }
 
   @override
-  String hostKeyMismatchBody(String host, String port) {
+  String hostKeyMismatchBody(String host, int port) {
     return '服务器 $host:$port 出示的密钥与你之前信任的不同。这可能意味着中间人攻击，也可能是服务器正常更换了密钥。';
   }
 
@@ -760,9 +811,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get keyCheckingPassphrase => '正在检查口令…';
-
-  @override
-  String get keySectionTitle => '密钥';
 
   @override
   String get localShellReadyBody => '打开一个 Shell，或同时运行多个会话。';
@@ -931,6 +979,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lockContinueWithoutAuth => '跳过验证继续';
 
   @override
+  String get lockNoticeNotConfigured => '未配置设备认证。请设置屏幕锁以保护已保存的主机。';
+
+  @override
+  String get lockNoticeCancelled => '认证已取消。';
+
+  @override
+  String get lockNoticeUnavailable => '此设备无法使用设备认证。设置屏幕锁可获得更好的保护。';
+
+  @override
   String get localShellNew => '新建本地 Shell';
 
   @override
@@ -1027,4 +1084,288 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get commonUnknown => '未知';
+
+  @override
+  String get commonRequired => '必填';
+
+  @override
+  String get brandTagline => 'SSH 工作区';
+
+  @override
+  String get terminalFontSystemMonospace => '系统等宽';
+
+  @override
+  String get terminalFontNerdFont => 'Nerd Font';
+
+  @override
+  String get terminalEnterCr => '回车';
+
+  @override
+  String get terminalEnterLf => '换行';
+
+  @override
+  String get terminalEnterCrlf => '回车 + 换行';
+
+  @override
+  String get hostsEmptyBody => '添加一台 SSH 或 Mosh 服务器，Conduit 会把凭据保存在本机的安全存储中。';
+
+  @override
+  String get hostsSortLastConnected => '最近连接';
+
+  @override
+  String get hostsSortAdded => '添加时间';
+
+  @override
+  String get hostsSortManual => '手动';
+
+  @override
+  String get publicKeyCreatedTitle => '密钥已创建';
+
+  @override
+  String get publicKeyTitle => '公钥';
+
+  @override
+  String get authExternalBody => '由 SSH 服务器自行认证，不在本机保存任何凭据。';
+
+  @override
+  String hardwareKeyItemTitle(int index) {
+    return '硬件密钥 $index';
+  }
+
+  @override
+  String get hostCardJustNow => '刚刚';
+
+  @override
+  String hostCardMinutesAgo(int count) {
+    return '$count 分钟前';
+  }
+
+  @override
+  String hostCardHoursAgo(int count) {
+    return '$count 小时前';
+  }
+
+  @override
+  String hostCardDaysAgo(int count) {
+    return '$count 天前';
+  }
+
+  @override
+  String hostCardMonthsAgo(int count) {
+    return '$count 个月前';
+  }
+
+  @override
+  String get hostFormConnectionHint => '该设备的访问地址。';
+
+  @override
+  String get hostFormAuthenticationHint => '凭据存放在系统安全存储中。';
+
+  @override
+  String get hostFormAdvancedHint => '可选的标签与连接超时设置。';
+
+  @override
+  String get sshKeyEncryptedHint => '该密钥已加密，请在下方填入口令解锁。';
+
+  @override
+  String get addHardwareKeyNormalKey => '这是普通私钥，请改用「私钥」方式。';
+
+  @override
+  String get addHardwareKeyNotStub =>
+      '无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。';
+
+  @override
+  String get addHardwareKeyDuplicate => '该密钥已添加到此主机。';
+
+  @override
+  String get addHardwareKeyNotTextStub => '该文件不是文本格式的安全密钥存根。';
+
+  @override
+  String get commonFilePickerFailed => '无法打开文件选择器。';
+
+  @override
+  String get commonFileReadFailed => '无法读取该文件。';
+
+  @override
+  String hostFormImported(String name) {
+    return '已导入 $name';
+  }
+
+  @override
+  String get hostFormGenerateFailed => '无法生成密钥。';
+
+  @override
+  String get hostFormNeedHardwareKey => '请至少添加一个硬件密钥。';
+
+  @override
+  String get hostFormEnterKeyPassphrase => '请填入口令以解锁密钥。';
+
+  @override
+  String get hostFormInvalidPrivateKey => '请使用有效的 PEM 或 OpenSSH 私钥。';
+
+  @override
+  String get hostFormStubUseHardwareKey => '这是硬件密钥存根，请改选「硬件密钥」。';
+
+  @override
+  String get hostFormNotTextKey => '该文件不是文本格式的私钥。';
+
+  @override
+  String get hostFormNotPrivateKey => '该文件不是可识别的私钥。';
+
+  @override
+  String get hostFormInvalidPort => '请填写 1-65535 之间的端口，或「低:高」范围。';
+
+  @override
+  String sftpNoMatchQuery(String query) {
+    return '该文件夹中没有与“$query”匹配的内容。';
+  }
+
+  @override
+  String get sftpCopiedPath => '已复制路径';
+
+  @override
+  String sftpSavedTar(String name) {
+    return '已保存 $name.tar';
+  }
+
+  @override
+  String sftpSavedFile(String name) {
+    return '已保存 $name';
+  }
+
+  @override
+  String sftpUploadedFile(String name) {
+    return '已上传 $name';
+  }
+
+  @override
+  String get sftpFileUnreadable => '其中有一个文件无法读取。';
+
+  @override
+  String sftpUploadedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已上传 $count 个文件',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sftpDeleteTitle(String kind) {
+    return '删除$kind？';
+  }
+
+  @override
+  String sftpVisibleOfTotal(int visible, int total) {
+    return '共 $total 项，显示 $visible 项';
+  }
+
+  @override
+  String sftpCountsSummary(String item, String folders, String files) {
+    return '$item  ·  $folders  ·  $files';
+  }
+
+  @override
+  String sftpTransferProgress(String action, String name) {
+    return '$action $name';
+  }
+
+  @override
+  String snippetWithEnter(String text) {
+    return '$text + 回车';
+  }
+
+  @override
+  String get localShellFullBuildOnly => '仅完整版可用';
+
+  @override
+  String get localShellPermissionNeeded => '需要权限';
+
+  @override
+  String get localShellMountHint => '授予文件访问权限，才能把手机存储挂载到 /mnt/android。';
+
+  @override
+  String get localShellMountUnavailable => '手机存储挂载仅在完整版中可用。';
+
+  @override
+  String get localShellSetupFailedBody => '设置过程中出现错误。';
+
+  @override
+  String get localShellErrorDownload => '下载失败';
+
+  @override
+  String get localShellErrorStorage => '存储空间不足';
+
+  @override
+  String get localShellErrorCorrupt => '下载文件已损坏';
+
+  @override
+  String get localShellErrorUnpack => '无法解压镜像';
+
+  @override
+  String get localShellErrorConfigure => '配置失败';
+
+  @override
+  String get localShellErrorUnavailable => '该设备不支持';
+
+  @override
+  String get localShellErrorGeneric => '设置失败';
+
+  @override
+  String get localShellIncompleteBody => '该 Shell 已添加，但镜像未安装完成。可继续安装，或将其移除。';
+
+  @override
+  String localShellStatusDownloading(String percent) {
+    return '正在下载… $percent%';
+  }
+
+  @override
+  String get localShellStatusUnpacking => '正在解压…';
+
+  @override
+  String get localShellStatusConfiguring => '正在配置…';
+
+  @override
+  String get localShellStatusFailed => '设置失败 - 点击重试';
+
+  @override
+  String localShellStatusChecking(String distro) {
+    return '$distro · 检查中…';
+  }
+
+  @override
+  String localShellStatusIncomplete(String distro) {
+    return '$distro · 设置未完成，点击继续';
+  }
+
+  @override
+  String localShellStatusReady(String distro, String size) {
+    return '$distro · $size';
+  }
+
+  @override
+  String get backupExportCancelled => '已取消导出。';
+
+  @override
+  String get backupExported => '备份已导出。';
+
+  @override
+  String get backupImportCancelled => '已取消导入。';
+
+  @override
+  String backupImported(int hosts, int keys) {
+    return '已导入 $hosts 台设备和 $keys 个已信任密钥。';
+  }
+
+  @override
+  String backupFailed(String error) {
+    return '备份失败：$error';
+  }
+
+  @override
+  String get backupPasswordMismatch => '两次输入的密码不一致。';
+
+  @override
+  String get backupPasswordRequired => '请输入备份密码。';
 }

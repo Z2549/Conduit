@@ -3,16 +3,20 @@ import 'package:flutter/foundation.dart';
 
 enum AppLockStatus { locked, checking, unlocked, unavailable }
 
+/// Why the lock screen is showing a notice. The UI turns this into text so the
+/// controller stays free of presentation strings.
+enum AppLockNotice { deviceNotConfigured, cancelled, deviceUnavailable }
+
 class AppLockController extends ChangeNotifier {
   AppLockController(this._authenticator);
 
   final AppAuthenticator _authenticator;
 
   AppLockStatus _status = AppLockStatus.locked;
-  String? _message;
+  AppLockNotice? _notice;
 
   AppLockStatus get status => _status;
-  String? get message => _message;
+  AppLockNotice? get notice => _notice;
   bool get isUnlocked => _status == AppLockStatus.unlocked;
 
   Future<void> unlock() async {
@@ -21,15 +25,13 @@ class AppLockController extends ChangeNotifier {
     }
 
     _status = AppLockStatus.checking;
-    _message = null;
+    _notice = null;
     notifyListeners();
 
     final canAuthenticate = await _canAuthenticate();
     if (!canAuthenticate) {
       _status = AppLockStatus.unavailable;
-      _message =
-          'Device authentication is not configured. '
-          'Set a screen lock to keep saved hosts private.';
+      _notice = AppLockNotice.deviceNotConfigured;
       notifyListeners();
       return;
     }
@@ -38,15 +40,13 @@ class AppLockController extends ChangeNotifier {
     switch (result) {
       case AppAuthenticationResult.success:
         _status = AppLockStatus.unlocked;
-        _message = null;
+        _notice = null;
       case AppAuthenticationResult.cancelled:
         _status = AppLockStatus.locked;
-        _message = 'Authentication was cancelled.';
+        _notice = AppLockNotice.cancelled;
       case AppAuthenticationResult.unavailable:
         _status = AppLockStatus.unavailable;
-        _message =
-            'Device authentication is unavailable on this device. '
-            'Set a screen lock for better protection.';
+        _notice = AppLockNotice.deviceUnavailable;
     }
     notifyListeners();
   }
@@ -77,7 +77,7 @@ class AppLockController extends ChangeNotifier {
 
   void lock() {
     _status = AppLockStatus.locked;
-    _message = null;
+    _notice = null;
     notifyListeners();
   }
 }

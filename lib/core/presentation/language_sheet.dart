@@ -41,7 +41,10 @@ class _LanguageSheet extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(l10n.languageTitle, style: theme.textTheme.headlineSmall),
+                    Text(
+                      l10n.languageTitle,
+                      style: theme.textTheme.headlineSmall,
+                    ),
                     const Spacer(),
                     const ConduitGlyph(size: 24),
                   ],

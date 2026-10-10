@@ -13,6 +13,7 @@ import 'package:conduit/features/local_shell/presentation/local_shell_controller
 import 'package:conduit/features/terminal/presentation/host_key_prompt_coordinator.dart';
 import 'package:conduit/features/terminal/presentation/terminal_page.dart';
 import 'package:conduit/features/terminal/presentation/terminal_workspace_controller.dart';
+import 'package:conduit/l10n/app_localizations.dart';
 import 'package:conduit/main.dart';
 import 'package:conduit_vt/conduit_vt.dart';
 import 'package:flutter/material.dart';
@@ -212,6 +213,8 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: TerminalPage(
           workspace: workspace,
           themeController: themeController,
