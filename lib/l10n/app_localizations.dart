@@ -62,8 +62,7 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('zh'),
+    Locale('zh')
   ];
 
   /// No description provided for @actionCancel.
@@ -2545,10 +2542,681 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the backup password.'**
   String get backupPasswordRequired;
+
+  /// No description provided for @lockAuthReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Conduit to access saved SSH machines.'**
+  String get lockAuthReason;
+
+  /// No description provided for @lockAuthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication required'**
+  String get lockAuthTitle;
+
+  /// No description provided for @lockAuthHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify identity'**
+  String get lockAuthHint;
+
+  /// No description provided for @appearanceSectionMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get appearanceSectionMode;
+
+  /// No description provided for @appearanceSectionTerminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal'**
+  String get appearanceSectionTerminal;
+
+  /// No description provided for @appearanceSectionHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get appearanceSectionHome;
+
+  /// No description provided for @appearanceSectionBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get appearanceSectionBackup;
+
+  /// No description provided for @appearanceSectionPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette'**
+  String get appearanceSectionPalette;
+
+  /// No description provided for @labelDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get labelDevice;
+
+  /// No description provided for @terminalSnippetGroupGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Global'**
+  String get terminalSnippetGroupGlobal;
+
+  /// No description provided for @securityKeyPinAttemptsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 attempt remaining.} other{{count} attempts remaining.}}'**
+  String securityKeyPinAttemptsRemaining(int count);
+
+  /// No description provided for @localShellErrorNotInstalled.
+  ///
+  /// In en, this message translates to:
+  /// **'The local shell is not installed.'**
+  String get localShellErrorNotInstalled;
+
+  /// No description provided for @localShellErrorAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'The local shell is only available on Android.'**
+  String get localShellErrorAndroidOnly;
+
+  /// No description provided for @localShellErrorArm64Only.
+  ///
+  /// In en, this message translates to:
+  /// **'The local shell requires a 64-bit ARM (arm64-v8a) device.'**
+  String get localShellErrorArm64Only;
+
+  /// No description provided for @localShellErrorChecksumFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded archive failed checksum verification.'**
+  String get localShellErrorChecksumFailed;
+
+  /// No description provided for @localShellErrorHttpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected HTTP status {status}'**
+  String localShellErrorHttpStatus(String status);
+
+  /// No description provided for @localShellErrorLowDisk.
+  ///
+  /// In en, this message translates to:
+  /// **'No space left on device.'**
+  String get localShellErrorLowDisk;
+
+  /// No description provided for @localShellErrorProotLaunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not launch proot/tar: {error}'**
+  String localShellErrorProotLaunch(String error);
+
+  /// No description provided for @localShellErrorTarExit.
+  ///
+  /// In en, this message translates to:
+  /// **'tar exited with {code}: {stderr}'**
+  String localShellErrorTarExit(String code, String stderr);
+
+  /// No description provided for @localShellErrorFirstBootLaunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not launch first-boot shell: {error}'**
+  String localShellErrorFirstBootLaunch(String error);
+
+  /// No description provided for @localShellErrorFirstBootExit.
+  ///
+  /// In en, this message translates to:
+  /// **'First-boot configuration exited with {code}: {stderr}'**
+  String localShellErrorFirstBootExit(String code, String stderr);
+
+  /// No description provided for @localShellErrorStartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start the local shell.'**
+  String get localShellErrorStartFailed;
+
+  /// No description provided for @localShellErrorSessionClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'The local shell session is closed.'**
+  String get localShellErrorSessionClosed;
+
+  /// No description provided for @hostsErrorNotAList.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected a list of hosts.'**
+  String get hostsErrorNotAList;
+
+  /// No description provided for @hostsErrorUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved hosts could not be read.'**
+  String get hostsErrorUnreadable;
+
+  /// No description provided for @sftpErrorNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected.'**
+  String get sftpErrorNotConnected;
+
+  /// No description provided for @sftpErrorTransferInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'A transfer is already in progress.'**
+  String get sftpErrorTransferInProgress;
+
+  /// No description provided for @sftpErrorUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not upload {name}.'**
+  String sftpErrorUploadFailed(String name);
+
+  /// No description provided for @sftpErrorOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open files on {endpoint}.'**
+  String sftpErrorOpenFailed(String endpoint);
+
+  /// No description provided for @sftpErrorPathTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Path is too long to archive: {path}'**
+  String sftpErrorPathTooLong(String path);
+
+  /// No description provided for @terminalErrorConnectFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect to {endpoint}.'**
+  String terminalErrorConnectFailed(String endpoint);
+
+  /// No description provided for @terminalErrorSessionClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'The SSH session is closed.'**
+  String get terminalErrorSessionClosed;
+
+  /// No description provided for @terminalErrorMoshStartFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start a Mosh session on {endpoint}.'**
+  String terminalErrorMoshStartFailed(String endpoint);
+
+  /// No description provided for @terminalErrorMoshStartupTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Timed out waiting for mosh-server startup.'**
+  String get terminalErrorMoshStartupTimeout;
+
+  /// No description provided for @terminalErrorMoshSessionClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'The Mosh session is closed.'**
+  String get terminalErrorMoshSessionClosed;
+
+  /// No description provided for @terminalStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting {name}...'**
+  String terminalStarting(String name);
+
+  /// No description provided for @terminalConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to {endpoint}...'**
+  String terminalConnecting(String endpoint);
+
+  /// No description provided for @terminalShellExited.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell exited.'**
+  String get terminalShellExited;
+
+  /// No description provided for @terminalConnectionClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection closed.'**
+  String get terminalConnectionClosed;
+
+  /// No description provided for @terminalConnectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed: {error}'**
+  String terminalConnectionFailed(String error);
+
+  /// No description provided for @sshErrorKeyNotUsable.
+  ///
+  /// In en, this message translates to:
+  /// **'The presented security key does not hold any usable key for this host.'**
+  String get sshErrorKeyNotUsable;
+
+  /// No description provided for @sshErrorAuthRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH server rejected the configured credentials.'**
+  String get sshErrorAuthRejected;
+
+  /// No description provided for @sshErrorAuthAborted.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH authentication stopped before it completed.'**
+  String get sshErrorAuthAborted;
+
+  /// No description provided for @sshErrorHandshakeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'SSH handshake failed: {message}'**
+  String sshErrorHandshakeFailed(String message);
+
+  /// No description provided for @ctapErrorPinInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN was incorrect.'**
+  String get ctapErrorPinInvalid;
+
+  /// No description provided for @ctapErrorPinBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN is blocked. Reset the key FIDO app to use it again.'**
+  String get ctapErrorPinBlocked;
+
+  /// No description provided for @ctapErrorPinAuthBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'The security key temporarily locked itself. Move it away from the phone (or unplug it) for a few seconds, then present it again.'**
+  String get ctapErrorPinAuthBlocked;
+
+  /// No description provided for @ctapErrorPinNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'This security key needs a FIDO2 PIN before it can be used.'**
+  String get ctapErrorPinNotSet;
+
+  /// No description provided for @ctapErrorPuatRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This security key requires PIN or user verification.'**
+  String get ctapErrorPuatRequired;
+
+  /// No description provided for @ctapErrorTouchTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key touch timed out.'**
+  String get ctapErrorTouchTimeout;
+
+  /// No description provided for @ctapErrorUpRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch is required on the security key.'**
+  String get ctapErrorUpRequired;
+
+  /// No description provided for @ctapErrorCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key authentication was cancelled.'**
+  String get ctapErrorCancelled;
+
+  /// No description provided for @ctapErrorNoCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'This security key does not have the credential for this SSH key stub.'**
+  String get ctapErrorNoCredentials;
+
+  /// No description provided for @ctapErrorPinAuthInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key rejected the PIN authentication data.'**
+  String get ctapErrorPinAuthInvalid;
+
+  /// No description provided for @ctapErrorInvalidOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key rejected the requested verification option.'**
+  String get ctapErrorInvalidOption;
+
+  /// No description provided for @ctapErrorUnauthorizedPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key rejected the requested authentication permission.'**
+  String get ctapErrorUnauthorizedPermission;
+
+  /// No description provided for @ctapErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key failed with CTAP status {status}.'**
+  String ctapErrorGeneric(String status);
+
+  /// No description provided for @securityKeyPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'USB security key permission was denied.'**
+  String get securityKeyPermissionDenied;
+
+  /// No description provided for @securityKeyNfcTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The NFC prompt timed out before a security key was read.'**
+  String get securityKeyNfcTimeout;
+
+  /// No description provided for @securityKeyNfcInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC security key read was interrupted. Hold the key still and try again.'**
+  String get securityKeyNfcInterrupted;
+
+  /// No description provided for @securityKeyOperationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key operation failed: {code}.'**
+  String securityKeyOperationFailed(String code);
+
+  /// No description provided for @sshErrorPrivateKeyUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Private key could not be loaded.'**
+  String get sshErrorPrivateKeyUnreadable;
+
+  /// No description provided for @sshErrorNoHardwareKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one hardware key to this host.'**
+  String get sshErrorNoHardwareKeys;
+
+  /// No description provided for @hardwareKeyFallbackName.
+  ///
+  /// In en, this message translates to:
+  /// **'hardware key {index}'**
+  String hardwareKeyFallbackName(String index);
+
+  /// No description provided for @sshErrorHardwareKeyUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware key \"{label}\" could not be loaded.'**
+  String sshErrorHardwareKeyUnreadable(String label);
+
+  /// No description provided for @sshErrorHardwareKeyNeedsStub.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware key \"{label}\" requires an OpenSSH security-key stub (id_ed25519_sk or id_ecdsa_sk), not a normal private key.'**
+  String sshErrorHardwareKeyNeedsStub(String label);
+
+  /// No description provided for @backupErrorRootNotObject.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup root is not an object.'**
+  String get backupErrorRootNotObject;
+
+  /// No description provided for @backupErrorNotConduit.
+  ///
+  /// In en, this message translates to:
+  /// **'This does not look like a Conduit backup.'**
+  String get backupErrorNotConduit;
+
+  /// No description provided for @backupErrorFormatUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup format is not supported.'**
+  String get backupErrorFormatUnsupported;
+
+  /// No description provided for @backupErrorPasswordWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'The password is wrong or the backup changed.'**
+  String get backupErrorPasswordWrong;
+
+  /// No description provided for @backupErrorPayloadInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The encrypted backup payload is invalid.'**
+  String get backupErrorPayloadInvalid;
+
+  /// No description provided for @backupErrorPayloadMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup payload is missing.'**
+  String get backupErrorPayloadMissing;
+
+  /// No description provided for @backupErrorEncryptedUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This encrypted backup is not supported.'**
+  String get backupErrorEncryptedUnsupported;
+
+  /// No description provided for @backupErrorEncryptedInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This encrypted backup is invalid.'**
+  String get backupErrorEncryptedInvalid;
+
+  /// No description provided for @backupPasswordRuleLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 12 characters.'**
+  String get backupPasswordRuleLength;
+
+  /// No description provided for @backupPasswordRuleSpaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove spaces from the start or end.'**
+  String get backupPasswordRuleSpaces;
+
+  /// No description provided for @backupPasswordRuleClasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least three of lowercase, uppercase, numbers, and symbols.'**
+  String get backupPasswordRuleClasses;
+
+  /// No description provided for @securityKeyNotSelectedKey.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{label}\" was not the selected security key.'**
+  String securityKeyNotSelectedKey(String label);
+
+  /// No description provided for @securityKeyAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware key accepted.'**
+  String get securityKeyAccepted;
+
+  /// No description provided for @securityKeyEnterPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the PIN for this security key.'**
+  String get securityKeyEnterPin;
+
+  /// No description provided for @securityKeyPinIncorrectRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN was incorrect. Try again.'**
+  String get securityKeyPinIncorrectRetry;
+
+  /// No description provided for @securityKeyNotOnPresented.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{label}\" is not on the presented security key.'**
+  String securityKeyNotOnPresented(String label);
+
+  /// No description provided for @securityKeySelectionCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key selection was cancelled.'**
+  String get securityKeySelectionCancelled;
+
+  /// No description provided for @securityKeyUsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Using security key \"{label}\".'**
+  String securityKeyUsing(String label);
+
+  /// No description provided for @securityKeyWaitingForAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for hardware key over USB or NFC. Any of your {count} enrolled keys will work...'**
+  String securityKeyWaitingForAny(String count);
+
+  /// No description provided for @securityKeyWaitingForKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for hardware key over USB or NFC...'**
+  String get securityKeyWaitingForKey;
+
+  /// No description provided for @securityKeySwitchingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'This security key holds \"{label}\". Switching to it...'**
+  String securityKeySwitchingTo(String label);
+
+  /// No description provided for @securityKeyHoldsNoSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'This security key does not hold any of the keys saved for this host.'**
+  String get securityKeyHoldsNoSaved;
+
+  /// No description provided for @securityKeyNotOnThisKey.
+  ///
+  /// In en, this message translates to:
+  /// **'\"{label}\" is not on this security key.'**
+  String securityKeyNotOnThisKey(String label);
+
+  /// No description provided for @securityKeyHoldsKeyPresentInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'That security key does not hold \"{label}\". Present \"{label}\" instead.'**
+  String securityKeyHoldsKeyPresentInstead(String label);
+
+  /// No description provided for @securityKeyPinRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN is required.'**
+  String get securityKeyPinRequired;
+
+  /// No description provided for @securityKeyPinRequiredShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN required.'**
+  String get securityKeyPinRequiredShort;
+
+  /// No description provided for @securityKeyPinEntryCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN entry was cancelled.'**
+  String get securityKeyPinEntryCancelled;
+
+  /// No description provided for @securityKeyPinAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN accepted.'**
+  String get securityKeyPinAccepted;
+
+  /// No description provided for @securityKeyPinUnverified.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key PIN could not be verified.'**
+  String get securityKeyPinUnverified;
+
+  /// No description provided for @securityKeyPinProtocolUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported security key PIN protocol.'**
+  String get securityKeyPinProtocolUnsupported;
+
+  /// No description provided for @securityKeyTouchUsb.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch your USB security key.'**
+  String get securityKeyTouchUsb;
+
+  /// No description provided for @securityKeyHoldNfc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your NFC security key held against the phone.'**
+  String get securityKeyHoldNfc;
+
+  /// No description provided for @securityKeyTouchOrHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch your USB key, or hold your NFC key near the phone.'**
+  String get securityKeyTouchOrHold;
+
+  /// No description provided for @securityKeyHoldNearPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold your security key near the phone.'**
+  String get securityKeyHoldNearPhone;
+
+  /// No description provided for @securityKeySigningFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Security key signing failed.'**
+  String get securityKeySigningFailed;
+
+  /// No description provided for @securityKeyAppletSelectFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'FIDO applet selection failed.'**
+  String get securityKeyAppletSelectFailed;
+
+  /// No description provided for @securityKeyCommandFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'FIDO command failed.'**
+  String get securityKeyCommandFailed;
+
+  /// No description provided for @securityKeyResponseTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'FIDO response was too short.'**
+  String get securityKeyResponseTooShort;
+
+  /// No description provided for @securityKeyEmptyApdu.
+  ///
+  /// In en, this message translates to:
+  /// **'{message} Empty APDU response.'**
+  String securityKeyEmptyApdu(String message);
+
+  /// No description provided for @securityKeyApduStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'{message} APDU status {sw}.'**
+  String securityKeyApduStatus(String message, String sw);
+
+  /// No description provided for @securityKeyUsbAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'USB security keys are only supported on Android.'**
+  String get securityKeyUsbAndroidOnly;
+
+  /// No description provided for @securityKeyUsbEmptyResponse.
+  ///
+  /// In en, this message translates to:
+  /// **'USB security key returned an empty response.'**
+  String get securityKeyUsbEmptyResponse;
+
+  /// No description provided for @securityKeyAuthenticatorDataShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Authenticator data was too short.'**
+  String get securityKeyAuthenticatorDataShort;
+
+  /// No description provided for @securityKeyMalformedSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Malformed DER ECDSA signature.'**
+  String get securityKeyMalformedSignature;
+
+  /// No description provided for @securityKeyNotHoldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'The presented security key does not hold \"{label}\".'**
+  String securityKeyNotHoldLabel(String label);
+
+  /// No description provided for @securityKeyNfcRetrying.
+  ///
+  /// In en, this message translates to:
+  /// **'NFC read was interrupted. Keep the key still near the phone; retrying...'**
+  String get securityKeyNfcRetrying;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2557,26 +3225,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'zh':
-      return AppLocalizationsZh();
+    case 'en': return AppLocalizationsEn();
+    case 'zh': return AppLocalizationsZh();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

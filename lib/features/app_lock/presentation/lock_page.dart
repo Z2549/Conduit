@@ -26,7 +26,7 @@ class _LockPageState extends State<LockPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => widget.controller.unlock(),
+      (_) => widget.controller.unlock(context.l10n),
     );
   }
 
@@ -104,7 +104,9 @@ class _LockPageState extends State<LockPage> {
                               child: FilledButton.icon(
                                 onPressed: checking
                                     ? null
-                                    : widget.controller.unlock,
+                                    : () => widget.controller.unlock(
+                                        context.l10n,
+                                      ),
                                 icon: checking
                                     ? SizedBox.square(
                                         dimension: 18,

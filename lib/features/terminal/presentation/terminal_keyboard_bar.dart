@@ -314,8 +314,8 @@ class TerminalKeyboardBar extends StatelessWidget {
       }
     }
 
-    addSnippetGroup('Host', controller.host.snippets);
-    addSnippetGroup('Global', globalSnippets);
+    addSnippetGroup(context.l10n.labelHost, controller.host.snippets);
+    addSnippetGroup(context.l10n.terminalSnippetGroupGlobal, globalSnippets);
     if (controller.host.password.isNotEmpty) {
       if (entries.isNotEmpty) {
         entries.add(const PopupMenuDivider(height: 8));

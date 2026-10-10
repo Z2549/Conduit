@@ -239,7 +239,7 @@ class _HostsPageState extends State<HostsPage> {
           icon: Icons.error_outline,
           title: context.l10n.hostsErrorTitle,
           message: controller.errorMessage!,
-          actionLabel: 'Retry',
+          actionLabel: context.l10n.actionRetry,
           onAction: controller.load,
         ),
       );
@@ -320,7 +320,7 @@ class _HostsPageState extends State<HostsPage> {
                 icon: Icons.search_off,
                 title: context.l10n.commonNoMatches,
                 message: context.l10n.commonNoMatchesHint,
-                actionLabel: 'Clear',
+                actionLabel: context.l10n.actionClear,
                 onAction: _clearFilters,
               ),
             )

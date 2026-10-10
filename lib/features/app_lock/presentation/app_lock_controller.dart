@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/l10n.dart';
 import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:flutter/foundation.dart';
 
@@ -19,7 +20,7 @@ class AppLockController extends ChangeNotifier {
   AppLockNotice? get notice => _notice;
   bool get isUnlocked => _status == AppLockStatus.unlocked;
 
-  Future<void> unlock() async {
+  Future<void> unlock(AppLocalizations l10n) async {
     if (_status == AppLockStatus.checking) {
       return;
     }
@@ -36,7 +37,7 @@ class AppLockController extends ChangeNotifier {
       return;
     }
 
-    final result = await _authenticate();
+    final result = await _authenticate(l10n);
     switch (result) {
       case AppAuthenticationResult.success:
         _status = AppLockStatus.unlocked;
@@ -59,9 +60,16 @@ class AppLockController extends ChangeNotifier {
     }
   }
 
-  Future<AppAuthenticationResult> _authenticate() async {
+  Future<AppAuthenticationResult> _authenticate(AppLocalizations l10n) async {
     try {
-      return await _authenticator.authenticate();
+      return await _authenticator.authenticate(
+        AppAuthenticationPrompt(
+          reason: l10n.lockAuthReason,
+          title: l10n.lockAuthTitle,
+          hint: l10n.lockAuthHint,
+          cancel: l10n.actionCancel,
+        ),
+      );
     } catch (_) {
       return AppAuthenticationResult.cancelled;
     }

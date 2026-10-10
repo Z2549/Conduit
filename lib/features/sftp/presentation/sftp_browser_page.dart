@@ -151,7 +151,7 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
           icon: Icons.error_outline_rounded,
           title: context.l10n.sftpOpenFailed,
           message: _controller.errorMessage,
-          actionLabel: 'Retry',
+          actionLabel: context.l10n.actionRetry,
           onAction: _controller.connect,
         );
       case SftpBrowserStatus.ready:

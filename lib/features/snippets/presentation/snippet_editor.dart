@@ -8,7 +8,7 @@ class SnippetListEditor extends StatelessWidget {
     required this.onChanged,
     this.connectSnippetId = '',
     this.onConnectSnippetChanged,
-    this.title = 'Snippets',
+    this.title,
     this.caption,
     super.key,
   });
@@ -17,7 +17,9 @@ class SnippetListEditor extends StatelessWidget {
   final ValueChanged<List<TerminalSnippet>> onChanged;
   final String connectSnippetId;
   final ValueChanged<String>? onConnectSnippetChanged;
-  final String title;
+
+  /// Heading shown above the list. Defaults to a localized "Snippets".
+  final String? title;
   final String? caption;
 
   @override
@@ -31,7 +33,12 @@ class SnippetListEditor extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(title, style: theme.textTheme.titleMedium)),
+              Expanded(
+                child: Text(
+                  title ?? context.l10n.labelSnippets,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
               TextButton.icon(
                 onPressed: () => _add(context),
                 icon: const Icon(Icons.add_rounded, size: 17),

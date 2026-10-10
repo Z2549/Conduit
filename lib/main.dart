@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/l10n.dart';
 import 'package:conduit/core/l10n/locale_controller.dart';
 import 'package:conduit/core/l10n/locale_preferences_repository.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -30,7 +31,6 @@ import 'package:conduit/features/terminal/domain/ssh_terminal_repository.dart';
 import 'package:conduit/features/terminal/presentation/host_key_prompt_coordinator.dart';
 import 'package:conduit/features/terminal/presentation/terminal_background_keepalive.dart';
 import 'package:conduit/features/terminal/presentation/terminal_workspace_controller.dart';
-import 'package:conduit/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -244,6 +244,9 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
           ),
           themeMode: widget.themeController.themeMode,
           builder: (context, child) {
+            // Publish the active localizations so layers without a
+            // BuildContext can produce localized text.
+            AppLocalizationsHolder.install(AppLocalizations.of(context));
             final overlayStyle = AppTheme.systemUiOverlayStyle(
               Theme.of(context).brightness,
             );

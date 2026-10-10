@@ -777,5 +777,336 @@
     }
   },
   "backupPasswordMismatch": "Passwords do not match.",
-  "backupPasswordRequired": "Enter the backup password."
+  "backupPasswordRequired": "Enter the backup password.",
+  "lockAuthReason": "Unlock Conduit to access saved SSH machines.",
+  "lockAuthTitle": "Authentication required",
+  "lockAuthHint": "Verify identity",
+  "appearanceSectionMode": "Mode",
+  "appearanceSectionTerminal": "Terminal",
+  "appearanceSectionHome": "Home",
+  "appearanceSectionBackup": "Backup",
+  "appearanceSectionPalette": "Palette",
+  "labelDevice": "Device",
+  "terminalSnippetGroupGlobal": "Global",
+  "securityKeyPinAttemptsRemaining": "{count, plural, =1{1 attempt remaining.} other{{count} attempts remaining.}}",
+  "@securityKeyPinAttemptsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "localShellErrorNotInstalled": "The local shell is not installed.",
+  "localShellErrorAndroidOnly": "The local shell is only available on Android.",
+  "localShellErrorArm64Only": "The local shell requires a 64-bit ARM (arm64-v8a) device.",
+  "localShellErrorChecksumFailed": "Downloaded archive failed checksum verification.",
+  "localShellErrorHttpStatus": "Unexpected HTTP status {status}",
+  "@localShellErrorHttpStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellErrorLowDisk": "No space left on device.",
+  "localShellErrorProotLaunch": "Could not launch proot/tar: {error}",
+  "@localShellErrorProotLaunch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellErrorTarExit": "tar exited with {code}: {stderr}",
+  "@localShellErrorTarExit": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "stderr": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellErrorFirstBootLaunch": "Could not launch first-boot shell: {error}",
+  "@localShellErrorFirstBootLaunch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellErrorFirstBootExit": "First-boot configuration exited with {code}: {stderr}",
+  "@localShellErrorFirstBootExit": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "stderr": {
+        "type": "String"
+      }
+    }
+  },
+  "localShellErrorStartFailed": "Could not start the local shell.",
+  "localShellErrorSessionClosed": "The local shell session is closed.",
+  "hostsErrorNotAList": "Expected a list of hosts.",
+  "hostsErrorUnreadable": "Saved hosts could not be read.",
+  "sftpErrorNotConnected": "Not connected.",
+  "sftpErrorTransferInProgress": "A transfer is already in progress.",
+  "sftpErrorUploadFailed": "Could not upload {name}.",
+  "@sftpErrorUploadFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpErrorOpenFailed": "Could not open files on {endpoint}.",
+  "@sftpErrorOpenFailed": {
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "sftpErrorPathTooLong": "Path is too long to archive: {path}",
+  "@sftpErrorPathTooLong": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalErrorConnectFailed": "Could not connect to {endpoint}.",
+  "@terminalErrorConnectFailed": {
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalErrorSessionClosed": "The SSH session is closed.",
+  "terminalErrorMoshStartFailed": "Could not start a Mosh session on {endpoint}.",
+  "@terminalErrorMoshStartFailed": {
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalErrorMoshStartupTimeout": "Timed out waiting for mosh-server startup.",
+  "terminalErrorMoshSessionClosed": "The Mosh session is closed.",
+  "terminalStarting": "Starting {name}...",
+  "@terminalStarting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalConnecting": "Connecting to {endpoint}...",
+  "@terminalConnecting": {
+    "placeholders": {
+      "endpoint": {
+        "type": "String"
+      }
+    }
+  },
+  "terminalShellExited": "Shell exited.",
+  "terminalConnectionClosed": "Connection closed.",
+  "terminalConnectionFailed": "Connection failed: {error}",
+  "@terminalConnectionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "sshErrorKeyNotUsable": "The presented security key does not hold any usable key for this host.",
+  "sshErrorAuthRejected": "SSH server rejected the configured credentials.",
+  "sshErrorAuthAborted": "SSH authentication stopped before it completed.",
+  "sshErrorHandshakeFailed": "SSH handshake failed: {message}",
+  "@sshErrorHandshakeFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "ctapErrorPinInvalid": "Security key PIN was incorrect.",
+  "ctapErrorPinBlocked": "Security key PIN is blocked. Reset the key FIDO app to use it again.",
+  "ctapErrorPinAuthBlocked": "The security key temporarily locked itself. Move it away from the phone (or unplug it) for a few seconds, then present it again.",
+  "ctapErrorPinNotSet": "This security key needs a FIDO2 PIN before it can be used.",
+  "ctapErrorPuatRequired": "This security key requires PIN or user verification.",
+  "ctapErrorTouchTimeout": "Security key touch timed out.",
+  "ctapErrorUpRequired": "Touch is required on the security key.",
+  "ctapErrorCancelled": "Security key authentication was cancelled.",
+  "ctapErrorNoCredentials": "This security key does not have the credential for this SSH key stub.",
+  "ctapErrorPinAuthInvalid": "Security key rejected the PIN authentication data.",
+  "ctapErrorInvalidOption": "Security key rejected the requested verification option.",
+  "ctapErrorUnauthorizedPermission": "Security key rejected the requested authentication permission.",
+  "ctapErrorGeneric": "Security key failed with CTAP status {status}.",
+  "@ctapErrorGeneric": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyPermissionDenied": "USB security key permission was denied.",
+  "securityKeyNfcTimeout": "The NFC prompt timed out before a security key was read.",
+  "securityKeyNfcInterrupted": "NFC security key read was interrupted. Hold the key still and try again.",
+  "securityKeyOperationFailed": "Security key operation failed: {code}.",
+  "@securityKeyOperationFailed": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "sshErrorPrivateKeyUnreadable": "Private key could not be loaded.",
+  "sshErrorNoHardwareKeys": "Add at least one hardware key to this host.",
+  "hardwareKeyFallbackName": "hardware key {index}",
+  "@hardwareKeyFallbackName": {
+    "placeholders": {
+      "index": {
+        "type": "String"
+      }
+    }
+  },
+  "sshErrorHardwareKeyUnreadable": "Hardware key \"{label}\" could not be loaded.",
+  "@sshErrorHardwareKeyUnreadable": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sshErrorHardwareKeyNeedsStub": "Hardware key \"{label}\" requires an OpenSSH security-key stub (id_ed25519_sk or id_ecdsa_sk), not a normal private key.",
+  "@sshErrorHardwareKeyNeedsStub": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorRootNotObject": "Backup root is not an object.",
+  "backupErrorNotConduit": "This does not look like a Conduit backup.",
+  "backupErrorFormatUnsupported": "This backup format is not supported.",
+  "backupErrorPasswordWrong": "The password is wrong or the backup changed.",
+  "backupErrorPayloadInvalid": "The encrypted backup payload is invalid.",
+  "backupErrorPayloadMissing": "The backup payload is missing.",
+  "backupErrorEncryptedUnsupported": "This encrypted backup is not supported.",
+  "backupErrorEncryptedInvalid": "This encrypted backup is invalid.",
+  "backupPasswordRuleLength": "Use at least 12 characters.",
+  "backupPasswordRuleSpaces": "Remove spaces from the start or end.",
+  "backupPasswordRuleClasses": "Use at least three of lowercase, uppercase, numbers, and symbols.",
+  "securityKeyNotSelectedKey": "\"{label}\" was not the selected security key.",
+  "@securityKeyNotSelectedKey": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyAccepted": "Hardware key accepted.",
+  "securityKeyEnterPin": "Enter the PIN for this security key.",
+  "securityKeyPinIncorrectRetry": "Security key PIN was incorrect. Try again.",
+  "securityKeyNotOnPresented": "\"{label}\" is not on the presented security key.",
+  "@securityKeyNotOnPresented": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeySelectionCancelled": "Security key selection was cancelled.",
+  "securityKeyUsing": "Using security key \"{label}\".",
+  "@securityKeyUsing": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyWaitingForAny": "Waiting for hardware key over USB or NFC. Any of your {count} enrolled keys will work...",
+  "@securityKeyWaitingForAny": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyWaitingForKey": "Waiting for hardware key over USB or NFC...",
+  "securityKeySwitchingTo": "This security key holds \"{label}\". Switching to it...",
+  "@securityKeySwitchingTo": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyHoldsNoSaved": "This security key does not hold any of the keys saved for this host.",
+  "securityKeyNotOnThisKey": "\"{label}\" is not on this security key.",
+  "@securityKeyNotOnThisKey": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyHoldsKeyPresentInstead": "That security key does not hold \"{label}\". Present \"{label}\" instead.",
+  "@securityKeyHoldsKeyPresentInstead": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyPinRequired": "Security key PIN is required.",
+  "securityKeyPinRequiredShort": "Security key PIN required.",
+  "securityKeyPinEntryCancelled": "Security key PIN entry was cancelled.",
+  "securityKeyPinAccepted": "Security key PIN accepted.",
+  "securityKeyPinUnverified": "Security key PIN could not be verified.",
+  "securityKeyPinProtocolUnsupported": "Unsupported security key PIN protocol.",
+  "securityKeyTouchUsb": "Touch your USB security key.",
+  "securityKeyHoldNfc": "Keep your NFC security key held against the phone.",
+  "securityKeyTouchOrHold": "Touch your USB key, or hold your NFC key near the phone.",
+  "securityKeyHoldNearPhone": "Hold your security key near the phone.",
+  "securityKeySigningFailed": "Security key signing failed.",
+  "securityKeyAppletSelectFailed": "FIDO applet selection failed.",
+  "securityKeyCommandFailed": "FIDO command failed.",
+  "securityKeyResponseTooShort": "FIDO response was too short.",
+  "securityKeyEmptyApdu": "{message} Empty APDU response.",
+  "@securityKeyEmptyApdu": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyApduStatus": "{message} APDU status {sw}.",
+  "@securityKeyApduStatus": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      },
+      "sw": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyUsbAndroidOnly": "USB security keys are only supported on Android.",
+  "securityKeyUsbEmptyResponse": "USB security key returned an empty response.",
+  "securityKeyAuthenticatorDataShort": "Authenticator data was too short.",
+  "securityKeyMalformedSignature": "Malformed DER ECDSA signature.",
+  "securityKeyNotHoldLabel": "The presented security key does not hold \"{label}\".",
+  "@securityKeyNotHoldLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "securityKeyNfcRetrying": "NFC read was interrupted. Keep the key still near the phone; retrying..."
 }

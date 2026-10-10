@@ -530,8 +530,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostFormConnectWithMosh => '使用 Mosh 连接';
 
   @override
-  String get hostFormConnectWithMoshHint =>
-      '基于 SSH 的漫游 UDP 会话。需要主机安装 mosh-server 并开放 UDP 端口。';
+  String get hostFormConnectWithMoshHint => '基于 SSH 的漫游 UDP 会话。需要主机安装 mosh-server 并开放 UDP 端口。';
 
   @override
   String get hostFormMoshLocale => 'Mosh 语言环境';
@@ -543,8 +542,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostFormMoshPorts => 'Mosh UDP 端口';
 
   @override
-  String get hostFormMoshPortsHint =>
-      '端口或端口范围，例如 60000:61000。留空则用 60001:60999。';
+  String get hostFormMoshPortsHint => '端口或端口范围，例如 60000:61000。留空则用 60001:60999。';
 
   @override
   String get hostFormPredictiveEcho => '预测回显（实验性）';
@@ -595,15 +593,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get authExternalHint => '认证由 Conduit 之外处理时使用，不在应用内存放密码或私钥。';
 
   @override
-  String get authHardwareKeyDetail =>
-      '为你持有的每个安全密钥添加 OpenSSH *_sk 存根。连接时，Conduit 会要求你用当前接入的密钥通过 USB 或 NFC 进行签名。';
+  String get authHardwareKeyDetail => '为你持有的每个安全密钥添加 OpenSSH *_sk 存根。连接时，Conduit 会要求你用当前接入的密钥通过 USB 或 NFC 进行签名。';
 
   @override
   String get hardwareKeysTitle => '硬件密钥';
 
   @override
-  String get hardwareKeysEmpty =>
-      '还没有硬件密钥。为该主机要使用的每个安全密钥添加 OpenSSH *_sk 存根，任意一个都能解锁连接。';
+  String get hardwareKeysEmpty => '还没有硬件密钥。为该主机要使用的每个安全密钥添加 OpenSSH *_sk 存根，任意一个都能解锁连接。';
 
   @override
   String hardwareKeysCount(int count) {
@@ -664,8 +660,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyTitle => '添加硬件密钥';
 
   @override
-  String get addHardwareKeyBody =>
-      '导入或粘贴 ssh-keygen 为该安全密钥生成的 OpenSSH *_sk 存根。存根只指向密钥本身，私钥部分始终留在硬件中。';
+  String get addHardwareKeyBody => '导入或粘贴 ssh-keygen 为该安全密钥生成的 OpenSSH *_sk 存根。存根只指向密钥本身，私钥部分始终留在硬件中。';
 
   @override
   String get addHardwareKeyStubLabel => 'OpenSSH 硬件密钥存根';
@@ -680,8 +675,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyPassphraseHint => '该存根文件已加密。';
 
   @override
-  String get addHardwareKeyLabelHint =>
-      '当 Conduit 请求该密钥时显示，例如“5C work”或“NFC backup”。';
+  String get addHardwareKeyLabelHint => '当 Conduit 请求该密钥时显示，例如“5C work”或“NFC backup”。';
 
   @override
   String get addHardwareKeySubmit => '添加密钥';
@@ -1018,8 +1012,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get localShellSetupTitle => '在手机上运行 Linux';
 
   @override
-  String get localShellSetupBody =>
-      '通过 proot 在本机运行的完整 Linux 用户空间——无需服务器，也不需要 root。选择发行版即可，可创建任意多个 Shell，包括同一发行版的多个实例。';
+  String get localShellSetupBody => '通过 proot 在本机运行的完整 Linux 用户空间——无需服务器，也不需要 root。选择发行版即可，可创建任意多个 Shell，包括同一发行版的多个实例。';
 
   @override
   String get localShellSetupCaption => 'Arch、Debian、Ubuntu、Alpine 等';
@@ -1028,8 +1021,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get localShellInstallHint => '镜像只需下载一次并解压到本机，建议使用 Wi-Fi。';
 
   @override
-  String get localShellLicensesBody =>
-      '本地 Shell 基于 proot 与经 Termux 打包的根文件系统镜像，由各上游发行版维护。Conduit 按其各自的开源许可再分发这些内置工具。';
+  String get localShellLicensesBody => '本地 Shell 基于 proot 与经 Termux 打包的根文件系统镜像，由各上游发行版维护。Conduit 按其各自的开源许可再分发这些内置工具。';
 
   @override
   String get localShellStageUnpacking => '正在解压根文件系统…（可能需要几分钟）';
@@ -1095,7 +1087,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get terminalFontSystemMonospace => '系统等宽';
 
   @override
-  String get terminalFontNerdFont => 'Nerd Font';
+  String get terminalFontNerdFont => 'Nerd 字体';
 
   @override
   String get terminalEnterCr => '回车';
@@ -1171,8 +1163,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyNormalKey => '这是普通私钥，请改用「私钥」方式。';
 
   @override
-  String get addHardwareKeyNotStub =>
-      '无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。';
+  String get addHardwareKeyNotStub => '无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。';
 
   @override
   String get addHardwareKeyDuplicate => '该密钥已添加到此主机。';
@@ -1368,4 +1359,400 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get backupPasswordRequired => '请输入备份密码。';
+
+  @override
+  String get lockAuthReason => '解锁 Conduit 以访问已保存的 SSH 设备。';
+
+  @override
+  String get lockAuthTitle => '需要验证身份';
+
+  @override
+  String get lockAuthHint => '验证身份';
+
+  @override
+  String get appearanceSectionMode => '模式';
+
+  @override
+  String get appearanceSectionTerminal => '终端';
+
+  @override
+  String get appearanceSectionHome => '主页';
+
+  @override
+  String get appearanceSectionBackup => '备份';
+
+  @override
+  String get appearanceSectionPalette => '配色';
+
+  @override
+  String get labelDevice => '设备';
+
+  @override
+  String get terminalSnippetGroupGlobal => '全局';
+
+  @override
+  String securityKeyPinAttemptsRemaining(int count) {
+    return '还可尝试 $count 次。';
+  }
+
+  @override
+  String get localShellErrorNotInstalled => '本地 Shell 尚未安装。';
+
+  @override
+  String get localShellErrorAndroidOnly => '本地 Shell 仅在 Android 上可用。';
+
+  @override
+  String get localShellErrorArm64Only => '本地 Shell 需要 64 位 ARM（arm64-v8a）设备。';
+
+  @override
+  String get localShellErrorChecksumFailed => '下载的归档文件未通过校验和验证。';
+
+  @override
+  String localShellErrorHttpStatus(String status) {
+    return 'HTTP 状态异常：$status';
+  }
+
+  @override
+  String get localShellErrorLowDisk => '设备存储空间不足。';
+
+  @override
+  String localShellErrorProotLaunch(String error) {
+    return '无法启动 proot/tar：$error';
+  }
+
+  @override
+  String localShellErrorTarExit(String code, String stderr) {
+    return 'tar 退出码 $code：$stderr';
+  }
+
+  @override
+  String localShellErrorFirstBootLaunch(String error) {
+    return '无法启动首次配置 Shell：$error';
+  }
+
+  @override
+  String localShellErrorFirstBootExit(String code, String stderr) {
+    return '首次配置退出码 $code：$stderr';
+  }
+
+  @override
+  String get localShellErrorStartFailed => '无法启动本地 Shell。';
+
+  @override
+  String get localShellErrorSessionClosed => '本地 Shell 会话已关闭。';
+
+  @override
+  String get hostsErrorNotAList => '设备列表格式异常。';
+
+  @override
+  String get hostsErrorUnreadable => '无法读取已保存的设备。';
+
+  @override
+  String get sftpErrorNotConnected => '未连接。';
+
+  @override
+  String get sftpErrorTransferInProgress => '已有传输任务正在进行。';
+
+  @override
+  String sftpErrorUploadFailed(String name) {
+    return '无法上传 $name。';
+  }
+
+  @override
+  String sftpErrorOpenFailed(String endpoint) {
+    return '无法打开 $endpoint 上的文件。';
+  }
+
+  @override
+  String sftpErrorPathTooLong(String path) {
+    return '路径过长，无法归档：$path';
+  }
+
+  @override
+  String terminalErrorConnectFailed(String endpoint) {
+    return '无法连接到 $endpoint。';
+  }
+
+  @override
+  String get terminalErrorSessionClosed => 'SSH 会话已关闭。';
+
+  @override
+  String terminalErrorMoshStartFailed(String endpoint) {
+    return '无法在 $endpoint 上启动 Mosh 会话。';
+  }
+
+  @override
+  String get terminalErrorMoshStartupTimeout => '等待 mosh-server 启动超时。';
+
+  @override
+  String get terminalErrorMoshSessionClosed => 'Mosh 会话已关闭。';
+
+  @override
+  String terminalStarting(String name) {
+    return '正在启动 $name…';
+  }
+
+  @override
+  String terminalConnecting(String endpoint) {
+    return '正在连接到 $endpoint…';
+  }
+
+  @override
+  String get terminalShellExited => 'Shell 已退出。';
+
+  @override
+  String get terminalConnectionClosed => '连接已关闭。';
+
+  @override
+  String terminalConnectionFailed(String error) {
+    return '连接失败：$error';
+  }
+
+  @override
+  String get sshErrorKeyNotUsable => '出示的安全密钥中不包含此设备可用的密钥。';
+
+  @override
+  String get sshErrorAuthRejected => 'SSH 服务器拒绝了所配置的凭据。';
+
+  @override
+  String get sshErrorAuthAborted => 'SSH 认证在完成前被中止。';
+
+  @override
+  String sshErrorHandshakeFailed(String message) {
+    return 'SSH 握手失败：$message';
+  }
+
+  @override
+  String get ctapErrorPinInvalid => '安全密钥 PIN 不正确。';
+
+  @override
+  String get ctapErrorPinBlocked => '安全密钥 PIN 已被锁定。重置密钥的 FIDO 应用后方可再次使用。';
+
+  @override
+  String get ctapErrorPinAuthBlocked => '安全密钥暂时自我锁定。请将其移离手机（或拔出）几秒钟，然后重新出示。';
+
+  @override
+  String get ctapErrorPinNotSet => '此安全密钥需要先设置 FIDO2 PIN 才能使用。';
+
+  @override
+  String get ctapErrorPuatRequired => '此安全密钥需要 PIN 或用户验证。';
+
+  @override
+  String get ctapErrorTouchTimeout => '安全密钥触摸超时。';
+
+  @override
+  String get ctapErrorUpRequired => '需要触摸安全密钥。';
+
+  @override
+  String get ctapErrorCancelled => '安全密钥认证已取消。';
+
+  @override
+  String get ctapErrorNoCredentials => '此安全密钥中没有该 SSH 密钥桩对应的凭据。';
+
+  @override
+  String get ctapErrorPinAuthInvalid => '安全密钥拒绝了 PIN 认证数据。';
+
+  @override
+  String get ctapErrorInvalidOption => '安全密钥拒绝了请求的验证方式。';
+
+  @override
+  String get ctapErrorUnauthorizedPermission => '安全密钥拒绝了请求的认证权限。';
+
+  @override
+  String ctapErrorGeneric(String status) {
+    return '安全密钥失败，CTAP 状态：$status。';
+  }
+
+  @override
+  String get securityKeyPermissionDenied => 'USB 安全密钥权限被拒绝。';
+
+  @override
+  String get securityKeyNfcTimeout => 'NFC 提示超时，未能读取安全密钥。';
+
+  @override
+  String get securityKeyNfcInterrupted => 'NFC 安全密钥读取被中断。请保持密钥不动后重试。';
+
+  @override
+  String securityKeyOperationFailed(String code) {
+    return '安全密钥操作失败：$code。';
+  }
+
+  @override
+  String get sshErrorPrivateKeyUnreadable => '无法加载私钥。';
+
+  @override
+  String get sshErrorNoHardwareKeys => '请为此设备至少添加一个硬件密钥。';
+
+  @override
+  String hardwareKeyFallbackName(String index) {
+    return '硬件密钥 $index';
+  }
+
+  @override
+  String sshErrorHardwareKeyUnreadable(String label) {
+    return '无法加载硬件密钥「$label」。';
+  }
+
+  @override
+  String sshErrorHardwareKeyNeedsStub(String label) {
+    return '硬件密钥「$label」需要 OpenSSH 安全密钥桩（id_ed25519_sk 或 id_ecdsa_sk），而不是普通私钥。';
+  }
+
+  @override
+  String get backupErrorRootNotObject => '备份根节点不是对象。';
+
+  @override
+  String get backupErrorNotConduit => '这看起来不是 Conduit 的备份文件。';
+
+  @override
+  String get backupErrorFormatUnsupported => '不支持此备份格式。';
+
+  @override
+  String get backupErrorPasswordWrong => '密码错误，或备份内容已发生变化。';
+
+  @override
+  String get backupErrorPayloadInvalid => '加密备份内容无效。';
+
+  @override
+  String get backupErrorPayloadMissing => '备份内容缺失。';
+
+  @override
+  String get backupErrorEncryptedUnsupported => '不支持此加密备份。';
+
+  @override
+  String get backupErrorEncryptedInvalid => '此加密备份无效。';
+
+  @override
+  String get backupPasswordRuleLength => '至少使用 12 个字符。';
+
+  @override
+  String get backupPasswordRuleSpaces => '请去掉开头或结尾的空格。';
+
+  @override
+  String get backupPasswordRuleClasses => '小写字母、大写字母、数字、符号中至少包含三类。';
+
+  @override
+  String securityKeyNotSelectedKey(String label) {
+    return '「$label」不是所选的安全密钥。';
+  }
+
+  @override
+  String get securityKeyAccepted => '硬件密钥已接受。';
+
+  @override
+  String get securityKeyEnterPin => '请输入此安全密钥的 PIN。';
+
+  @override
+  String get securityKeyPinIncorrectRetry => '安全密钥 PIN 不正确，请重试。';
+
+  @override
+  String securityKeyNotOnPresented(String label) {
+    return '出示的安全密钥中没有「$label」。';
+  }
+
+  @override
+  String get securityKeySelectionCancelled => '安全密钥选择已取消。';
+
+  @override
+  String securityKeyUsing(String label) {
+    return '正在使用安全密钥「$label」。';
+  }
+
+  @override
+  String securityKeyWaitingForAny(String count) {
+    return '正在等待通过 USB 或 NFC 连接硬件密钥。已注册的 $count 个密钥中任意一个均可…';
+  }
+
+  @override
+  String get securityKeyWaitingForKey => '正在等待通过 USB 或 NFC 连接硬件密钥…';
+
+  @override
+  String securityKeySwitchingTo(String label) {
+    return '此安全密钥包含「$label」，正在切换…';
+  }
+
+  @override
+  String get securityKeyHoldsNoSaved => '此安全密钥中没有为该设备保存的任何密钥。';
+
+  @override
+  String securityKeyNotOnThisKey(String label) {
+    return '此安全密钥中没有「$label」。';
+  }
+
+  @override
+  String securityKeyHoldsKeyPresentInstead(String label) {
+    return '该安全密钥中没有「$label」。请改出示「$label」。';
+  }
+
+  @override
+  String get securityKeyPinRequired => '需要安全密钥 PIN。';
+
+  @override
+  String get securityKeyPinRequiredShort => '需要安全密钥 PIN。';
+
+  @override
+  String get securityKeyPinEntryCancelled => '安全密钥 PIN 输入已取消。';
+
+  @override
+  String get securityKeyPinAccepted => '安全密钥 PIN 已接受。';
+
+  @override
+  String get securityKeyPinUnverified => '无法验证安全密钥 PIN。';
+
+  @override
+  String get securityKeyPinProtocolUnsupported => '不支持的安全密钥 PIN 协议。';
+
+  @override
+  String get securityKeyTouchUsb => '请触摸您的 USB 安全密钥。';
+
+  @override
+  String get securityKeyHoldNfc => '请将 NFC 安全密钥持续贴近手机。';
+
+  @override
+  String get securityKeyTouchOrHold => '请触摸 USB 密钥，或将 NFC 密钥贴近手机。';
+
+  @override
+  String get securityKeyHoldNearPhone => '请将安全密钥贴近手机。';
+
+  @override
+  String get securityKeySigningFailed => '安全密钥签名失败。';
+
+  @override
+  String get securityKeyAppletSelectFailed => 'FIDO 小程序选择失败。';
+
+  @override
+  String get securityKeyCommandFailed => 'FIDO 命令失败。';
+
+  @override
+  String get securityKeyResponseTooShort => 'FIDO 响应过短。';
+
+  @override
+  String securityKeyEmptyApdu(String message) {
+    return '$message APDU 响应为空。';
+  }
+
+  @override
+  String securityKeyApduStatus(String message, String sw) {
+    return '$message APDU 状态 $sw。';
+  }
+
+  @override
+  String get securityKeyUsbAndroidOnly => 'USB 安全密钥仅在 Android 上受支持。';
+
+  @override
+  String get securityKeyUsbEmptyResponse => 'USB 安全密钥返回了空响应。';
+
+  @override
+  String get securityKeyAuthenticatorDataShort => '认证器数据过短。';
+
+  @override
+  String get securityKeyMalformedSignature => 'DER ECDSA 签名格式错误。';
+
+  @override
+  String securityKeyNotHoldLabel(String label) {
+    return '出示的安全密钥中没有「$label」。';
+  }
+
+  @override
+  String get securityKeyNfcRetrying => 'NFC 读取被中断。请保持密钥贴近手机不动，正在重试…';
 }

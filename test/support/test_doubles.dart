@@ -85,7 +85,9 @@ class InMemoryLocalePreferences implements LocalePreferencesRepository {
 
 class AlwaysAuthenticates implements AppAuthenticator {
   @override
-  Future<AppAuthenticationResult> authenticate() async =>
+  Future<AppAuthenticationResult> authenticate(
+    AppAuthenticationPrompt prompt,
+  ) async =>
       AppAuthenticationResult.success;
 
   @override
@@ -94,7 +96,9 @@ class AlwaysAuthenticates implements AppAuthenticator {
 
 class UnavailableAuthenticator implements AppAuthenticator {
   @override
-  Future<AppAuthenticationResult> authenticate() async =>
+  Future<AppAuthenticationResult> authenticate(
+    AppAuthenticationPrompt prompt,
+  ) async =>
       AppAuthenticationResult.unavailable;
 
   @override
@@ -107,7 +111,9 @@ class ScriptedAuthenticator implements AppAuthenticator {
   final AppAuthenticationResult result;
 
   @override
-  Future<AppAuthenticationResult> authenticate() async => result;
+  Future<AppAuthenticationResult> authenticate(
+    AppAuthenticationPrompt prompt,
+  ) async => result;
 
   @override
   Future<bool> canAuthenticate() async => true;
@@ -119,7 +125,9 @@ class ThrowingAuthenticator implements AppAuthenticator {
   final bool throwFromCanAuthenticate;
 
   @override
-  Future<AppAuthenticationResult> authenticate() async {
+  Future<AppAuthenticationResult> authenticate(
+    AppAuthenticationPrompt prompt,
+  ) async {
     throw StateError('auth failed');
   }
 

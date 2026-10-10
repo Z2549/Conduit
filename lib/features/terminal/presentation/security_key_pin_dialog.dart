@@ -47,7 +47,7 @@ class _SecurityKeyPinDialogState extends State<_SecurityKeyPinDialog> {
           labelText: context.l10n.securityKeyPinLabel,
           helperText: retriesRemaining == null
               ? context.l10n.securityKeyPinBody
-              : '$retriesRemaining attempts remaining.',
+              : context.l10n.securityKeyPinAttemptsRemaining(retriesRemaining),
           helperMaxLines: 2,
         ),
         onSubmitted: (value) => Navigator.of(context).pop(value),
