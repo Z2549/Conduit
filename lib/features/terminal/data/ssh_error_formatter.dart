@@ -87,7 +87,7 @@ String _describePlatformException(PlatformException error) {
     '500' || '503' || '406' => l10n.securityKeyNfcInterrupted,
     _ =>
       error.message == null || error.message!.isEmpty
-          ? l10n.securityKeyOperationFailed('${error.code}')
+          ? l10n.securityKeyOperationFailed(error.code)
           : error.message!,
   };
 }

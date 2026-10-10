@@ -1,5 +1,5 @@
-import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:conduit/core/l10n/l10n.dart';
+import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:conduit/features/app_lock/presentation/app_lock_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../support/test_doubles.dart';
