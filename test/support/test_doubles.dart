@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cbor/cbor.dart';
+import 'package:conduit/core/l10n/locale_preferences_repository.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/theme_preferences_repository.dart';
 import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
@@ -65,6 +66,20 @@ class InMemoryThemePreferences implements ThemePreferencesRepository {
   @override
   Future<void> save(ThemePreferences preferences) async {
     _preferences = preferences;
+  }
+}
+
+class InMemoryLocalePreferences implements LocalePreferencesRepository {
+  InMemoryLocalePreferences([this._locale]);
+
+  Locale? _locale;
+
+  @override
+  Future<Locale?> load() async => _locale;
+
+  @override
+  Future<void> save(Locale? locale) async {
+    _locale = locale;
   }
 }
 

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/locale_controller.dart';
+import 'package:conduit/core/l10n/locale_preferences_repository.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
@@ -28,9 +30,11 @@ import 'package:conduit/features/terminal/domain/ssh_terminal_repository.dart';
 import 'package:conduit/features/terminal/presentation/host_key_prompt_coordinator.dart';
 import 'package:conduit/features/terminal/presentation/terminal_background_keepalive.dart';
 import 'package:conduit/features/terminal/presentation/terminal_workspace_controller.dart';
+import 'package:conduit/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
@@ -43,6 +47,9 @@ void main() {
     const ThemePreferencesRepository(secureStorage),
   );
   final lockController = AppLockController(LocalAppAuthenticator());
+  final localeController = LocaleController(
+    const LocalePreferencesRepository(secureStorage),
+  );
   final hostsController = HostsController(
     const SecureSavedHostsRepository(secureStorage),
   );
@@ -72,10 +79,12 @@ void main() {
   const fileExport = FilePickerFileExport();
 
   unawaited(themeController.load());
+  unawaited(localeController.load());
 
   runApp(
     ConduitApp(
       themeController: themeController,
+      localeController: localeController,
       lockController: lockController,
       hostsController: hostsController,
       terminalRepository: terminalRepository,
@@ -93,6 +102,7 @@ void main() {
 class ConduitApp extends StatefulWidget {
   const ConduitApp({
     required this.themeController,
+    required this.localeController,
     required this.lockController,
     required this.hostsController,
     required this.terminalRepository,
@@ -107,6 +117,7 @@ class ConduitApp extends StatefulWidget {
   });
 
   final ThemeController themeController;
+  final LocaleController localeController;
   final AppLockController lockController;
   final HostsController hostsController;
   final SshTerminalRepository terminalRepository;
@@ -207,11 +218,22 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: widget.themeController,
+      listenable: Listenable.merge([
+        widget.themeController,
+        widget.localeController,
+      ]),
       builder: (context, _) {
         return MaterialApp(
           title: 'Conduit',
           debugShowCheckedModeBanner: false,
+          locale: widget.localeController.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           theme: AppTheme.build(
             brightness: Brightness.light,
             palette: widget.themeController.palette,
@@ -255,6 +277,7 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
                 workspaceController: widget.workspaceController,
                 localShellController: widget.localShellController,
                 themeController: widget.themeController,
+                localeController: widget.localeController,
                 hostKeyVerifier: widget.hostKeyVerifier,
                 promptCoordinator: widget.promptCoordinator,
                 sftpRepository: widget.sftpRepository,

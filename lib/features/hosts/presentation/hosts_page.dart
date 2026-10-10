@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/locale_controller.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
+import 'package:conduit/core/presentation/language_sheet.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
@@ -44,6 +46,7 @@ class HostsPage extends StatefulWidget {
     required this.workspaceController,
     required this.localShellController,
     required this.themeController,
+    required this.localeController,
     required this.hostKeyVerifier,
     required this.promptCoordinator,
     required this.sftpRepository,
@@ -58,6 +61,7 @@ class HostsPage extends StatefulWidget {
   final TerminalWorkspaceController workspaceController;
   final LocalShellController localShellController;
   final ThemeController themeController;
+  final LocaleController localeController;
   final HostKeyVerifier hostKeyVerifier;
   final HostKeyPromptCoordinator promptCoordinator;
   final SftpRepository sftpRepository;
@@ -156,6 +160,10 @@ class _HostsPageState extends State<HostsPage> {
                         hostCount: widget.hostsController.hosts.length,
                         activeSessionCount:
                             widget.workspaceController.sessions.length,
+                        onLanguage: () => showLanguageSheet(
+                          context: context,
+                          controller: widget.localeController,
+                        ),
                         onAppearance: () => showThemeSheet(
                           context: context,
                           controller: widget.themeController,

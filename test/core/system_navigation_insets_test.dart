@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/locale_controller.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/terminal_appearance.dart';
@@ -74,6 +75,7 @@ void main() {
       ConduitApp(
         lockController: AppLockController(AlwaysAuthenticates()),
         themeController: themeController,
+        localeController: LocaleController(InMemoryLocalePreferences()),
         hostsController: hostsController,
         terminalRepository: NoNetworkTerminalRepository(),
         workspaceController: TerminalWorkspaceController(
@@ -121,6 +123,7 @@ void main() {
       ConduitApp(
         lockController: AppLockController(AlwaysAuthenticates()),
         themeController: themeController,
+        localeController: LocaleController(InMemoryLocalePreferences()),
         hostsController: hostsController,
         terminalRepository: NoNetworkTerminalRepository(),
         workspaceController: TerminalWorkspaceController(
