@@ -1,9 +1,14 @@
 name: Android build
 
-# Manual, fork-friendly APK build. Mirrors the geometry of the upstream
+# Fork-friendly APK build. Mirrors the geometry of the upstream
 # `.github/workflows/release.yml` (same Flutter/Java versions, same local-shell
-# native payload, same `full` flavor and `--split-per-abi`) but stops at an
-# artifact upload: it never pushes tags and never creates a release.
+# native payload, same `full` flavor with `--split-per-abi`) but stops at an
+# artifact upload: it never pushes a tag and never creates a release.
+#
+# Trigger it either from the Actions tab (Run workflow) or by pushing a
+# `build/**` branch. Note that GitHub only registers workflows that live on the
+# default branch, so `workflow_dispatch` needs this file on `master`; the push
+# trigger reads the workflow from the pushed branch and works regardless.
 on:
   workflow_dispatch:
     inputs:
@@ -25,9 +30,19 @@ on:
         required: true
         default: true
         type: boolean
+  push:
+    branches:
+      - 'build/**'
 
 permissions:
   contents: read
+
+env:
+  # `github.event.inputs` is always a string for workflow_dispatch and null for
+  # a push event, so this also supplies the defaults for the push trigger.
+  FLAVOR: ${{ github.event.inputs.flavor || 'full' }}
+  SKIP_NATIVE: ${{ github.event.inputs.skip_native || 'false' }}
+  RUN_CHECKS: ${{ github.event.inputs.run_checks || 'true' }}
 
 jobs:
   build:
@@ -57,15 +72,15 @@ jobs:
         run: flutter pub get
 
       - name: Analyze
-        if: ${{ inputs.run_checks }}
+        if: ${{ env.RUN_CHECKS == 'true' }}
         run: flutter analyze
 
       - name: Test
-        if: ${{ inputs.run_checks }}
+        if: ${{ env.RUN_CHECKS == 'true' }}
         run: flutter test
 
       - name: Build local shell native binaries
-        if: ${{ !inputs.skip_native }}
+        if: ${{ env.SKIP_NATIVE != 'true' }}
         run: |
           docker run --rm \
             -v "$PWD:/workspace" -w /workspace \
@@ -125,7 +140,7 @@ jobs:
           } > android/key.properties
 
       - name: Build Android APKs
-        run: flutter build apk --release --flavor ${{ inputs.flavor }} --split-per-abi
+        run: flutter build apk --release --flavor "${FLAVOR}" --split-per-abi
 
       - name: Report build metadata
         shell: bash
@@ -136,8 +151,8 @@ jobs:
             echo ""
             echo "- ref: \`${GITHUB_REF_NAME}\` (${GITHUB_SHA})"
             echo "- pubspec version: \`${pubspec_version}\`"
-            echo "- flavor: \`${{ inputs.flavor }}\`"
-            echo "- native local shell: \`${{ inputs.skip_native && 'skipped' || 'built' }}\`"
+            echo "- flavor: \`${FLAVOR}\`"
+            echo "- native local shell: \`$([[ "${SKIP_NATIVE}" == 'true' ]] && echo skipped || echo built)\`"
             echo ""
             echo "| APK | bytes | sha256 |"
             echo "| --- | --- | --- |"
@@ -150,7 +165,7 @@ jobs:
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: conduit-${{ inputs.flavor }}-apks-${{ github.run_number }}
+          name: conduit-${{ env.FLAVOR }}-apks-${{ github.run_number }}
           if-no-files-found: error
           retention-days: 30
           path: |
