@@ -239,16 +239,23 @@ class ChatTaskNoticeRow extends StatelessWidget {
 /// A `!` command the user ran, like the Bash tool card, labelled "You
 /// ran"; tap to see the output.
 class ChatShellCommandCard extends StatefulWidget {
-  const ChatShellCommandCard({required this.item, super.key});
+  const ChatShellCommandCard({
+    required this.item,
+    this.initiallyExpanded = false,
+    super.key,
+  });
 
   final ChatShellCommand item;
+
+  /// Starts open (a command just sent from the phone shows its result).
+  final bool initiallyExpanded;
 
   @override
   State<ChatShellCommandCard> createState() => _ChatShellCommandCardState();
 }
 
 class _ChatShellCommandCardState extends State<ChatShellCommandCard> {
-  bool _expanded = false;
+  late bool _expanded = widget.initiallyExpanded;
 
   @override
   Widget build(BuildContext context) {

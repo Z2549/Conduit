@@ -11,6 +11,7 @@ import 'package:conduit/features/chat_view/domain/chat_items.dart';
 import 'package:conduit/features/chat_view/domain/chat_outgoing.dart';
 import 'package:conduit/features/chat_view/domain/chat_transcript.dart';
 import 'package:conduit/features/chat_view/domain/neutral_chat_window.dart';
+import 'package:conduit/features/chat_view/domain/slash_commands.dart';
 import 'package:conduit/features/voice/domain/speech_summary.dart';
 import 'package:flutter/foundation.dart';
 
@@ -712,6 +713,37 @@ class ChatViewController extends ChangeNotifier {
       if (!_disposed) notifyListeners();
     }
     unawaited(refresh());
+  }
+
+  SlashCommandList? _commands;
+  DateTime? _commandsAt;
+
+  /// How long a listed set of commands is reused before asking again.
+  static const commandsTtl = Duration(minutes: 5);
+
+  /// The composer's "/" list (CON-125). [claude]: the agent is Claude
+  /// Code (other agents get none). [listed]: the companion has
+  /// `commands`; without it, or when asking fails, Claude Code's
+  /// built-ins. Never throws.
+  Future<SlashCommandList> slashCommands({
+    required bool claude,
+    required bool listed,
+  }) async {
+    if (!claude) return SlashCommandList.empty;
+    if (!listed) return SlashCommandList.claudeBuiltins;
+    final cached = _commands;
+    final at = _commandsAt;
+    if (cached != null && at != null && _clock().difference(at) < commandsTtl) {
+      return cached;
+    }
+    try {
+      final list = await _client.commands(sessionId);
+      _commands = list;
+      _commandsAt = _clock();
+      return list;
+    } catch (_) {
+      return cached ?? SlashCommandList.claudeBuiltins;
+    }
   }
 
   /// A short spoken summary of [text] by Claude on this chat's machine,

@@ -16,6 +16,7 @@ import 'package:conduit/features/chat_view/domain/chat_items.dart';
 import 'package:conduit/features/chat_view/domain/chat_outgoing.dart';
 import 'package:conduit/features/chat_view/domain/chat_tool_activity.dart';
 import 'package:conduit/features/chat_view/domain/chat_working.dart';
+import 'package:conduit/features/chat_view/domain/slash_commands.dart';
 import 'package:conduit/features/chat_view/domain/terminal_answers.dart';
 import 'package:conduit/features/chat_view/presentation/chat_forward.dart';
 import 'package:conduit/features/chat_view/presentation/chat_thread_extras.dart';
@@ -706,6 +707,10 @@ class _ChatViewPageState extends State<ChatViewPage>
   /// Tool groups the user opened (Tool activity: Collapsed).
   final Set<String> _openGroups = {};
 
+  /// `!` commands sent from this view, once the transcript shows them:
+  /// they stay out of the tool groups and start open (CON-125).
+  final Set<String> _sentShell = {};
+
   /// The user is acting (sending, answering): stop talking over them.
   void _quiet() => _readAloud?.stop();
 
@@ -1341,7 +1346,30 @@ class _ChatViewPageState extends State<ChatViewPage>
     );
   }
 
+  /// Whether this agent is Claude Code: its kind when the companion lists
+  /// it, else the transcript's format.
+  bool get _isClaude {
+    final agent = _reviewAgent;
+    if (agent != null) return agent.kind == defaultAgentKind;
+    return _chat.neutralFormat == false;
+  }
+
+  /// The composer's "/" list (CON-125): the companion's, or Claude Code's
+  /// built-ins from a companion without `commands`. Unknown capabilities
+  /// count as yes: an older companion's refusal falls back the same way.
+  Future<SlashCommandList> _loadCommands() {
+    final hostId = widget.hostId;
+    final capabilities = hostId == null
+        ? null
+        : widget.attention?.companionCapabilities(hostId);
+    return _chat.slashCommands(
+      claude: _isClaude,
+      listed: capabilities == null || capabilities.contains(commandsCapability),
+    );
+  }
+
   Widget _composer(ChatActivity? activity) => ChatComposer(
+    loadCommands: _loadCommands,
     textController: _composerText,
     focusNode: composerFocus,
     onTalk: _talk == null ? null : _startTalk,
@@ -1431,7 +1459,12 @@ class _ChatViewPageState extends State<ChatViewPage>
     }
     // What the user sent stays at the bottom until the transcript shows
     // it; while frozen above that entry, the bubble stands in for it.
-    searchThread(items, shownCount, _toolActivity);
+    for (final o in allOutgoing) {
+      if (o.confirmedId case final id? when o.text.trimLeft().startsWith('!')) {
+        _sentShell.add(id);
+      }
+    }
+    searchThread(items, shownCount, _toolActivity, shown: _sentShell);
     final shownIds = {for (final item in items.take(shownCount)) item.id};
     final outgoing = [
       for (final o in allOutgoing)
@@ -1528,6 +1561,7 @@ class _ChatViewPageState extends State<ChatViewPage>
       for (final entry in ChatToolActivity.arrange(
         items.sublist(0, shownCount),
         _toolActivity,
+        shown: _sentShell,
       ).reversed)
         switch (entry) {
           ChatItemEntry(:final item) => _ThreadRow(
@@ -1713,7 +1747,11 @@ class _ChatViewPageState extends State<ChatViewPage>
       ChatUserMessage() => ChatUserBubble(key: key, item: item),
       ChatAgentMessage() => ChatAgentMessageCard(key: key, item: item),
       ChatTaskNotice() => ChatTaskNoticeRow(key: key, item: item),
-      ChatShellCommand() => ChatShellCommandCard(key: key, item: item),
+      ChatShellCommand() => ChatShellCommandCard(
+        key: key,
+        item: item,
+        initiallyExpanded: _sentShell.contains(item.id),
+      ),
       ChatAssistantText() => ChatAssistantBubble(key: key, item: item),
       ChatThinking() => ChatThinkingRow(key: key, item: item),
       ChatToolCall() => ChatToolCard(key: key, item: item),

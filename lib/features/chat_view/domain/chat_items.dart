@@ -22,6 +22,8 @@ class ChatUserMessage extends ChatItem {
     this.isCommand = false,
     this.pasted = const [],
     this.truncated = false,
+    this.commandStdout,
+    this.commandStderr,
   });
 
   final String text;
@@ -36,6 +38,35 @@ class ChatUserMessage extends ChatItem {
 
   /// Blocks the user pasted (`<pasted_content>`), shown collapsed.
   final List<String> pasted;
+
+  /// A slash command's output, once the next line brings it (CON-125).
+  final String? commandStdout;
+  final String? commandStderr;
+
+  bool get hasCommandOutput => commandStdout != null || commandStderr != null;
+
+  /// What the command printed, stdout then stderr; empty when nothing.
+  String get commandOutput => [
+    if (commandStdout?.isNotEmpty ?? false) commandStdout!,
+    if (commandStderr?.isNotEmpty ?? false) commandStderr!,
+  ].join('\n');
+
+  /// Only an error was printed.
+  bool get commandFailed =>
+      (commandStderr?.isNotEmpty ?? false) && (commandStdout?.isEmpty ?? true);
+
+  ChatUserMessage withCommandOutput(String stdout, String stderr) =>
+      ChatUserMessage(
+        id,
+        text: text,
+        imageCount: imageCount,
+        timestamp: timestamp,
+        isCommand: isCommand,
+        pasted: pasted,
+        truncated: truncated,
+        commandStdout: stdout,
+        commandStderr: stderr,
+      );
 }
 
 /// A message from another agent, not from the user: a teammate
@@ -281,6 +312,17 @@ class ChatItemBuilder {
           // Session titles from older Claude Code versions; not a message.
           continue;
         case TranscriptEntryType.system:
+          if (entry.subtype == 'local_command' && entry.text != null) {
+            // Newer Claude Code writes a slash command and its output as
+            // system lines.
+            _addParts(
+              key,
+              ChatUserInput.parse(entry.text!),
+              entry.timestamp,
+              items,
+            );
+            continue;
+          }
           final notice = _systemNotice(key, entry);
           if (notice != null) {
             items.add(notice);
@@ -414,7 +456,36 @@ class ChatItemBuilder {
       );
       return;
     }
-    final parts = ChatUserInput.parse(raw);
+    final imagesLeft = _addParts(
+      key,
+      ChatUserInput.parse(raw),
+      entry.timestamp,
+      items,
+      images: images,
+      truncated: truncated,
+    );
+    if (imagesLeft > 0) {
+      items.add(
+        ChatUserMessage(
+          key,
+          text: '',
+          imageCount: imagesLeft,
+          timestamp: entry.timestamp,
+        ),
+      );
+    }
+  }
+
+  /// Adds the items of one line's [parts]; returns the images no prompt
+  /// took.
+  static int _addParts(
+    String key,
+    List<UserInputPart> parts,
+    DateTime? timestamp,
+    List<ChatItem> items, {
+    int images = 0,
+    bool truncated = false,
+  }) {
     var imagesLeft = images;
     for (var k = 0; k < parts.length; k++) {
       final id = parts.length == 1 ? key : '$key#u$k';
@@ -426,7 +497,7 @@ class ChatItemBuilder {
               text: text,
               pasted: pasted,
               imageCount: imagesLeft,
-              timestamp: entry.timestamp,
+              timestamp: timestamp,
               truncated: truncated,
             ),
           );
@@ -437,12 +508,12 @@ class ChatItemBuilder {
               id,
               text: command,
               isCommand: true,
-              timestamp: entry.timestamp,
+              timestamp: timestamp,
             ),
           );
         case ShellInputPart(:final command):
           items.add(
-            ChatShellCommand(id, command: command, timestamp: entry.timestamp),
+            ChatShellCommand(id, command: command, timestamp: timestamp),
           );
         case ShellOutputPart(:final stdout, :final stderr):
           final index = items.lastIndexWhere(
@@ -469,23 +540,24 @@ class ChatItemBuilder {
               body: body,
               idle: idle,
               session: session,
-              timestamp: entry.timestamp,
+              timestamp: timestamp,
             ),
           );
         case TaskPart(:final summary, :final status):
           items.add(ChatTaskNotice(id, summary: summary, status: status));
+        case SlashOutputPart(:final stdout, :final stderr):
+          // Under the command it answers: the latest user row, when that
+          // is a slash command still without output.
+          final index = items.lastIndexWhere((item) => item is ChatUserMessage);
+          if (index != -1) {
+            final command = items[index] as ChatUserMessage;
+            if (command.isCommand && !command.hasCommandOutput) {
+              items[index] = command.withCommandOutput(stdout, stderr);
+            }
+          }
       }
     }
-    if (imagesLeft > 0) {
-      items.add(
-        ChatUserMessage(
-          key,
-          text: '',
-          imageCount: imagesLeft,
-          timestamp: entry.timestamp,
-        ),
-      );
-    }
+    return imagesLeft;
   }
 
   static void _addSidechain(
