@@ -86,6 +86,10 @@ class ProjectLayoutController extends ChangeNotifier {
 
   /// A machine answered `sheprd-view` (with a view or without).
   bool _viewAnswered = false;
+
+  /// Machines whose view.json is there but unreadable (`found: true,
+  /// error`), by saved machine id: its name and why.
+  final Map<String, (String, String)> _viewErrors = {};
   final Map<String, _PendingMark> _pending = {};
 
   /// Layout edits sent to sheprd and not confirmed yet, in sending order.
@@ -125,10 +129,23 @@ class ProjectLayoutController extends ChangeNotifier {
   bool get mirroring => sheprdSync && _merged != null;
 
   /// Synced, a machine answered, and none shares sheprd's view: what to
-  /// tell the user (sheprd writes it only with `share_view = true`).
-  String? get sheprdNotSharing => sheprdSync && _merged == null && _viewAnswered
-      ? sheprdNotSharingText
-      : null;
+  /// tell the user. A machine whose view.json is there but unreadable
+  /// says why (CON-126); else sheprd writes none without `share_view =
+  /// true`.
+  String? get sheprdNotSharing {
+    if (!sheprdSync || _merged != null || !_viewAnswered) return null;
+    if (_viewErrors.isNotEmpty) {
+      final (machine, error) = _viewErrors.values.first;
+      return "sheprd's view on $machine can't be read: $error. Until then "
+          'the app keeps its own projects.';
+    }
+    return sheprdNotSharingText;
+  }
+
+  /// A machine has sheprd's view.json, but it could not be read
+  /// ([sheprdNotSharing] says why).
+  bool get sheprdViewBroken =>
+      sheprdNotSharing != null && _viewErrors.isNotEmpty;
 
   static const sheprdNotSharingText =
       "sheprd isn't sharing its view yet: set share_view = true in sheprd's "
@@ -279,6 +296,14 @@ class ProjectLayoutController extends ChangeNotifier {
   Future<void> setSheprdSync(bool on) async {
     await _setPrefs(prefs.copyWith(sheprdSync: on));
     if (on) await refresh(force: true);
+  }
+
+  /// The app came back to the foreground: while synced, sheprd's view is
+  /// read again now, whatever screen shows (CON-126), so the home screen
+  /// and the widget never start from a view minutes old.
+  Future<void> appResumed() async {
+    if (_disposed || !sheprdSync) return;
+    await refresh(force: true);
   }
 
   // Layout edits: the app's own layout from here on.
@@ -612,22 +637,23 @@ class ProjectLayoutController extends ChangeNotifier {
   /// at most every [refreshEvery] (or now with [force]).
   Future<void> refresh({bool force = false}) async {
     final attention = this.attention;
-    if (attention == null) return;
+    final hosts = viewHosts ?? attention?.monitoredHosts;
+    if (hosts == null) return;
     final now = clock();
     final seen = <String>{};
     final pending = <Future<void>>[];
-    for (final host in attention.monitoredHosts) {
+    for (final host in hosts) {
       final id = baseHostId(host.id);
       if (!seen.add(id)) continue;
-      if (sheprdSync &&
-          attention.companionSupports(host.id, sheprdViewCapability)) {
+      if (sheprdSync && _canSend(host)) {
         final last = _viewFetchedAt[id];
         if ((force || last == null || now.difference(last) >= syncEvery) &&
             !_viewInFlight.contains(id)) {
-          pending.add(_fetchView(attention, host, id));
+          pending.add(_fetchView(host, id));
         }
       }
-      if (!attention.companionSupports(host.id, sheprdSidebarCapability)) {
+      if (attention == null ||
+          !attention.companionSupports(host.id, sheprdSidebarCapability)) {
         continue;
       }
       final last = _fetchedAt[id];
@@ -693,25 +719,21 @@ class ProjectLayoutController extends ChangeNotifier {
 
   // sheprd's view (CON-077).
 
-  Future<void> _fetchView(
-    AgentAttentionController attention,
-    SavedHost host,
-    String id,
-  ) async {
+  Future<void> _fetchView(SavedHost host, String id) async {
     _viewInFlight.add(id);
     _viewFetchedAt[id] = clock();
-    final (runner, :owned) = attention.runnerFor(host);
     try {
-      final result = await runner.run(
-        ConductoreHostAttentionProvider.remoteCommand('sheprd-view'),
-        timeout: const Duration(seconds: 15),
+      applyViewReply(
+        host,
+        await _run(
+          host,
+          ConductoreHostAttentionProvider.remoteCommand('sheprd-view'),
+        ),
       );
-      applyViewReply(host, result.stdout);
     } catch (_) {
       // Unreachable now: the next refresh asks again.
     } finally {
       _viewInFlight.remove(id);
-      if (owned) unawaited(runner.close());
     }
   }
 
@@ -726,7 +748,18 @@ class ProjectLayoutController extends ChangeNotifier {
     }
     final id = baseHostId(host.id);
     final view = SheprdView.fromReply(decoded);
-    if (!_viewAnswered) {
+    final error = view == null && decoded is Map && decoded['found'] == true
+        ? (decoded['error'] is String
+              ? decoded['error'] as String
+              : 'view.json is not one this app reads')
+        : null;
+    final hadError = _viewErrors[id];
+    if (error == null) {
+      _viewErrors.remove(id);
+    } else {
+      _viewErrors[id] = (host.name, error);
+    }
+    if (!_viewAnswered || hadError != _viewErrors[id]) {
       _viewAnswered = true;
       if (view == null && !_disposed) notifyListeners();
     }
@@ -930,6 +963,11 @@ class ProjectLayoutController extends ChangeNotifier {
   /// Runs marks in tests instead of a machine's companion.
   @visibleForTesting
   Future<String> Function(SavedHost host, String command)? sheprdRunner;
+
+  /// Tests set this: the machines asked for sheprd's view, instead of the
+  /// monitored ones.
+  @visibleForTesting
+  List<SavedHost>? viewHosts;
 
   bool _canSend(SavedHost host) =>
       sheprdRunner != null ||

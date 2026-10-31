@@ -219,4 +219,51 @@ void main() {
     expect(controller.leftOutOfActive(entry, row('w44:p1')), isFalse);
     expect(controller.leftOutOfActive(entry, row('wE:p1')), isTrue);
   });
+
+  test("an unreadable view.json says why, not \"isn't sharing\"", () async {
+    final other = ProjectLayoutController(theme: theme, clock: () => now);
+    addTearDown(other.dispose);
+    await other.setSheprdSync(true);
+    other.applyViewReply(
+      dev,
+      '{"ok":true,"found":true,"path":"~/.local/state/sheprd/view.json",'
+      '"error":"view.json: unsupported version 2"}',
+    );
+    expect(other.mirroring, isFalse);
+    expect(other.sheprdViewBroken, isTrue);
+    expect(
+      other.sheprdNotSharing,
+      "sheprd's view on Dev can't be read: view.json: unsupported version 2. "
+      'Until then the app keeps its own projects.',
+    );
+    // Fixed on the machine: the view mirrors, the notice goes.
+    other.applyViewReply(dev, reply);
+    expect(other.mirroring, isTrue);
+    expect(other.sheprdNotSharing, isNull);
+  });
+
+  test("coming back to the foreground reads sheprd's view again at once, "
+      'with no project view on screen', () async {
+    final asked = <String>[];
+    final other = ProjectLayoutController(theme: theme, clock: () => now)
+      ..viewHosts = [dev]
+      ..sheprdRunner = (host, command) async {
+        asked.add(host.name);
+        return reply;
+      };
+    addTearDown(other.dispose);
+    await other.setSheprdSync(true);
+    expect(asked, ['Dev']);
+    expect(other.mirroring, isTrue);
+    // Within the 15 s poll interval: a plain refresh does not ask.
+    await other.refresh();
+    expect(asked, ['Dev']);
+    await other.appResumed();
+    expect(asked, ['Dev', 'Dev']);
+
+    // Off: nothing is read on resume.
+    await other.setSheprdSync(false);
+    await other.appResumed();
+    expect(asked, ['Dev', 'Dev']);
+  });
 }

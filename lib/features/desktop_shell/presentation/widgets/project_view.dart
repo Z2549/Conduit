@@ -282,7 +282,9 @@ class _ViewMenu extends StatelessWidget {
 String sheprdSyncStatus(ProjectLayoutController controller) {
   final view = controller.sheprdView;
   if (view == null) {
-    return controller.sheprdNotSharing != null
+    return controller.sheprdViewBroken
+        ? "Sync with sheprd: sheprd's view can't be read"
+        : controller.sheprdNotSharing != null
         ? "Sync with sheprd: sheprd isn't sharing its view yet"
         : 'Sync with sheprd: waiting for its view';
   }

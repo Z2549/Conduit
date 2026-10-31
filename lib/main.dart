@@ -351,10 +351,14 @@ void main() {
   appTaskStartEnvironment = taskStartEnvironment(agentAttention);
   // The project view (CON-065): its prefs sync with the app settings; the
   // machines' sidebar.toml is read when a project view shows.
-  ProjectLayoutController.instance = ProjectLayoutController(
-    theme: themeController,
-    attention: agentAttention,
-  );
+  final projectLayout = ProjectLayoutController.instance =
+      ProjectLayoutController(
+        theme: themeController,
+        attention: agentAttention,
+      );
+  // sheprd's view is read again on every return to the foreground, not
+  // only while a project view polls it (CON-126).
+  AppLifecycleListener(onResume: () => unawaited(projectLayout.appResumed()));
   // Crash reports never carry Claude account names (cswap aliases, masked
   // emails).
   addTelemetryTerms(() => usage.summary.accountTerms);
