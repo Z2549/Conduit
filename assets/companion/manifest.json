@@ -2,7 +2,7 @@
   "version": "1.9.0",
   "archive": "companion.tar.gz",
   "files": {
-    "README.md": "28192c8e836a5c14a4b1f7063a889d4a85e9a2e4f78781bf48812fca355805d6",
+    "README.md": "fb88e7c8d0c0a98205da459c9ca29bdc2f63ce05ca7a4c15494a58290e44076e",
     "bin/conductore-hook": "7ebf051b9ca536d8bc93903fd2b783a2072d5d0075456b9e17a2d751b9886cc3",
     "bin/conductore-hostd": "ce811efd5a8cad5ee09df0adbc5b14d4613ca88d7815ffebe4e0ef72117c36f5",
     "bin/conductore-statusline": "99c2e9c9640fe4c44ddd44f04bcd4f0024c4924940de5c89c2b14266ccbdbdca",
@@ -25,7 +25,7 @@
     "lib/approvals.js": "d7a3041be866f1e06f16d6043491af6e99947eeeae7b0fea1ba04038ac00413f",
     "lib/cli.js": "03a6ad7748dbb2688adb7b46a68aedb19b45103b5fe39b0edcae0c601a54106a",
     "lib/client.js": "c8b7cde77679284f0aafe9db46f9947ad531dda2c7fe3f9fd68cfffc9194806d",
-    "lib/commands.js": "4b7e2ee84513e70364177f2b28b0d4ab5c74b1e76972d4beed83440f49e8c21a",
+    "lib/commands.js": "3384e2817318b509b051aebbc2b3463947bcbcd7ca57f264827a594300aed2be",
     "lib/config.js": "8a25e75f9e63128876a48d8b19524e062f7c5d4f9031b57e260fd5b83e46a674",
     "lib/context.js": "f6c6dbe4f03be5d6e23a385117235d3c1a68ea86b6cbcaa7887634a06804d85f",
     "lib/cswap.js": "1463856fada3002225f3f8363efdb4b9de0b389c1dd14d510fddf5e7106b77e3",

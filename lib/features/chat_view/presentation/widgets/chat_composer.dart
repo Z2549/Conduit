@@ -253,11 +253,16 @@ class _ChatComposerState extends State<ChatComposer> {
     _setText('/${text.startsWith('!') ? text.substring(1) : text}');
   }
 
-  /// "Shell command": adds or removes the leading `!`.
+  /// A command as the "/" list writes it (`/name` and maybe arguments),
+  /// not a path like `/tmp/x.sh`.
+  static final _bareCommand = RegExp(r'^/[^\s/]*(\s|$)');
+
+  /// "Shell command": adds or removes the leading `!`. A bare `/name`
+  /// becomes `!name`; anything else (a path) keeps its `/`.
   void _toggleShell() {
     final text = _controller.text;
     if (text.startsWith('!')) return _setText(text.substring(1));
-    _setText('!${text.startsWith('/') ? text.substring(1) : text}');
+    _setText('!${_bareCommand.hasMatch(text) ? text.substring(1) : text}');
   }
 
   void _pickCommand(SlashCommand command) => _setText(command.insertText);

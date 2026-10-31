@@ -356,6 +356,9 @@ void main() {
         same(SlashCommandList.claudeBuiltins),
       );
       expect(host.commandCalls, 1);
+      // A failure is not asked again right away.
+      await controller.slashCommands(claude: true, listed: true);
+      expect(host.commandCalls, 1);
       expect(
         await controller.slashCommands(claude: true, listed: false),
         same(SlashCommandList.claudeBuiltins),
@@ -454,6 +457,19 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('chat-commands-shell')));
       await tester.pumpAndSettle();
       expect(text.text, 'git status');
+
+      // A path keeps its slash; a picked command loses it.
+      for (final (before, after) in [
+        ('/tmp/x/cleanup.sh', '!/tmp/x/cleanup.sh'),
+        ('/deploy prod', '!deploy prod'),
+      ]) {
+        text.text = before;
+        await tester.tap(menu);
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('chat-commands-shell')));
+        await tester.pumpAndSettle();
+        expect(text.text, after);
+      }
 
       text.text = '';
       await tester.tap(menu);

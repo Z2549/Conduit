@@ -543,7 +543,9 @@ issues) or stdin; at most 100 000 characters.
 
 The slash commands the agent's prompt takes, for the phone's "/" list
 (capability `commands`). Read on demand from disk, nothing polled or kept;
-only the first 4 KB of at most 300 files are read.
+only the first 4 KB of regular files are read (a FIFO or device is
+skipped), at most 300 files and folders and 1.5 s in all, and nothing whose
+real path leaves its `commands/` or `skills/` folder.
 
 ```json
 {"sessionId":"0f2c…","kind":"claude",
@@ -556,7 +558,7 @@ only the first 4 KB of at most 300 files are read.
 * `builtin`: Claude Code's own commands, a fixed list; `menu: true` opens
   a picker in the terminal when given no argument.
 * `custom`: `*.md` under `<cwd>/.claude/commands` (`scope: project`) and
-  `~/.claude/commands` (`personal`); a file in a subfolder is `dir:name`.
+  `~/.claude/commands` (`personal`); a file in a subfolder is `dir:name`, and `<dir>/SKILL.md` is `<dir>`.
   The description is the front matter's `description`, else the first
   text line; `argumentHint` from `argument-hint`.
 * `skills`: `<cwd>/.claude/skills/*/SKILL.md` and `~/.claude/skills/*/SKILL.md`,

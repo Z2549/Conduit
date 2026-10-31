@@ -716,10 +716,14 @@ class ChatViewController extends ChangeNotifier {
   }
 
   SlashCommandList? _commands;
-  DateTime? _commandsAt;
+  DateTime? _commandsUntil;
 
   /// How long a listed set of commands is reused before asking again.
   static const commandsTtl = Duration(minutes: 5);
+
+  /// How long a failed ask (an older companion, a slow disk) is not
+  /// repeated: each "/" opening would otherwise run the command again.
+  static const commandsFailureTtl = Duration(minutes: 1);
 
   /// The composer's "/" list (CON-125). [claude]: the agent is Claude
   /// Code (other agents get none). [listed]: the companion has
@@ -732,17 +736,20 @@ class ChatViewController extends ChangeNotifier {
     if (!claude) return SlashCommandList.empty;
     if (!listed) return SlashCommandList.claudeBuiltins;
     final cached = _commands;
-    final at = _commandsAt;
-    if (cached != null && at != null && _clock().difference(at) < commandsTtl) {
+    final until = _commandsUntil;
+    if (cached != null && until != null && _clock().isBefore(until)) {
       return cached;
     }
     try {
       final list = await _client.commands(sessionId);
       _commands = list;
-      _commandsAt = _clock();
+      _commandsUntil = _clock().add(commandsTtl);
       return list;
     } catch (_) {
-      return cached ?? SlashCommandList.claudeBuiltins;
+      final fallback = cached ?? SlashCommandList.claudeBuiltins;
+      _commands = fallback;
+      _commandsUntil = _clock().add(commandsFailureTtl);
+      return fallback;
     }
   }
 

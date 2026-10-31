@@ -11,7 +11,9 @@
 //            (front matter `name` and `description`)
 //
 // Read on demand, nothing polled or kept: only the first few KB of each
-// file are read, at most MAX_FILES files and MAX_DEPTH folders deep. A
+// regular file are read, at most MAX_FILES files and folders, MAX_DEPTH
+// folders deep, for at most TIME_LIMIT_MS; nothing whose real path leaves
+// its commands/ or skills/ folder is read. A
 // project entry wins over a personal one of the same name, like in Claude
 // Code. Agents other than Claude Code get empty lists.
 
@@ -23,6 +25,8 @@ const HEAD_BYTES = 4096
 const MAX_FILES = 300
 const MAX_DEPTH = 3
 const DESCRIPTION_MAX = 140
+// The whole scan gives up after this long (a slow or odd file system).
+const TIME_LIMIT_MS = 1500
 
 // Claude Code's built-in commands (2.1.30x). `menu`: opens a picker or a
 // screen in the terminal when given no arguments.
@@ -55,10 +59,13 @@ const BUILTIN = [
   ['usage', 'Show plan usage limits', true]
 ].map(([name, description, menu]) => menu ? { name, description, menu: true } : { name, description })
 
+// The first HEAD_BYTES of a regular file, else null. Non-blocking open and
+// fstat: a FIFO or device planted as a .md file is skipped, never waited on.
 function readHead (file) {
   let fd
   try {
-    fd = fs.openSync(file, 'r')
+    fd = fs.openSync(file, fs.constants.O_RDONLY | (fs.constants.O_NONBLOCK || 0))
+    if (!fs.fstatSync(fd).isFile()) return null
     const buf = Buffer.alloc(HEAD_BYTES)
     const n = fs.readSync(fd, buf, 0, HEAD_BYTES, 0)
     return buf.subarray(0, n).toString('utf8')
@@ -112,21 +119,44 @@ function firstLine (body) {
 
 const validName = name => /^[\w.:-]+$/.test(name)
 
+// The real path of `file` when it stays under `root` (a real path), else
+// null: a symlink pointing outside the folder is not followed.
+function inside (file, root) {
+  let real
+  try { real = fs.realpathSync(file) } catch { return null }
+  return real === root || real.startsWith(root + path.sep) ? real : null
+}
+
+function realRoot (dir) {
+  try { return fs.realpathSync(dir) } catch { return null }
+}
+
+const spent = budget => budget.left <= 0 || Date.now() > budget.deadline
+
 // *.md files under dir as [relative path without .md, file].
-function markdownFiles (dir, budget, prefix = [], depth = 0) {
+// Every entry (file or folder) counts against the budget; entries whose
+// real path leaves `root` are skipped.
+function markdownFiles (dir, root, budget, prefix = [], depth = 0) {
   const out = []
+  if (spent(budget)) return out
+  budget.left -= 1
   let entries
   try { entries = fs.readdirSync(dir, { withFileTypes: true }) } catch { return out }
   entries.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
   for (const e of entries) {
-    if (budget.left <= 0) break
+    if (spent(budget)) break
     if (e.name.startsWith('.')) continue
-    const file = path.join(dir, e.name)
-    if (e.isDirectory()) {
-      if (depth < MAX_DEPTH) out.push(...markdownFiles(file, budget, [...prefix, e.name], depth + 1))
-    } else if ((e.isFile() || e.isSymbolicLink()) && e.name.endsWith('.md')) {
+    const real = inside(path.join(dir, e.name), root)
+    if (!real) continue
+    let st
+    try { st = fs.statSync(real) } catch { continue }
+    if (st.isDirectory()) {
+      if (depth < MAX_DEPTH) out.push(...markdownFiles(real, root, budget, [...prefix, e.name], depth + 1))
+    } else if (st.isFile() && e.name.endsWith('.md')) {
       budget.left -= 1
-      out.push([[...prefix, e.name.slice(0, -3)], file])
+      // A skill-shaped folder in commands/ (<dir>/SKILL.md) is `<dir>`.
+      const name = e.name === 'SKILL.md' && prefix.length ? prefix : [...prefix, e.name.slice(0, -3)]
+      out.push([name, real])
     }
   }
   return out
@@ -134,7 +164,9 @@ function markdownFiles (dir, budget, prefix = [], depth = 0) {
 
 function customCommands (dir, scope, budget) {
   const out = []
-  for (const [parts, file] of markdownFiles(dir, budget)) {
+  const root = realRoot(dir)
+  if (!root) return out
+  for (const [parts, file] of markdownFiles(root, root, budget)) {
     const name = parts.join(':')
     if (!validName(name)) continue
     const head = readHead(file)
@@ -149,14 +181,18 @@ function customCommands (dir, scope, budget) {
 
 function skills (dir, scope, budget) {
   const out = []
+  const root = realRoot(dir)
+  if (!root) return out
   let entries
-  try { entries = fs.readdirSync(dir, { withFileTypes: true }) } catch { return out }
+  try { entries = fs.readdirSync(root, { withFileTypes: true }) } catch { return out }
   entries.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
   for (const e of entries) {
-    if (budget.left <= 0) break
+    if (spent(budget)) break
     if (e.name.startsWith('.') || !(e.isDirectory() || e.isSymbolicLink())) continue
     budget.left -= 1
-    const head = readHead(path.join(dir, e.name, 'SKILL.md'))
+    const file = inside(path.join(root, e.name, 'SKILL.md'), root)
+    if (!file) continue
+    const head = readHead(file)
     if (head === null) continue
     const { fields } = frontMatter(head)
     const name = fields.name || e.name
@@ -176,7 +212,7 @@ function merge (project, personal) {
 function list (agent, { home = os.homedir() } = {}) {
   const kind = (agent && agent.kind) || 'claude'
   if (kind !== 'claude') return { kind, builtin: [], custom: [], skills: [] }
-  const budget = { left: MAX_FILES }
+  const budget = { left: MAX_FILES, deadline: Date.now() + TIME_LIMIT_MS }
   const cwd = agent && typeof agent.cwd === 'string' && path.isAbsolute(agent.cwd) ? agent.cwd : null
   const personalDir = path.join(home, '.claude')
   // A session started in the home folder: its "project" folder is the
