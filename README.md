@@ -36,8 +36,17 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 ## What's new
 
-Previews 30 to 38 (companion 1.8.4 bundled):
+Previews 30 to 39 (companion 1.9.0 bundled):
 
+- **Preview 39**: Chat View can run commands. Type `/` to pick from Claude's
+  built-in commands, your own commands and skills (the machine's and the
+  project's); the `/` menu in the message field also has **Shell command
+  (!)**. What a slash command prints (`/context`, `/cost`, `/model` …) now
+  shows under it, and a `!` command sent from the phone opens its result.
+  With **Sync with sheprd** on, Projects mode shows the same projects as
+  active as sheprd does (it counted recently changed agents too, so it
+  showed many more), finds the laptop whatever you named it, refreshes when
+  you come back to the app and names a view it can't read.
 - **Preview 38**: when a machine's host key changes, the machine now says
   so on the home page ("Host key changed on …") with the trusted and the
   presented fingerprint, instead of status and sync silently stopping.
