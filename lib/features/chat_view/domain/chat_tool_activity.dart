@@ -104,17 +104,22 @@ abstract final class ChatToolActivity {
   /// - [ToolActivity.hidden]: no tool rows, except failed ones (errors
   ///   always show). Approvals are not thread items and always show;
   ///   questions, plans and notices are never tool rows.
+  ///
+  /// Items in [shown] are never folded or hidden (a `!` command just sent
+  /// from the phone, CON-125): they show on their own row, between runs.
   static List<ChatThreadEntry> arrange(
     List<ChatItem> items,
-    ToolActivity mode,
-  ) {
+    ToolActivity mode, {
+    Set<String> shown = const {},
+  }) {
+    bool isTool(ChatItem item) => _isTool(item) && !shown.contains(item.id);
     switch (mode) {
       case ToolActivity.all:
         return [for (final item in items) ChatItemEntry(item)];
       case ToolActivity.hidden:
         return [
           for (final item in items)
-            if (!_isTool(item) || _failed(item)) ChatItemEntry(item),
+            if (!isTool(item) || _failed(item)) ChatItemEntry(item),
         ];
       case ToolActivity.collapsed:
         final entries = <ChatThreadEntry>[];
@@ -125,7 +130,7 @@ abstract final class ChatToolActivity {
           while (end > 0 && run[end - 1] is ChatThinking) {
             end -= 1;
           }
-          final tools = run.take(end).where(_isTool).length;
+          final tools = run.take(end).where(isTool).length;
           if (tools >= 2) {
             entries.add(ChatToolGroup(run.sublist(0, end)));
             entries.addAll(run.skip(end).map(ChatItemEntry.new));
@@ -136,7 +141,7 @@ abstract final class ChatToolActivity {
         }
 
         for (final item in items) {
-          if (_isTool(item) || (item is ChatThinking && run.isNotEmpty)) {
+          if (isTool(item) || (item is ChatThinking && run.isNotEmpty)) {
             run.add(item);
           } else {
             flush();

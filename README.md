@@ -147,6 +147,13 @@ Older previews, one line each (full notes are on the
     The header has Review (when there are changes), Terminal and ⋮.
   - Long-press a message to copy, share, quote it or send it to another
     agent; find in the conversation from ⋮ or with Ctrl+F (Cmd+F).
+  - **Commands**: type `/` and the matching Claude Code commands, your
+    custom commands and skills show above the field; pick one to fill
+    it in. The `/` inside the field opens Commands and **Shell command
+    (!)**, which adds or removes a leading `!`. A slash command's output
+    (`/context`, `/cost`, `/model`) shows under it, and a `!` command you
+    sent shows its result open, outside the collapsed tool group. Older
+    companions list Claude Code's own commands only.
 - **Voice** (Android and iPhone): read Claude's final answer aloud, and
   hands-free **Talk mode** that listens, sends after a pause, reads the
   answer and answers approvals by voice. Dictation keeps listening across

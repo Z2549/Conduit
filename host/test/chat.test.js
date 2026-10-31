@@ -222,6 +222,63 @@ test('send --text-b64 and stdin; multiline goes through a bracketed paste buffer
   assert.deepEqual(typed()[0].args, ['-S', SOCK, 'send-keys', '-t', '%3', '-l', '--', 'from stdin'])
 })
 
+test('a /command or !command with trailing line breaks is typed, never pasted (CON-125)', async () => {
+  for (const text of ['/compact\n', '!ls -la \n\n', '/context\r\n']) {
+    resetCalls()
+    const r = await cli(['send', 'tm', '--text-b64', Buffer.from(text).toString('base64')])
+    assert.equal(r.code, 0)
+    const want = text.replace(/\s+$/, '')
+    assert.equal(r.json.chars, want.length)
+    assert.deepEqual(typed().map(c => c.args), [
+      ['-S', SOCK, 'send-keys', '-t', '%3', '-l', '--', want],
+      ['-S', SOCK, 'send-keys', '-t', '%3', 'Enter']
+    ])
+  }
+  // A real multi-line message that starts with / is still pasted whole.
+  resetCalls()
+  await cli(['send', 'tm', '--text-b64', Buffer.from('/review\nfocus on auth').toString('base64')])
+  assert.equal(typed()[0].args[2], 'load-buffer')
+})
+
+test('commands lists built-ins, custom commands and skills from the home and project folders', async () => {
+  const h = tempDir('cnd-cmd-home-')
+  const proj = tempDir('cnd-cmd-proj-')
+  const w = (f, t) => { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, t) }
+  w(path.join(h, '.claude/commands/deploy.md'), '---\ndescription: Ship it\nargument-hint: <env>\n---\nDeploy $ARGUMENTS')
+  w(path.join(h, '.claude/commands/frontend/component.md'), '# Make a component\nBody')
+  w(path.join(h, '.claude/commands/shared.md'), 'personal one')
+  w(path.join(proj, '.claude/commands/shared.md'), 'project one')
+  w(path.join(h, '.claude/skills/talk/SKILL.md'), '---\nname: talkbawt\ndescription: >\n  Hand work over\n  through a link.\n---\n# x')
+  w(path.join(proj, '.claude/skills/lint/SKILL.md'), '---\nname: "lint"\ndescription: \'Lint the repo\'\n---\n')
+  w(path.join(h, '.claude/skills/broken/README.md'), 'no SKILL.md')
+  const states = path.join(home, 'state.json')
+  const saved = fs.readFileSync(states, 'utf8')
+  const st = JSON.parse(saved)
+  st.agents.push(agent('cmd', { cwd: proj }), agent('cdx', { cwd: proj, kind: 'codex' }))
+  fs.writeFileSync(states, JSON.stringify(st))
+  try {
+    const r = await cli(['commands', 'cmd'], { extraEnv: { HOME: h } })
+    assert.equal(r.code, 0)
+    assert.equal(r.json.kind, 'claude')
+    assert.ok(r.json.builtin.some(c => c.name === 'compact' && c.description))
+    assert.deepEqual(r.json.custom, [
+      { name: 'shared', description: 'project one', scope: 'project' },
+      { name: 'deploy', description: 'Ship it', scope: 'personal', argumentHint: '<env>' },
+      { name: 'frontend:component', description: 'Make a component', scope: 'personal' }
+    ])
+    assert.deepEqual(r.json.skills, [
+      { name: 'lint', description: 'Lint the repo', scope: 'project' },
+      { name: 'talkbawt', description: 'Hand work over through a link.', scope: 'personal' }
+    ])
+    const c = await cli(['commands', 'cdx'], { extraEnv: { HOME: h } })
+    assert.deepEqual(c.json, { sessionId: 'cdx', kind: 'codex', builtin: [], custom: [], skills: [] })
+    const u = await cli(['commands', 'nope'])
+    assert.equal(u.code, 1)
+  } finally {
+    fs.writeFileSync(states, saved)
+  }
+})
+
 test('send --no-enter types without submitting', async () => {
   resetCalls()
   const r = await cli(['send', 'tm', '--text', '2', '--no-enter'])

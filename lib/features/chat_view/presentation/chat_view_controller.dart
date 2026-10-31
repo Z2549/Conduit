@@ -11,6 +11,7 @@ import 'package:conduit/features/chat_view/domain/chat_items.dart';
 import 'package:conduit/features/chat_view/domain/chat_outgoing.dart';
 import 'package:conduit/features/chat_view/domain/chat_transcript.dart';
 import 'package:conduit/features/chat_view/domain/neutral_chat_window.dart';
+import 'package:conduit/features/chat_view/domain/slash_commands.dart';
 import 'package:conduit/features/voice/domain/speech_summary.dart';
 import 'package:flutter/foundation.dart';
 
@@ -712,6 +713,44 @@ class ChatViewController extends ChangeNotifier {
       if (!_disposed) notifyListeners();
     }
     unawaited(refresh());
+  }
+
+  SlashCommandList? _commands;
+  DateTime? _commandsUntil;
+
+  /// How long a listed set of commands is reused before asking again.
+  static const commandsTtl = Duration(minutes: 5);
+
+  /// How long a failed ask (an older companion, a slow disk) is not
+  /// repeated: each "/" opening would otherwise run the command again.
+  static const commandsFailureTtl = Duration(minutes: 1);
+
+  /// The composer's "/" list (CON-125). [claude]: the agent is Claude
+  /// Code (other agents get none). [listed]: the companion has
+  /// `commands`; without it, or when asking fails, Claude Code's
+  /// built-ins. Never throws.
+  Future<SlashCommandList> slashCommands({
+    required bool claude,
+    required bool listed,
+  }) async {
+    if (!claude) return SlashCommandList.empty;
+    if (!listed) return SlashCommandList.claudeBuiltins;
+    final cached = _commands;
+    final until = _commandsUntil;
+    if (cached != null && until != null && _clock().isBefore(until)) {
+      return cached;
+    }
+    try {
+      final list = await _client.commands(sessionId);
+      _commands = list;
+      _commandsUntil = _clock().add(commandsTtl);
+      return list;
+    } catch (_) {
+      final fallback = cached ?? SlashCommandList.claudeBuiltins;
+      _commands = fallback;
+      _commandsUntil = _clock().add(commandsFailureTtl);
+      return fallback;
+    }
   }
 
   /// A short spoken summary of [text] by Claude on this chat's machine,

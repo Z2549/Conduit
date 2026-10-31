@@ -6,6 +6,7 @@ import 'package:conduit/features/agent_attention/data/conductore_host_attention_
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/chat_view/domain/chat_transcript.dart';
+import 'package:conduit/features/chat_view/domain/slash_commands.dart';
 import 'package:conduit/features/voice/domain/speech_summary.dart';
 
 /// Why the chat view cannot run on a host.
@@ -222,6 +223,30 @@ class ConductoreChatClient {
             timeout: terminalAnswerTimeout,
           );
     _check(result);
+  }
+
+  static String commandsCommand(String sessionId) =>
+      ConductoreHostAttentionProvider.remoteCommand(
+        'commands ${shellQuoteArgument(sessionId)}',
+      );
+
+  /// The slash commands, custom commands and skills the session's agent
+  /// takes (capability `commands`, CON-125). A companion without the
+  /// command throws [ChatUnsupported] (outdated).
+  Future<SlashCommandList> commands(String sessionId) async {
+    final result = await _runner.run(
+      commandsCommand(sessionId),
+      timeout: _timeout,
+    );
+    _check(result);
+    try {
+      return SlashCommandList.parse(result.stdout);
+    } on FormatException {
+      throw const AppFailure(
+        'The Conductore companion returned its commands in an unexpected '
+        'shape.',
+      );
+    }
   }
 
   Future<void> interrupt(String sessionId) async {

@@ -4,6 +4,7 @@ import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
+import 'package:conduit/features/chat_view/domain/slash_commands.dart';
 import 'package:conduit/features/terminal/data/keyboard_image_file.dart';
 import 'package:conduit/features/terminal/domain/prompt_image.dart';
 import 'package:conduit/features/voice/domain/voice_commands.dart';
@@ -17,6 +18,11 @@ import 'package:flutter/material.dart';
 /// through the attach icon in the field, "Paste image" in its menu, and a
 /// keyboard's image insertion (its clipboard panel, GIFs). Once the
 /// message runs past one line a small × clears it, with Undo.
+///
+/// Commands (CON-125): the "/" at the start of the field opens a menu with
+/// Commands (starts a `/`) and Shell command (toggles a leading `!`).
+/// While the field holds `/` and a name being typed, the matching
+/// commands show above the row; picking one puts `/name ` in the field.
 class ChatComposer extends StatefulWidget {
   const ChatComposer({
     required this.onSend,
@@ -36,6 +42,7 @@ class ChatComposer extends StatefulWidget {
     this.onAttachImage,
     this.attachingImage = false,
     this.onInsertContent,
+    this.loadCommands,
     super.key,
   });
 
@@ -93,6 +100,10 @@ class ChatComposer extends StatefulWidget {
   /// leaves the keyboard's image insertion off.
   final ValueChanged<KeyboardInsertedContent>? onInsertContent;
 
+  /// The "/" list's commands, asked once the list first shows; null
+  /// hides the command menu and the list.
+  final Future<SlashCommandList> Function()? loadCommands;
+
   @override
   State<ChatComposer> createState() => _ChatComposerState();
 }
@@ -103,6 +114,9 @@ class _ChatComposerState extends State<ChatComposer> {
   late final _focusNode = widget.focusNode ?? FocusNode();
   AppLifecycleListener? _lifecycle;
   bool _clipboardHasImage = false;
+  SlashCommandList? _commands;
+  bool _loadingCommands = false;
+  bool _listOpen = false;
 
   @override
   void initState() {
@@ -199,6 +213,182 @@ class _ChatComposerState extends State<ChatComposer> {
             ),
           ),
       ],
+    );
+  }
+
+  /// Asks for the commands each time the list opens (the controller
+  /// keeps them a few minutes); the last list shows meanwhile.
+  void _loadCommands() {
+    final load = widget.loadCommands;
+    if (load == null || _loadingCommands) return;
+    _loadingCommands = true;
+    unawaited(
+      load()
+          .then(
+            (list) {
+              if (mounted) setState(() => _commands = list);
+            },
+            onError: (Object _) {
+              if (mounted && _commands == null) {
+                setState(() => _commands = SlashCommandList.empty);
+              }
+            },
+          )
+          .whenComplete(() => _loadingCommands = false),
+    );
+  }
+
+  void _setText(String text) {
+    _controller.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+    _focusNode.requestFocus();
+  }
+
+  /// "Commands": the field starts with `/` (a leading `!` becomes it).
+  void _startCommand() {
+    final text = _controller.text;
+    if (text.startsWith('/')) return _focusNode.requestFocus();
+    _setText('/${text.startsWith('!') ? text.substring(1) : text}');
+  }
+
+  /// A command as the "/" list writes it (`/name` and maybe arguments),
+  /// not a path like `/tmp/x.sh`.
+  static final _bareCommand = RegExp(r'^/[^\s/]*(\s|$)');
+
+  /// "Shell command": adds or removes the leading `!`. A bare `/name`
+  /// becomes `!name`; anything else (a path) keeps its `/`.
+  void _toggleShell() {
+    final text = _controller.text;
+    if (text.startsWith('!')) return _setText(text.substring(1));
+    _setText('!${_bareCommand.hasMatch(text) ? text.substring(1) : text}');
+  }
+
+  void _pickCommand(SlashCommand command) => _setText(command.insertText);
+
+  Widget _commandMenu(ThemeData theme) {
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) {
+        final shell = _controller.text.startsWith('!');
+        return PopupMenuButton<bool>(
+          key: const ValueKey('chat-commands-menu'),
+          tooltip: 'Commands',
+          enabled: widget.enabled,
+          onSelected: (shellCommand) =>
+              shellCommand ? _toggleShell() : _startCommand(),
+          icon: Text(
+            shell ? '!' : '/',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.w700,
+              color: shell
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              key: ValueKey('chat-commands-slash'),
+              value: false,
+              child: ListTile(
+                leading: Icon(Icons.keyboard_command_key_rounded),
+                title: Text('Commands'),
+                subtitle: Text('Type / and pick a command or skill'),
+              ),
+            ),
+            CheckedPopupMenuItem(
+              key: const ValueKey('chat-commands-shell'),
+              value: true,
+              checked: shell,
+              child: const Text('Shell command (!)'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// The commands matching the `/` being typed, above the input row.
+  Widget _suggestions(ThemeData theme) {
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) {
+        final query = SlashCommandList.queryOf(_controller.text);
+        final open =
+            widget.loadCommands != null && widget.enabled && query != null;
+        if (open && !_listOpen) _loadCommands();
+        _listOpen = open;
+        if (!open) return const SizedBox.shrink();
+        final commands = _commands;
+        if (commands == null) {
+          return const Padding(
+            padding: EdgeInsets.all(8),
+            child: LinearProgressIndicator(),
+          );
+        }
+        final matches = commands.filter(query);
+        if (matches.isEmpty) return const SizedBox.shrink();
+        final scheme = theme.colorScheme;
+        return ConstrainedBox(
+          key: const ValueKey('chat-command-suggestions'),
+          constraints: const BoxConstraints(maxHeight: 232),
+          child: ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: matches.length,
+            itemBuilder: (context, i) {
+              final command = matches[i];
+              final tag = switch (command.source) {
+                SlashCommandSource.skill => 'skill',
+                SlashCommandSource.custom =>
+                  command.project ? 'project' : 'custom',
+                SlashCommandSource.builtin => command.menu ? 'menu' : null,
+              };
+              return ListTile(
+                key: ValueKey('slash-suggestion-${command.name}'),
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                title: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '/${command.name}',
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (command.argumentHint case final hint?)
+                        TextSpan(
+                          text: ' $hint',
+                          style: TextStyle(color: scheme.onSurfaceVariant),
+                        ),
+                    ],
+                  ),
+                ),
+                subtitle: command.description.isEmpty
+                    ? null
+                    : Text(
+                        command.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                trailing: tag == null
+                    ? null
+                    : Text(
+                        tag,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                onTap: () => _pickCommand(command),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -318,59 +508,67 @@ class _ChatComposerState extends State<ChatComposer> {
       color: theme.colorScheme.surfaceContainer,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(4, 6, 4, 6),
-        child: Row(
-          children: [
-            if (widget.showInterrupt)
-              IconButton(
-                key: const ValueKey('chat-interrupt'),
-                tooltip: 'Interrupt (Esc)',
-                onPressed: _interrupt,
-                icon: Icon(
-                  Icons.stop_circle_outlined,
-                  color: theme.colorScheme.error,
-                ),
-              ),
-            Expanded(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  _field(theme),
-                  Positioned(top: -4, right: -4, child: _clearOverlay(theme)),
-                ],
-              ),
-            ),
-            // The mic stays visible (disabled) while the chat cannot
-            // send, so voice is always where the user expects it.
-            if (widget.dictation != null)
-              DictationButton(
-                controller: widget.dictation!,
-                textController: _controller,
-                focusNode: _focusNode,
-                enabled: widget.enabled,
-                disabledTooltip: _disabledVoiceTooltip,
-                onVoiceCommand: _voiceCommand,
-                onLongPress: widget.onTalk,
-                onMessage: (message) => ScaffoldMessenger.maybeOf(context)
-                  ?..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(content: Text(message))),
-              ),
-            widget.sending
-                ? const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  )
-                : IconButton(
-                    tooltip: 'Send',
-                    onPressed: widget.enabled ? _send : null,
-                    icon: const Icon(Icons.send_rounded),
-                  ),
-          ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [_suggestions(theme), _inputRow(theme)],
         ),
       ),
+    );
+  }
+
+  Widget _inputRow(ThemeData theme) {
+    return Row(
+      children: [
+        if (widget.showInterrupt)
+          IconButton(
+            key: const ValueKey('chat-interrupt'),
+            tooltip: 'Interrupt (Esc)',
+            onPressed: _interrupt,
+            icon: Icon(
+              Icons.stop_circle_outlined,
+              color: theme.colorScheme.error,
+            ),
+          ),
+        Expanded(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              _field(theme),
+              Positioned(top: -4, right: -4, child: _clearOverlay(theme)),
+            ],
+          ),
+        ),
+        // The mic stays visible (disabled) while the chat cannot
+        // send, so voice is always where the user expects it.
+        if (widget.dictation != null)
+          DictationButton(
+            controller: widget.dictation!,
+            textController: _controller,
+            focusNode: _focusNode,
+            enabled: widget.enabled,
+            disabledTooltip: _disabledVoiceTooltip,
+            onVoiceCommand: _voiceCommand,
+            onLongPress: widget.onTalk,
+            onMessage: (message) => ScaffoldMessenger.maybeOf(context)
+              ?..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(message))),
+          ),
+        widget.sending
+            ? const Padding(
+                padding: EdgeInsets.all(12),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              )
+            : IconButton(
+                tooltip: 'Send',
+                onPressed: widget.enabled ? _send : null,
+                icon: const Icon(Icons.send_rounded),
+              ),
+      ],
     );
   }
 
@@ -405,6 +603,13 @@ class _ChatComposerState extends State<ChatComposer> {
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 10,
+        ),
+        // Inside the field too: commands and the shell toggle take no
+        // slot in the row.
+        prefixIcon: widget.loadCommands == null ? null : _commandMenu(theme),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 36,
+          minHeight: 40,
         ),
         // Inside the field: images are always one tap away
         // without taking another slot in the row.

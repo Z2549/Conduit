@@ -134,21 +134,60 @@ class ChatUserBubble extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     if (item.isCommand && item.text.startsWith('/')) {
-      // A slash command: a compact chip, not a prompt bubble.
+      // A slash command: a compact chip, not a prompt bubble, with what
+      // it printed (/context, /cost) under it.
+      final output = item.commandOutput;
       return Align(
         alignment: Alignment.centerRight,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Chip(
-            key: const ValueKey('slash-command-chip'),
-            visualDensity: VisualDensity.compact,
-            avatar: const Icon(Icons.keyboard_command_key_rounded, size: 16),
-            label: ChatHighlightedText(
-              item.text,
-              itemId: item.id,
-              segment: 0,
-              style: theme.textTheme.bodySmall?.copyWith(fontFamily: _mono),
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Chip(
+                key: const ValueKey('slash-command-chip'),
+                visualDensity: VisualDensity.compact,
+                avatar: const Icon(
+                  Icons.keyboard_command_key_rounded,
+                  size: 16,
+                ),
+                label: ChatHighlightedText(
+                  item.text,
+                  itemId: item.id,
+                  segment: 0,
+                  style: theme.textTheme.bodySmall?.copyWith(fontFamily: _mono),
+                ),
+              ),
+              if (output.isNotEmpty)
+                Container(
+                  key: const ValueKey('slash-command-output'),
+                  margin: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.all(8),
+                  constraints: BoxConstraints(
+                    maxHeight: 320,
+                    maxWidth: MediaQuery.sizeOf(context).width * 0.92,
+                  ),
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppTheme.radius),
+                    border: item.commandFailed
+                        ? Border.all(color: scheme.error)
+                        : null,
+                  ),
+                  child: SingleChildScrollView(
+                    child: ChatHighlightedText(
+                      output,
+                      itemId: item.id,
+                      segment: 1 + item.pasted.length,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontFamily: _mono,
+                        color: item.commandFailed ? scheme.error : null,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       );

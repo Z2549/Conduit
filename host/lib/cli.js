@@ -105,6 +105,9 @@ const USAGE = `usage: conductore-hostd <command>
                                   type a prompt into the agent's pane (text
                                   from stdin when neither flag is given)
   interrupt <sessionId>           press Escape in the agent's pane
+  commands <sessionId>            the slash commands the agent takes:
+                                  {builtin, custom, skills}, each
+                                  [{name, description}] (Claude Code only)
   terminal-answer <sessionId> -   answer Claude Code's own dialog in the
                                   agent's pane (CON-096): JSON on stdin
                                   (or --json-b64 <base64>),
@@ -650,6 +653,9 @@ async function send (args) {
   }
   text = text.replace(/\r\n?/g, '\n')
   const enter = !flags['no-enter']
+  // A `/command` or `!shell` line is typed, never pasted: trailing line
+  // breaks would turn it into a bracketed paste (CON-125).
+  if (enter && /^[/!]/.test(text) && !text.replace(/\s+$/, '').includes('\n')) text = text.replace(/\s+$/, '')
   if (!text.length && !enter) return fail('nothing to send')
   if (text.length > paneMod().MAX_TEXT) return fail(`text too long (${text.length} > ${paneMod().MAX_TEXT} characters)`)
   const found = await inputAgent(sessionId)
@@ -660,6 +666,14 @@ async function send (args) {
   const r = adapter.sendPrompt ? await adapter.sendPrompt(found.agent, text, { enter }) : await paneMod().sendText(found.agent, text, { enter })
   if (r.error) return fail(r.error)
   return out({ ok: true, sessionId, via: r.via, paneId: r.paneId, chars: text.length, enter })
+}
+
+async function commandsCmd (args) {
+  const [sessionId] = parseFlags(args).positional
+  if (!sessionId) return fail('usage: commands <sessionId>')
+  const found = await findAgent(sessionId)
+  if (found.error) return fail(found.error)
+  return out({ sessionId, ...require('./commands').list(found.agent) })
 }
 
 async function interrupt (args) {
@@ -1310,6 +1324,7 @@ async function main (argv) {
     case 'transcript': return transcriptCmd(args)
     case 'send': return send(args)
     case 'interrupt': return interrupt(args)
+    case 'commands': return commandsCmd(args)
     case 'terminal-answer': return terminalAnswerCmd(args)
     case 'ports': return portsCmd(args)
     case 'usage': return usageCmd(args)

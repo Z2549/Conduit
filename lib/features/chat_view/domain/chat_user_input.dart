@@ -23,6 +23,16 @@ class SlashCommandPart extends UserInputPart {
   final String command;
 }
 
+/// The output of the preceding slash command (`/context`, `/cost`):
+/// `<local-command-stdout>` / `<local-command-stderr>`, without terminal
+/// colour codes. Empty when the command printed nothing.
+class SlashOutputPart extends UserInputPart {
+  const SlashOutputPart({required this.stdout, required this.stderr});
+
+  final String stdout;
+  final String stderr;
+}
+
 /// A `!` shell command the user ran.
 class ShellInputPart extends UserInputPart {
   const ShellInputPart(this.command);
@@ -115,8 +125,6 @@ abstract final class ChatUserInput {
 
   /// Tags that only carry harness noise; their lines are hidden.
   static const _hiddenTags = [
-    'local-command-stdout',
-    'local-command-stderr',
     'local-command-caveat',
     'command-message',
     'command-args',
@@ -198,6 +206,22 @@ abstract final class ChatUserInput {
       parts.add(SlashCommandPart(args.isEmpty ? name : '$name $args'));
       text = _strip(text, ['command-name']);
     }
+    final commandOut = _openTag(text, 'local-command-stdout');
+    final commandErr = _openTag(text, 'local-command-stderr');
+    if (commandOut != null || commandErr != null) {
+      parts.add(
+        SlashOutputPart(
+          stdout: _commandOutput(commandOut),
+          stderr: _commandOutput(commandErr),
+        ),
+      );
+      text = text.replaceAll(
+        RegExp(
+          r'<local-command-(stdout|stderr)>[\s\S]*?(</local-command-\1>|$)',
+        ),
+        '',
+      );
+    }
     text = _strip(text, _hiddenTags);
 
     final working = _whileWorking.firstMatch(text);
@@ -261,6 +285,20 @@ abstract final class ChatUserInput {
       body: body,
       session: session,
     );
+  }
+
+  /// Like [_tag], also for a tag the host's cap cut off (no closing tag).
+  static String? _openTag(String text, String name) =>
+      _tag(text, name) ??
+      RegExp('<$name>([\\s\\S]*)\$').firstMatch(text)?[1]?.trim();
+
+  /// Terminal colour and cursor codes Claude Code leaves in a command's
+  /// output.
+  static final _ansi = RegExp(r'\x1B\[[0-?]*[ -/]*[@-~]');
+
+  static String _commandOutput(String? raw) {
+    final text = (raw ?? '').replaceAll(_ansi, '').trim();
+    return text == '(no content)' ? '' : text;
   }
 
   static String? _tag(String text, String name) =>

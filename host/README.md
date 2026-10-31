@@ -515,7 +515,8 @@ issues) or stdin; at most 100 000 characters.
 * tmux (always `tmux -S <socket> …`): single line `tmux send-keys -t <pane> -l -- <text>`; multiline
   `tmux load-buffer -b conductore-<rand> -` (text on stdin) then
   `tmux paste-buffer -p -d -b … -t <pane>` (bracketed paste, so newlines do
-  not submit). Enter follows as a separate `send-keys … Enter` after 150 ms
+  not submit). A `/command` or `!shell` line whose only line breaks are
+  trailing is trimmed and typed with `send-keys`, never pasted. Enter follows as a separate `send-keys … Enter` after 150 ms
   (`CONDUCTORE_SEND_ENTER_DELAY_MS`): Claude Code treats text and CR in one
   read as a paste and would insert a newline instead of submitting.
 * Everything goes through `execFile`/`spawn` with an argument array; the
@@ -537,6 +538,34 @@ issues) or stdin; at most 100 000 characters.
   a permission decision; answer it first` (typing would answer the prompt),
   `session not in tmux or Herdr`, the pane check's, and the multiplexer's
   own error.
+
+### `conductore-hostd commands <sessionId>`
+
+The slash commands the agent's prompt takes, for the phone's "/" list
+(capability `commands`). Read on demand from disk, nothing polled or kept;
+only the first 4 KB of regular files are read (a FIFO or device is
+skipped), at most 300 files and folders and 1.5 s in all, and nothing whose
+real path leaves its `commands/` or `skills/` folder.
+
+```json
+{"sessionId":"0f2c…","kind":"claude",
+ "builtin":[{"name":"compact","description":"Compact the conversation, …"},
+            {"name":"model","description":"Set the model …","menu":true}],
+ "custom":[{"name":"deploy","description":"Ship it","scope":"project","argumentHint":"<env>"}],
+ "skills":[{"name":"talkbawt","description":"Use when handing work off …","scope":"personal"}]}
+```
+
+* `builtin`: Claude Code's own commands, a fixed list; `menu: true` opens
+  a picker in the terminal when given no argument.
+* `custom`: `*.md` under `<cwd>/.claude/commands` (`scope: project`) and
+  `~/.claude/commands` (`personal`); a file in a subfolder is `dir:name`, and `<dir>/SKILL.md` is `<dir>`.
+  The description is the front matter's `description`, else the first
+  text line; `argumentHint` from `argument-hint`.
+* `skills`: `<cwd>/.claude/skills/*/SKILL.md` and `~/.claude/skills/*/SKILL.md`,
+  `name` and `description` from the front matter. Plugin skills are not
+  listed.
+* A project entry hides a personal one with the same name. Agents other
+  than Claude Code get empty lists.
 
 ### `conductore-hostd interrupt <sessionId>`
 

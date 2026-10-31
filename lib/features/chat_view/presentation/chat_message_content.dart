@@ -29,9 +29,10 @@ class ChatMessageContent {
   /// (thinking steps).
   static ChatMessageContent? of(ChatItem item) {
     final text = switch (item) {
-      ChatUserMessage(:final text, :final pasted) => [
+      ChatUserMessage(:final text, :final pasted, :final commandOutput) => [
         if (text.isNotEmpty) text,
         ...pasted,
+        if (commandOutput.isNotEmpty) commandOutput,
       ].join('\n\n'),
       ChatAssistantText(:final text) => text,
       ChatAgentMessage(:final summary, :final body) => [
@@ -90,8 +91,12 @@ class ChatMessageContent {
 /// Rows mark what they show: a collapsed card opens while it has the
 /// current match.
 List<String> chatSearchSegments(ChatItem item) => switch (item) {
-  // 0: the prompt; 1..: pasted blocks.
-  ChatUserMessage(:final text, :final pasted) => [text, ...pasted],
+  // 0: the prompt; 1..: pasted blocks; then a slash command's output.
+  ChatUserMessage(:final text, :final pasted, :final commandOutput) => [
+    text,
+    ...pasted,
+    if (commandOutput.isNotEmpty) commandOutput,
+  ],
   ChatAssistantText(:final text) => markdownSearchSegments(text),
   // Idle: 0 the result. Else 0 the summary, 1 the body.
   ChatAgentMessage(:final idle, :final summary, :final body) =>

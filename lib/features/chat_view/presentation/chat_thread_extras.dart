@@ -149,13 +149,19 @@ mixin ChatThreadExtras on State<ChatViewPage> {
 
   /// Searches the thread as shown: [items] up to [shownCount], arranged
   /// for [mode] (hidden tool rows are not searched). Runs in build.
-  void searchThread(List<ChatItem> items, int shownCount, ToolActivity mode) {
+  void searchThread(
+    List<ChatItem> items,
+    int shownCount,
+    ToolActivity mode, {
+    Set<String> shown = const {},
+  }) {
     search.update(
-      (identityHashCode(items), items.length, shownCount, mode),
+      (identityHashCode(items), items.length, shownCount, mode, shown.length),
       () => [
         for (final entry in ChatToolActivity.arrange(
           items.sublist(0, shownCount),
           mode,
+          shown: shown,
         ))
           ...switch (entry) {
             ChatItemEntry(:final item) => [item],
