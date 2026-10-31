@@ -301,7 +301,17 @@ counts `active` in its active filter, and adds the idle age (`now`, `5m`,
     [--state-seq N]` appends one line and returns `{ok: true, id}`.
 - App: when "Sync with sheprd" is on, the project views use `view.layout`
   (the newest `updated` across the machines that report one) and show the
-  presence it reports. Keys under `self` are that machine. Under `local`
+  presence it reports. On a machine that has agents in the view, the
+  active filter follows sheprd alone (CON-126): a workspace is active when
+  one of its agents is in sheprd's active view (or is busy and not listed
+  yet), and an agent row sheprd leaves out of its active view is left out
+  too. The app's own clock (the companion's last event, which restarts
+  with the companion) and sessions open in the app do not count there.
+  Machines sheprd does not see keep the app's own rule. The view is read
+  every 15 s while a project view shows, and again whenever the app comes
+  back to the foreground. A `{found: true, error}` reply is shown as
+  "sheprd's view on <machine> can't be read: <error>", not as "isn't
+  sharing its view yet". Keys under `self` are that machine. Under `local`
   is the hub, which is recognised by its name or address. Mark read,
   unread, keep and dismiss go back through the companion. With v2 (the
   view says `updates: 2` and the companion has `sheprd-view-2`), layout
