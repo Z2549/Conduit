@@ -273,7 +273,7 @@ void main() {
   group("sheprd's hub under another name (CON-126 review)", () {
     // The phone knows the laptop as Omarchy on its tailnet address; the
     // view calls it `laptop`, the hub's sheprd-msg name.
-    final omarchy = SavedHost(
+    const omarchy = SavedHost(
       id: 'h1',
       name: 'Omarchy',
       host: '100.97.235.112',
@@ -307,7 +307,7 @@ void main() {
 
     test("the laptop's own copy says it is the hub", () async {
       final own = jsonEncode({
-        ...decoded as Map,
+        ...decoded,
         'view': {...view, 'self': 'local'},
       });
       controller.applyViewReply(omarchy, own);
@@ -335,7 +335,7 @@ void main() {
   });
 
   test("a stale view: the app's own rule decides what is active", () async {
-    final stale = jsonEncode({...decoded as Map, 'stale': true});
+    final stale = jsonEncode({...decoded, 'stale': true});
     controller.applyViewReply(dev, stale);
     expect(controller.sheprdView!.stale, isTrue);
     expect(sheprdSyncStatus(controller), contains('view may be old'));
