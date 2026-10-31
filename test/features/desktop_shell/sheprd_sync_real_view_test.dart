@@ -190,7 +190,33 @@ void main() {
   test('all agents: every row, the inactive ones faded', () async {
     await controller.setActiveOnly(false);
     final labels = [for (final (_, row) in shown()) row];
-    expect(labels, hasLength(12), reason: 'DTech and Mail Marketing are hidden');
+    expect(
+      labels,
+      hasLength(12),
+      reason: 'DTech and Mail Marketing are hidden',
+    );
     expect(labels, isNot(contains('DTech @ h2')));
+  });
+
+  test("a workspace's agents outside sheprd's active view are left out", () {
+    // Two agents in one workspace: one in sheprd's active view, one idle
+    // for days (not removed by hand).
+    final groups = controller.build(
+      [
+        _machine(dev, {
+          ('w44', 'lf-seguros-web'): [
+            agent('w44:p1', working),
+            agent('wE:p1', idle),
+          ],
+        }),
+      ],
+      hosts: [laptop, dev],
+    );
+    final entry = groups.expand((g) => g.entries).single;
+    SidebarNode row(String pane) =>
+        entry.agentRows.firstWhere((r) => r.label == 'agent $pane');
+    expect(entry.active, isTrue);
+    expect(controller.leftOutOfActive(entry, row('w44:p1')), isFalse);
+    expect(controller.leftOutOfActive(entry, row('wE:p1')), isTrue);
   });
 }

@@ -232,9 +232,10 @@ class ProjectLayoutController extends ChangeNotifier {
   ];
 
   /// Whether the agent [row] of [entry] is left out by the active filter
-  /// because sheprd's user removed it from the active view.
-  bool removedFromActive(ProjectEntry entry, SidebarNode row) =>
-      activeOnly && (entry.sheprdOf(row)?.removed ?? false);
+  /// because sheprd's active view does not hold it (idle too long, or
+  /// removed from it by hand), as sheprd's own sidebar leaves it out.
+  bool leftOutOfActive(ProjectEntry entry, SidebarNode row) =>
+      activeOnly && !(entry.sheprdOf(row)?.active ?? true);
 
   /// Groups the view lists: Other and (with the active filter) projects
   /// with nothing to show are left out, like in sheprd.

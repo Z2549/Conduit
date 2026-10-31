@@ -648,10 +648,10 @@ void main() {
         expect(sf().sheprdOf(row('w2:p1'))!.active, isFalse);
 
         await controller.setActiveOnly(true);
-        expect(controller.removedFromActive(sf(), row('w2:p1')), isTrue);
-        expect(controller.removedFromActive(sf(), row('w2:p2')), isFalse);
+        expect(controller.leftOutOfActive(sf(), row('w2:p1')), isTrue);
+        expect(controller.leftOutOfActive(sf(), row('w2:p2')), isFalse);
         await controller.setActiveOnly(false);
-        expect(controller.removedFromActive(sf(), row('w2:p1')), isFalse);
+        expect(controller.leftOutOfActive(sf(), row('w2:p1')), isFalse);
 
         // Only removed agents left: the workspace drops out of "active".
         controller.applyViewReply(
