@@ -160,7 +160,8 @@ function normalizeEntry (d) {
   if (d.isApiErrorMessage) out.isApiErrorMessage = true
   if (d.type === 'system') {
     out.subtype = d.subtype || null
-    if (typeof d.content === 'string') out.content = capString(d.content, SYSTEM_CAP).value
+    // A slash command's output (/context, /cost) is shown under its chip.
+    if (typeof d.content === 'string') out.content = capString(d.content, d.subtype === 'local_command' ? TOOL_CAP : SYSTEM_CAP).value
     if (d.level) out.level = d.level
     return out
   }

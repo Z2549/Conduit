@@ -247,6 +247,14 @@ test('malformed lines are counted and skipped', () => {
   assert.equal(r.entries.length, 1)
 })
 
+test('a slash command\'s output (system local_command) keeps up to 4 KB; other system lines 500', () => {
+  const out = '<local-command-stdout>' + 'c'.repeat(3000) + '</local-command-stdout>'
+  const cmd = normalizeEntry(base('system', 's1', { subtype: 'local_command', content: out }))
+  assert.equal(cmd.content, out)
+  const other = normalizeEntry(base('system', 's2', { subtype: 'informational', content: 'x'.repeat(3000) }))
+  assert.ok(other.content.length < 600)
+})
+
 test('normalizeEntry drops unknown line types', () => {
   assert.equal(normalizeEntry({ type: 'file-history-snapshot' }), null)
   assert.equal(normalizeEntry(null), null)
