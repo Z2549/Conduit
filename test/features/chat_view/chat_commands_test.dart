@@ -196,14 +196,14 @@ void main() {
         name: 'Bash',
         input: {},
         kind: ChatToolKind.bash,
-        result: ChatToolResult(content: 'ok', isError: false),
+        result: const ChatToolResult(content: 'ok', isError: false),
       );
       final b = ChatToolCall(
         'b2',
         name: 'Bash',
         input: {},
         kind: ChatToolKind.bash,
-        result: ChatToolResult(content: 'ok', isError: false),
+        result: const ChatToolResult(content: 'ok', isError: false),
       );
       const shell = ChatShellCommand('s1', command: 'ls', stdout: 'a');
       List<String> shape(List<ChatThreadEntry> entries) => [
