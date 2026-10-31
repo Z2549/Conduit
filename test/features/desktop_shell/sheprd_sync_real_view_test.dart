@@ -6,6 +6,7 @@ import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/desktop_shell/domain/project_tree.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
+import 'package:conduit/features/desktop_shell/presentation/widgets/project_view.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/presentation/home_board_controller.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
@@ -32,8 +33,9 @@ SavedHost _host(String id, String name) => SavedHost(
 /// them.
 SidebarNode _machine(
   SavedHost host,
-  Map<(String, String), List<AgentInfo>> workspaces,
-) => SidebarNode(
+  Map<(String, String), List<AgentInfo>> workspaces, {
+  Set<String> open = const {},
+}) => SidebarNode(
   key: SidebarKeys.machine(host.id),
   kind: SidebarNodeKind.machine,
   machineId: host.id,
@@ -52,6 +54,7 @@ SidebarNode _machine(
           kind: SidebarNodeKind.herdrWorkspace,
           machineId: host.id,
           label: label,
+          openInApp: open.contains(wsId),
           target: HerdrWorkspaceTarget(host, workspace),
           children: [
             for (final pane in workspace.panes)
@@ -96,8 +99,8 @@ void main() {
 
   final laptop = _host('h1', 'Laptop');
   final dev = _host('h2', 'Dev');
-  List<SidebarNode> tree() => [
-    _machine(laptop, {
+  List<SidebarNode> tree({SavedHost? hub, Set<String> open = const {}}) => [
+    _machine(hub ?? laptop, {
       ('wH', 'Workout'): [agent('wH:p1', idle)],
       ('w3B', 'Projects'): [agent('w3B:p1', idle)],
       ('w3D', 'lf-seguros-web'): [agent('w3D:p1', idle)],
@@ -114,7 +117,7 @@ void main() {
       ('w3X', 'Projects'): [agent('w3X:p1', idle)],
       ('wY', 'Migrations'): [agent('wY:p1', idle)],
       ('wE', 'DTech'): [agent('wE:p1', idle)],
-    }),
+    }, open: open),
   ];
 
   late ThemeController theme;
@@ -265,5 +268,117 @@ void main() {
     await other.setSheprdSync(false);
     await other.appResumed();
     expect(asked, ['Dev', 'Dev']);
+  });
+
+  group("sheprd's hub under another name (CON-126 review)", () {
+    // The phone knows the laptop as Omarchy on its tailnet address; the
+    // view calls it `laptop`, the hub's sheprd-msg name.
+    final omarchy = SavedHost(
+      id: 'h1',
+      name: 'Omarchy',
+      host: '100.97.235.112',
+      port: 22,
+      username: 'u',
+      authMethod: SshAuthMethod.password,
+    );
+    List<(String, String)> shownWith(ProjectLayoutController c) => [
+      for (final group in c.visibleGroups(
+        c.build(tree(hub: omarchy), hosts: [omarchy, dev]),
+      ))
+        for (final entry in c.visibleEntries(group))
+          (group.name, '${entry.node.label} @ ${entry.node.machineId}'),
+    ];
+    const expected = [
+      ('LF', 'lf-seguros-web @ h2'),
+      ('TheCalendar', 'Calendar @ h2'),
+      ('Infrastructure', 'Infrastructure @ h2'),
+      ('Personal', 'Workout @ h1'),
+      ('Other', 'App Deployments @ h2'),
+      ('Other', 'Conductore @ h2'),
+    ];
+
+    test("dev's copy only: found by its workspaces", () async {
+      // The first build finds the hub; the view is renamed right after.
+      shownWith(controller);
+      await Future<void>.delayed(Duration.zero);
+      expect(shownWith(controller), expected);
+      expect(controller.sheprdHubMissing, isNull);
+    });
+
+    test("the laptop's own copy says it is the hub", () async {
+      final own = jsonEncode({
+        ...decoded as Map,
+        'view': {...view, 'self': 'local'},
+      });
+      controller.applyViewReply(omarchy, own);
+      expect(shownWith(controller), expected);
+      expect(controller.sheprdHubMissing, isNull);
+    });
+
+    test('no machine is the hub: the view says so, keys stay under its '
+        'name', () async {
+      final c = ProjectLayoutController(theme: theme, clock: () => now);
+      addTearDown(c.dispose);
+      await c.setSheprdSync(true);
+      c.applyViewReply(dev, reply);
+      final groups = c.build([tree()[1]], hosts: [omarchy, dev]);
+      await Future<void>.delayed(Duration.zero);
+      expect(groups, isNotEmpty);
+      expect(
+        c.sheprdHubMissing,
+        "sheprd's hub 'laptop' isn't one of your machines: its agents show "
+        "the app's own status. Name that machine 'laptop' here, or connect "
+        'its companion.',
+      );
+      expect(c.layout.byName('Personal')!.members, ['laptop/wH:Workout']);
+    });
+  });
+
+  test("a stale view: the app's own rule decides what is active", () async {
+    final stale = jsonEncode({...decoded as Map, 'stale': true});
+    controller.applyViewReply(dev, stale);
+    expect(controller.sheprdView!.stale, isTrue);
+    expect(sheprdSyncStatus(controller), contains('view may be old'));
+    // Every agent "changed" two minutes ago by the companion's clock.
+    expect(shown(), hasLength(12));
+    final entry = controller
+        .build(tree(), hosts: [laptop, dev])
+        .expand((g) => g.entries)
+        .firstWhere((e) => e.node.label == 'LitIntel');
+    expect(entry.bySheprd, isFalse);
+    expect(controller.leftOutOfActive(entry, entry.agentRows.single), isFalse);
+  });
+
+  test('an agent sheprd has not listed: idle is left out, busy stays, in '
+      'every project view', () {
+    final groups = controller.build(
+      [
+        _machine(dev, {
+          ('w44', 'lf-seguros-web'): [
+            agent('w44:p1', working),
+            agent('w44:p7', idle),
+            agent('w44:p8', working),
+          ],
+        }),
+      ],
+      hosts: [laptop, dev],
+    );
+    final entry = groups.expand((g) => g.entries).single;
+    SidebarNode row(String pane) =>
+        entry.agentRows.firstWhere((r) => r.label == 'agent $pane');
+    expect(entry.sheprdOf(row('w44:p7')), isNull);
+    expect(controller.leftOutOfActive(entry, row('w44:p1')), isFalse);
+    expect(controller.leftOutOfActive(entry, row('w44:p7')), isTrue);
+    expect(controller.leftOutOfActive(entry, row('w44:p8')), isFalse);
+  });
+
+  test('a workspace open in the app is not active by itself on a machine '
+      'sheprd sees', () {
+    final entries = controller
+        .build(tree(open: {'w2A'}), hosts: [laptop, dev])
+        .expand((g) => g.entries);
+    final litIntel = entries.firstWhere((e) => e.node.label == 'LitIntel');
+    expect(litIntel.node.openInApp, isTrue);
+    expect(litIntel.active, isFalse);
   });
 }

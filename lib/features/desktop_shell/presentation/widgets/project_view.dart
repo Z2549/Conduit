@@ -59,7 +59,10 @@ class ProjectViewBar extends StatelessWidget {
           ),
         );
     final active = controller.activeOnly;
-    final notice = controller.markNotice ?? controller.sheprdNotSharing;
+    final notice =
+        controller.markNotice ??
+        controller.sheprdNotSharing ??
+        controller.sheprdHubMissing;
     final bar = Padding(
       padding: EdgeInsets.fromLTRB(dense ? 6 : 0, 0, 0, dense ? 2 : 4),
       child: Row(

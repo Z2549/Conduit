@@ -38,6 +38,7 @@ class ProjectEntry {
     this.hidden = false,
     this.sheprd = const {},
     this.sheprdKeys = const {},
+    this.bySheprd = false,
   });
 
   /// The machine-tree row (opens and drags like in the Machines tab).
@@ -68,6 +69,11 @@ class ProjectEntry {
   /// The same agents' keys as sheprd names them (`machine/pane_id`, with
   /// the app's machine names), for marks sent back.
   final Map<String, String> sheprdKeys;
+
+  /// With "Sync with sheprd", on a machine sheprd sees and with a view
+  /// that is not stale: sheprd's active view decides [active] and which
+  /// agent rows the active filter keeps.
+  final bool bySheprd;
 
   /// sheprd's view of [row] (one of [agentRows], or [node]), if synced.
   SheprdAgentView? sheprdOf(SidebarNode row) => sheprd[row.key];
@@ -182,6 +188,7 @@ abstract final class ProjectTreeBuilder {
     int recentHours = ProjectPrefs.defaultRecentHours,
     Map<String, SheprdAgentView>? sheprd,
     List<String> order = const [],
+    bool sheprdStale = false,
   }) {
     final clock = now ?? DateTime.now();
     final recent = Duration(hours: recentHours);
@@ -206,8 +213,10 @@ abstract final class ProjectTreeBuilder {
             in machineAliases[machine.machineId] ?? const <String>{})
           if (alias.trim().isNotEmpty) alias.trim().toLowerCase(),
       };
+      // A stale view's flags are frozen: the app's own rule decides then.
       final seenBySheprd =
           sheprd != null &&
+          !sheprdStale &&
           sheprd.keys.any(
             (key) => names.contains(key.substring(0, key.indexOf('/'))),
           );
@@ -281,6 +290,7 @@ abstract final class ProjectTreeBuilder {
             hidden: hidden,
             sheprd: views,
             sheprdKeys: viewKeys,
+            bySheprd: seenBySheprd,
           ),
         ));
         if (hidden) continue;
@@ -426,16 +436,33 @@ abstract final class ProjectTreeBuilder {
 
   /// Working, needing you or finished: in an active view whatever its
   /// last change.
+  static bool isBusy(SidebarDot dot) =>
+      dot == SidebarDot.needsYou ||
+      dot == SidebarDot.working ||
+      dot == SidebarDot.done;
+
+  /// The agent an agent row ([ProjectEntry.agentRows]) stands for: a
+  /// pane's, or the single agent of a tab.
+  static AgentInfo? agentOf(SidebarNode row) => switch (row.target) {
+    AgentPaneTarget(:final pane) => pane.agent,
+    HerdrTabTarget(:final workspace, :final tab) => switch ([
+      for (final pane in workspace.panes)
+        if (pane.agent.tab == tab.id) pane,
+    ]) {
+      [final pane] => pane.agent,
+      _ => null,
+    },
+    _ => null,
+  };
+
   static bool _isBusy(
     SidebarNode node,
     List<AgentInfo> agents,
     List<SidebarNode> agentRows,
   ) {
-    bool busy(SidebarDot dot) =>
-        dot == SidebarDot.needsYou ||
-        dot == SidebarDot.working ||
-        dot == SidebarDot.done;
-    if (busy(node.dot) || agentRows.any((row) => busy(row.dot))) return true;
+    if (isBusy(node.dot) || agentRows.any((row) => isBusy(row.dot))) {
+      return true;
+    }
     return agents.any(
       (agent) =>
           agent.state.needsAttention ||
