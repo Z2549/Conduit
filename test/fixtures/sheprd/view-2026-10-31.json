@@ -1,0 +1,331 @@
+{
+ "ok": true,
+ "found": true,
+ "path": "~/.local/state/sheprd/view.json",
+ "stale": false,
+ "view": {
+  "agents": {
+   "dev/w44:p1": {
+    "active": true,
+    "ctx": 348650,
+    "dismissed": false,
+    "idle_since": null,
+    "kept": false,
+    "number": 4,
+    "presence": "working",
+    "removed": false,
+    "state_seq": 2199,
+    "title": "Multi-agent bug search and fix",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w2M:p1": {
+    "active": true,
+    "ctx": 192642,
+    "dismissed": false,
+    "idle_since": null,
+    "kept": false,
+    "number": 5,
+    "presence": "working",
+    "removed": false,
+    "state_seq": 2198,
+    "title": "Multi-agent bug search and fix",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w4:p4": {
+    "active": true,
+    "ctx": 83143,
+    "dismissed": false,
+    "idle_since": null,
+    "kept": false,
+    "number": 6,
+    "presence": "working",
+    "removed": false,
+    "state_seq": 2200,
+    "title": "Tailscale audit for coolify URLs",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w47:p1": {
+    "active": true,
+    "ctx": 80899,
+    "dismissed": false,
+    "idle_since": null,
+    "kept": false,
+    "number": 24,
+    "presence": "working",
+    "removed": false,
+    "state_seq": 2201,
+    "title": "Running and viewing commands from chat",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w1D:p1": {
+    "active": true,
+    "ctx": 161233,
+    "dismissed": false,
+    "idle_since": 1793398417,
+    "kept": false,
+    "number": 17,
+    "presence": "idle",
+    "removed": false,
+    "state_seq": 2122,
+    "title": "CI/CD setup for Android and iOS",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w1H:p1": {
+    "active": true,
+    "dismissed": false,
+    "kept": true,
+    "presence": "idle",
+    "state_seq": 0,
+    "unread": false
+   },
+   "dev/w2A:p1": {
+    "active": false,
+    "ctx": 183901,
+    "dismissed": true,
+    "idle_since": 1793083900,
+    "kept": false,
+    "number": 18,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 855,
+    "title": "Law firm product for Portuguese market",
+    "todo": null,
+    "unread": false
+   },
+   "dev/w3X:p1": {
+    "active": false,
+    "ctx": 72659,
+    "dismissed": true,
+    "idle_since": 1793349078,
+    "kept": false,
+    "number": 22,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 1974,
+    "title": "Vale da Teja feedback",
+    "todo": null,
+    "unread": false
+   },
+   "dev/wY:p1": {
+    "active": false,
+    "ctx": 363972,
+    "dismissed": true,
+    "idle_since": 1793268618,
+    "kept": false,
+    "number": 7,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 1852,
+    "title": "HANDOFF azure-exit dev parity",
+    "todo": null,
+    "unread": false
+   },
+   "dev/wE:p1": {
+    "active": false,
+    "dismissed": false,
+    "kept": false,
+    "presence": "idle",
+    "state_seq": 0,
+    "unread": false
+   },
+   "local/wH:p1": {
+    "active": true,
+    "ctx": 125477,
+    "dismissed": false,
+    "idle_since": 1793483177,
+    "kept": false,
+    "number": 12,
+    "presence": "idle",
+    "removed": false,
+    "state_seq": 514,
+    "title": "Design full-body 3x weekly workout split",
+    "todo": [
+     4,
+     4
+    ],
+    "unread": false
+   },
+   "local/w3B:p1": {
+    "active": false,
+    "ctx": 140089,
+    "dismissed": true,
+    "idle_since": 1793396949,
+    "kept": false,
+    "number": 10,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 504,
+    "title": "cockpit-finances-v0",
+    "todo": [
+     12,
+     12
+    ],
+    "unread": false
+   },
+   "local/w3D:p1": {
+    "active": false,
+    "ctx": 199044,
+    "dismissed": false,
+    "idle_since": 1793383584,
+    "kept": false,
+    "number": 3,
+    "presence": "idle",
+    "removed": false,
+    "state_seq": 466,
+    "title": "LF-1560 Fase A, portais AT e SS Direta",
+    "todo": null,
+    "unread": false
+   },
+   "local/wC:p1": {
+    "active": false,
+    "ctx": 330414,
+    "dismissed": true,
+    "idle_since": 1793395104,
+    "kept": false,
+    "number": 8,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 489,
+    "title": "Follow up with connections task review",
+    "todo": null,
+    "unread": false
+   },
+   "local/wW:p1": {
+    "active": false,
+    "ctx": null,
+    "dismissed": true,
+    "idle_since": 1793286370,
+    "kept": false,
+    "number": 2,
+    "presence": "idle",
+    "removed": true,
+    "state_seq": 14,
+    "title": "Mailchimp setup for portugalatrabalhar.pt",
+    "todo": null,
+    "unread": false
+   }
+  },
+  "focus": "dev/w47:p1",
+  "hub": "laptop",
+  "layout": {
+   "active_only": true,
+   "group": [
+    {
+     "match": [
+      "lf-",
+      "lf "
+     ],
+     "members": [
+      "dev/roberto",
+      "dev/Roberto",
+      "local/LF",
+      "local/w2T:~",
+      "dev/w2K:LF"
+     ],
+     "name": "LF",
+     "pinned": true
+    },
+    {
+     "match": [
+      "calendar"
+     ],
+     "name": "TheCalendar",
+     "pinned": true
+    },
+    {
+     "members": [
+      "dev/Infrastructure",
+      "dev/Migrations",
+      "dev/Vaultwarden",
+      "dev/w3F:~"
+     ],
+     "name": "Infrastructure"
+    },
+    {
+     "members": [
+      "local/wC:Follow up",
+      "local/w12:Accounting",
+      "local/w2P:~",
+      "local/w3B:Projects"
+     ],
+     "name": "Outsmartis ops"
+    },
+    {
+     "match": [
+      "vtm"
+     ],
+     "members": [
+      "dev/VTM-Api"
+     ],
+     "name": "VTM"
+    },
+    {
+     "members": [
+      "local/wH:Workout"
+     ],
+     "name": "Personal"
+    },
+    {
+     "members": [
+      "dev/w43:portugal-a-trabalhar",
+      "dev/w42:portugal-a-trabalhar",
+      "local/w3A:Projects"
+     ],
+     "name": "PAT"
+    }
+   ],
+   "hidden": [
+    "dev/wE:DTech",
+    "local/wW:Mail Marketing"
+   ],
+   "idled": [
+    "dev/wE:p1@890",
+    "dev/w4:p4@319",
+    "dev/w2A:p1@855",
+    "dev/w1D:p1@857",
+    "dev/wY:p1@1852",
+    "local/wW:p1@14",
+    "local/wH:p1@72",
+    "dev/w3X:p1@1974",
+    "local/wC:p1@489",
+    "local/w3B:p1@504"
+   ],
+   "show_hidden": true,
+   "ungrouped": [
+    "dev/Token saving",
+    "local/w1M:Token saving local",
+    "dev/w1F:Review server",
+    "dev/w1H:Barbusano",
+    "dev/w29:Cockpit",
+    "local/w13:1M plan"
+   ]
+  },
+  "order": [
+   "local/wW:Mail Marketing",
+   "local/w3D:lf-seguros-web",
+   "dev/w44:lf-seguros-web",
+   "dev/w2M:Calendar",
+   "dev/w4:Infrastructure",
+   "dev/wY:Migrations",
+   "local/wC:Follow up",
+   "local/w3B:Projects",
+   "local/wH:Workout",
+   "dev/w1D:App Deployments",
+   "dev/w2A:LitIntel",
+   "dev/w3X:Projects",
+   "dev/w47:Conductore"
+  ],
+  "rejected": [],
+  "rows": 3,
+  "self": "dev",
+  "source": "sheprd (herdr 0.9.5)",
+  "updated": 1793483278,
+  "updates": 2,
+  "version": 1
+ }
+}

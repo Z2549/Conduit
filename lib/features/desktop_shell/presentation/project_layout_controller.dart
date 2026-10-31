@@ -86,6 +86,10 @@ class ProjectLayoutController extends ChangeNotifier {
 
   /// A machine answered `sheprd-view` (with a view or without).
   bool _viewAnswered = false;
+
+  /// Machines whose view.json is there but unreadable (`found: true,
+  /// error`), by saved machine id: its name and why.
+  final Map<String, (String, String)> _viewErrors = {};
   final Map<String, _PendingMark> _pending = {};
 
   /// Layout edits sent to sheprd and not confirmed yet, in sending order.
@@ -125,10 +129,23 @@ class ProjectLayoutController extends ChangeNotifier {
   bool get mirroring => sheprdSync && _merged != null;
 
   /// Synced, a machine answered, and none shares sheprd's view: what to
-  /// tell the user (sheprd writes it only with `share_view = true`).
-  String? get sheprdNotSharing => sheprdSync && _merged == null && _viewAnswered
-      ? sheprdNotSharingText
-      : null;
+  /// tell the user. A machine whose view.json is there but unreadable
+  /// says why (CON-126); else sheprd writes none without `share_view =
+  /// true`.
+  String? get sheprdNotSharing {
+    if (!sheprdSync || _merged != null || !_viewAnswered) return null;
+    if (_viewErrors.isNotEmpty) {
+      final (machine, error) = _viewErrors.values.first;
+      return "sheprd's view on $machine can't be read: $error. Until then "
+          'the app keeps its own projects.';
+    }
+    return sheprdNotSharingText;
+  }
+
+  /// A machine has sheprd's view.json, but it could not be read
+  /// ([sheprdNotSharing] says why).
+  bool get sheprdViewBroken =>
+      sheprdNotSharing != null && _viewErrors.isNotEmpty;
 
   static const sheprdNotSharingText =
       "sheprd isn't sharing its view yet: set share_view = true in sheprd's "
@@ -197,6 +214,16 @@ class ProjectLayoutController extends ChangeNotifier {
     Map<String, List<AgentInfo>> agentsByMachine = const {},
     Iterable<SavedHost> hosts = const [],
   }) {
+    if (sheprdSync && _hubWorkspaces != null) {
+      final guess = _findHub(tree, hosts);
+      if (guess != _hubGuess) {
+        _hubGuess = guess;
+        // Renames sheprd's view after this build, then builds again.
+        scheduleMicrotask(() {
+          if (!_disposed) _remerge();
+        });
+      }
+    }
     final view = sheprdView;
     final groups = ProjectTreeBuilder.build(
       tree,
@@ -207,6 +234,7 @@ class ProjectLayoutController extends ChangeNotifier {
       recentHours: recentHours,
       sheprd: view?.agents,
       order: view?.order ?? const [],
+      sheprdStale: view?.stale ?? false,
     );
     _found = [
       for (final group in groups)
@@ -231,10 +259,24 @@ class ProjectLayoutController extends ChangeNotifier {
       if ((!entry.hidden || showHidden) && (!activeOnly || entry.active)) entry,
   ];
 
-  /// Whether the agent [row] of [entry] is left out by the active filter
-  /// because sheprd's user removed it from the active view.
-  bool removedFromActive(ProjectEntry entry, SidebarNode row) =>
-      activeOnly && (entry.sheprdOf(row)?.removed ?? false);
+  /// Whether the agent [row] of [entry] is left out by the active filter.
+  /// The same rule decides as for the workspace ([ProjectEntry.active]):
+  /// while sheprd decides ([ProjectEntry.bySheprd]), its active view (idle
+  /// too long, or removed by hand: out), or busy for an agent it has not
+  /// listed yet; else busy, open in the app, or changed state within the
+  /// recent hours. Every project view uses this, so they agree.
+  bool leftOutOfActive(ProjectEntry entry, SidebarNode row) {
+    if (!activeOnly) return false;
+    if (!entry.active) return true;
+    final dot = entry.dotOf(row);
+    if (entry.bySheprd) {
+      return !(entry.sheprdOf(row)?.active ?? ProjectTreeBuilder.isBusy(dot));
+    }
+    if (entry.node.openInApp || row.openInApp) return false;
+    if (dot != SidebarDot.idle) return false;
+    final at = ProjectTreeBuilder.agentOf(row)?.stateChangedAt;
+    return at == null || clock().difference(at) >= Duration(hours: recentHours);
+  }
 
   /// Groups the view lists: Other and (with the active filter) projects
   /// with nothing to show are left out, like in sheprd.
@@ -278,6 +320,14 @@ class ProjectLayoutController extends ChangeNotifier {
   Future<void> setSheprdSync(bool on) async {
     await _setPrefs(prefs.copyWith(sheprdSync: on));
     if (on) await refresh(force: true);
+  }
+
+  /// The app came back to the foreground: while synced, sheprd's view is
+  /// read again now, whatever screen shows (CON-126), so the home screen
+  /// and the widget never start from a view minutes old.
+  Future<void> appResumed() async {
+    if (_disposed || !sheprdSync) return;
+    await refresh(force: true);
   }
 
   // Layout edits: the app's own layout from here on.
@@ -611,22 +661,23 @@ class ProjectLayoutController extends ChangeNotifier {
   /// at most every [refreshEvery] (or now with [force]).
   Future<void> refresh({bool force = false}) async {
     final attention = this.attention;
-    if (attention == null) return;
+    final hosts = viewHosts ?? attention?.monitoredHosts;
+    if (hosts == null) return;
     final now = clock();
     final seen = <String>{};
     final pending = <Future<void>>[];
-    for (final host in attention.monitoredHosts) {
+    for (final host in hosts) {
       final id = baseHostId(host.id);
       if (!seen.add(id)) continue;
-      if (sheprdSync &&
-          attention.companionSupports(host.id, sheprdViewCapability)) {
+      if (sheprdSync && _canSend(host)) {
         final last = _viewFetchedAt[id];
         if ((force || last == null || now.difference(last) >= syncEvery) &&
             !_viewInFlight.contains(id)) {
-          pending.add(_fetchView(attention, host, id));
+          pending.add(_fetchView(host, id));
         }
       }
-      if (!attention.companionSupports(host.id, sheprdSidebarCapability)) {
+      if (attention == null ||
+          !attention.companionSupports(host.id, sheprdSidebarCapability)) {
         continue;
       }
       final last = _fetchedAt[id];
@@ -692,25 +743,21 @@ class ProjectLayoutController extends ChangeNotifier {
 
   // sheprd's view (CON-077).
 
-  Future<void> _fetchView(
-    AgentAttentionController attention,
-    SavedHost host,
-    String id,
-  ) async {
+  Future<void> _fetchView(SavedHost host, String id) async {
     _viewInFlight.add(id);
     _viewFetchedAt[id] = clock();
-    final (runner, :owned) = attention.runnerFor(host);
     try {
-      final result = await runner.run(
-        ConductoreHostAttentionProvider.remoteCommand('sheprd-view'),
-        timeout: const Duration(seconds: 15),
+      applyViewReply(
+        host,
+        await _run(
+          host,
+          ConductoreHostAttentionProvider.remoteCommand('sheprd-view'),
+        ),
       );
-      applyViewReply(host, result.stdout);
     } catch (_) {
       // Unreachable now: the next refresh asks again.
     } finally {
       _viewInFlight.remove(id);
-      if (owned) unawaited(runner.close());
     }
   }
 
@@ -725,7 +772,18 @@ class ProjectLayoutController extends ChangeNotifier {
     }
     final id = baseHostId(host.id);
     final view = SheprdView.fromReply(decoded);
-    if (!_viewAnswered) {
+    final error = view == null && decoded is Map && decoded['found'] == true
+        ? (decoded['error'] is String
+              ? decoded['error'] as String
+              : 'view.json is not one this app reads')
+        : null;
+    final hadError = _viewErrors[id];
+    if (error == null) {
+      _viewErrors.remove(id);
+    } else {
+      _viewErrors[id] = (host.name, error);
+    }
+    if (!_viewAnswered || hadError != _viewErrors[id]) {
       _viewAnswered = true;
       if (view == null && !_disposed) notifyListeners();
     }
@@ -740,8 +798,10 @@ class ProjectLayoutController extends ChangeNotifier {
 
   /// sheprd names machines by the hub's endpoint labels and the hub itself
   /// `local`, in every machine's copy. A machine's own copy says which
-  /// label is that machine (`self`); the hub is the machine whose copy says
-  /// `local`, else the one named like the hub.
+  /// label is that machine (`self`). The hub is the machine whose copy
+  /// says `local`; else the one named like the hub (name, address, or
+  /// their first dot-separated part); else the machine whose Herdr
+  /// workspaces are the view's `local/` ones ([build] finds it, CON-126).
   void _remerge() {
     final names = <String, String>{};
     String? hub;
@@ -758,28 +818,112 @@ class ProjectLayoutController extends ChangeNotifier {
     if (hub == null && hubName != null) {
       final hosts = [
         ...?attention?.monitoredHosts,
+        ...?viewHosts,
         for (final (host, _) in _views.values) host,
       ];
       for (final host in hosts) {
-        if (aliasesOf([host]).values.single.contains(hubName)) {
+        if (_namesOf(host).contains(hubName)) {
           hub = host.name.toLowerCase();
           break;
         }
       }
     }
-    names['local'] = hub ?? hubName ?? 'local';
     final newest = [for (final (_, view) in _views.values) view]
       ..sort((a, b) {
         final byTime = b.updated.compareTo(a.updated);
         if (byTime != 0) return byTime;
         return (b.fromHub ? 1 : 0) - (a.fromHub ? 1 : 0);
       });
+    // Found by name or by its own copy: no guessing needed.
+    _hubWorkspaces = hub == null && newest.isNotEmpty
+        ? _localWorkspaces(newest.first)
+        : null;
+    if (hub == null && _hubWorkspaces != null) hub = _hubGuess;
+    _hubMissing = hub == null && newest.isNotEmpty
+        ? (hubName ?? 'local')
+        : null;
+    names['local'] = hub ?? hubName ?? 'local';
     _sheprdNames = names;
     _base = newest.isEmpty ? null : newest.first.renamed(names);
     _confirmPending();
     _overlay();
     if (!_disposed) notifyListeners();
   }
+
+  /// The names [host] may go by in sheprd: its name and address, and the
+  /// first part of each (`omarchy` for `omarchy.tail1234.ts.net`).
+  static Set<String> _namesOf(SavedHost host) => {
+    for (final name in aliasesOf([host]).values.single) ...{
+      name,
+      // Not for an IP address.
+      if (!RegExp(r'^[\d.:]+$').hasMatch(name)) name.split('.').first,
+    },
+  };
+
+  /// The hub's workspaces in [view] (`id:label`, lower case), while the
+  /// hub is not known by name; null once it is.
+  Set<String>? _hubWorkspaces;
+
+  /// The machine [build] found holding the hub's workspaces.
+  String? _hubGuess;
+
+  /// sheprd's name for a hub that is none of the machines here.
+  String? _hubMissing;
+
+  static Set<String> _localWorkspaces(SheprdView view) {
+    final layout = view.layout;
+    return {
+      for (final key in [
+        ...view.order,
+        ...layout.hidden,
+        ...layout.ungrouped,
+        for (final group in layout.groups) ...group.members,
+      ])
+        if (key.startsWith('local/') && key.contains(':'))
+          key.substring('local/'.length).toLowerCase(),
+    };
+  }
+
+  /// While the hub is unknown by name: the machine in [tree], not named
+  /// by another machine's copy, with the most of the hub's workspaces
+  /// (by Herdr id and label), if one has more than any other.
+  String? _findHub(List<SidebarNode> tree, Iterable<SavedHost> hosts) {
+    final wanted = _hubWorkspaces;
+    if (wanted == null || wanted.isEmpty) return null;
+    final taken = {
+      for (final MapEntry(:key, :value) in _sheprdNames.entries)
+        if (key != 'local') value,
+    };
+    final byId = {for (final host in hosts) baseHostId(host.id): host};
+    final counts = <String, int>{};
+    for (final machine in tree) {
+      final host = byId[baseHostId(machine.machineId)];
+      final name = (host?.name ?? machine.label).toLowerCase();
+      if (taken.contains(name)) continue;
+      var count = 0;
+      for (final node in machine.children) {
+        if (node.target case HerdrWorkspaceTarget(:final workspace)) {
+          final key = '${workspace.workspace.id}:${workspace.workspace.label}'
+              .toLowerCase();
+          if (wanted.contains(key)) count += 1;
+        }
+      }
+      if (count > 0) counts[name] = count;
+    }
+    if (counts.isEmpty) return null;
+    final ranked = counts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    if (ranked.length > 1 && ranked[1].value == ranked[0].value) return null;
+    return ranked.first.key;
+  }
+
+  /// Synced, and sheprd's hub is none of the machines here: its agents
+  /// keep the app's own status, and the view says why.
+  String? get sheprdHubMissing => mirroring && _hubMissing != null
+      ? "sheprd's hub '$_hubMissing' isn't one of your machines: its "
+            "agents show the app's own status. Name that machine "
+            "'$_hubMissing' here, or connect its companion."
+      : null;
 
   /// [key] (`machine/pane_id` in the app's names) as sheprd names it.
   String _sheprdKey(String key) {
@@ -929,6 +1073,11 @@ class ProjectLayoutController extends ChangeNotifier {
   /// Runs marks in tests instead of a machine's companion.
   @visibleForTesting
   Future<String> Function(SavedHost host, String command)? sheprdRunner;
+
+  /// Tests set this: the machines asked for sheprd's view, instead of the
+  /// monitored ones.
+  @visibleForTesting
+  List<SavedHost>? viewHosts;
 
   bool _canSend(SavedHost host) =>
       sheprdRunner != null ||

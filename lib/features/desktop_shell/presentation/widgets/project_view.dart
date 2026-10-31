@@ -59,7 +59,10 @@ class ProjectViewBar extends StatelessWidget {
           ),
         );
     final active = controller.activeOnly;
-    final notice = controller.markNotice ?? controller.sheprdNotSharing;
+    final notice =
+        controller.markNotice ??
+        controller.sheprdNotSharing ??
+        controller.sheprdHubMissing;
     final bar = Padding(
       padding: EdgeInsets.fromLTRB(dense ? 6 : 0, 0, 0, dense ? 2 : 4),
       child: Row(
@@ -282,7 +285,9 @@ class _ViewMenu extends StatelessWidget {
 String sheprdSyncStatus(ProjectLayoutController controller) {
   final view = controller.sheprdView;
   if (view == null) {
-    return controller.sheprdNotSharing != null
+    return controller.sheprdViewBroken
+        ? "Sync with sheprd: sheprd's view can't be read"
+        : controller.sheprdNotSharing != null
         ? "Sync with sheprd: sheprd isn't sharing its view yet"
         : 'Sync with sheprd: waiting for its view';
   }

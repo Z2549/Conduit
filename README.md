@@ -273,9 +273,16 @@ tmux.
 - **Projects and sheprd**: workspaces and agents group by project, read from
   sheprd's `sidebar.toml` and shared
   across your devices. With **Sync with sheprd** on, sheprd's shared view
-  gives the layout and each agent's unread, kept and dismissed marks, and your
-  edits (move, hide, projects, rules, order, remove from active) go back to
-  sheprd ([docs/sheprd-view-sync.md](docs/sheprd-view-sync.md)).
+  gives the layout, each agent's name and unread, kept and dismissed marks,
+  and which agents are active: the active filter lists the same agents as
+  sheprd's own active view (a workspace open in the app no longer counts as
+  active by itself; while sheprd's view is stale the app's own rule
+  applies). If sheprd's hub is none of your machines, the view says so.
+  The view is read again whenever the app comes
+  back to the foreground, and an unreadable `view.json` is named with the
+  reason. Your edits (move, hide, projects, rules, order, remove from
+  active) go back to sheprd
+  ([docs/sheprd-view-sync.md](docs/sheprd-view-sync.md)).
 - **Navigators** for Herdr and tmux: every pane with its agent and state, tap to
   switch, one-tap **Split right / Split down / New tab / New workspace** (tmux:
   new window), windows or tabs 1-9, zoom, kill pane and detach. Long-press the

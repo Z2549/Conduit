@@ -275,7 +275,7 @@ class HomeProjectsList extends StatelessWidget {
         continue;
       }
       for (final agent in entry.agentRows) {
-        if (controller.removedFromActive(entry, agent)) continue;
+        if (controller.leftOutOfActive(entry, agent)) continue;
         final text = _agentText(entry, agent, project, names);
         if (!all &&
             !search.matches([

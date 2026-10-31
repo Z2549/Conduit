@@ -38,6 +38,7 @@ class ProjectEntry {
     this.hidden = false,
     this.sheprd = const {},
     this.sheprdKeys = const {},
+    this.bySheprd = false,
   });
 
   /// The machine-tree row (opens and drags like in the Machines tab).
@@ -52,7 +53,9 @@ class ProjectEntry {
   final List<SidebarNode> agentRows;
 
   /// Working, waiting, finished, open in the app, or changed state within
-  /// the recent hours: kept by the "active" filter.
+  /// the recent hours: kept by the "active" filter. With "Sync with
+  /// sheprd", on a machine sheprd sees: one of its agents is in sheprd's
+  /// active view (or busy and not listed by sheprd yet).
   final bool active;
 
   /// In the layout's hidden list (shown only with "show hidden").
@@ -66,6 +69,11 @@ class ProjectEntry {
   /// The same agents' keys as sheprd names them (`machine/pane_id`, with
   /// the app's machine names), for marks sent back.
   final Map<String, String> sheprdKeys;
+
+  /// With "Sync with sheprd", on a machine sheprd sees and with a view
+  /// that is not stale: sheprd's active view decides [active] and which
+  /// agent rows the active filter keeps.
+  final bool bySheprd;
 
   /// sheprd's view of [row] (one of [agentRows], or [node]), if synced.
   SheprdAgentView? sheprdOf(SidebarNode row) => sheprd[row.key];
@@ -180,6 +188,7 @@ abstract final class ProjectTreeBuilder {
     int recentHours = ProjectPrefs.defaultRecentHours,
     Map<String, SheprdAgentView>? sheprd,
     List<String> order = const [],
+    bool sheprdStale = false,
   }) {
     final clock = now ?? DateTime.now();
     final recent = Duration(hours: recentHours);
@@ -204,6 +213,13 @@ abstract final class ProjectTreeBuilder {
             in machineAliases[machine.machineId] ?? const <String>{})
           if (alias.trim().isNotEmpty) alias.trim().toLowerCase(),
       };
+      // A stale view's flags are frozen: the app's own rule decides then.
+      final seenBySheprd =
+          sheprd != null &&
+          !sheprdStale &&
+          sheprd.keys.any(
+            (key) => names.contains(key.substring(0, key.indexOf('/'))),
+          );
       for (final node in machine.children) {
         final nodeAgents = _agentsOf(node, agents);
         final keys = [for (final name in names) _memberKey(name, node)];
@@ -254,15 +270,16 @@ abstract final class ProjectTreeBuilder {
             viewKeys.putIfAbsent(rowKey, () => '${names.first}/$paneId');
           }
         }
-        final active = views.isEmpty
+        // While synced, sheprd decides what is active on the machines it
+        // sees (CON-126): its `active` already counts its idle clock, kept
+        // and removed agents. The app's own clock (the companion's last
+        // event, reset when it restarts) and open sessions do not count.
+        // A busy agent sheprd has not listed yet still does.
+        final active = !seenBySheprd
             ? _isActive(node, nodeAgents, agentRows, clock, recent)
-            : node.openInApp ||
-                  views.values.any((view) => view.active) ||
-                  nodeAgents.any(
-                    (agent) =>
-                        agent.stateChangedAt != null &&
-                        clock.difference(agent.stateChangedAt!) < recent,
-                  );
+            : views.isEmpty
+            ? _isBusy(node, nodeAgents, agentRows)
+            : views.values.any((view) => view.active);
         group.entries.add((
           rank,
           ProjectEntry(
@@ -273,6 +290,7 @@ abstract final class ProjectTreeBuilder {
             hidden: hidden,
             sheprd: views,
             sheprdKeys: viewKeys,
+            bySheprd: seenBySheprd,
           ),
         ));
         if (hidden) continue;
@@ -408,21 +426,48 @@ abstract final class ProjectTreeBuilder {
     DateTime now,
     Duration recent,
   ) {
-    bool busy(SidebarDot dot) =>
-        dot == SidebarDot.needsYou ||
-        dot == SidebarDot.working ||
-        dot == SidebarDot.done;
-    if (node.openInApp || busy(node.dot)) return true;
-    if (agentRows.any((row) => busy(row.dot))) return true;
+    if (node.openInApp || _isBusy(node, agents, agentRows)) return true;
     for (final agent in agents) {
-      if (agent.state.needsAttention ||
-          agent.state == AgentAttentionState.working) {
-        return true;
-      }
       final at = agent.stateChangedAt;
       if (at != null && now.difference(at) < recent) return true;
     }
     return false;
+  }
+
+  /// Working, needing you or finished: in an active view whatever its
+  /// last change.
+  static bool isBusy(SidebarDot dot) =>
+      dot == SidebarDot.needsYou ||
+      dot == SidebarDot.working ||
+      dot == SidebarDot.done;
+
+  /// The agent an agent row ([ProjectEntry.agentRows]) stands for: a
+  /// pane's, or the single agent of a tab.
+  static AgentInfo? agentOf(SidebarNode row) => switch (row.target) {
+    AgentPaneTarget(:final pane) => pane.agent,
+    HerdrTabTarget(:final workspace, :final tab) => switch ([
+      for (final pane in workspace.panes)
+        if (pane.agent.tab == tab.id) pane,
+    ]) {
+      [final pane] => pane.agent,
+      _ => null,
+    },
+    _ => null,
+  };
+
+  static bool _isBusy(
+    SidebarNode node,
+    List<AgentInfo> agents,
+    List<SidebarNode> agentRows,
+  ) {
+    if (isBusy(node.dot) || agentRows.any((row) => isBusy(row.dot))) {
+      return true;
+    }
+    return agents.any(
+      (agent) =>
+          agent.state.needsAttention ||
+          agent.state == AgentAttentionState.working,
+    );
   }
 
   /// The agents working in [node]: its panes' agents, and the companion's

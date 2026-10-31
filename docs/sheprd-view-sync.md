@@ -301,7 +301,25 @@ counts `active` in its active filter, and adds the idle age (`now`, `5m`,
     [--state-seq N]` appends one line and returns `{ok: true, id}`.
 - App: when "Sync with sheprd" is on, the project views use `view.layout`
   (the newest `updated` across the machines that report one) and show the
-  presence it reports. Keys under `self` are that machine. Under `local`
+  presence it reports. On a machine that has agents in the view, the
+  active filter follows sheprd alone (CON-126): a workspace is active when
+  one of its agents is in sheprd's active view (or is busy and not listed
+  yet), and an agent row sheprd leaves out of its active view is left out
+  too. The app's own clock (the companion's last event, which restarts
+  with the companion) does not count there, and neither does a workspace
+  being open in the app. Machines sheprd does not see, and every machine
+  while the view is stale, keep the app's own rule (busy, open in the
+  app, or changed within the recent hours); the project views all use
+  the same rule for agent rows. The hub (`local`) is the machine whose
+  own copy says `self: "local"`; else the one whose name or address (or
+  its first dot-separated part) is the view's `hub`; else the machine
+  whose Herdr workspaces (id and label) are the view's `local/` ones. If
+  none is, the keys stay under the hub's name and the view says "sheprd's
+  hub '<hub>' isn't one of your machines". The view is read
+  every 15 s while a project view shows, and again whenever the app comes
+  back to the foreground. A `{found: true, error}` reply is shown as
+  "sheprd's view on <machine> can't be read: <error>", not as "isn't
+  sharing its view yet". Keys under `self` are that machine. Under `local`
   is the hub, which is recognised by its name or address. Mark read,
   unread, keep and dismiss go back through the companion. With v2 (the
   view says `updates: 2` and the companion has `sheprd-view-2`), layout
