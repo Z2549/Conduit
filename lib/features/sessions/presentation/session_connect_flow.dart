@@ -205,12 +205,13 @@ class SessionConnectFlow {
   };
 
   /// Opens a session for [host]: straight away when the host remembers a
-  /// choice (unless [forcePicker]), otherwise after the picker. Returns
-  /// null when the picker was dismissed.
+  /// choice (unless [forcePicker]), otherwise after the picker, on
+  /// [initialTab] when given. Returns null when the picker was dismissed.
   Future<TerminalSessionController?> connect(
     BuildContext context,
     SavedHost host, {
     bool forcePicker = false,
+    ConnectPickerTab? initialTab,
   }) async {
     unawaited(hostsController.markConnected(host));
     if (host.isLocal) {
@@ -235,7 +236,7 @@ class SessionConnectFlow {
           runner: runner,
           preferences: saved,
           activeTargetKeys: activeTargetKeysFor(host),
-          initialTab: initialTabFor(remembered),
+          initialTab: initialTab ?? initialTabFor(remembered, host.backend),
           recentDirectories: directories,
           mayMoveHerdrFocus: herdr.mayMoveFocus,
           agentKinds: agentKinds?.call(host.id),
@@ -257,13 +258,15 @@ class SessionConnectFlow {
 
   /// The picker tab that shows [remembered]: the Herdr tab for a Herdr
   /// workspace or an hc terminal (it is the "Herdr app" tab on an hc
-  /// machine), else Tmux.
-  static ConnectPickerTab initialTabFor(ConnectTarget? remembered) =>
-      switch (remembered?.kind) {
-        ConnectTargetKind.herdr ||
-        ConnectTargetKind.hc => ConnectPickerTab.herdr,
-        _ => ConnectPickerTab.tmux,
-      };
+  /// machine, where it is also the default), else Tmux.
+  static ConnectPickerTab initialTabFor(
+    ConnectTarget? remembered, [
+    HostBackend backend = HostBackend.herdr,
+  ]) => switch (remembered?.kind) {
+    ConnectTargetKind.herdr || ConnectTargetKind.hc => ConnectPickerTab.herdr,
+    null when backend == HostBackend.hc => ConnectPickerTab.herdr,
+    _ => ConnectPickerTab.tmux,
+  };
 
   /// Opens (or activates) the session for [target] on [host] without any
   /// UI.

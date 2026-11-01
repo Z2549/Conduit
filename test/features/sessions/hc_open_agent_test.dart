@@ -103,5 +103,17 @@ void main() {
       ConnectPickerTab.tmux,
     );
     expect(SessionConnectFlow.initialTabFor(null), ConnectPickerTab.tmux);
+    // Nothing remembered: an hc machine opens on its Herdr app tab.
+    expect(
+      SessionConnectFlow.initialTabFor(null, HostBackend.hc),
+      ConnectPickerTab.herdr,
+    );
+    expect(
+      SessionConnectFlow.initialTabFor(
+        const ConnectTarget.tmux('work'),
+        HostBackend.hc,
+      ),
+      ConnectPickerTab.tmux,
+    );
   });
 }

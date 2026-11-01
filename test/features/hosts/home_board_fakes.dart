@@ -91,6 +91,14 @@ class HerdrFakeRunner implements AgentCommandRunner {
   String tmuxStderr;
   String tmuxWindows;
 
+  /// What `hc ls --json` answers (an hc machine's board).
+  String hcList =
+      '{"hidden_finished":0,"terminals":[{"address":"t1","agent":"claude",'
+      '"cwd":"/srv/api","state":"live","status":"blocked","turn":2},'
+      '{"address":"t2","agent":"bash","cwd":"/srv","state":"live","turn":0}]}';
+  int hcExitCode = 0;
+  String hcStderr = '';
+
   /// Thrown by every call when set (a dead connection).
   Object? error;
 
@@ -113,6 +121,13 @@ class HerdrFakeRunner implements AgentCommandRunner {
         stdout: tmuxSessions,
         stderr: tmuxStderr,
         exitCode: tmuxExitCode,
+      );
+    }
+    if (command.contains('exec hc ')) {
+      return AgentCommandResult(
+        stdout: hcList,
+        stderr: hcStderr,
+        exitCode: hcExitCode,
       );
     }
     if (command.startsWith('tmux list-windows')) {

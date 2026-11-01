@@ -6,6 +6,7 @@ import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/presentation/home_board_controller.dart';
 import 'package:conduit/features/hosts/presentation/widgets/home_session_grid.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
 import 'package:conduit/features/sessions/presentation/terminal_preview.dart';
 import 'package:conduit/features/terminal/presentation/terminal_session_controller.dart';
@@ -424,6 +425,56 @@ void main() {
         of(HomeBoardPhase.ready, workspaces: [workspace('w1', 'A')]),
         isNull,
       );
+    });
+
+    test('an hc machine never offers Start Herdr', () {
+      HomeBoardNotice? of(
+        HomeBoardPhase phase, {
+        List<HcTerminalInfo> terminals = const [],
+        List<TmuxSessionInfo> tmux = const [],
+      }) => HomeBoardNotice.of(
+        HomeBoardState(
+          phase: phase,
+          backend: HostBackend.hc,
+          hcTerminals: terminals,
+          tmux: HomeTmuxStatus.available,
+          tmuxSessions: tmux,
+          message: 'core is down',
+        ),
+      );
+
+      final ready = of(
+        HomeBoardPhase.ready,
+        terminals: const [
+          HcTerminalInfo(address: 't1'),
+          HcTerminalInfo(address: 't2'),
+        ],
+      )!;
+      expect(ready.title, '2 Herdr app terminals');
+      expect(ready.message, contains('Connect › Herdr app'));
+      expect(ready.action, HomeBoardNoticeAction.openHerdrApp);
+      expect(
+        of(HomeBoardPhase.ready, tmux: const [TmuxSessionInfo(name: 'main')]),
+        isNull,
+      );
+      final failed = of(HomeBoardPhase.failed)!;
+      expect(failed.title, 'Could not list the Herdr app terminals');
+      expect(failed.action, HomeBoardNoticeAction.retry);
+      final missing = HomeBoardNotice.of(
+        const HomeBoardState(
+          phase: HomeBoardPhase.notInstalled,
+          backend: HostBackend.hc,
+        ),
+      )!;
+      expect(missing.title, 'The Herdr app is not installed');
+      expect(missing.action, HomeBoardNoticeAction.openShell);
+      for (final phase in HomeBoardPhase.values) {
+        expect(
+          of(phase)?.action,
+          isNot(HomeBoardNoticeAction.startHerdr),
+          reason: '$phase',
+        );
+      }
     });
 
     test('a connection problem replaces the listing wording', () {
