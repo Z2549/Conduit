@@ -1327,11 +1327,14 @@ class _TerminalPageState extends State<TerminalPage>
   }
 
   /// Whether closing [session] ends what runs in it: a connected plain
-  /// shell (or local shell) does; a tmux or Herdr session only detaches.
+  /// shell (or local shell) does; a tmux, Herdr or hc session only
+  /// detaches.
   bool _closeEndsProcesses(TerminalSessionController session) {
     if (!session.isConnected) return false;
     final kind = widget.workspace.targetOf(session).kind;
-    if (kind == ConnectTargetKind.tmux || kind == ConnectTargetKind.herdr) {
+    if (kind == ConnectTargetKind.tmux ||
+        kind == ConnectTargetKind.herdr ||
+        kind == ConnectTargetKind.hc) {
       return false;
     }
     return !session.host.startTmuxOnConnect;
