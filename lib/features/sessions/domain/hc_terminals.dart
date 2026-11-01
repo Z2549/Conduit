@@ -92,18 +92,19 @@ abstract final class HcCommands {
 
   /// `hc read <t> --lines <n>`: the screen plus [lines] of history, as text.
   static String read(String address, {int lines = 200}) =>
-      _hc('read ${shellQuoteArgument(address)} --lines $lines');
+      _hc('read --lines $lines -- ${shellQuoteArgument(address)}');
 
   /// `hc send <t> <text>`: pastes [text] and presses Enter once nobody has
   /// typed for about three seconds. hc refuses a blocked program (exit 9);
   /// the phone never passes `--force`, so a permission prompt is answered
-  /// in the terminal itself.
+  /// in the terminal itself. `--` ends hc's options, so text such as `-h`
+  /// or `- fix tests` is typed instead of read as a flag.
   static String send(String address, String text) =>
-      _hc('send ${shellQuoteArgument(address)} ${shellQuoteArgument(text)}');
+      _hc('send -- ${shellQuoteArgument(address)} ${shellQuoteArgument(text)}');
 
   /// `hc keys <t> <keys...>`: named keys (`enter`, `esc`, `up`, `ctrl+c`).
   static String keys(String address, List<String> keys) => _hc(
-    'keys ${shellQuoteArgument(address)} '
+    'keys -- ${shellQuoteArgument(address)} '
     '${keys.map(shellQuoteArgument).join(' ')}',
   );
 

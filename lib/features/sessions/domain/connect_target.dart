@@ -144,7 +144,7 @@ class ConnectTarget {
     ConnectTargetKind.directory => 'cd ${shellQuote(name)}',
     // ctrl+\ detaches back to this shell, like the herdr and tmux attaches,
     // which do not `exec` either.
-    ConnectTargetKind.hc => 'hc attach ${shellQuote(name)}',
+    ConnectTargetKind.hc => 'hc attach -- ${shellQuote(name)}',
   };
 
   String _herdrAttachCommand() {

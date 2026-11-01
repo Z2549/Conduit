@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
@@ -140,15 +143,58 @@ void main() {
       expect(HcCommands.list, contains('exec hc ls --json'));
       expect(
         HcCommands.read('t2', lines: 50),
-        contains('hc read t2 --lines 50'),
+        contains('hc read --lines 50 -- t2'),
       );
       final send = HcCommands.send('dev/t7', "it's done; rm -rf /");
       expect(send, contains('hc send'));
       expect(send, isNot(contains("it's done; rm")));
       final keys = HcCommands.keys('t2', ['ctrl+c', 'esc']);
-      expect(keys, contains('hc keys t2 '));
+      expect(keys, contains('hc keys -- t2 '));
       expect(keys, contains('ctrl+c'));
       expect(keys, contains('esc'));
+    });
+
+    test('text that looks like a flag is typed, not parsed by hc', () async {
+      // `hc send t7 -h` prints help and exits 0, so the phone would say
+      // "Sent." with nothing typed; `--` must end hc's options first. The
+      // commands run through sh with hc swapped for printf, which prints
+      // the argv hc would get.
+      Future<List<String>> argv(String command) async {
+        final printing = command.replaceFirst(
+          'exec hc ',
+          r'exec printf "%s\n" ',
+        );
+        final result = await Process.run('sh', ['-c', printing]);
+        expect(result.exitCode, 0, reason: '${result.stderr}');
+        return const LineSplitter().convert(result.stdout as String);
+      }
+
+      expect(await argv(HcCommands.send('t7', '-h')), [
+        'send',
+        '--',
+        't7',
+        '-h',
+      ]);
+      expect(await argv(HcCommands.send('t7', '- fix tests')), [
+        'send',
+        '--',
+        't7',
+        '- fix tests',
+      ]);
+      expect(await argv(HcCommands.keys('-odd', ['enter', 'ctrl+c'])), [
+        'keys',
+        '--',
+        '-odd',
+        'enter',
+        'ctrl+c',
+      ]);
+      expect(await argv(HcCommands.read('-odd', lines: 5)), [
+        'read',
+        '--lines',
+        '5',
+        '--',
+        '-odd',
+      ]);
     });
 
     test('docGet sends one doc.get per name over hc connect', () {
@@ -231,7 +277,7 @@ void main() {
     test('attaches with hc and survives the session host id', () {
       expect(target.key, 'hc:dev/t7');
       expect(target.title, 'claude in api');
-      expect(target.startupCommand, 'hc attach dev/t7');
+      expect(target.startupCommand, 'hc attach -- dev/t7');
       final host = target.apply(
         buildHost('h').copyWith(startTmuxOnConnect: true),
       );
