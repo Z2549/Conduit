@@ -17,6 +17,11 @@ class HcAttentionProvider extends AgentAttentionProvider {
 
   static const _commandTimeout = Duration(seconds: 10);
 
+  /// The [AgentInfo.herdrServer] of every agent hc lists: their id is an hc
+  /// terminal address, opened with `hc attach` rather than a Herdr
+  /// workspace or tmux pane.
+  static const serverId = 'hc';
+
   @override
   String get id => 'hc';
 
@@ -53,6 +58,7 @@ class HcAttentionProvider extends AgentAttentionProvider {
           kind: terminal.agent,
           state: stateOf(terminal.status),
           stateSequence: terminal.turn,
+          herdrServer: serverId,
         ),
   ];
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_theme.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
@@ -133,7 +134,9 @@ class SessionConnectFlow {
   /// `tab` = `session:window`, `pane` = `%N`), the tab attached to that
   /// tmux session with the pane selected; with a Herdr location, the exact
   /// workspace, tab and pane on its Herdr server (a named session's `w1` is
-  /// not the default one's); otherwise the host's open session, if any.
+  /// not the default one's); with an hc agent (the Herdr app backend), its
+  /// terminal attached with `hc attach`, as the picker's Herdr app tab
+  /// opens it; otherwise the host's open session, if any.
   /// Asks for the terminal to be shown when something was opened; with
   /// [preferredView] (a notification tap), in the session's preferred
   /// view (see [takeOpenedAgent]) rather than always its terminal.
@@ -149,7 +152,10 @@ class SessionConnectFlow {
       pane: agent.pane,
     );
     TerminalSessionController? session;
-    if (tmuxLocation != null && !host.isLocal) {
+    if (agent.herdrServer == HcAttentionProvider.serverId && !host.isLocal) {
+      unawaited(hostsController.markConnected(host));
+      session = open(host, ConnectTarget.hc(agent.id, label: agent.name));
+    } else if (tmuxLocation != null && !host.isLocal) {
       unawaited(hostsController.markConnected(host));
       session = await tmux.openAgentLocation(
         host,
@@ -229,9 +235,7 @@ class SessionConnectFlow {
           runner: runner,
           preferences: saved,
           activeTargetKeys: activeTargetKeysFor(host),
-          initialTab: remembered?.kind == ConnectTargetKind.herdr
-              ? ConnectPickerTab.herdr
-              : ConnectPickerTab.tmux,
+          initialTab: initialTabFor(remembered),
           recentDirectories: directories,
           mayMoveHerdrFocus: herdr.mayMoveFocus,
           agentKinds: agentKinds?.call(host.id),
@@ -250,6 +254,16 @@ class SessionConnectFlow {
     unawaited(preferences.save(host.id, updated));
     return open(host, result.target);
   }
+
+  /// The picker tab that shows [remembered]: the Herdr tab for a Herdr
+  /// workspace or an hc terminal (it is the "Herdr app" tab on an hc
+  /// machine), else Tmux.
+  static ConnectPickerTab initialTabFor(ConnectTarget? remembered) =>
+      switch (remembered?.kind) {
+        ConnectTargetKind.herdr ||
+        ConnectTargetKind.hc => ConnectPickerTab.herdr,
+        _ => ConnectPickerTab.tmux,
+      };
 
   /// Opens (or activates) the session for [target] on [host] without any
   /// UI.

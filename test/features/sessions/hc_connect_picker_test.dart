@@ -105,7 +105,7 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('hc-action-read')));
     await tester.pumpAndSettle();
-    expect(runner.commands.last, contains('hc read t1 --lines 200'));
+    expect(runner.commands.last, contains('hc read --lines 200 -- t1'));
     expect(find.textContaining('line two'), findsOneWidget);
   });
 }
