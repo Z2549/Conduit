@@ -125,6 +125,20 @@ void main() {
       ]);
     });
 
+    test('an hc terminal: ctrl+backslash, never Ctrl-D', () {
+      final controller = TerminalSessionController(
+        host: mosh(const ConnectTarget.hc('t7')),
+        repository: ImmediateTerminalRepository(TrackableTerminalSession()),
+        startupCommand: const ConnectTarget.hc('t7').startupCommand,
+      );
+      addTearDown(controller.dispose);
+      final keys = controller.moshCloseKeystrokes();
+      // Ctrl-D would reach the attached program and could end it.
+      expect(keys, isA<MoshCloseHerdr>());
+      expect((keys as MoshCloseHerdr).detach, [0x1c]);
+      expect(keys.detach, isNot(ctrlD));
+    });
+
     test('a plain shell: Ctrl-D', () {
       final controller = TerminalSessionController(
         host: mosh(null),

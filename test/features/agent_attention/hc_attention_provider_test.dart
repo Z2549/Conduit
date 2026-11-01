@@ -85,14 +85,16 @@ void main() {
       AgentAttentionController,
       ScriptedAgentCommandRunner,
     )
-    build(List<Object> script) {
+    build(List<Object> script, {bool withCompanion = true}) {
       final workspace = TerminalWorkspaceController(FreshTerminalRepository());
       final runner = ScriptedAgentCommandRunner(script);
       final controller = AgentAttentionController(
         workspace: workspace,
         runnerFactory: (_) => runner,
         provider: const HerdrAttentionProvider(),
-        companionProvider: const ConductoreHostAttentionProvider(),
+        companionProvider: withCompanion
+            ? const ConductoreHostAttentionProvider()
+            : null,
         pollInterval: const Duration(days: 1),
         watchRestartDelay: Duration.zero,
       );
@@ -132,6 +134,17 @@ void main() {
           .connect();
       await pumpEventQueue();
       expect(controller.providerFor('h').id, 'conductore');
+    });
+
+    test('a companion choice in a build without the companion stays on hc, '
+        'never the herdr CLI', () async {
+      final (workspace, controller, runner) = build([ls], withCompanion: false);
+      await workspace
+          .open(host(HostBackend.hc, monitor: AgentMonitorKind.companion))
+          .connect();
+      await pumpEventQueue();
+      expect(controller.providerFor('h').id, 'hc');
+      expect(runner.commands.single, contains('hc ls --json'));
     });
 
     test('sheprd keeps the herdr CLI', () async {
