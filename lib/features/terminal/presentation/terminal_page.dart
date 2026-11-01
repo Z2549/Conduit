@@ -2034,6 +2034,8 @@ class _TerminalPageState extends State<TerminalPage>
     return switch (ConnectTarget.fromSessionHostId(session.host.id)?.kind) {
       ConnectTargetKind.herdr => TerminalWindowSwitchTarget.herdr,
       ConnectTargetKind.tmux => TerminalWindowSwitchTarget.tmux,
+      // One hc terminal per view: no windows to switch between.
+      ConnectTargetKind.hc => null,
       ConnectTargetKind.shell || ConnectTargetKind.directory || null =>
         session.host.startTmuxOnConnect
             ? TerminalWindowSwitchTarget.tmux

@@ -350,7 +350,10 @@ class SessionRestoreController extends ChangeNotifier {
   /// How a session to [target] on [host] is brought back.
   static RestoredSessionMode modeFor(SavedHost host, ConnectTarget target) {
     final reattaches = switch (target.kind) {
-      ConnectTargetKind.herdr || ConnectTargetKind.tmux => true,
+      // hc terminals outlive the connection, like Herdr and tmux.
+      ConnectTargetKind.herdr ||
+      ConnectTargetKind.tmux ||
+      ConnectTargetKind.hc => true,
       ConnectTargetKind.shell => host.startTmuxOnConnect,
       ConnectTargetKind.directory => false,
     };

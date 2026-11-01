@@ -1498,13 +1498,13 @@ class AgentAttentionController extends ChangeNotifier {
     final resolved = hc
         ? _hcProvider
         : switch (monitor.host.agentMonitor) {
-      AgentMonitorKind.herdr => _provider,
-      AgentMonitorKind.companion => companion ?? _provider,
-      AgentMonitorKind.auto =>
-        companion != null && await companion.isAvailable(monitor.runner)
-            ? companion
-            : _provider,
-    };
+            AgentMonitorKind.herdr => _provider,
+            AgentMonitorKind.companion => companion ?? _provider,
+            AgentMonitorKind.auto =>
+              companion != null && await companion.isAvailable(monitor.runner)
+                  ? companion
+                  : _provider,
+          };
     // Another resolution may have finished while probing.
     return monitor.provider ??= resolved;
   }

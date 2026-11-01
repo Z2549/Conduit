@@ -98,9 +98,8 @@ abstract final class HcCommands {
   /// typed for about three seconds. hc refuses a blocked program (exit 9);
   /// the phone never passes `--force`, so a permission prompt is answered
   /// in the terminal itself.
-  static String send(String address, String text) => _hc(
-    'send ${shellQuoteArgument(address)} ${shellQuoteArgument(text)}',
-  );
+  static String send(String address, String text) =>
+      _hc('send ${shellQuoteArgument(address)} ${shellQuoteArgument(text)}');
 
   /// `hc keys <t> <keys...>`: named keys (`enter`, `esc`, `up`, `ctrl+c`).
   static String keys(String address, List<String> keys) => _hc(
@@ -347,12 +346,12 @@ String? unsupportedReason(HostBackend backend, MultiplexerAction action) {
     MultiplexerAction.attach => null,
     MultiplexerAction.focusPane =>
       'hc cannot move the Herdr app\'s focus; open the terminal here instead.',
-    MultiplexerAction.splitPane ||
-    MultiplexerAction.zoomPane => 'Panes are the Herdr app\'s layout; hc has '
-        'no command for them.',
-    MultiplexerAction.newTab ||
-    MultiplexerAction.newWorkspace => 'Spaces and tabs live in the Herdr app '
-        'only; hc has no command for them.',
+    MultiplexerAction.splitPane || MultiplexerAction.zoomPane =>
+      'Panes are the Herdr app\'s layout; hc has '
+          'no command for them.',
+    MultiplexerAction.newTab || MultiplexerAction.newWorkspace =>
+      'Spaces and tabs live in the Herdr app '
+          'only; hc has no command for them.',
     MultiplexerAction.prefixKeys =>
       'An hc terminal is attached on its own, without a TUI around it.',
   };
@@ -361,6 +360,5 @@ String? unsupportedReason(HostBackend backend, MultiplexerAction action) {
 /// The actions [backend] cannot do, each with its reason, in a fixed order.
 List<(MultiplexerAction, String)> unsupportedActions(HostBackend backend) => [
   for (final action in MultiplexerAction.values)
-    if (unsupportedReason(backend, action) case final reason?)
-      (action, reason),
+    if (unsupportedReason(backend, action) case final reason?) (action, reason),
 ];

@@ -34,10 +34,9 @@ class HcAttentionProvider extends AgentAttentionProvider {
         'hc (herdr-core) is not installed on this machine.',
       ),
       RemoteListingNotRunning(:final message) ||
-      RemoteListingFailed(:final message) => throw AppFailure(
-        'hc reported an error.',
-        message,
-      ),
+      RemoteListingFailed(
+        :final message,
+      ) => throw AppFailure('hc reported an error.', message),
     };
   }
 

@@ -98,12 +98,13 @@ class HcSheprdView {
   /// shape), so callers fall back to an ungrouped list.
   static HcSheprdView? fromJson(Object? json) {
     if (json is! Map || json['v'] != 1) return null;
-    final marks = json['marks'] is Map ? json['marks'] as Map : const {};
+    final marks = json['marks'] is Map
+        ? json['marks'] as Map<Object?, Object?>
+        : const <Object?, Object?>{};
     return HcSheprdView(
       projects: [
-        if (json['projects'] case final List projects)
-          for (final raw in projects)
-            if (HcProject.fromJson(raw) case final project?) project,
+        if (json['projects'] case final List<Object?> projects)
+          for (final raw in projects) ?HcProject.fromJson(raw),
       ],
       hidden: _strings(json['hidden']).toSet(),
       filter: HcViewFilter.parse(json['filter']),
@@ -245,7 +246,7 @@ abstract final class HcCards {
               status: _string(raw['status']),
               summary: _string(raw['summary']),
               questions: [
-                if (raw['questions'] case final List questions)
+                if (raw['questions'] case final List<Object?> questions)
                   for (final q in questions)
                     if (q is Map && q['n'] is int && q['text'] is String)
                       HcCardQuestion(

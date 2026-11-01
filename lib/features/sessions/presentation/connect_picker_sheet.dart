@@ -623,6 +623,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                     : 'Herdr tab ${target.tabId}',
               ConnectTargetKind.shell => 'Plain shell',
               ConnectTargetKind.directory => target.name,
+              ConnectTargetKind.hc => 'Herdr app terminal ${target.name}',
             },
             active: widget.activeTargetKeys.contains(target.key),
             onTap: () => _pick(target),
