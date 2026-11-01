@@ -310,6 +310,7 @@ class HostAdvancedSection extends StatelessWidget {
     required this.agentNotifyInput,
     required this.agentNotifyFinished,
     required this.agentMonitor,
+    required this.backend,
     required this.snippets,
     required this.connectSnippetId,
     required this.timeoutValidator,
@@ -324,6 +325,7 @@ class HostAdvancedSection extends StatelessWidget {
     required this.onAgentNotifyInputChanged,
     required this.onAgentNotifyFinishedChanged,
     required this.onAgentMonitorChanged,
+    required this.onBackendChanged,
     required this.onSnippetsChanged,
     required this.onConnectSnippetChanged,
     this.companionSetup,
@@ -347,6 +349,9 @@ class HostAdvancedSection extends StatelessWidget {
   final bool agentNotifyInput;
   final bool agentNotifyFinished;
   final AgentMonitorKind agentMonitor;
+
+  /// Herdr TUI, sheprd or the Herdr app's `hc` (CON-100000).
+  final HostBackend backend;
   final List<TerminalSnippet> snippets;
   final String connectSnippetId;
   final FormFieldValidator<String> timeoutValidator;
@@ -361,6 +366,7 @@ class HostAdvancedSection extends StatelessWidget {
   final ValueChanged<bool> onAgentNotifyInputChanged;
   final ValueChanged<bool> onAgentNotifyFinishedChanged;
   final ValueChanged<AgentMonitorKind> onAgentMonitorChanged;
+  final ValueChanged<HostBackend> onBackendChanged;
   final ValueChanged<List<TerminalSnippet>> onSnippetsChanged;
   final ValueChanged<String> onConnectSnippetChanged;
 
@@ -504,6 +510,27 @@ class HostAdvancedSection extends StatelessWidget {
         MultiplexerPrefixField(
           value: tmuxPrefixKey,
           onChanged: onTmuxPrefixKeyChanged,
+        ),
+        const SizedBox(height: 16),
+        DropdownButtonFormField<HostBackend>(
+          key: const ValueKey('host-backend'),
+          initialValue: backend,
+          isExpanded: true,
+          decoration: InputDecoration(
+            labelText: 'Agents and terminals',
+            helperText: backend.description,
+            helperMaxLines: 3,
+            prefixIcon: const Icon(Icons.hub_outlined),
+          ),
+          items: [
+            for (final kind in HostBackend.values)
+              DropdownMenuItem(value: kind, child: Text(kind.label)),
+          ],
+          onChanged: (value) {
+            if (value != null) {
+              onBackendChanged(value);
+            }
+          },
         ),
         const SizedBox(height: 16),
         Material(

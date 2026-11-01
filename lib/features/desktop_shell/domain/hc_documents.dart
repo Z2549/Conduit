@@ -9,6 +9,18 @@ abstract final class HcDocuments {
   static const cards = 'sheprd-cards';
 }
 
+/// Both documents as one machine had them; empty when absent.
+@immutable
+class HcSheprdDocuments {
+  const HcSheprdDocuments({this.view, this.cards = const {}});
+
+  /// Null without a (v1) `sheprd-view`.
+  final HcSheprdView? view;
+
+  /// Open cards by terminal address.
+  final Map<String, List<HcCard>> cards;
+}
+
 /// One project of `sheprd-view`: sheprd's `[[group]]` from `sidebar.toml`.
 @immutable
 class HcProject {
