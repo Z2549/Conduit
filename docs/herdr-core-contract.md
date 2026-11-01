@@ -79,3 +79,31 @@ the app runs on (the hub), like sheprd's `sidebar.toml`.
   the active view.
 - An agent "needs you" when blocked, done, or unread; a working agent with a
   staged-but-unsent answer also counts.
+
+## How Conductore reads them (CON-100000)
+
+Copied from sheprd's `herdr-app/CONTRACT.md` (SHE-100012); the sections above
+are that contract. This one is Conductore's side.
+
+- A machine's backend is a per-machine setting, "Agents and terminals":
+  Herdr (TUI), sheprd, or Herdr app (hc). Herdr stays the default; herdr and
+  sheprd both keep driving the `herdr` CLI. On hc the connect picker's Herdr
+  tab becomes "Herdr app" and lists `hc ls --json`; agent monitoring reads the
+  same list (only terminals whose program reports an OSC 7501 status count as
+  agents).
+- Both documents are read with one `hc connect` call (`doc.get` for
+  `sheprd-view` and `sheprd-cards`). Conductore never writes them, and never
+  reads or writes the app's private `herdr-app` document.
+- A missing document (`value: null`), a view that is not `v: 1`, or a failed
+  read leaves the terminals in one ungrouped list without cards.
+- The phone does not know which space of the Herdr app a terminal sits in,
+  so a terminal's folder stands in for the space name when projects are
+  assigned: a member `machine/<folder>` (`local/` on the machine itself), or
+  a `match` rule found in the folder, the cwd or the terminal's name. Members
+  win; the first matching project takes it; the rest is Other.
+- Open cards (not done, not dismissed) show on their terminal's row with the
+  number of open questions. Answering them stays in the agent's terminal or
+  in the desktop app for now.
+- Not on hc, each shown disabled with its reason in a terminal's actions:
+  focusing, splitting or zooming the app's panes, new tabs or spaces, and
+  Herdr's prefix keys. hc has no command for the app's layout.

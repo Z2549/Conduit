@@ -1,6 +1,5 @@
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
-import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 
 /// What a terminal session should attach to once the shell is up.
 enum ConnectTargetKind {
@@ -143,7 +142,9 @@ class ConnectTarget {
     ConnectTargetKind.shell || ConnectTargetKind.tmux => null,
     ConnectTargetKind.herdr => _herdrAttachCommand(),
     ConnectTargetKind.directory => 'cd ${shellQuote(name)}',
-    ConnectTargetKind.hc => HcCommands.attach(name),
+    // ctrl+\ detaches back to this shell, like the herdr and tmux attaches,
+    // which do not `exec` either.
+    ConnectTargetKind.hc => 'hc attach ${shellQuote(name)}',
   };
 
   String _herdrAttachCommand() {

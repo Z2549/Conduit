@@ -107,12 +107,6 @@ abstract final class HcCommands {
     '${keys.map(shellQuoteArgument).join(' ')}',
   );
 
-  /// `hc attach <t>`, typed into the session's shell: puts the phone's
-  /// terminal on it. ctrl+\ detaches back to that shell, like the herdr
-  /// and tmux attaches, which do not `exec` either.
-  static String attach(String address) =>
-      'hc attach ${shellQuoteArgument(address)}';
-
   /// `doc.get` for [names] over `hc connect` (JSON-RPC lines on stdin and
   /// stdout), one request per name with ids 1, 2, ... in order. A document
   /// nobody wrote comes back as `{"value": null, "version": 0}`.
