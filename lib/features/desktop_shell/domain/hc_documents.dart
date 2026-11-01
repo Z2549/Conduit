@@ -183,7 +183,7 @@ class HcSheprdView {
       terminal.machine.isEmpty ? 'local' : terminal.machine;
 }
 
-/// One open question on a card.
+/// One question on a card.
 @immutable
 class HcCardQuestion {
   const HcCardQuestion({
@@ -197,10 +197,17 @@ class HcCardQuestion {
   final String text;
   final List<String> options;
 
-  /// `open`, `staged`, `sent` or `dismissed`.
+  /// `open`, `staged`, `sending`, `sent` or `dismissed`.
   final String state;
 
-  bool get isOpen => state == 'open';
+  /// Not answered yet as far as the agent knows: `open`, `staged` (an
+  /// answer chosen) or `sending` (a `cards send` has claimed it; a failed
+  /// send puts it back to `staged`). The phone only reads these states and
+  /// never writes them.
+  bool get isOpen => const {'open', 'staged', 'sending'}.contains(state);
+
+  /// A `cards send` is delivering its answer right now.
+  bool get isSending => state == 'sending';
 }
 
 /// One card of `sheprd-cards`, the agents' card ledger.

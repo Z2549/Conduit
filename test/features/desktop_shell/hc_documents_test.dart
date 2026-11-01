@@ -170,6 +170,43 @@ void main() {
       expect(card.questions.first.options, ['Stripe', 'Multibanco']);
     });
 
+    test('a question being sent still counts as open, never unknown', () {
+      final card = HcCards.byTerminal({
+        'v': 1,
+        'cards': {
+          't7/SHE-12': {
+            'id': 'SHE-12',
+            'terminal': 't7',
+            'born': 1790229500000,
+            'questions': [
+              {'n': 1, 'text': 'Which provider?', 'state': 'open'},
+              {
+                'n': 2,
+                'text': 'EUR only?',
+                'state': 'sending',
+                'answer': 'yes',
+                'claim': 'c-41',
+                'claimed_at': '2026-11-02T01:00:00Z',
+              },
+              {'n': 3, 'text': 'Retry?', 'state': 'staged', 'answer': 'no'},
+              {'n': 4, 'text': 'Ship?', 'state': 'sent', 'answer': 'yes'},
+              {'n': 5, 'text': 'Old?', 'state': 'dismissed'},
+            ],
+          },
+        },
+        'inbox': {
+          't7': [
+            {'line': 'SHE-12 Q4 → yes', 'born': 1790229500000, 'read': false},
+          ],
+        },
+      })['t7']!.single;
+      final sending = card.questions[1];
+      expect(sending.state, 'sending');
+      expect(sending.isSending, isTrue);
+      expect(sending.isOpen, isTrue);
+      expect(card.openQuestions, 3);
+    });
+
     test('an absent document has no cards', () {
       expect(HcCards.byTerminal(null), isEmpty);
       expect(HcCards.byTerminal({'v': 1}), isEmpty);
