@@ -33,8 +33,7 @@ class HostKeyMismatch {
   String get shownFingerprint => sha256Fingerprint ?? fingerprint;
 
   /// The pinned key's fingerprint, the same way.
-  String get pinnedFingerprint =>
-      pinned.sha256Fingerprint ?? pinned.fingerprint;
+  String get pinnedFingerprint => pinned.sha256Fingerprint ?? pinned.fingerprint;
 
   /// The same presented key against the same pin.
   bool sameAs(HostKeyMismatch other) =>
