@@ -83,6 +83,43 @@ void main() {
     expect(find.text('claude in Conductore-Mobile'), findsOneWidget);
   });
 
+  testWidgets('reads the view from the hub: marked first, hidden folded', (
+    tester,
+  ) async {
+    final remoteLs = ok(
+      '{"hidden_finished":0,"terminals":[{"address":"t1","agent":"claude",'
+      '"cwd":"/root/Conductore-Mobile","state":"live","turn":0},'
+      '{"address":"t2","agent":"bash","cwd":"/root/Barbusano","name":"shell",'
+      '"state":"live","turn":0},{"address":"omarchy/t5","agent":"claude",'
+      '"cwd":"/home/a/Notes","name":"notes","state":"live","turn":0}]}',
+    );
+    final hubDocs = ok(
+      '{"id":1,"jsonrpc":"2.0","result":{"version":3,"value":{"v":1,'
+      '"projects":[],"hidden":["development-central/Barbusano"],'
+      '"density":"compact","marks":{"marked":["t5"]}}}}\n'
+      '{"id":2,"jsonrpc":"2.0","result":{"version":4,"value":{"v":1,'
+      '"cards":{"t5/CON-9":{"id":"CON-9","terminal":"t5","title":"notes"}}}}}\n',
+    );
+    final (runner, _) = await pump(tester, [tmux, remoteLs, noDocs, hubDocs]);
+
+    expect(runner.commands[3], contains('omarchy'));
+    final titles = tester
+        .widgetList<Text>(find.byType(Text))
+        .map((text) => text.data)
+        .toList();
+    expect(
+      titles.indexOf('★ notes'),
+      lessThan(titles.indexOf('claude in Conductore-Mobile')),
+    );
+    expect(find.text('CON-9 notes'), findsOneWidget, reason: 'compact');
+    expect(find.text('shell'), findsNothing);
+    expect(find.textContaining('HIDDEN 1'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('hc-hidden-toggle')));
+    await tester.pumpAndSettle();
+    expect(find.text('shell'), findsOneWidget);
+  });
+
   testWidgets('the actions list read, send and keys, and why the rest is off', (
     tester,
   ) async {

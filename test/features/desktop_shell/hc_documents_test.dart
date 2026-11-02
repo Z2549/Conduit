@@ -128,9 +128,55 @@ void main() {
       );
     });
 
-    test('mark keys carry the machine, local for the hub', () {
-      expect(HcSheprdView.markKey(terminal('t7')), 'local/t7');
-      expect(HcSheprdView.markKey(terminal('dev/t7')), 'dev/t7');
+    test('marked, hidden and density', () {
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'hidden': ['local/Barbusano'],
+        'filter': 'marked',
+        'density': 'compact',
+        'marks': {
+          'marked': ['t4', 'dev/t9'],
+        },
+      })!;
+      expect(view.filter, HcViewFilter.marked);
+      expect(view.compact, isTrue);
+      expect(view.isMarked(terminal('t4')), isTrue);
+      expect(view.isMarked(terminal('dev/t9')), isTrue);
+      expect(view.isMarked(terminal('t9')), isFalse);
+      expect(view.isHidden(terminal('t2', cwd: '/root/barbusano')), isTrue);
+      expect(
+        view.isHidden(terminal('dev/t2', cwd: '/root/Barbusano')),
+        isFalse,
+      );
+      expect(HcSheprdView.fromJson({'v': 1})!.compact, isFalse);
+      expect(HcSheprdView.fromJson({'v': 1})!.marked, isEmpty);
+    });
+
+    test('a view read from the hub maps its keys to this host', () {
+      // The Herdr app runs on omarchy; the phone talks to dev, which
+      // omarchy calls development-central.
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'LF',
+            'members': ['local/LF', 'development-central/roberto'],
+          },
+        ],
+        'hidden': ['development-central/Barbusano'],
+        'marks': {
+          'marked': ['t5', 'development-central/t1m'],
+          'unread': ['local/t6'],
+        },
+      })!.scoped(const HcKeyScope(hub: 'omarchy', machines: {'omarchy'}));
+      expect(view.isMarked(terminal('omarchy/t5')), isTrue);
+      expect(view.isMarked(terminal('t1m')), isTrue);
+      expect(view.isMarked(terminal('t5')), isFalse);
+      expect(view.needsYou(terminal('omarchy/t6')), isTrue);
+      expect(view.isHidden(terminal('t3', cwd: '/root/Barbusano')), isTrue);
+      expect(view.projectOf(terminal('t2', cwd: '/root/roberto'))!.name, 'LF');
+      expect(view.projectOf(terminal('omarchy/t2', cwd: '/x/LF'))!.name, 'LF');
+      expect(view.projectOf(terminal('t2', cwd: '/x/LF')), isNull);
     });
   });
 
@@ -205,6 +251,17 @@ void main() {
       expect(sending.isSending, isTrue);
       expect(sending.isOpen, isTrue);
       expect(card.openQuestions, 3);
+    });
+
+    test('cards from another machine get the addresses this host uses', () {
+      final cards = HcCards.byTerminal({
+        'v': 1,
+        'cards': {
+          't5/CON-1': {'id': 'CON-1', 'terminal': 't5'},
+          'x/CON-2': {'id': 'CON-2', 'terminal': 'development-central/t1m'},
+        },
+      }, scope: const HcKeyScope(hub: 'omarchy', machines: {'omarchy'}));
+      expect(cards.keys.toSet(), {'omarchy/t5', 't1m'});
     });
 
     test('an absent document has no cards', () {

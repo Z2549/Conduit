@@ -147,6 +147,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   Future<RemoteListing<HcTerminalInfo>>? _hc;
   Future<HcSheprdDocuments>? _hcDocuments;
 
+  /// The sidebar's hidden spaces, folded at the end until tapped.
+  bool _showHidden = false;
+
   /// What to suggest when herdr is missing: `hc` if that is installed.
   Future<HostBackend>? _suggestion;
 
@@ -168,8 +171,19 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     setState(() {
       _tmux = _lister.listTmux();
       if (_onHc) {
-        _hc = _lister.listHc();
-        _hcDocuments = _lister.readHcDocuments();
+        final hc = _hc = _lister.listHc();
+        // Once the machines are known: the Herdr app's view may live on one
+        // this host reaches.
+        _hcDocuments = hc.then(
+          (listing) => _lister.readHcDocuments(
+            machines: switch (listing) {
+              RemoteListingAvailable(:final items) => {
+                for (final terminal in items) terminal.machine,
+              },
+              _ => const {},
+            },
+          ),
+        );
       } else {
         _herdr = _lister.listHerdr();
       }
@@ -669,7 +683,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   }
 
   /// [terminals] under sheprd's projects (then Other), or in one list when
-  /// the machine has no `sheprd-view`.
+  /// the machine has no `sheprd-view`. Marked agents (★) lead each group;
+  /// spaces the sidebar hides fold into Hidden at the end.
   Widget _hcGroups(List<HcTerminalInfo> terminals, HcSheprdDocuments docs) {
     final view = docs.view;
     final shown = terminals.where(
@@ -681,16 +696,21 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
           card.headline,
       ]),
     );
-    if (view == null || view.projects.isEmpty) {
+    if (view == null) {
       return Column(
         children: [for (final terminal in shown) _hcTile(terminal, docs)],
       );
     }
+    final hidden = shown.where(view.isHidden).toList();
+    final visible = [
+      ...shown.where((t) => !view.isHidden(t) && view.isMarked(t)),
+      ...shown.where((t) => !view.isHidden(t) && !view.isMarked(t)),
+    ];
     final groups = <String, List<HcTerminalInfo>>{
       for (final project in view.projects) project.name: [],
     };
     final other = <HcTerminalInfo>[];
-    for (final terminal in shown) {
+    for (final terminal in visible) {
       final project = view.projectOf(terminal);
       (project == null ? other : groups[project.name]!).add(terminal);
     }
@@ -708,8 +728,19 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
               _hcTile(terminal, docs),
           ],
         if (other.isNotEmpty) ...[
-          _hcHeader('Other'),
+          if (view.projects.isNotEmpty) _hcHeader('Other'),
           for (final terminal in other) _hcTile(terminal, docs),
+        ],
+        if (hidden.isNotEmpty) ...[
+          InkWell(
+            key: const ValueKey('hc-hidden-toggle'),
+            onTap: () => setState(() => _showHidden = !_showHidden),
+            child: _hcHeader(
+              '${_showHidden ? '▾' : '▸'} Hidden ${hidden.length}',
+            ),
+          ),
+          if (_showHidden)
+            for (final terminal in hidden) _hcTile(terminal, docs),
         ],
       ],
     );
@@ -735,17 +766,26 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     final cards = docs.cards[terminal.address] ?? const <HcCard>[];
     final questions = cards.fold(0, (sum, card) => sum + card.openQuestions);
     final needsYou = docs.view?.needsYou(terminal) ?? false;
+    final marked = docs.view?.isMarked(terminal) ?? false;
+    // Compact, as the sidebar's density: the card or folder, no address.
+    final compact = docs.view?.compact ?? false;
     return _TargetTile(
       key: ValueKey('hc-terminal-${terminal.address}'),
-      title: terminal.displayLabel,
+      title: marked ? '★ ${terminal.displayLabel}' : terminal.displayLabel,
       subtitle: [
-        terminal.address,
-        if (terminal.folder.isNotEmpty && terminal.name.isNotEmpty)
-          terminal.folder,
-        if (cards.isNotEmpty) cards.map((card) => card.headline).join(', '),
+        if (!compact) terminal.address,
+        if (compact && cards.isNotEmpty)
+          cards.first.headline
+        else if (compact)
+          terminal.folder
+        else ...[
+          if (terminal.folder.isNotEmpty && terminal.name.isNotEmpty)
+            terminal.folder,
+          if (cards.isNotEmpty) cards.map((card) => card.headline).join(', '),
+        ],
         if (questions > 0)
           questions == 1 ? '1 question' : '$questions questions',
-      ].join(' · '),
+      ].where((part) => part.isNotEmpty).join(' · '),
       active: widget.activeTargetKeys.contains(target.key),
       trailingLabel: needsYou && terminal.status != 'blocked'
           ? 'Needs you'
