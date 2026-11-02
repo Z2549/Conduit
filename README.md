@@ -36,8 +36,16 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 ## What's new
 
-Previews 30 to 39 (companion 1.9.0 bundled):
+Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 40**: a third choice for a machine's agents and terminals,
+  **Herdr app (hc)**, next to herdr and sheprd (host form › Agents and
+  terminals). On it Conductore lists, reads, prompts and attaches to the
+  app's terminals through `hc`, groups them by your sheprd projects and shows
+  agents' card questions; desktop-only actions (focus, split, zoom, new tab)
+  show disabled with the reason. Chat View's message field no longer has
+  the `/` button: type `/` for commands or start with `!` for a shell
+  command.
 - **Preview 39**: Chat View can run commands. Type `/` to pick from Claude's
   built-in commands, your own commands and skills (the machine's and the
   project's); the `/` menu in the message field also has **Shell command
