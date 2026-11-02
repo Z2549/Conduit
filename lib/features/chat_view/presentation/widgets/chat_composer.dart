@@ -246,69 +246,7 @@ class _ChatComposerState extends State<ChatComposer> {
     _focusNode.requestFocus();
   }
 
-  /// "Commands": the field starts with `/` (a leading `!` becomes it).
-  void _startCommand() {
-    final text = _controller.text;
-    if (text.startsWith('/')) return _focusNode.requestFocus();
-    _setText('/${text.startsWith('!') ? text.substring(1) : text}');
-  }
-
-  /// A command as the "/" list writes it (`/name` and maybe arguments),
-  /// not a path like `/tmp/x.sh`.
-  static final _bareCommand = RegExp(r'^/[^\s/]*(\s|$)');
-
-  /// "Shell command": adds or removes the leading `!`. A bare `/name`
-  /// becomes `!name`; anything else (a path) keeps its `/`.
-  void _toggleShell() {
-    final text = _controller.text;
-    if (text.startsWith('!')) return _setText(text.substring(1));
-    _setText('!${_bareCommand.hasMatch(text) ? text.substring(1) : text}');
-  }
-
   void _pickCommand(SlashCommand command) => _setText(command.insertText);
-
-  Widget _commandMenu(ThemeData theme) {
-    return ListenableBuilder(
-      listenable: _controller,
-      builder: (context, _) {
-        final shell = _controller.text.startsWith('!');
-        return PopupMenuButton<bool>(
-          key: const ValueKey('chat-commands-menu'),
-          tooltip: 'Commands',
-          enabled: widget.enabled,
-          onSelected: (shellCommand) =>
-              shellCommand ? _toggleShell() : _startCommand(),
-          icon: Text(
-            shell ? '!' : '/',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontFamily: 'monospace',
-              fontWeight: FontWeight.w700,
-              color: shell
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              key: ValueKey('chat-commands-slash'),
-              value: false,
-              child: ListTile(
-                leading: Icon(Icons.keyboard_command_key_rounded),
-                title: Text('Commands'),
-                subtitle: Text('Type / and pick a command or skill'),
-              ),
-            ),
-            CheckedPopupMenuItem(
-              key: const ValueKey('chat-commands-shell'),
-              value: true,
-              checked: shell,
-              child: const Text('Shell command (!)'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   /// The commands matching the `/` being typed, above the input row.
   Widget _suggestions(ThemeData theme) {
@@ -595,7 +533,10 @@ class _ChatComposerState extends State<ChatComposer> {
       decoration: InputDecoration(
         isDense: true,
         hintText: widget.enabled
+            // No button for commands: typing `/` opens the list and `!`
+            // runs a shell command, so the hint says it instead.
             ? 'Message ${agentObject(widget.agentName)}…'
+                  '${widget.loadCommands == null ? '' : ' · / commands'}'
             : widget.disabledHint,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(AppTheme.radius)),
@@ -603,13 +544,6 @@ class _ChatComposerState extends State<ChatComposer> {
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 10,
-        ),
-        // Inside the field too: commands and the shell toggle take no
-        // slot in the row.
-        prefixIcon: widget.loadCommands == null ? null : _commandMenu(theme),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 36,
-          minHeight: 40,
         ),
         // Inside the field: images are always one tap away
         // without taking another slot in the row.

@@ -433,54 +433,16 @@ void main() {
       );
     });
 
-    testWidgets('the / menu starts a command and toggles the shell !', (
+    testWidgets('no / button in the field; the hint names / instead', (
       tester,
     ) async {
-      final text = await pumpComposer(tester);
-      final menu = find.byKey(const ValueKey('chat-commands-menu'));
-      // Inside the field: the row keeps its controls (no new button).
-      expect(
-        find.descendant(
-          of: find.byKey(const ValueKey('chat-composer-field')),
-          matching: menu,
-        ),
-        findsOneWidget,
+      await pumpComposer(tester);
+      expect(find.byKey(const ValueKey('chat-commands-menu')), findsNothing);
+      final field = tester.widget<TextField>(
+        find.byKey(const ValueKey('chat-composer-field')),
       );
-      text.text = 'git status';
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('chat-commands-shell')));
-      await tester.pumpAndSettle();
-      expect(text.text, '!git status');
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('chat-commands-shell')));
-      await tester.pumpAndSettle();
-      expect(text.text, 'git status');
-
-      // A path keeps its slash; a picked command loses it.
-      for (final (before, after) in [
-        ('/tmp/x/cleanup.sh', '!/tmp/x/cleanup.sh'),
-        ('/deploy prod', '!deploy prod'),
-      ]) {
-        text.text = before;
-        await tester.tap(menu);
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey('chat-commands-shell')));
-        await tester.pumpAndSettle();
-        expect(text.text, after);
-      }
-
-      text.text = '';
-      await tester.tap(menu);
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('chat-commands-slash')));
-      await tester.pumpAndSettle();
-      expect(text.text, '/');
-      expect(
-        find.byKey(const ValueKey('chat-command-suggestions')),
-        findsOneWidget,
-      );
+      expect(field.decoration?.prefixIcon, isNull);
+      expect(field.decoration?.hintText, endsWith(' · / commands'));
     });
 
     testWidgets('no loader: no menu and no list', (tester) async {
