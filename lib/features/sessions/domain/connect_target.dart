@@ -18,6 +18,11 @@ enum ConnectTargetKind {
   /// A plain shell that starts with `cd <directory>` (a recent directory
   /// picked in the connect picker).
   directory,
+
+  /// `hc attach <terminal>`: one herdr-core terminal of the Herdr app
+  /// (CON-100000), on machines whose backend is `hc`. No TUI around it, so
+  /// none of Herdr's workspace, tab or pane handling applies.
+  hc,
 }
 
 /// The choice made in the connect picker for one host.
@@ -44,6 +49,10 @@ class ConnectTarget {
   const ConnectTarget.directory(String path)
     : this._(kind: ConnectTargetKind.directory, name: path);
 
+  /// The hc terminal at [address] (`t7`, or `machine/t7`).
+  const ConnectTarget.hc(String address, {String label = ''})
+    : this._(kind: ConnectTargetKind.hc, name: address, label: label);
+
   const ConnectTarget.herdr({
     required String workspaceId,
     String label = '',
@@ -62,10 +71,12 @@ class ConnectTarget {
   final ConnectTargetKind kind;
 
   /// tmux session name, Herdr workspace id (empty for "just run herdr",
-  /// which launches or attaches the default session) or directory path.
+  /// which launches or attaches the default session), directory path or
+  /// hc terminal address.
   final String name;
 
-  /// Human label (Herdr workspace label); empty for tmux and shell.
+  /// Human label (Herdr workspace or hc terminal label); empty for tmux
+  /// and shell.
   final String label;
 
   /// Optional Herdr tab id to focus inside the workspace.
@@ -94,6 +105,7 @@ class ConnectTarget {
     ConnectTargetKind.tmux => 'tmux:$name',
     ConnectTargetKind.herdr => _herdrKey(),
     ConnectTargetKind.directory => 'dir:$name',
+    ConnectTargetKind.hc => 'hc:$name',
   };
 
   String _herdrKey() {
@@ -116,6 +128,7 @@ class ConnectTarget {
           ? name
           : 'Herdr',
     ConnectTargetKind.directory => _basename(name),
+    ConnectTargetKind.hc => label.isNotEmpty ? label : name,
   };
 
   static String _basename(String path) {
@@ -129,6 +142,9 @@ class ConnectTarget {
     ConnectTargetKind.shell || ConnectTargetKind.tmux => null,
     ConnectTargetKind.herdr => _herdrAttachCommand(),
     ConnectTargetKind.directory => 'cd ${shellQuote(name)}',
+    // ctrl+\ detaches back to this shell, like the herdr and tmux attaches,
+    // which do not `exec` either.
+    ConnectTargetKind.hc => 'hc attach -- ${shellQuote(name)}',
   };
 
   String _herdrAttachCommand() {
@@ -186,7 +202,8 @@ class ConnectTarget {
         tmuxSessionName: name,
       ),
       ConnectTargetKind.herdr ||
-      ConnectTargetKind.directory => base.copyWith(startTmuxOnConnect: false),
+      ConnectTargetKind.directory ||
+      ConnectTargetKind.hc => base.copyWith(startTmuxOnConnect: false),
       ConnectTargetKind.shell => base,
     };
   }
@@ -223,7 +240,8 @@ class ConnectTarget {
           : '',
     );
     if ((kind == ConnectTargetKind.tmux ||
-            kind == ConnectTargetKind.directory) &&
+            kind == ConnectTargetKind.directory ||
+            kind == ConnectTargetKind.hc) &&
         target.name.isEmpty) {
       return null;
     }
@@ -258,6 +276,10 @@ class ConnectTarget {
     if (key.startsWith('dir:')) {
       final path = key.substring('dir:'.length);
       return path.isEmpty ? null : ConnectTarget.directory(path);
+    }
+    if (key.startsWith('hc:')) {
+      final address = key.substring('hc:'.length);
+      return address.isEmpty ? null : ConnectTarget.hc(address);
     }
     if (key == 'herdr' ||
         key.startsWith('herdr:') ||

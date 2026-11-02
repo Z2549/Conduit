@@ -59,6 +59,8 @@ import 'package:conduit/features/session_navigation/presentation/session_view_la
 import 'package:conduit/features/session_navigation/presentation/session_view_widgets.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
+import 'package:conduit/features/sessions/presentation/connect_picker_sheet.dart'
+    show ConnectPickerTab;
 import 'package:conduit/features/sessions/presentation/live_terminal_preview.dart';
 import 'package:conduit/features/sessions/presentation/session_connect_flow.dart';
 import 'package:conduit/features/sessions/presentation/session_grid_page.dart'
@@ -1735,6 +1737,11 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
         board?.requestLoad();
       case HomeBoardNoticeAction.retry:
         if (board != null) unawaited(board.refresh());
+      // An hc machine has no herdr to start: its notices offer the Herdr
+      // app tab instead, and an older one lands there too.
+      case HomeBoardNoticeAction.startHerdr when host.backend == HostBackend.hc:
+      case HomeBoardNoticeAction.openHerdrApp:
+        unawaited(_connect(host, initialTab: ConnectPickerTab.herdr));
       case HomeBoardNoticeAction.startHerdr:
         unawaited(
           _openTarget(host, const ConnectTarget.herdr(workspaceId: '')),
@@ -2467,7 +2474,11 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _connect(SavedHost host, {bool forcePicker = false}) async {
+  Future<void> _connect(
+    SavedHost host, {
+    bool forcePicker = false,
+    ConnectPickerTab? initialTab,
+  }) async {
     final flow = widget.connectFlow;
     final TerminalSessionController session;
     if (flow == null) {
@@ -2477,7 +2488,8 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       final connected = await flow.connect(
         context,
         host,
-        forcePicker: forcePicker,
+        forcePicker: forcePicker || initialTab != null,
+        initialTab: initialTab,
       );
       if (connected == null) return;
       session = connected;

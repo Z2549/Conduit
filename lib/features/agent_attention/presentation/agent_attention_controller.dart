@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_notifier.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_provider.dart';
@@ -103,6 +104,7 @@ class AgentAttentionController extends ChangeNotifier {
     required AgentCommandRunnerFactory runnerFactory,
     required AgentAttentionProvider provider,
     AgentAttentionProvider? companionProvider,
+    AgentAttentionProvider hcProvider = const HcAttentionProvider(),
     AgentAttentionNotifier? notifier,
     AgentNotificationPreferencesStore? notificationPreferences,
     Duration pollInterval = const Duration(seconds: 15),
@@ -116,6 +118,7 @@ class AgentAttentionController extends ChangeNotifier {
        _runnerFactory = runnerFactory,
        _provider = provider,
        _companionProvider = companionProvider,
+       _hcProvider = hcProvider,
        _notifier = notifier,
        _notificationStore =
            notificationPreferences ?? MemoryAgentNotificationPreferencesStore(),
@@ -134,6 +137,9 @@ class AgentAttentionController extends ChangeNotifier {
 
   /// The Conductore companion provider, when the app ships one.
   final AgentAttentionProvider? _companionProvider;
+
+  /// herdr-core's `hc`, for machines whose backend is the Herdr app.
+  final AgentAttentionProvider _hcProvider;
   final AgentAttentionNotifier? _notifier;
   final AgentNotificationPreferencesStore _notificationStore;
   AgentNotificationPreferences _notificationPreferences =
@@ -1476,22 +1482,29 @@ class AgentAttentionController extends ChangeNotifier {
   }
 
   /// Picks the provider for [monitor] from the host setting, probing the
-  /// companion when the setting is automatic. Cached for the life of the
-  /// connection.
+  /// companion when the setting is automatic. On the Herdr app backend
+  /// (`hc`) only an explicit companion choice overrides hc. Cached for the
+  /// life of the connection.
   Future<AgentAttentionProvider> _resolveProvider(_HostMonitor monitor) async {
     final cached = monitor.provider;
     if (cached != null) {
       return cached;
     }
     final companion = _companionProvider;
-    final resolved = switch (monitor.host.agentMonitor) {
-      AgentMonitorKind.herdr => _provider,
-      AgentMonitorKind.companion => companion ?? _provider,
-      AgentMonitorKind.auto =>
-        companion != null && await companion.isAvailable(monitor.runner)
-            ? companion
-            : _provider,
-    };
+    final hc =
+        monitor.host.backend == HostBackend.hc &&
+        (monitor.host.agentMonitor != AgentMonitorKind.companion ||
+            companion == null);
+    final resolved = hc
+        ? _hcProvider
+        : switch (monitor.host.agentMonitor) {
+            AgentMonitorKind.herdr => _provider,
+            AgentMonitorKind.companion => companion ?? _provider,
+            AgentMonitorKind.auto =>
+              companion != null && await companion.isAvailable(monitor.runner)
+                  ? companion
+                  : _provider,
+          };
     // Another resolution may have finished while probing.
     return monitor.provider ??= resolved;
   }

@@ -26,6 +26,49 @@ enum AgentMonitorKind {
   }
 }
 
+/// What drives a machine's agents and terminals (CON-100000): the Herdr TUI,
+/// sheprd (herdr's client with a shared sidebar), or the Herdr app's runtime,
+/// herdr-core, through its `hc` CLI.
+///
+/// [herdr] and [sheprd] both drive the `herdr` CLI on the machine, exactly as
+/// before this setting existed; sheprd's own extras (projects and marks) stay
+/// behind the "Sync with sheprd" setting. [hc] lists, reads, prompts and
+/// attaches through `hc` instead, see docs/herdr-core-contract.md.
+enum HostBackend {
+  herdr,
+  sheprd,
+  hc;
+
+  String get label => switch (this) {
+    HostBackend.herdr => 'Herdr (TUI)',
+    HostBackend.sheprd => 'sheprd',
+    HostBackend.hc => 'Herdr app (hc)',
+  };
+
+  String get description => switch (this) {
+    HostBackend.herdr => 'Workspaces, tabs and panes through the herdr CLI.',
+    HostBackend.sheprd =>
+      'Like Herdr, plus sheprd\'s projects when "Sync with sheprd" is on.',
+    HostBackend.hc =>
+      'Terminals and agents through herdr-core\'s hc. One terminal per '
+          'view; the desktop app\'s panes, tabs and spaces stay on the '
+          'desktop.',
+  };
+
+  /// Unknown or missing values read as [herdr], today's behaviour.
+  static HostBackend parse(Object? raw) {
+    return HostBackend.values.where((kind) => kind.name == raw).firstOrNull ??
+        HostBackend.herdr;
+  }
+
+  /// The backend to suggest for a machine without a choice yet: `hc` when
+  /// only herdr-core is installed there, else the default.
+  static HostBackend suggest({
+    required bool hcInstalled,
+    required bool herdrInstalled,
+  }) => hcInstalled && !herdrInstalled ? HostBackend.hc : HostBackend.herdr;
+}
+
 /// How loudly Agent Attention notifies for one host.
 ///
 /// Stored as the two legacy flags ([SavedHost.agentNotifyInput],
@@ -226,6 +269,7 @@ class SavedHost {
     this.agentNotifyInput = true,
     this.agentNotifyFinished = true,
     this.agentMonitor = AgentMonitorKind.auto,
+    this.backend = HostBackend.herdr,
     this.shareInboxDirectory = '',
     this.lastConnectedAt,
     this.isLocal = false,
@@ -299,6 +343,9 @@ class SavedHost {
 
   /// Which agent manager to read (see [AgentMonitorKind]).
   final AgentMonitorKind agentMonitor;
+
+  /// What drives this machine's agents and terminals (see [HostBackend]).
+  final HostBackend backend;
 
   /// The notification level the two notify flags encode.
   AgentNotifyLevel get agentNotifyLevel => AgentNotifyLevel.fromFlags(
@@ -398,6 +445,7 @@ class SavedHost {
     bool? agentNotifyFinished,
     AgentNotifyLevel? agentNotifyLevel,
     AgentMonitorKind? agentMonitor,
+    HostBackend? backend,
     String? shareInboxDirectory,
     DateTime? lastConnectedAt,
     bool clearLastConnectedAt = false,
@@ -441,6 +489,7 @@ class SavedHost {
           agentNotifyFinished ??
           this.agentNotifyFinished,
       agentMonitor: agentMonitor ?? this.agentMonitor,
+      backend: backend ?? this.backend,
       shareInboxDirectory: shareInboxDirectory ?? this.shareInboxDirectory,
       lastConnectedAt: clearLastConnectedAt
           ? null
@@ -486,6 +535,7 @@ class SavedHost {
       'agentNotifyInput': agentNotifyInput,
       'agentNotifyFinished': agentNotifyFinished,
       'agentMonitor': agentMonitor.name,
+      'backend': backend.name,
       'shareInboxDirectory': shareInboxDirectory,
       'lastConnectedAt': lastConnectedAt?.toIso8601String(),
       'isLocal': isLocal,
@@ -544,6 +594,7 @@ class SavedHost {
       agentNotifyInput: json['agentNotifyInput'] as bool? ?? true,
       agentNotifyFinished: json['agentNotifyFinished'] as bool? ?? true,
       agentMonitor: AgentMonitorKind.parse(json['agentMonitor']),
+      backend: HostBackend.parse(json['backend']),
       shareInboxDirectory:
           (json['shareInboxDirectory'] as String?)?.trim() ?? '',
       lastConnectedAt: lastConnectedAtRaw == null

@@ -9,12 +9,15 @@ import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
+import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/data/remote_session_lister.dart';
 import 'package:conduit/features/sessions/data/workspace_creator.dart';
 import 'package:conduit/features/sessions/domain/connect_preferences.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
+import 'package:conduit/features/sessions/presentation/hc_terminal_actions_sheet.dart';
 import 'package:conduit/features/sessions/presentation/new_workspace_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +142,16 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   Future<RemoteListing<TmuxSessionInfo>>? _tmux;
   Future<RemoteListing<HerdrWorkspaceInfo>>? _herdr;
 
+  /// The Herdr app backend (CON-100000): hc terminals in the Herdr tab, with
+  /// sheprd's projects and cards when the machine has them.
+  Future<RemoteListing<HcTerminalInfo>>? _hc;
+  Future<HcSheprdDocuments>? _hcDocuments;
+
+  /// What to suggest when herdr is missing: `hc` if that is installed.
+  Future<HostBackend>? _suggestion;
+
+  bool get _onHc => widget.host.backend == HostBackend.hc;
+
   /// Hardware-key logins ask for a key touch per connection; the listing
   /// would be a second one, so it only runs on request.
   bool get _autoLoad => widget.host.authMethod != SshAuthMethod.hardwareKey;
@@ -154,7 +167,12 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   void _load() {
     setState(() {
       _tmux = _lister.listTmux();
-      _herdr = _lister.listHerdr();
+      if (_onHc) {
+        _hc = _lister.listHc();
+        _hcDocuments = _lister.readHcDocuments();
+      } else {
+        _herdr = _lister.listHerdr();
+      }
     });
   }
 
@@ -279,8 +297,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                       EdgeInsets.symmetric(horizontal: 4),
                     ),
                   ),
-                  segments: const [
-                    ButtonSegment(
+                  segments: [
+                    const ButtonSegment(
                       value: ConnectPickerTab.tmux,
                       label: _TabLabel(
                         icon: MultiplexerIcon(
@@ -294,15 +312,15 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                     ButtonSegment(
                       value: ConnectPickerTab.herdr,
                       label: _TabLabel(
-                        icon: MultiplexerIcon(
+                        icon: const MultiplexerIcon(
                           MultiplexerKind.herdr,
                           size: 15,
                           semanticLabel: '',
                         ),
-                        label: 'Herdr',
+                        label: _onHc ? 'Herdr app' : 'Herdr',
                       ),
                     ),
-                    ButtonSegment(
+                    const ButtonSegment(
                       value: ConnectPickerTab.recent,
                       label: _TabLabel(
                         icon: Icon(Icons.history_rounded, size: 16),
@@ -352,7 +370,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
             padding: EdgeInsets.fromLTRB(12, 8, 12, 16 + bottomInset),
             children: switch (_tab) {
               ConnectPickerTab.tmux => _buildTmux(),
-              ConnectPickerTab.herdr => _buildHerdr(),
+              ConnectPickerTab.herdr => _onHc ? _buildHc() : _buildHerdr(),
               ConnectPickerTab.recent => _buildRecent(),
             },
           ),
@@ -480,10 +498,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
             return const _Loading();
           }
           return switch (listing) {
-            RemoteListingNotInstalled() => const _Message(
-              icon: Icons.extension_off_outlined,
-              message: 'Herdr is not installed on this machine.',
-            ),
+            RemoteListingNotInstalled() => _herdrMissing(),
             RemoteListingNotRunning(:final message) => _Message(
               icon: Icons.power_settings_new_rounded,
               message: '$message Start it from a plain shell with "herdr".',
@@ -585,6 +600,168 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     ];
   }
 
+  /// Herdr is not installed: says so, and suggests the Herdr app backend
+  /// when `hc` is there instead.
+  Widget _herdrMissing() {
+    final suggestion = _suggestion ??= _lister.suggestBackend();
+    return FutureBuilder<HostBackend>(
+      future: suggestion,
+      builder: (context, snapshot) => _Message(
+        icon: Icons.extension_off_outlined,
+        message: snapshot.data == HostBackend.hc
+            ? 'Herdr is not installed on this machine, but the Herdr app '
+                  '(hc) is: choose "${HostBackend.hc.label}" under Agents '
+                  "and terminals in this machine's settings."
+            : 'Herdr is not installed on this machine.',
+      ),
+    );
+  }
+
+  List<Widget> _buildHc() {
+    final pending = _hc;
+    if (pending == null) {
+      return [_LoadOnRequest(onLoad: _load)];
+    }
+    return [
+      FutureBuilder<RemoteListing<HcTerminalInfo>>(
+        future: pending,
+        builder: (context, snapshot) {
+          final listing = snapshot.data;
+          if (listing == null) {
+            return const _Loading();
+          }
+          return switch (listing) {
+            RemoteListingNotInstalled() => const _Message(
+              icon: Icons.extension_off_outlined,
+              message:
+                  "hc (the Herdr app's runtime) is not installed on this "
+                  'machine.',
+            ),
+            RemoteListingNotRunning(:final message) => _Message(
+              icon: Icons.power_settings_new_rounded,
+              message: message,
+            ),
+            final RemoteListingFailed<HcTerminalInfo> failed => _failed(
+              failed,
+              'Could not list hc terminals.',
+            ),
+            RemoteListingAvailable(:final items) => _hcList(
+              items.where((terminal) => terminal.live).toList(),
+            ),
+          };
+        },
+      ),
+    ];
+  }
+
+  Widget _hcList(List<HcTerminalInfo> terminals) {
+    if (terminals.isEmpty) {
+      return const _Message(
+        icon: Icons.inbox_outlined,
+        message: 'No hc terminals are running.',
+      );
+    }
+    return FutureBuilder<HcSheprdDocuments>(
+      future: _hcDocuments,
+      builder: (context, docs) =>
+          _hcGroups(terminals, docs.data ?? const HcSheprdDocuments()),
+    );
+  }
+
+  /// [terminals] under sheprd's projects (then Other), or in one list when
+  /// the machine has no `sheprd-view`.
+  Widget _hcGroups(List<HcTerminalInfo> terminals, HcSheprdDocuments docs) {
+    final view = docs.view;
+    final shown = terminals.where(
+      (terminal) => _matches([
+        terminal.displayLabel,
+        terminal.address,
+        terminal.cwd,
+        for (final card in docs.cards[terminal.address] ?? const <HcCard>[])
+          card.headline,
+      ]),
+    );
+    if (view == null || view.projects.isEmpty) {
+      return Column(
+        children: [for (final terminal in shown) _hcTile(terminal, docs)],
+      );
+    }
+    final groups = <String, List<HcTerminalInfo>>{
+      for (final project in view.projects) project.name: [],
+    };
+    final other = <HcTerminalInfo>[];
+    for (final terminal in shown) {
+      final project = view.projectOf(terminal);
+      (project == null ? other : groups[project.name]!).add(terminal);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final project in view.projects)
+          if (groups[project.name]!.isNotEmpty) ...[
+            _hcHeader(
+              project.short.isEmpty
+                  ? project.name
+                  : '${project.short} · ${project.name}',
+            ),
+            for (final terminal in groups[project.name]!)
+              _hcTile(terminal, docs),
+          ],
+        if (other.isNotEmpty) ...[
+          _hcHeader('Other'),
+          for (final terminal in other) _hcTile(terminal, docs),
+        ],
+      ],
+    );
+  }
+
+  Widget _hcHeader(String label) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+    child: Text(
+      label.toUpperCase(),
+      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        letterSpacing: 1.1,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
+
+  Widget _hcTile(HcTerminalInfo terminal, HcSheprdDocuments docs) {
+    final target = ConnectTarget.hc(
+      terminal.address,
+      label: terminal.displayLabel,
+    );
+    final cards = docs.cards[terminal.address] ?? const <HcCard>[];
+    final questions = cards.fold(0, (sum, card) => sum + card.openQuestions);
+    final needsYou = docs.view?.needsYou(terminal) ?? false;
+    return _TargetTile(
+      key: ValueKey('hc-terminal-${terminal.address}'),
+      title: terminal.displayLabel,
+      subtitle: [
+        terminal.address,
+        if (terminal.folder.isNotEmpty && terminal.name.isNotEmpty)
+          terminal.folder,
+        if (cards.isNotEmpty) cards.map((card) => card.headline).join(', '),
+        if (questions > 0)
+          questions == 1 ? '1 question' : '$questions questions',
+      ].join(' · '),
+      active: widget.activeTargetKeys.contains(target.key),
+      trailingLabel: needsYou && terminal.status != 'blocked'
+          ? 'Needs you'
+          : _agentStatusLabel(terminal.status),
+      onMore: () => unawaited(
+        showHcTerminalActions(
+          context: context,
+          runner: widget.runner,
+          terminal: terminal,
+          onOpen: () => _pick(target),
+        ),
+      ),
+      onTap: () => _pick(target),
+    );
+  }
+
   static String _herdrSubtitle(HerdrWorkspaceInfo workspace) {
     return workspace.tabCount == 1 ? '1 tab' : '${workspace.tabCount} tabs';
   }
@@ -623,6 +800,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                     : 'Herdr tab ${target.tabId}',
               ConnectTargetKind.shell => 'Plain shell',
               ConnectTargetKind.directory => target.name,
+              ConnectTargetKind.hc => 'Herdr app terminal ${target.name}',
             },
             active: widget.activeTargetKeys.contains(target.key),
             onTap: () => _pick(target),
@@ -695,6 +873,7 @@ class _TargetTile extends StatelessWidget {
     this.focused = false,
     this.indented = false,
     this.trailingLabel,
+    this.onMore,
     super.key,
   });
 
@@ -707,6 +886,10 @@ class _TargetTile extends StatelessWidget {
   final bool indented;
   final String? trailingLabel;
   final VoidCallback onTap;
+
+  /// More actions for the row (an hc terminal's read, send and keys); null
+  /// shows no button.
+  final VoidCallback? onMore;
 
   @override
   Widget build(BuildContext context) {
@@ -747,13 +930,26 @@ class _TargetTile extends StatelessWidget {
         ],
       ),
       subtitle: subtitle == null ? null : Text(subtitle!),
-      trailing: trailingLabel == null
+      trailing: trailingLabel == null && onMore == null
           ? null
-          : _Badge(
-              label: trailingLabel!,
-              tone: trailingLabel == 'Needs input'
-                  ? _BadgeTone.danger
-                  : _BadgeTone.neutral,
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (trailingLabel case final label?)
+                  _Badge(
+                    label: label,
+                    tone: label == 'Needs input' || label == 'Needs you'
+                        ? _BadgeTone.danger
+                        : _BadgeTone.neutral,
+                  ),
+                if (onMore case final onMore?)
+                  IconButton(
+                    key: const ValueKey('target-tile-more'),
+                    tooltip: 'Read, send, keys',
+                    icon: const Icon(Icons.more_vert_rounded),
+                    onPressed: onMore,
+                  ),
+              ],
             ),
       onTap: onTap,
     );

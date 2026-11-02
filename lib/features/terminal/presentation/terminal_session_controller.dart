@@ -813,6 +813,11 @@ class TerminalSessionController extends ChangeNotifier {
     if (host.startTmuxOnConnect || target?.kind == ConnectTargetKind.tmux) {
       return MoshCloseTmux(_tmuxDetachBytes());
     }
+    if (target?.kind == ConnectTargetKind.hc) {
+      // `hc attach` detaches on ctrl+\. Never Ctrl-D: that would reach the
+      // attached program. Typed like Herdr's detach, with nothing after it.
+      return const MoshCloseHerdr([0x1c]);
+    }
     if (target?.kind == ConnectTargetKind.herdr ||
         _startsHerdr(startupCommand)) {
       final bytes = herdrDetachBytes(

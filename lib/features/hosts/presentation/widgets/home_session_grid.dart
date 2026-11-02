@@ -1221,6 +1221,9 @@ enum HomeBoardNoticeAction {
   /// Open a session that starts Herdr.
   startHerdr,
 
+  /// Open the connect picker on the Herdr app tab (an hc machine).
+  openHerdrApp,
+
   /// Open a plain shell.
   openShell,
 
@@ -1336,6 +1339,17 @@ class HomeBoardNotice {
           message: 'Connecting to the machine.',
           busy: true,
         );
+      case HomeBoardPhase.notInstalled when state.onHc:
+        if (state.tmux == HomeTmuxStatus.available) return null;
+        return HomeBoardNotice(
+          icon: Icons.extension_off_outlined,
+          title: 'The Herdr app is not installed',
+          message:
+              state.message ??
+              'hc (herdr-core) is not installed on this machine.',
+          actionLabel: 'Open a shell',
+          action: HomeBoardNoticeAction.openShell,
+        );
       case HomeBoardPhase.notInstalled:
         return switch (state.tmux) {
           HomeTmuxStatus.available => null,
@@ -1357,6 +1371,16 @@ class HomeBoardNotice {
             action: HomeBoardNoticeAction.openShell,
           ),
         };
+      case HomeBoardPhase.notRunning when state.onHc:
+        // The board never reports it for hc; nothing to start from here.
+        if (state.tmuxSessions.isNotEmpty) return null;
+        return HomeBoardNotice(
+          icon: Icons.history_rounded,
+          title: 'Could not list the Herdr app terminals',
+          message: state.message ?? 'hc did not answer.',
+          actionLabel: 'Retry',
+          action: HomeBoardNoticeAction.retry,
+        );
       case HomeBoardPhase.notRunning:
         if (state.tmuxSessions.isNotEmpty) return null;
         return const HomeBoardNotice(
@@ -1389,6 +1413,15 @@ class HomeBoardNotice {
           );
         }
         final reason = state.message ?? 'The machine did not answer.';
+        if (state.onHc) {
+          return HomeBoardNotice(
+            icon: Icons.history_rounded,
+            title: 'Could not list the Herdr app terminals',
+            message: reason,
+            actionLabel: 'Retry',
+            action: HomeBoardNoticeAction.retry,
+          );
+        }
         final herdrOnly = state.hasTmux;
         if (herdrOnly && state.tmuxSessions.isNotEmpty) {
           // tmux answered: only Herdr is broken; say so briefly.
@@ -1417,6 +1450,21 @@ class HomeBoardNotice {
                 actionLabel: 'Retry',
                 action: HomeBoardNoticeAction.retry,
               );
+      case HomeBoardPhase.ready when state.onHc:
+        if (state.tmuxSessions.isNotEmpty) return null;
+        final count = state.hcTerminals.where((t) => t.live).length;
+        return HomeBoardNotice(
+          icon: Icons.space_dashboard_outlined,
+          title: count == 1
+              ? '1 Herdr app terminal'
+              : '$count Herdr app terminals',
+          // The board lists Herdr workspaces; hc has terminals instead.
+          message:
+              'This machine uses the Herdr app: open its terminals '
+              'from Connect › Herdr app.',
+          actionLabel: 'Open',
+          action: HomeBoardNoticeAction.openHerdrApp,
+        );
       case HomeBoardPhase.ready:
         if (state.workspaces.isNotEmpty ||
             hasOpenHerdrSession ||

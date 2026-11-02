@@ -13,6 +13,7 @@ import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/live/domain/live_host_model.dart';
 import 'package:conduit/features/live/presentation/live_host_hub.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
 import 'package:flutter/foundation.dart';
 
@@ -202,6 +203,8 @@ class HomeBoardState {
     this.problem,
     this.updatedAt,
     this.refreshing = false,
+    this.backend = HostBackend.herdr,
+    this.hcTerminals = const [],
   });
 
   /// Where listing stands: the connection, and Herdr's availability once
@@ -228,6 +231,16 @@ class HomeBoardState {
   /// A fetch is running while older data is on screen.
   final bool refreshing;
 
+  /// The machine's backend. On [HostBackend.hc] the board never runs the
+  /// herdr CLI: [workspaces] stay empty, [hcTerminals] holds `hc ls`, and
+  /// [phase] speaks about hc instead of Herdr.
+  final HostBackend backend;
+
+  /// The machine's hc terminals (only on [HostBackend.hc]).
+  final List<HcTerminalInfo> hcTerminals;
+
+  bool get onHc => backend == HostBackend.hc;
+
   int get paneCount =>
       workspaces.fold(0, (count, workspace) => count + workspace.panes.length);
 
@@ -246,6 +259,8 @@ class HomeBoardState {
   /// on screen changes nothing for listeners.
   bool sameBoardAs(HomeBoardState other) {
     if (other.phase != phase ||
+        other.backend != backend ||
+        !listEquals(other.hcTerminals, hcTerminals) ||
         other.tmux != tmux ||
         other.message != message ||
         !listEquals(other.tmuxSessions, tmuxSessions) ||
@@ -290,6 +305,8 @@ class HomeBoardState {
     bool clearMessage = false,
     DateTime? updatedAt,
     bool? refreshing,
+    HostBackend? backend,
+    List<HcTerminalInfo>? hcTerminals,
   }) {
     return HomeBoardState(
       phase: phase ?? this.phase,
@@ -300,6 +317,8 @@ class HomeBoardState {
       problem: clearMessage ? null : problem ?? this.problem,
       updatedAt: updatedAt ?? this.updatedAt,
       refreshing: refreshing ?? this.refreshing,
+      backend: backend ?? this.backend,
+      hcTerminals: hcTerminals ?? this.hcTerminals,
     );
   }
 }
@@ -428,6 +447,9 @@ class HomeBoardController extends ChangeNotifier {
 
   bool get _listable => _host != null && !_host!.isLocal;
 
+  /// The machine runs the Herdr app (hc), not the herdr CLI.
+  bool get _onHc => _host?.backend == HostBackend.hc;
+
   /// Shows [host] on the board. Selecting the same machine again only
   /// refreshes its saved details; a different one starts over.
   ///
@@ -529,7 +551,9 @@ class HomeBoardController extends ChangeNotifier {
   }
 
   /// Focuses [agent]'s pane in Herdr (`herdr agent focus <pane>`).
+  /// Nothing on an hc machine: hc cannot move the desktop app's focus.
   Future<void> focusPane(AgentInfo agent) async {
+    if (_onHc) return;
     final command = _provider.focusCommand(agent);
     if (command == null) return;
     await _runBestEffort(command);
@@ -537,7 +561,7 @@ class HomeBoardController extends ChangeNotifier {
 
   /// Focuses a whole workspace in Herdr.
   Future<void> focusWorkspace(String workspaceId) async {
-    if (workspaceId.isEmpty) return;
+    if (workspaceId.isEmpty || _onHc) return;
     await _runBestEffort(
       HerdrAttentionProvider.remoteCommand(
         'workspace focus ${ConnectTarget.shellQuote(workspaceId)}',
@@ -611,7 +635,8 @@ class HomeBoardController extends ChangeNotifier {
   /// when the board polls instead.
   bool _attachFeed() {
     final host = _host;
-    if (host == null) return false;
+    // The pushed model is Herdr's: an hc machine is polled with `hc ls`.
+    if (host == null || host.backend == HostBackend.hc) return false;
     final feed = _feed ?? _liveFeed?.call(host);
     if (feed == null || feed.support == LiveSupport.unsupported) {
       return false;
@@ -894,6 +919,8 @@ class HomeBoardController extends ChangeNotifier {
         workspaces: _state.workspaces,
         tmux: _state.tmux,
         tmuxSessions: _state.tmuxSessions,
+        backend: host.backend,
+        hcTerminals: _state.hcTerminals,
         message: error is AppFailure ? error.toString() : '$error',
         problem: connectionProblemFor(
           error,
@@ -946,6 +973,7 @@ class HomeBoardController extends ChangeNotifier {
         const <TmuxSessionInfo>[],
       ),
     };
+    if (_onHc) return _loadHc(runner, tmux, tmuxSessions);
     final workspaceResult = await runner.run(
       RemoteSessionListing.herdrWorkspaceListCommand,
       timeout: _timeout,
@@ -993,6 +1021,39 @@ class HomeBoardController extends ChangeNotifier {
           tmux: tmux,
           tmuxSessions: tmuxSessions,
           updatedAt: DateTime.now(),
+        );
+    }
+  }
+
+  /// The board of an hc machine: tmux as usual, then `hc ls` in place of
+  /// the herdr CLI, so no herdr error or "Start Herdr" shows there.
+  Future<HomeBoardState> _loadHc(
+    AgentCommandRunner runner,
+    HomeTmuxStatus tmux,
+    List<TmuxSessionInfo> tmuxSessions,
+  ) async {
+    final result = await runner.run(HcCommands.list, timeout: _timeout);
+    final base = HomeBoardState(
+      backend: HostBackend.hc,
+      tmux: tmux,
+      tmuxSessions: tmuxSessions,
+      updatedAt: DateTime.now(),
+    );
+    switch (HcListing.interpret(result)) {
+      case RemoteListingAvailable<HcTerminalInfo>(:final items):
+        return base.copyWith(phase: HomeBoardPhase.ready, hcTerminals: items);
+      case RemoteListingNotInstalled<HcTerminalInfo>():
+        return base.copyWith(
+          phase: HomeBoardPhase.notInstalled,
+          message: 'hc (herdr-core) is not installed on this machine.',
+        );
+      case RemoteListingNotRunning<HcTerminalInfo>(:final message) ||
+          RemoteListingFailed<HcTerminalInfo>(:final message):
+        if (tmux != HomeTmuxStatus.available) throw AppFailure(message);
+        return base.copyWith(
+          phase: HomeBoardPhase.failed,
+          hcTerminals: _state.hcTerminals,
+          message: message,
         );
     }
   }

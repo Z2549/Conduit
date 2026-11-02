@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
+import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/presentation/home_board_controller.dart';
 import 'package:conduit/features/live/domain/live_host_model.dart';
 import 'package:conduit/features/live/presentation/live_host_hub.dart';
@@ -285,6 +286,33 @@ void main() {
         // 12 a minute at 5 s, 3 once quiet (20 s).
         final perMinute = tmuxPolls() - settled;
         expect(perMinute, lessThanOrEqualTo(4));
+        expect(companion.commands.where((c) => c.contains('herdr ')), isEmpty);
+        board.dispose();
+        hub.dispose();
+      });
+    });
+
+    test('an hc machine ignores the pushed Herdr model and lists hc', () {
+      fakeAsync((async) {
+        final companion = LiveCompanion();
+        final hub = LiveHostHub(runnerFactory: (_) => companion);
+        final board =
+            HomeBoardController(
+              runnerFactory: (_) => companion,
+              liveFeed: hub.feedFor,
+            )..selectHost(
+              buildHost('m').copyWith(backend: HostBackend.hc),
+              connectedBefore: true,
+            );
+        board.setVisible(true);
+        async.elapse(const Duration(seconds: 1));
+        expect(board.live, isFalse);
+        expect(board.state.onHc, isTrue);
+        expect(board.state.workspaces, isEmpty);
+        expect(
+          companion.commands.where((c) => c.contains('exec hc ls')),
+          isNotEmpty,
+        );
         expect(companion.commands.where((c) => c.contains('herdr ')), isEmpty);
         board.dispose();
         hub.dispose();

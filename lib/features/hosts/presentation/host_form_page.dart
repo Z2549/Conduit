@@ -82,6 +82,7 @@ class _HostFormPageState extends State<HostFormPage> {
   bool _agentNotifyInput = true;
   bool _agentNotifyFinished = true;
   AgentMonitorKind _agentMonitor = AgentMonitorKind.auto;
+  HostBackend _backend = HostBackend.herdr;
   bool _predictiveEchoEnabled = false;
   bool _externalAuthOfferKey = true;
   bool _forwardAgent = false;
@@ -147,6 +148,7 @@ class _HostFormPageState extends State<HostFormPage> {
       _agentNotifyInput = host.agentNotifyInput;
       _agentNotifyFinished = host.agentNotifyFinished;
       _agentMonitor = host.agentMonitor;
+      _backend = host.backend;
     }
     _keyInspection = _cheapPreview();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -328,6 +330,7 @@ class _HostFormPageState extends State<HostFormPage> {
           agentNotifyInput: _agentNotifyInput,
           agentNotifyFinished: _agentNotifyFinished,
           agentMonitor: _agentMonitor,
+          backend: _backend,
           snippets: _snippets,
           connectSnippetId: _connectSnippetId,
           timeoutValidator: _validateTimeout,
@@ -354,6 +357,7 @@ class _HostFormPageState extends State<HostFormPage> {
               setState(() => _agentNotifyFinished = value),
           onAgentMonitorChanged: (value) =>
               setState(() => _agentMonitor = value),
+          onBackendChanged: (value) => setState(() => _backend = value),
           companionSetup: CompanionSetupTile(
             host: widget.host,
             resolveHost: _validatedHost,
@@ -839,6 +843,7 @@ class _HostFormPageState extends State<HostFormPage> {
       agentNotifyInput: _agentNotifyInput,
       agentNotifyFinished: _agentNotifyFinished,
       agentMonitor: _agentMonitor,
+      backend: _backend,
       shareInboxDirectory: _shareInboxDirectoryController.text.trim(),
       snippets: List<TerminalSnippet>.unmodifiable(_snippets),
       connectSnippetId:

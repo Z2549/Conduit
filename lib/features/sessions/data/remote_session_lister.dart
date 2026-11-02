@@ -1,5 +1,8 @@
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
+import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
+import 'package:conduit/features/hosts/domain/saved_host.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
 
 /// Lists tmux sessions and Herdr workspaces on a host over an
@@ -126,6 +129,52 @@ class RemoteSessionLister {
       return RemoteListingFailed(failure.toString(), error: failure);
     } catch (error) {
       return RemoteListingFailed(error.toString(), error: error);
+    }
+  }
+
+  /// Lists herdr-core terminals with `hc ls --json` (CON-100000).
+  Future<RemoteListing<HcTerminalInfo>> listHc() async {
+    try {
+      final result = await _runner.run(HcCommands.list, timeout: _timeout);
+      return HcListing.interpret(result);
+    } on AppFailure catch (failure) {
+      return RemoteListingFailed(failure.toString(), error: failure);
+    } catch (error) {
+      return RemoteListingFailed(error.toString(), error: error);
+    }
+  }
+
+  /// sheprd's view and cards from the machine's herdr-core documents, for
+  /// grouping and labelling hc terminals. Both are optional: a machine
+  /// without sheprd's mods, or a failed read, gives an empty result and
+  /// the picker lists terminals ungrouped.
+  Future<HcSheprdDocuments> readHcDocuments() async {
+    try {
+      final result = await _runner.run(
+        HcCommands.docGet(const [HcDocuments.view, HcDocuments.cards]),
+        timeout: _timeout,
+      );
+      if (result.exitCode != null && result.exitCode != 0) {
+        return const HcSheprdDocuments();
+      }
+      final answers = HcListing.parseDocAnswers(result.stdout);
+      return HcSheprdDocuments(
+        view: HcSheprdView.fromJson(answers[1]),
+        cards: HcCards.byTerminal(answers[2]),
+      );
+    } catch (_) {
+      return const HcSheprdDocuments();
+    }
+  }
+
+  /// What is installed for [HostBackend.suggest]: the default backend when
+  /// the probe fails.
+  Future<HostBackend> suggestBackend() async {
+    try {
+      final result = await _runner.run(HcCommands.probe, timeout: _timeout);
+      return HcCommands.suggestFromProbe(result.stdout);
+    } catch (_) {
+      return HostBackend.herdr;
     }
   }
 }

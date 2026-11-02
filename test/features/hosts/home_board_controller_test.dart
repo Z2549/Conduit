@@ -93,6 +93,66 @@ void main() {
     expect(board.state.phase, HomeBoardPhase.ready);
   });
 
+  group('an hc machine (the Herdr app)', () {
+    SavedHost hcHost() => connected('a').copyWith(backend: HostBackend.hc);
+
+    test('lists hc terminals and never runs the herdr CLI', () async {
+      board
+        ..setVisible(true)
+        ..selectHost(hcHost());
+      await pumpEventQueue();
+
+      final state = board.state;
+      expect(state.phase, HomeBoardPhase.ready);
+      expect(state.onHc, isTrue);
+      expect(state.workspaces, isEmpty);
+      expect(state.hcTerminals.map((t) => t.address), ['t1', 't2']);
+      expect(runner.commands.any((c) => c.contains('exec hc ls')), isTrue);
+      expect(runner.commands.any((c) => c.contains('herdr')), isFalse);
+
+      // The board's Herdr focus does nothing there.
+      await board.focusWorkspace('w1');
+      await board.focusPane(
+        const AgentInfo(
+          id: 'w1:p1',
+          name: '',
+          state: AgentAttentionState.idle,
+          pane: 'w1:p1',
+        ),
+      );
+      expect(runner.commands.any((c) => c.contains('herdr')), isFalse);
+    });
+
+    test('a machine without hc says so, not "Herdr is not running"', () async {
+      runner
+        ..hcList = ''
+        ..hcExitCode = 127
+        ..hcStderr = 'sh: 1: exec: hc: not found';
+      board
+        ..setVisible(true)
+        ..selectHost(hcHost());
+      await pumpEventQueue();
+      expect(board.state.phase, HomeBoardPhase.notInstalled);
+      expect(board.state.message, contains('hc (herdr-core)'));
+      expect(runner.commands.any((c) => c.contains('herdr')), isFalse);
+    });
+
+    test('an hc error with tmux up keeps the board, without herdr', () async {
+      runner
+        ..tmuxSessions = TmuxFixtures.sessions
+        ..hcExitCode = 1
+        ..hcStderr = '{"error":{"kind":"core","message":"core is down"}}';
+      board
+        ..setVisible(true)
+        ..selectHost(hcHost());
+      await pumpEventQueue();
+      expect(board.state.phase, HomeBoardPhase.failed);
+      expect(board.state.onHc, isTrue);
+      expect(board.state.tmuxSessions, hasLength(2));
+      expect(runner.commands.any((c) => c.contains('herdr')), isFalse);
+    });
+  });
+
   test('reports Herdr not running and not installed', () async {
     runner
       ..workspaces = HerdrFixtures.notRunning

@@ -5,6 +5,7 @@ import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/hosts/presentation/hosts_controller.dart';
 import 'package:conduit/features/sessions/domain/connect_preferences.dart';
+import 'package:conduit/features/sessions/domain/connect_target.dart';
 import 'package:conduit/features/sessions/presentation/connect_picker_sheet.dart';
 import 'package:conduit/features/sessions/presentation/session_connect_flow.dart';
 import 'package:conduit/features/terminal/presentation/desktop_shortcuts.dart';
@@ -52,6 +53,7 @@ void main() {
     WidgetTester tester, {
     int sessions = 1,
     bool withFlow = false,
+    ConnectTarget? target,
   }) async {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
@@ -80,7 +82,15 @@ void main() {
       );
     }
     for (final host in hosts) {
-      workspace.open(host);
+      if (target == null) {
+        workspace.open(host);
+      } else {
+        workspace.open(
+          target.apply(host),
+          startupCommand: target.startupCommand,
+          target: target,
+        );
+      }
     }
     workspace.activate(workspace.sessions.first);
     await tester.pumpWidget(
@@ -233,6 +243,26 @@ void main() {
       // Semantics off: closing a session trips a semantics geometry assertion
       // on main already (also through the header menu), unrelated to the
       // shortcut.
+    },
+    variant: _desktops,
+    semanticsEnabled: false,
+  );
+
+  testWidgets(
+    'Ctrl+Shift+W only detaches an hc terminal: no warning',
+    (tester) async {
+      final h = await pumpTerminal(
+        tester,
+        sessions: 2,
+        target: const ConnectTarget.hc('t7'),
+      );
+      await press(tester, LogicalKeyboardKey.keyW, ctrl: true, shift: true);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('close-session-confirm')), findsNothing);
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(h.workspace.sessions, hasLength(1));
     },
     variant: _desktops,
     semanticsEnabled: false,
