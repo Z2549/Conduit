@@ -109,17 +109,24 @@ abstract final class HcCommands {
   );
 
   /// `doc.get` for [names] over `hc connect` (JSON-RPC lines on stdin and
-  /// stdout), one request per name with ids 1, 2, ... in order. A document
-  /// nobody wrote comes back as `{"value": null, "version": 0}`.
-  static String docGet(List<String> names) {
+  /// stdout), one request per name with ids 1, 2, ... in order, then the
+  /// same names again on each machine of [on] (ids go on counting);
+  /// [skipLocal] leaves out this machine's round. A document nobody wrote
+  /// comes back as `{"value": null, "version": 0}`.
+  static String docGet(
+    List<String> names, {
+    List<String> on = const [],
+    bool skipLocal = false,
+  }) {
     final requests = [
-      for (final (index, name) in names.indexed)
-        jsonEncode({
-          'jsonrpc': '2.0',
-          'id': index + 1,
-          'method': 'doc.get',
-          'params': {'name': name},
-        }),
+      for (final (round, machine) in [if (!skipLocal) null, ...on].indexed)
+        for (final (index, name) in names.indexed)
+          jsonEncode({
+            'jsonrpc': '2.0',
+            'id': round * names.length + index + 1,
+            'method': 'doc.get',
+            'params': {'name': name, 'on': ?machine},
+          }),
     ];
     final inner =
         'PATH="${remoteToolExtraPathDirs.join(':')}:\$PATH"; '

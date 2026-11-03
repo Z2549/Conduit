@@ -70,13 +70,55 @@ class HcProject {
 enum HcViewFilter {
   needsYou,
   working,
+  marked,
   all;
 
   static HcViewFilter parse(Object? raw) => switch (raw) {
     'needs-you' => HcViewFilter.needsYou,
     'working' => HcViewFilter.working,
+    'marked' => HcViewFilter.marked,
     _ => HcViewFilter.all,
   };
+}
+
+/// Where a document's keys point from the phone's side.
+///
+/// The documents name machines as the machine that holds them sees them:
+/// a bare `t7` or `local/t7` is that machine's own, `omarchy/t7` one it
+/// reaches. Read from another machine (the Herdr app's hub, with `on`), the
+/// phone's host shows up under the hub's name for it, which the phone does
+/// not know: a machine name that is neither the hub nor one the phone
+/// reaches is taken for the phone's host.
+@immutable
+class HcKeyScope {
+  const HcKeyScope({this.hub = '', this.machines = const {}});
+
+  /// The machine the document came from, as the phone names it; empty for
+  /// the phone's host.
+  final String hub;
+
+  /// The machines the phone's host reaches (`hc ls` address prefixes).
+  final Set<String> machines;
+
+  /// The phone-side machine for a key's machine part (null for none).
+  String machineOf(String? prefix) {
+    if (prefix == null || prefix == 'local') return hub;
+    if (prefix == hub || machines.contains(prefix)) return prefix;
+    return hub.isEmpty ? prefix : '';
+  }
+
+  /// [key] split into its phone-side machine and the rest.
+  (String, String) split(String key) {
+    final slash = key.indexOf('/');
+    if (slash == -1) return (machineOf(null), key);
+    return (machineOf(key.substring(0, slash)), key.substring(slash + 1));
+  }
+
+  /// [key] as an address `hc ls` on the phone's host gives.
+  String address(String key) {
+    final (machine, bare) = split(key);
+    return machine.isEmpty ? bare : '$machine/$bare';
+  }
 }
 
 /// The `sheprd-view` document: projects, hidden spaces and marks.
@@ -91,6 +133,9 @@ class HcSheprdView {
     this.unread = const {},
     this.kept = const {},
     this.dismissed = const {},
+    this.marked = const {},
+    this.compact = false,
+    this.scope = const HcKeyScope(),
   });
 
   final List<HcProject> projects;
@@ -105,6 +150,30 @@ class HcSheprdView {
 
   /// `machine/t7@<seq>`: lapses when the terminal's turn moves on.
   final Set<String> dismissed;
+
+  /// The user's own flag on an agent (★ in the sidebar).
+  final Set<String> marked;
+
+  /// `density: compact`: one line per agent.
+  final bool compact;
+
+  /// How the keys above map to the phone's addresses.
+  final HcKeyScope scope;
+
+  /// This view read from [scope]'s hub.
+  HcSheprdView scoped(HcKeyScope scope) => HcSheprdView(
+    projects: projects,
+    hidden: hidden,
+    filter: filter,
+    activeOnly: activeOnly,
+    otherCollapsed: otherCollapsed,
+    unread: unread,
+    kept: kept,
+    dismissed: dismissed,
+    marked: marked,
+    compact: compact,
+    scope: scope,
+  );
 
   /// Null when [json] is not a v1 view (absent, never written, or another
   /// shape), so callers fall back to an ungrouped list.
@@ -125,6 +194,8 @@ class HcSheprdView {
       unread: _strings(marks['unread']).toSet(),
       kept: _strings(marks['kept']).toSet(),
       dismissed: _strings(marks['dismissed']).toSet(),
+      marked: _strings(marks['marked']).toSet(),
+      compact: json['density'] == 'compact',
     );
   }
 
@@ -137,9 +208,8 @@ class HcSheprdView {
   /// a member `machine/<folder>` or a rule matching the folder, the cwd or
   /// the terminal's name.
   HcProject? projectOf(HcTerminalInfo terminal) {
-    final key = '${_machine(terminal)}/${terminal.folder}'.toLowerCase();
     for (final project in projects) {
-      if (project.members.any((member) => member.toLowerCase() == key)) {
+      if (project.members.any((member) => _isSpace(member, terminal))) {
         return project;
       }
     }
@@ -159,28 +229,40 @@ class HcSheprdView {
     return null;
   }
 
+  /// Whether the sidebar hides [terminal]'s space (its folder standing in,
+  /// as in [projectOf]).
+  bool isHidden(HcTerminalInfo terminal) =>
+      hidden.any((key) => _isSpace(key, terminal));
+
+  /// Whether the user marked [terminal] (★).
+  bool isMarked(HcTerminalInfo terminal) =>
+      marked.any((key) => _isTerminal(key, terminal));
+
   /// Whether sheprd counts [terminal] as needing you: unread, or blocked or
   /// done and not dismissed at its current turn.
   bool needsYou(HcTerminalInfo terminal) {
-    final key = markKey(terminal);
-    if (unread.contains(key)) return true;
+    if (unread.any((key) => _isTerminal(key, terminal))) return true;
     if (terminal.status != 'blocked' && terminal.status != 'done') {
       return false;
     }
-    return !dismissed.contains('$key@${terminal.turn}');
+    return !dismissed.any(
+      (key) =>
+          key.endsWith('@${terminal.turn}') &&
+          _isTerminal(key.substring(0, key.lastIndexOf('@')), terminal),
+    );
   }
 
-  /// The key sheprd's marks use for [terminal]: `machine/t7`, `local/t7`
-  /// on the hub.
-  static String markKey(HcTerminalInfo terminal) {
-    final address = terminal.address;
-    final slash = address.lastIndexOf('/');
-    final bare = slash == -1 ? address : address.substring(slash + 1);
-    return '${_machine(terminal)}/$bare';
-  }
+  /// A mark key (`t7`, `local/t7`, `dev/t7`) names [terminal].
+  bool _isTerminal(String key, HcTerminalInfo terminal) =>
+      scope.address(key) == terminal.address;
 
-  static String _machine(HcTerminalInfo terminal) =>
-      terminal.machine.isEmpty ? 'local' : terminal.machine;
+  /// A space key (`machine/<space name>`) names [terminal]'s folder.
+  bool _isSpace(String key, HcTerminalInfo terminal) {
+    if (!key.contains('/')) return false;
+    final (machine, space) = scope.split(key);
+    return machine == terminal.machine &&
+        space.toLowerCase() == terminal.folder.toLowerCase();
+  }
 }
 
 /// One question on a card.
@@ -243,7 +325,12 @@ class HcCard {
 abstract final class HcCards {
   /// Cards that are neither dismissed nor done, by terminal address. An
   /// absent or unreadable document gives no cards.
-  static Map<String, List<HcCard>> byTerminal(Object? json) {
+  /// Terminal addresses are the ones the phone's host uses, translated
+  /// through [scope] when the document came from another machine.
+  static Map<String, List<HcCard>> byTerminal(
+    Object? json, {
+    HcKeyScope scope = const HcKeyScope(),
+  }) {
     if (json is! Map || json['v'] != 1 || json['cards'] is! Map) {
       return const {};
     }
@@ -253,8 +340,9 @@ abstract final class HcCards {
         continue;
       }
       final id = raw['id'];
-      final terminal = raw['terminal'];
-      if (id is! String || terminal is! String || id.isEmpty) continue;
+      final key = raw['terminal'];
+      if (id is! String || key is! String || id.isEmpty) continue;
+      final terminal = scope.address(key);
       out
           .putIfAbsent(terminal, () => [])
           .add(

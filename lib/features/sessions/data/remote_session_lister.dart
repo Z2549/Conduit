@@ -148,22 +148,52 @@ class RemoteSessionLister {
   /// grouping and labelling hc terminals. Both are optional: a machine
   /// without sheprd's mods, or a failed read, gives an empty result and
   /// the picker lists terminals ungrouped.
-  Future<HcSheprdDocuments> readHcDocuments() async {
+  Future<HcSheprdDocuments> readHcDocuments({
+    Set<String> machines = const {},
+  }) async {
+    final on = machines.where((machine) => machine.isNotEmpty).toList()..sort();
+    // This host first, then the machines it reaches in one more call, so a
+    // machine that is down cannot cost this host's documents.
+    final answers = await _docAnswers();
+    final remote = on.isEmpty ? const <int, Object?>{} : await _docAnswers(on);
+    // The view of the first machine that has one: this host's, else the
+    // Herdr app's hub it reaches. Cards come from every machine, each
+    // keeping its own agents'.
+    HcSheprdView? view;
+    final cards = <String, List<HcCard>>{};
+    for (final (round, hub) in ['', ...on].indexed) {
+      final from = round == 0 ? answers : remote;
+      final id = round == 0 ? 0 : (round - 1) * 2;
+      final scope = HcKeyScope(hub: hub, machines: machines);
+      view ??= HcSheprdView.fromJson(from[id + 1])?.scoped(scope);
+      for (final MapEntry(:key, :value) in HcCards.byTerminal(
+        from[id + 2],
+        scope: scope,
+      ).entries) {
+        cards.putIfAbsent(key, () => []).addAll(value);
+      }
+    }
+    return HcSheprdDocuments(view: view, cards: cards);
+  }
+
+  /// `doc.get` answers for the view and the cards, on this host or on each
+  /// of [on]; none when the call fails.
+  Future<Map<int, Object?>> _docAnswers([List<String>? on]) async {
     try {
       final result = await _runner.run(
-        HcCommands.docGet(const [HcDocuments.view, HcDocuments.cards]),
+        on == null
+            ? HcCommands.docGet(const [HcDocuments.view, HcDocuments.cards])
+            : HcCommands.docGet(
+                const [HcDocuments.view, HcDocuments.cards],
+                on: on,
+                skipLocal: true,
+              ),
         timeout: _timeout,
       );
-      if (result.exitCode != null && result.exitCode != 0) {
-        return const HcSheprdDocuments();
-      }
-      final answers = HcListing.parseDocAnswers(result.stdout);
-      return HcSheprdDocuments(
-        view: HcSheprdView.fromJson(answers[1]),
-        cards: HcCards.byTerminal(answers[2]),
-      );
+      if (result.exitCode != null && result.exitCode != 0) return const {};
+      return HcListing.parseDocAnswers(result.stdout);
     } catch (_) {
-      return const HcSheprdDocuments();
+      return const {};
     }
   }
 
