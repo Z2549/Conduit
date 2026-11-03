@@ -38,6 +38,11 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 42**: on the Herdr app (hc), the **Projects** list shows the
+  app's agents, one row per space, grouped like your laptop's sidebar
+  (instead of the old sheprd ones); tapping one attaches. Card questions
+  can be answered from the phone: ⋯ on an agent lists its open questions
+  with a button per option and **Other…**.
 - **Preview 41**: on the Herdr app (hc), the picker follows your laptop's
   sidebar even when the phone talks to another machine: agents you starred
   come first with ★, spaces you hid fold under **Hidden**, and compact
