@@ -38,6 +38,10 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 41**: on the Herdr app (hc), the picker follows your laptop's
+  sidebar even when the phone talks to another machine: agents you starred
+  come first with ★, spaces you hid fold under **Hidden**, and compact
+  density gives one-line rows.
 - **Preview 40**: a third choice for a machine's agents and terminals,
   **Herdr app (hc)**, next to herdr and sheprd (host form › Agents and
   terminals). On it Conductore lists, reads, prompts and attaches to the
