@@ -120,6 +120,28 @@ void main() {
     expect(find.text('shell'), findsOneWidget);
   });
 
+  testWidgets('a card question is answered from the actions sheet', (
+    tester,
+  ) async {
+    final (runner, _) = await pump(tester, [tmux, ls, docs, ok('sent')]);
+    await tester.tap(find.byKey(const ValueKey('target-tile-more')).first);
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('CON-1 Q1: Ship?'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('hc-answer-CON-1-1-other')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('hc-answer-field')),
+      'yes',
+    );
+    await tester.tap(find.text('Send').last);
+    await tester.pumpAndSettle();
+
+    expect(runner.commands.last, contains('cards stage t1 CON-1 1 yes'));
+    expect(runner.commands.last, contains('cards send t1'));
+    expect(find.text('→ yes (sent)'), findsOneWidget);
+  });
+
   testWidgets('the actions list read, send and keys, and why the rest is off', (
     tester,
   ) async {
