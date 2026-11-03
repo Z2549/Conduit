@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
+import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:flutter/material.dart';
 
 /// What the phone can do with one hc terminal without opening it
-/// (CON-100000): read its screen, send it a line, press a key. The desktop
+/// (CON-100000): answer its agent's card questions (CON-129), read its
+/// screen, send it a line, press a key. The desktop
 /// app's own actions are listed disabled, each with why.
 ///
 /// Commands run over [runner], the picker's exec channel.
@@ -16,6 +18,7 @@ Future<void> showHcTerminalActions({
   required AgentCommandRunner runner,
   required HcTerminalInfo terminal,
   required VoidCallback onOpen,
+  List<HcCard> cards = const [],
 }) {
   return showAdaptiveModal<void>(
     kind: AdaptiveModalKind.dialog,
@@ -25,6 +28,7 @@ Future<void> showHcTerminalActions({
     builder: (context) => HcTerminalActionsSheet(
       runner: runner,
       terminal: terminal,
+      cards: cards,
       onOpen: () {
         Navigator.of(context).pop();
         onOpen();
@@ -38,12 +42,16 @@ class HcTerminalActionsSheet extends StatefulWidget {
     required this.runner,
     required this.terminal,
     required this.onOpen,
+    this.cards = const [],
     super.key,
   });
 
   final AgentCommandRunner runner;
   final HcTerminalInfo terminal;
   final VoidCallback onOpen;
+
+  /// The agent's open cards; their open questions can be answered here.
+  final List<HcCard> cards;
 
   @override
   State<HcTerminalActionsSheet> createState() => _HcTerminalActionsSheetState();
@@ -57,6 +65,9 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
   bool _busy = false;
 
   String get _address => widget.terminal.address;
+
+  /// Questions answered from this sheet (`CON-1#2`), shown as sent.
+  final _answered = <String, String>{};
 
   /// Runs [command]; null when it worked, else why not.
   Future<String?> _run(String command) async {
@@ -151,6 +162,74 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
     await _act(HcCommands.send(_address, text), 'Sent.');
   }
 
+  Future<void> _answer(HcCard card, HcCardQuestion q, String answer) async {
+    setState(() => _busy = true);
+    final problem = await _run(
+      HcCommands.answerCard(_address, card.id, q.number, answer),
+    );
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      if (problem == null) _answered['${card.id}#${q.number}'] = answer;
+      _note = problem ?? 'Sent to ${card.id}: $answer';
+    });
+  }
+
+  Future<void> _answerOther(HcCard card, HcCardQuestion q) async {
+    final text = await showDialog<String>(
+      context: context,
+      builder: (context) => _AnswerDialog(card: card, question: q),
+    );
+    if (text == null || text.trim().isEmpty || !mounted) return;
+    await _answer(card, q, text.trim());
+  }
+
+  /// One open question: its text, an answer chip per option and Other….
+  Widget _question(HcCard card, HcCardQuestion q) {
+    final theme = Theme.of(context);
+    final sent = _answered['${card.id}#${q.number}'];
+    return Padding(
+      key: ValueKey('hc-question-${card.id}-${q.number}'),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${card.id} Q${q.number}: ${q.text}',
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 6),
+          if (sent != null)
+            Text('→ $sent (sent)', style: theme.textTheme.bodySmall)
+          else if (q.isSending)
+            Text('Being sent…', style: theme.textTheme.bodySmall)
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final option in q.options)
+                  ActionChip(
+                    key: ValueKey('hc-answer-${card.id}-${q.number}-$option'),
+                    label: Text(option),
+                    onPressed: _busy
+                        ? null
+                        : () => unawaited(_answer(card, q, option)),
+                  ),
+                ActionChip(
+                  key: ValueKey('hc-answer-${card.id}-${q.number}-other'),
+                  label: const Text('Other…'),
+                  onPressed: _busy
+                      ? null
+                      : () => unawaited(_answerOther(card, q)),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -172,6 +251,9 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
               ].join(' · '),
             ),
           ),
+          for (final card in widget.cards)
+            for (final q in card.questions.where((q) => q.isOpen))
+              _question(card, q),
           ListTile(
             key: const ValueKey('hc-action-open'),
             leading: const Icon(Icons.terminal_rounded),
@@ -246,4 +328,52 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
       ),
     );
   }
+}
+
+/// A written answer to one card question. It owns its controller, so the
+/// field outlives the dialog's closing animation.
+class _AnswerDialog extends StatefulWidget {
+  const _AnswerDialog({required this.card, required this.question});
+
+  final HcCard card;
+  final HcCardQuestion question;
+
+  @override
+  State<_AnswerDialog> createState() => _AnswerDialogState();
+}
+
+class _AnswerDialogState extends State<_AnswerDialog> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: Text('${widget.card.id} Q${widget.question.number}'),
+    content: TextField(
+      key: const ValueKey('hc-answer-field'),
+      controller: _controller,
+      autofocus: true,
+      minLines: 1,
+      maxLines: 4,
+      decoration: InputDecoration(
+        helperText: widget.question.text,
+        helperMaxLines: 4,
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: const Text('Cancel'),
+      ),
+      FilledButton(
+        onPressed: () => Navigator.of(context).pop(_controller.text),
+        child: const Text('Send'),
+      ),
+    ],
+  );
 }

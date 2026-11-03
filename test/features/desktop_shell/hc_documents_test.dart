@@ -177,6 +177,22 @@ void main() {
       expect(view.projectOf(terminal('t2', cwd: '/root/roberto'))!.name, 'LF');
       expect(view.projectOf(terminal('omarchy/t2', cwd: '/x/LF'))!.name, 'LF');
       expect(view.projectOf(terminal('t2', cwd: '/x/LF')), isNull);
+      final withIds = HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'Q',
+            'members': ['local/Projects#sp1'],
+          },
+        ],
+        'hidden': ['local/Barbusano#sp9'],
+      })!;
+      expect(
+        withIds.projectOf(terminal('t2', cwd: '/root/Projects'))!.name,
+        'Q',
+        reason: 'the #id the app adds is ignored on the phone',
+      );
+      expect(withIds.isHidden(terminal('t3', cwd: '/root/Barbusano')), isTrue);
     });
   });
 

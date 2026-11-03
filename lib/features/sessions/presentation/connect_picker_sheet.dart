@@ -795,6 +795,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
           context: context,
           runner: widget.runner,
           terminal: terminal,
+          cards: cards,
           onOpen: () => _pick(target),
         ),
       ),

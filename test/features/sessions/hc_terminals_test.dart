@@ -205,6 +205,19 @@ void main() {
       expect(command, contains('sheprd-cards'));
     });
 
+    test('answerCard stages and sends on the agent\'s own machine', () {
+      final here = HcCommands.answerCard('t7', 'SHE-12', 2, 'no, wait');
+      expect(here, contains('cards stage t7 SHE-12 2'));
+      expect(here, contains('cards send t7'));
+      expect(here, isNot(contains('exec --on')));
+      final there = HcCommands.answerCard('omarchy/t5', 'SHE-12', 1, 'yes');
+      expect(
+        there,
+        contains('hc exec --on omarchy cards stage t5 SHE-12 1 yes'),
+      );
+      expect(there, contains('hc exec --on omarchy cards send t5'));
+    });
+
     test('the probe suggests hc only when herdr is missing', () {
       expect(HcCommands.suggestFromProbe('hc\n'), HostBackend.hc);
       expect(HcCommands.suggestFromProbe('hc\nherdr\n'), HostBackend.herdr);

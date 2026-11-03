@@ -102,6 +102,27 @@ abstract final class HcCommands {
   static String send(String address, String text) =>
       _hc('send -- ${shellQuoteArgument(address)} ${shellQuoteArgument(text)}');
 
+  /// Answers question [n] of card [id] on [address]'s agent and sends it
+  /// there, as the Work panel's Send does: `cards stage` then `cards send`
+  /// on the machine that keeps the agent's cards (its own, through
+  /// `hc exec --on` when it is not this one).
+  static String answerCard(String address, String id, int n, String answer) {
+    final slash = address.lastIndexOf('/');
+    final machine = slash == -1 ? '' : address.substring(0, slash);
+    final terminal = address.substring(slash + 1);
+    String cards(List<String> args) {
+      final argv = args.map(shellQuoteArgument).join(' ');
+      return machine.isEmpty
+          ? remoteToolCommand('cards', argv)
+          : _hc('exec --on ${shellQuoteArgument(machine)} cards $argv');
+    }
+
+    final both =
+        '${cards(['stage', terminal, id, '$n', answer])} && '
+        '${cards(['send', terminal])}';
+    return 'sh -c ${shellQuoteArgument(both)}';
+  }
+
   /// `hc keys <t> <keys...>`: named keys (`enter`, `esc`, `up`, `ctrl+c`).
   static String keys(String address, List<String> keys) => _hc(
     'keys -- ${shellQuoteArgument(address)} '

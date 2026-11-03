@@ -256,10 +256,15 @@ class HcSheprdView {
   bool _isTerminal(String key, HcTerminalInfo terminal) =>
       scope.address(key) == terminal.address;
 
-  /// A space key (`machine/<space name>`) names [terminal]'s folder.
+  /// A space key (`machine/<space name>`) names [terminal]'s folder. The
+  /// app adds `#<space id>` to tell same-named spaces apart; the phone has
+  /// no space ids, so it goes by the name.
   bool _isSpace(String key, HcTerminalInfo terminal) {
     if (!key.contains('/')) return false;
-    final (machine, space) = scope.split(key);
+    final hash = key.lastIndexOf('#');
+    final (machine, space) = scope.split(
+      hash > key.indexOf('/') ? key.substring(0, hash) : key,
+    );
     return machine == terminal.machine &&
         space.toLowerCase() == terminal.folder.toLowerCase();
   }
