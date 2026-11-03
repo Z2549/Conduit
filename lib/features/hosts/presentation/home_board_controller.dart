@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/herdr_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_provider.dart';
@@ -232,8 +233,9 @@ class HomeBoardState {
   final bool refreshing;
 
   /// The machine's backend. On [HostBackend.hc] the board never runs the
-  /// herdr CLI: [workspaces] stay empty, [hcTerminals] holds `hc ls`, and
-  /// [phase] speaks about hc instead of Herdr.
+  /// herdr CLI: [hcTerminals] holds `hc ls`, [workspaces] are the Herdr
+  /// app's spaces made from it (CON-130, see [hcWorkspaces]), and [phase]
+  /// speaks about hc instead of Herdr.
   final HostBackend backend;
 
   /// The machine's hc terminals (only on [HostBackend.hc]).
@@ -1025,6 +1027,57 @@ class HomeBoardController extends ChangeNotifier {
     }
   }
 
+  /// The Herdr app's spaces as workspaces, so the Projects view and the
+  /// machine tree group hc agents the way they group Herdr's (CON-130):
+  /// live terminals by the space `hc ls` says they are in (`where`), else
+  /// by their folder. Ids are `wHc` plus a hash of the space name, stable
+  /// across refreshes; their panes are the agents [HcAttentionProvider]
+  /// reports, which open with `hc attach`.
+  @visibleForTesting
+  static List<HomeBoardWorkspace> hcWorkspaces(List<HcTerminalInfo> items) {
+    final bySpace = <String, List<HcTerminalInfo>>{};
+    for (final terminal in items.where((terminal) => terminal.live)) {
+      final space = terminal.space.isNotEmpty
+          ? terminal.space
+          : (terminal.folder.isNotEmpty ? terminal.folder : terminal.address);
+      bySpace.putIfAbsent(space, () => []).add(terminal);
+    }
+    return [
+      for (final (index, MapEntry(key: space, value: terminals))
+          in bySpace.entries.indexed)
+        HomeBoardWorkspace(
+          workspace: HerdrWorkspaceInfo(
+            id: 'wHc${_fnv(space)}',
+            label: space,
+            number: index + 1,
+            agentStatus: _mostUrgent(terminals.map((t) => t.status)),
+            tabCount: terminals.length,
+          ),
+          panes: [
+            for (final agent in HcAttentionProvider.agentsOf(terminals))
+              HomeBoardPane(agent: agent),
+          ],
+        ),
+    ];
+  }
+
+  static String _mostUrgent(Iterable<String> statuses) {
+    const order = ['blocked', 'done', 'working', 'idle'];
+    for (final status in order) {
+      if (statuses.contains(status)) return status;
+    }
+    return '';
+  }
+
+  /// FNV-1a, 32 bits, in hex: a short id that is the same on every run.
+  static String _fnv(String text) {
+    var hash = 0x811c9dc5;
+    for (final unit in text.codeUnits) {
+      hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
+    }
+    return hash.toRadixString(16);
+  }
+
   /// The board of an hc machine: tmux as usual, then `hc ls` in place of
   /// the herdr CLI, so no herdr error or "Start Herdr" shows there.
   Future<HomeBoardState> _loadHc(
@@ -1041,7 +1094,11 @@ class HomeBoardController extends ChangeNotifier {
     );
     switch (HcListing.interpret(result)) {
       case RemoteListingAvailable<HcTerminalInfo>(:final items):
-        return base.copyWith(phase: HomeBoardPhase.ready, hcTerminals: items);
+        return base.copyWith(
+          phase: HomeBoardPhase.ready,
+          hcTerminals: items,
+          workspaces: hcWorkspaces(items),
+        );
       case RemoteListingNotInstalled<HcTerminalInfo>():
         return base.copyWith(
           phase: HomeBoardPhase.notInstalled,

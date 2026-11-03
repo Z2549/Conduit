@@ -6,12 +6,14 @@ import 'package:conduit/features/agent_attention/data/conductore_host_attention_
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
+import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
 import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/project_tree.dart';
 import 'package:conduit/features/desktop_shell/domain/sheprd_view.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/usage/domain/usage_summary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
@@ -669,6 +671,17 @@ class ProjectLayoutController extends ChangeNotifier {
     for (final host in hosts) {
       final id = baseHostId(host.id);
       if (!seen.add(id)) continue;
+      if (host.backend == HostBackend.hc) {
+        // The Herdr app's layout, not sheprd's files (CON-130).
+        if (_views.remove(id) != null) _remerge();
+        final last = _fetchedAt[id];
+        if ((force || last == null || now.difference(last) >= refreshEvery) &&
+            !_inFlight.contains(id) &&
+            (sheprdRunner != null || attention != null)) {
+          pending.add(_fetchHc(host, id));
+        }
+        continue;
+      }
       if (sheprdSync && _canSend(host)) {
         final last = _viewFetchedAt[id];
         if ((force || last == null || now.difference(last) >= syncEvery) &&
@@ -710,6 +723,69 @@ class ProjectLayoutController extends ChangeNotifier {
       _inFlight.remove(id);
       if (owned) unawaited(runner.close());
     }
+  }
+
+  /// The Herdr app sidebar's `sheprd-view` as [host]'s layout: the
+  /// machine's own document, else the first machine it reaches that has
+  /// one (the app's hub, usually the laptop).
+  Future<void> _fetchHc(SavedHost host, String id) async {
+    _inFlight.add(id);
+    _fetchedAt[id] = clock();
+    try {
+      const names = [HcDocuments.view];
+      var view = HcSheprdView.fromJson(
+        HcListing.parseDocAnswers(
+          await _run(host, HcCommands.docGet(names)),
+        )[1],
+      );
+      if (view == null) {
+        final machines = _hcMachines(await _run(host, HcCommands.list));
+        if (machines.isNotEmpty) {
+          final answers = HcListing.parseDocAnswers(
+            await _run(
+              host,
+              HcCommands.docGet(names, on: machines, skipLocal: true),
+            ),
+          );
+          for (var i = 0; i < machines.length && view == null; i++) {
+            view = HcSheprdView.fromJson(answers[i + 1]);
+          }
+        }
+      }
+      applyHcView(host, view);
+    } catch (_) {
+      // Unreachable now: the next refresh asks again.
+    } finally {
+      _inFlight.remove(id);
+    }
+  }
+
+  /// The machines `hc ls --json` says hc reaches.
+  static List<String> _hcMachines(String stdout) {
+    try {
+      final decoded = jsonDecode(stdout.trim());
+      return [
+        if (decoded is Map && decoded['machines'] is List)
+          for (final machine in decoded['machines'] as List)
+            if (machine is Map && machine['name'] is String)
+              machine['name'] as String,
+      ];
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  /// Takes the Herdr app's view for hc machine [host]; null clears it.
+  @visibleForTesting
+  void applyHcView(SavedHost host, HcSheprdView? view) {
+    final id = baseHostId(host.id);
+    final before = _machineLayouts[id];
+    if (view == null) {
+      _machineLayouts.remove(id);
+    } else {
+      _machineLayouts[id] = view.toProjectLayout(host.name);
+    }
+    if (before != _machineLayouts[id] && !_disposed) notifyListeners();
   }
 
   /// Takes one `sidebar-layout` reply from [host].
