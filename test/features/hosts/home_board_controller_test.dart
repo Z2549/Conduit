@@ -105,7 +105,9 @@ void main() {
       final state = board.state;
       expect(state.phase, HomeBoardPhase.ready);
       expect(state.onHc, isTrue);
-      expect(state.workspaces, isEmpty);
+      // The app's spaces stand in for workspaces (CON-130).
+      expect(state.workspaces, isNotEmpty);
+      expect(state.workspaces.every((w) => w.id.startsWith('wHc')), isTrue);
       expect(state.hcTerminals.map((t) => t.address), ['t1', 't2']);
       expect(runner.commands.any((c) => c.contains('exec hc ls')), isTrue);
       expect(runner.commands.any((c) => c.contains('herdr')), isFalse);

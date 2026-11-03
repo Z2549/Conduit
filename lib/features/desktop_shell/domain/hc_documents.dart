@@ -1,3 +1,4 @@
+import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:flutter/foundation.dart';
 
@@ -197,6 +198,38 @@ class HcSheprdView {
       marked: _strings(marks['marked']).toSet(),
       compact: json['density'] == 'compact',
     );
+  }
+
+  /// This view as the Projects view's layout for the hc machine named
+  /// [machine] in the app (CON-130). The machine's board lists every space
+  /// it reaches under its own name, so each member and hidden space keeps
+  /// only its space name (without the app's `#<space id>`).
+  ProjectLayout toProjectLayout(String machine) {
+    final name = machine.toLowerCase();
+    String key(String raw) {
+      final slash = raw.indexOf('/');
+      var space = slash == -1 ? raw : raw.substring(slash + 1);
+      final hash = space.lastIndexOf('#');
+      if (hash > 0) space = space.substring(0, hash);
+      return '$name/$space';
+    }
+
+    return ProjectLayout.fromJson({
+      'group': [
+        for (final project in projects)
+          {
+            'name': project.name,
+            'pinned': project.pinned,
+            'collapsed': project.collapsed,
+            'members': {for (final m in project.members) key(m)}.toList(),
+            'match': project.match,
+            if (project.short.isNotEmpty) 'short': project.short,
+          },
+      ],
+      'hidden': {for (final h in hidden) key(h)}.toList(),
+      'compact': compact,
+      'other_collapsed': otherCollapsed,
+    });
   }
 
   /// The project [terminal] belongs to, or null for Other.

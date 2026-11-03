@@ -22,6 +22,7 @@ class HcTerminalInfo {
     this.live = true,
     this.status = '',
     this.turn = 0,
+    this.where = '',
   });
 
   /// `t7` on its own machine, `machine/t7` for one hc reaches elsewhere:
@@ -43,6 +44,16 @@ class HcTerminalInfo {
 
   /// Goes up each time the status leaves `working`.
   final int turn;
+
+  /// Where the Herdr app shows it: `<space> / <tab>`; empty when no app
+  /// window has it.
+  final String where;
+
+  /// The Herdr app space it sits in (the part of [where] before ` / `).
+  String get space {
+    final at = where.lastIndexOf(' / ');
+    return (at == -1 ? where : where.substring(0, at)).trim();
+  }
 
   /// The machine part of [address]; empty for a terminal on this machine.
   String get machine {
@@ -72,11 +83,12 @@ class HcTerminalInfo {
       other.cwd == cwd &&
       other.live == live &&
       other.status == status &&
-      other.turn == turn;
+      other.turn == turn &&
+      other.where == where;
 
   @override
   int get hashCode =>
-      Object.hash(address, name, agent, cwd, live, status, turn);
+      Object.hash(address, name, agent, cwd, live, status, turn, where);
 
   @override
   String toString() => 'HcTerminalInfo($address)';
@@ -239,6 +251,7 @@ abstract final class HcListing {
             live: (_string(item, const ['state']) ?? 'live') == 'live',
             status: _status(item['status']),
             turn: item['turn'] is int ? item['turn'] as int : 0,
+            where: _string(item, const ['where']) ?? '',
           ),
     ];
   }

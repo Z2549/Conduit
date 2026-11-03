@@ -12,6 +12,7 @@ import 'package:conduit/core/telemetry/telemetry.dart';
 import 'package:conduit/core/telemetry/telemetry_events.dart';
 import 'package:conduit/core/theme/terminal_appearance.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_naming.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
@@ -2135,6 +2136,17 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     HomeBoardPane? pane,
   ) async {
     final flow = widget.connectFlow;
+    // A Herdr app space (CON-130): its agent's terminal, or the space's
+    // first one, attached with `hc attach`.
+    final hcAgent = (pane ?? workspace.panes.firstOrNull)?.agent;
+    if (flow != null &&
+        hcAgent != null &&
+        hcAgent.herdrServer == HcAttentionProvider.serverId) {
+      final session = await flow.openAgent(host, hcAgent);
+      if (!mounted) return;
+      await _showSession(session, agent: hcAgent);
+      return;
+    }
     if (flow != null) {
       // Lands on the exact workspace, tab and pane: reuses (and if needed
       // reconnects) an open Herdr tab, or attaches a new one focused there.
