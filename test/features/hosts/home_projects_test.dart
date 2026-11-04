@@ -662,6 +662,14 @@ void main() {
       ConnectTarget.fromSessionHostId(opened.host.id)?.kind,
       ConnectTargetKind.hc,
     );
+    // A session saved with the old name gets its space's, and its own state.
+    final old = await h.open(
+      tester,
+      workstation,
+      const ConnectTarget.hc('t2', label: 'claude-code in me'),
+    );
+    await settleShell(tester);
+    expect(old.targetTitle, endsWith(': Workout'));
   });
 
   testWidgets('in project mode an unreachable machine keeps its notice as '

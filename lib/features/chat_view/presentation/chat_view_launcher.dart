@@ -33,7 +33,7 @@ bool chatViewAvailable(AgentAttentionController attention, SavedHost host) =>
 
 List<AgentInfo> _live(Iterable<AgentInfo> agents) => [
   for (final agent in agents)
-    if (agent.state != AgentAttentionState.finished) agent,
+    if (!agent.ended) agent,
 ];
 
 /// Where a terminal session is inside its multiplexer, as far as the app

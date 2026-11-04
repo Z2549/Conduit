@@ -292,8 +292,9 @@ class _SessionGridPageState extends State<SessionGridPage>
 enum _TileAction { reconnect, close }
 
 /// Summarizes a host's agents for one session: agents in the session's
-/// Herdr workspace when the target names one, otherwise every agent on the
-/// host. The most urgent state wins.
+/// Herdr workspace when the target names one, the agent in its terminal on
+/// the Herdr app, otherwise every agent on the host. The most urgent state
+/// wins.
 AgentAttentionState? summarizeAgentState(
   AgentHostStatus? status,
   String sessionHostId,
@@ -305,7 +306,9 @@ AgentAttentionState? summarizeAgentState(
   final workspaceId = target?.kind == ConnectTargetKind.herdr
       ? target!.name
       : '';
-  final agents = workspaceId.isEmpty
+  final agents = target?.kind == ConnectTargetKind.hc
+      ? status.agents.where((agent) => agent.pane == target!.name)
+      : workspaceId.isEmpty
       ? status.agents
       : status.agents.where((agent) => agent.workspace == workspaceId);
   AgentAttentionState? summary;

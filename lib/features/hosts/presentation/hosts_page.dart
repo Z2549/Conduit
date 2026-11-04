@@ -59,6 +59,7 @@ import 'package:conduit/features/session_navigation/presentation/session_view_co
 import 'package:conduit/features/session_navigation/presentation/session_view_launcher.dart';
 import 'package:conduit/features/session_navigation/presentation/session_view_widgets.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/remote_session_listing.dart';
 import 'package:conduit/features/sessions/presentation/connect_picker_sheet.dart'
     show ConnectPickerTab;
@@ -539,7 +540,10 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     final agents =
         [
           for (final agent in status.agents)
-            if (workspace.isEmpty || agent.workspace == workspace) agent,
+            if (target?.kind == ConnectTargetKind.hc
+                ? agent.pane == target!.name
+                : workspace.isEmpty || agent.workspace == workspace)
+              agent,
         ]..sort(
           (a, b) => agentStatePriority(a.state) - agentStatePriority(b.state),
         );
@@ -565,16 +569,47 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     if (boards == null) return;
     for (final session in widget.workspaceController.sessions) {
       final target = ConnectTarget.fromSessionHostId(session.host.id);
+      final board = boards[baseHostId(session.host.id)];
+      if (target?.kind == ConnectTargetKind.hc) {
+        final terminal = _hcTerminalOf(board, target!);
+        if (terminal != null) session.noteTargetLabel(terminal.displayLabel);
+        continue;
+      }
       if (target?.kind != ConnectTargetKind.herdr || target!.name.isEmpty) {
         continue;
       }
-      final board = boards[baseHostId(session.host.id)];
       final live = board?.state.workspaces
           .where((workspace) => workspace.id == target.name)
           .firstOrNull;
       if (live != null) session.noteTargetLabel(live.label);
     }
   }
+
+  /// A Herdr app session's state as hc reports it; a pending approval the
+  /// companion knows of still wins. Null for other sessions.
+  AgentAttentionState? _hcStateOf(
+    TerminalSessionController session,
+    HomeBoardController? board,
+  ) {
+    final target = ConnectTarget.fromSessionHostId(session.host.id);
+    if (target?.kind != ConnectTargetKind.hc) return null;
+    final monitored = widget.agentAttention
+        .statusFor(session.host.id)
+        ?.agents
+        .where((agent) => agent.pane == target!.name)
+        .firstOrNull;
+    if (monitored?.pendingRequests.isNotEmpty ?? false) return monitored!.state;
+    final status = _hcTerminalOf(board, target!)?.status ?? '';
+    return status.isEmpty ? null : HcAttentionProvider.stateOf(status);
+  }
+
+  /// The Herdr app terminal at [target], from its machine's `hc ls`.
+  static HcTerminalInfo? _hcTerminalOf(
+    HomeBoardController? board,
+    ConnectTarget target,
+  ) => board?.state.hcTerminals
+      .where((terminal) => terminal.address == target.name)
+      .firstOrNull;
 
   bool _connectedBefore(SavedHost host) =>
       host.isThisComputer ||
@@ -1334,10 +1369,12 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       return HomeSessionInfo.of(
         session,
         workspaces: board?.state.workspaces ?? const [],
-        agentState: summarizeAgentState(
-          widget.agentAttention.statusFor(session.host.id),
-          session.host.id,
-        ),
+        agentState:
+            _hcStateOf(session, board) ??
+            summarizeAgentState(
+              widget.agentAttention.statusFor(session.host.id),
+              session.host.id,
+            ),
         machineName: session.host.isLocal ? 'This device' : machine?.name ?? '',
         restoreNote: widget.sessionRestore?.noteFor(session),
         agentLine: _agentLineFor(session),

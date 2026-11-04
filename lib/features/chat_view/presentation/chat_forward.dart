@@ -37,7 +37,7 @@ List<ChatForwardTarget> chatForwardTargets(
       if (chatViewAvailable(attention, host))
         for (final agent
             in attention.statusFor(host.id)?.agents ?? const <AgentInfo>[])
-          if (agent.state != AgentAttentionState.finished &&
+          if (!agent.ended &&
               isClaudeAgent(agent) &&
               !(agent.id == sessionId && baseHostId(host.id) == here) &&
               seen.add('${baseHostId(host.id)}\n${agent.id}'))

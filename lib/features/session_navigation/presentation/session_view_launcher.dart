@@ -30,7 +30,7 @@ bool agentOpensInChat({
   if (views == null || attention == null) return false;
   final runsClaude =
       supportsChatView(agent, attention.agentKinds(monitoredHost.id)) &&
-      agent.state != AgentAttentionState.finished &&
+      !agent.ended &&
       chatViewAvailable(attention, monitoredHost);
   return views.viewFor(
         sessionHostId ?? monitoredHost.id,
@@ -327,7 +327,7 @@ _ChatStep _nextStep(
 AgentInfo? _sameAgent(AgentInfo agent, List<AgentInfo> agents) {
   final live = [
     for (final candidate in agents)
-      if (candidate.state != AgentAttentionState.finished) candidate,
+      if (!candidate.ended) candidate,
   ];
   final byId = live.where((candidate) => candidate.id == agent.id);
   if (byId.isNotEmpty) return byId.first;

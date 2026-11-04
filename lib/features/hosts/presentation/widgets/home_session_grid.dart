@@ -141,7 +141,7 @@ class HomeSessionInfo {
         }
       }
       if (label.isEmpty) {
-        final name = session.host.name;
+        final name = session.targetTitle;
         final cut = name.lastIndexOf(': ');
         label = cut > 0 && cut + 2 < name.length
             ? name.substring(cut + 2)

@@ -152,6 +152,9 @@ class TerminalSessionController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// The session's name with the target's live label when one was noted.
+  String get targetTitle => _labelledTitle ?? host.name;
+
   /// Name the user gave this session (long-press › Rename on the home
   /// grid), or null to show the machine and target name.
   String? get customTitle => _customTitle;
