@@ -185,6 +185,9 @@ ChatAgentMatch resolveChatAgent(
             if (tab.isNotEmpty) (agent) => agent.tab == tab,
             if (location.hasPane) (agent) => agent.pane == location.herdrPaneId,
           ]);
+  } else if (target?.kind == ConnectTargetKind.hc) {
+    located = true;
+    scoped = live.where((agent) => agent.pane == target!.name).toList();
   } else if (host.startTmuxOnConnect && host.tmuxSessionName.isNotEmpty) {
     final name = host.tmuxSessionName;
     located = true;

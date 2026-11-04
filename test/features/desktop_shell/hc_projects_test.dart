@@ -108,4 +108,16 @@ void main() {
       'Barbusano',
     ]);
   });
+
+  test('machines with their own board are left out of the spaces', () {
+    final spaces = HomeBoardController.hcWorkspaces(
+      terminals,
+      skipMachines: const {'omarchy'},
+    );
+    expect(spaces.map((w) => w.label), [
+      'Calendar',
+      'lf-seguros-web',
+      'Barbusano',
+    ]);
+  });
 }

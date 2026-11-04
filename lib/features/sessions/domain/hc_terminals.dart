@@ -66,9 +66,13 @@ class HcTerminalInfo {
       cwd.split('/').where((part) => part.isNotEmpty).lastOrNull ?? '';
 
   /// The name to show, never the bare address when anything better exists:
-  /// its name, else "agent in folder", else the address.
+  /// its name, else where it is in the app ("Calendar", or "Calendar / 2"
+  /// past the first tab), else "agent in folder", else the address.
   String get displayLabel {
     if (name.isNotEmpty) return name;
+    if (where.isNotEmpty) {
+      return where.endsWith(' / 1') ? space : where.trim();
+    }
     if (agent.isNotEmpty && folder.isNotEmpty) return '$agent in $folder';
     if (agent.isNotEmpty) return agent;
     return address;

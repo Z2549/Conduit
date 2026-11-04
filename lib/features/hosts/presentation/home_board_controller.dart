@@ -452,6 +452,11 @@ class HomeBoardController extends ChangeNotifier {
   /// The machine runs the Herdr app (hc), not the herdr CLI.
   bool get _onHc => _host?.backend == HostBackend.hc;
 
+  /// Machines (lower case) whose terminals this board leaves out of its
+  /// spaces: `hc ls` on one machine lists the machines it reaches too, and
+  /// those on the home page have their own board.
+  Set<String> skipHcMachines = const {};
+
   /// Shows [host] on the board. Selecting the same machine again only
   /// refreshes its saved details; a different one starts over.
   ///
@@ -1034,9 +1039,13 @@ class HomeBoardController extends ChangeNotifier {
   /// across refreshes; their panes are the agents [HcAttentionProvider]
   /// reports, which open with `hc attach`.
   @visibleForTesting
-  static List<HomeBoardWorkspace> hcWorkspaces(List<HcTerminalInfo> items) {
+  static List<HomeBoardWorkspace> hcWorkspaces(
+    List<HcTerminalInfo> items, {
+    Set<String> skipMachines = const {},
+  }) {
     final bySpace = <String, List<HcTerminalInfo>>{};
     for (final terminal in items.where((terminal) => terminal.live)) {
+      if (skipMachines.contains(terminal.machine.toLowerCase())) continue;
       final space = terminal.space.isNotEmpty
           ? terminal.space
           : (terminal.folder.isNotEmpty ? terminal.folder : terminal.address);
@@ -1097,7 +1106,7 @@ class HomeBoardController extends ChangeNotifier {
         return base.copyWith(
           phase: HomeBoardPhase.ready,
           hcTerminals: items,
-          workspaces: hcWorkspaces(items),
+          workspaces: hcWorkspaces(items, skipMachines: skipHcMachines),
         );
       case RemoteListingNotInstalled<HcTerminalInfo>():
         return base.copyWith(
@@ -1268,6 +1277,12 @@ class HomeBoards extends ChangeNotifier {
         changed = true;
         board.setVisible(_visible);
       }
+      board.skipHcMachines = {
+        for (final other in wanted.values)
+          if (other.host.id != entry.host.id &&
+              other.host.backend == HostBackend.hc)
+            other.host.name.toLowerCase(),
+      };
       board.selectHost(entry.host, connectedBefore: entry.connectedBefore);
     }
     if (changed) notifyListeners();

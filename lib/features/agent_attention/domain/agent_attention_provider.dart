@@ -39,6 +39,9 @@ abstract class AgentAttentionProvider {
   /// to pick a provider automatically. Must not throw for "not installed".
   Future<bool> isAvailable(AgentCommandRunner runner) async => true;
 
+  /// Whether this provider's agents can be reached in Herdr app terminals.
+  Future<bool> supportsHcTerminals(AgentCommandRunner runner) async => false;
+
   /// Whether [watchAgents] blocks until something changes instead of
   /// returning immediately.
   bool get supportsWatch => false;

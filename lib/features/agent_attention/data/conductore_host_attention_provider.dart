@@ -4,6 +4,7 @@ import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/features/agent_attention/data/companion_reply.dart';
 import 'package:conduit/features/agent_attention/data/herdr_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
@@ -105,6 +106,24 @@ class ConductoreHostAttentionProvider extends AgentAttentionProvider
       // A connection problem is not "not installed", but the caller has
       // nothing better to do than fall back; the next poll surfaces the
       // error itself.
+      return false;
+    }
+  }
+
+  /// Whether the companion knows which Herdr app terminal its agents run in
+  /// (capability `hc-terminals`), so they can be opened and typed into.
+  @override
+  Future<bool> supportsHcTerminals(AgentCommandRunner runner) async {
+    try {
+      final result = await runner.run(
+        remoteCommand('version'),
+        timeout: _commandTimeout,
+      );
+      final decoded = jsonDecode(result.stdout.trim());
+      return decoded is Map &&
+          decoded['capabilities'] is List &&
+          (decoded['capabilities'] as List).contains('hc-terminals');
+    } catch (_) {
       return false;
     }
   }
@@ -431,6 +450,9 @@ class ConductoreHostAttentionProvider extends AgentAttentionProvider
     final cwd = _string(item['cwd']);
     final tmux = item['tmux'];
     final herdr = item['herdr'];
+    final hcTerminal = item['hc'] is Map
+        ? _string((item['hc'] as Map)['terminal'])
+        : null;
     // An agent in a Herdr pane is its workspace (CON-116), unless the pane
     // has a live name (the companion's own pick, which it then reports).
     final workspaceLabel = herdr is Map
@@ -450,7 +472,9 @@ class ConductoreHostAttentionProvider extends AgentAttentionProvider
     String? workspace;
     String? tab;
     String? pane;
-    if (tmux is Map) {
+    if (hcTerminal != null) {
+      pane = hcTerminal;
+    } else if (tmux is Map) {
       final session = _string(tmux['session']);
       final window = tmux['window'];
       if (session != null) {
@@ -493,7 +517,9 @@ class ConductoreHostAttentionProvider extends AgentAttentionProvider
         _ => null,
       },
       workspaceLabel: workspaceLabel,
-      herdrServer: herdr is Map ? herdrServerOf(herdr) : null,
+      herdrServer: hcTerminal != null
+          ? HcAttentionProvider.serverId
+          : (herdr is Map ? herdrServerOf(herdr) : null),
       awaitsApproval: _string(item['state']) == 'needs_permission',
     );
   }

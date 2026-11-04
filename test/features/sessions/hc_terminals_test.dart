@@ -308,4 +308,28 @@ void main() {
       expect(ConnectTarget.fromSessionHostId('h#hc:'), isNull);
     });
   });
+
+  test('a terminal is named after its place in the app', () {
+    const inSpace = HcTerminalInfo(
+      address: 't1',
+      agent: 'claude-code',
+      cwd: '/root/Projects',
+      where: 'Calendar / 1',
+    );
+    expect(inSpace.displayLabel, 'Calendar');
+    const secondTab = HcTerminalInfo(
+      address: 't2',
+      agent: 'claude-code',
+      where: 'Calendar / 2',
+    );
+    expect(secondTab.displayLabel, 'Calendar / 2');
+    const named = HcTerminalInfo(address: 't3', name: 'api', where: 'X / 1');
+    expect(named.displayLabel, 'api');
+    const nowhere = HcTerminalInfo(
+      address: 't4',
+      agent: 'claude-code',
+      cwd: '/root/Projects',
+    );
+    expect(nowhere.displayLabel, 'claude-code in Projects');
+  });
 }

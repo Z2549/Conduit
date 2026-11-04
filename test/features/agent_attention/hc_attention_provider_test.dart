@@ -36,7 +36,7 @@ void main() {
       expect(reviewer.kind, 'claude');
       expect(reviewer.state, AgentAttentionState.needsInput);
       expect(reviewer.stateSequence, 3);
-      expect(reviewer.pane, isNull, reason: 'no herdr pane to focus');
+      expect(reviewer.pane, 't2', reason: 'the terminal holds it');
       expect(snapshot.agents.last.state, AgentAttentionState.working);
     });
 
@@ -111,14 +111,43 @@ void main() {
           agentMonitor: monitor,
         );
 
-    test('hc reads hc ls without probing the companion', () async {
-      final (workspace, controller, runner) = build([ls]);
+    test(
+      'hc reads hc ls when the companion does not know its terminals',
+      () async {
+        final (workspace, controller, runner) = build([
+          const AgentCommandResult(
+            stdout: '{"version":"1.9.0","capabilities":["live"]}',
+            stderr: '',
+            exitCode: 0,
+          ),
+          ls,
+        ]);
+        await workspace.open(host(HostBackend.hc)).connect();
+        await pumpEventQueue();
+
+        expect(controller.providerFor('h').id, 'hc');
+        expect(runner.commands.last, contains('hc ls --json'));
+        expect(controller.statusFor('h')?.agents, hasLength(2));
+      },
+    );
+
+    test('a companion that knows hc terminals monitors the machine, so Chat '
+        'View works there', () async {
+      final (workspace, controller, _) = build([
+        const AgentCommandResult(
+          stdout: '{"version":"1.10.0","capabilities":["hc-terminals"]}',
+          stderr: '',
+          exitCode: 0,
+        ),
+        const AgentCommandResult(
+          stdout: '{"version":1,"seq":1,"agents":[]}',
+          stderr: '',
+          exitCode: 0,
+        ),
+      ]);
       await workspace.open(host(HostBackend.hc)).connect();
       await pumpEventQueue();
-
-      expect(controller.providerFor('h').id, 'hc');
-      expect(runner.commands.single, contains('hc ls --json'));
-      expect(controller.statusFor('h')?.agents, hasLength(2));
+      expect(controller.providerFor('h').id, 'conductore');
     });
 
     test('an explicit companion choice still wins on hc', () async {
