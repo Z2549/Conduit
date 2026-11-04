@@ -38,6 +38,11 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 43**: a machine's settings now have checkboxes for **Herdr app**,
+  **Herdr TUI** and **tmux**: home and Connect show only what you tick.
+  **Chat View** works on Herdr app terminals (companion 1.10). Terminals are
+  named after their space, each machine lists only its own spaces when the
+  other is on home too, and the "N Herdr app terminals" card is gone.
 - **Preview 42**: on the Herdr app (hc), the **Projects** list shows the
   app's agents, one row per space, grouped like your laptop's sidebar
   (instead of the old sheprd ones); tapping one attaches. Card questions
