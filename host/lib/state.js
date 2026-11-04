@@ -53,6 +53,7 @@ function newAgent (sessionId, now) {
     transcriptPath: null,
     tmux: null,
     herdr: null,
+    hc: null,
     state: 'working',
     lastEvent: null,
     lastToolName: null,
@@ -137,6 +138,12 @@ function applyContext (agent, event) {
       (before.socket || null) === (event.herdr.socket || null) ? before.workspaceLabel : null
     agent.herdr = label ? { ...event.herdr, workspaceLabel: label } : event.herdr
   }
+  // One owner at a time: a session resumed elsewhere leaves the other's
+  // location stale.
+  if (event.hc) {
+    agent.hc = event.hc
+    if (!event.herdr) agent.herdr = null
+  } else if (event.herdr) agent.hc = null
   if (event.process) agent.process = event.process
   // Claude Code's current mode (default, plan, acceptEdits, auto,
   // bypassPermissions…), carried by every hook event: Talkbawt refuses to

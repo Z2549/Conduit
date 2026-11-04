@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Agents in a Herdr app terminal: the hook records the terminal (`hc`), and input, keys and dialog answers go through `hc` (capability `hc-terminals`).
+
 ## 1.9.0 (2026-10-31)
 
 - feat: `commands <sessionId>` (capability `commands`, CON-125) lists what the agent's prompt takes for the phone's "/" list: Claude Code's built-in commands, custom commands from `~/.claude/commands` and `<cwd>/.claude/commands` (a subfolder file is `dir:name`; description from the front matter or the first line) and skills from `~/.claude/skills` and `<cwd>/.claude/skills`. Read on demand: only regular files (a FIFO is skipped, never waited on), the first 4 KB of each, at most 300 files and folders, 1.5 s in all, nothing whose real path leaves its commands/ or skills/ folder; `commands/<dir>/SKILL.md` is `<dir>`. Other agents get empty lists.

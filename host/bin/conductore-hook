@@ -97,6 +97,8 @@ header() {
     # The agent's own Herdr server (a named session has its own socket).
     if [ -n "${HERDR_SOCKET_PATH:-}" ]; then printf 'herdr_socket=%s\n' "$HERDR_SOCKET_PATH"; fi
   fi
+  # The Herdr app's terminal the agent runs in.
+  if [ -n "${HC_TERMINAL_ID:-}" ]; then printf 'hc_terminal=%s\n' "$HC_TERMINAL_ID"; fi
 }
 
 tmp=$d/tmp/h.$$
