@@ -6,6 +6,7 @@ import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
 import 'package:conduit/features/hosts/domain/home_preferences.dart';
+import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -576,6 +577,91 @@ void main() {
     expect(tile, findsOneWidget);
     expect(find.byKey(calendar), findsOneWidget);
     await tearDownShell(tester);
+  });
+
+  testWidgets('an hc machine lists its spaces in Open and Projects, with no '
+      'placeholder card, and a space opens with hc attach', (tester) async {
+    late ProjectLayoutController layout;
+    // The shape of a real `hc ls --json` on a hub with a second machine.
+    const list = '''
+{"hidden_finished":1,"machines":[{"name":"dev","state":"connected"}],
+"terminals":[
+{"address":"t1","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"idle","turn":3,"where":"Follow up / 1"},
+{"address":"t2","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"working","turn":1,"where":"Workout / 1"},
+{"address":"dev/t9","agent":"claude-code","cwd":"/root/x","state":"live",
+"status":"blocked","turn":2,"where":"Follow up / 2"},
+{"address":"dev/t8","agent":"bash","cwd":"/root","state":"live","turn":0,
+"where":"root / 1"}]}''';
+    final h = await pumpShell(
+      tester,
+      size: const Size(390, 844),
+      shellMode: false,
+      before: (h) {
+        unawaited(
+          h.hosts.upsert(workstation.copyWith(backend: HostBackend.hc)),
+        );
+        h.runners['workstation']!
+          ..hcList = list
+          ..tmuxSessions = '';
+        layout = ProjectLayoutController.instance = ProjectLayoutController(
+          theme: h.theme,
+          clock: () => h.now,
+        );
+      },
+    );
+    addTearDown(() {
+      ProjectLayoutController.instance = null;
+      layout.dispose();
+    });
+    await settleShell(tester);
+
+    // Open: one tile per space, and no "N Herdr app terminals" card.
+    expect(
+      find.byKey(const ValueKey('home-board-notice-workstation')),
+      findsNothing,
+    );
+    expect(find.textContaining('Herdr app terminal'), findsNothing);
+    final tiles = find.byWidgetPredicate((widget) {
+      final key = widget.key;
+      return key is ValueKey<String> &&
+          key.value.startsWith('other-herdr-workstation-wHc');
+    });
+    await tester.scrollUntilVisible(
+      tiles.first,
+      200,
+      scrollable: homeScrollable,
+    );
+    expect(find.text('Follow up'), findsOneWidget);
+
+    // Projects: the same spaces, and no one-line notice either.
+    final projects = find.byKey(const ValueKey('home-mode-projects'));
+    await tester.scrollUntilVisible(projects, -200, scrollable: homeScrollable);
+    await tester.tap(projects);
+    await settleShell(tester);
+    expect(
+      find.byKey(const ValueKey('home-notice-line-workstation')),
+      findsNothing,
+    );
+    expect(find.textContaining('Follow up'), findsWidgets);
+    expect(find.textContaining('Workout'), findsWidgets);
+
+    // A space opens its first agent's terminal, not `herdr`.
+    await tester.tap(find.byKey(const ValueKey('home-mode-open')));
+    await settleShell(tester);
+    await tester.scrollUntilVisible(
+      tiles.first,
+      200,
+      scrollable: homeScrollable,
+    );
+    await tester.tap(tiles.first);
+    await settleShell(tester);
+    final opened = h.workspace.sessions.single;
+    expect(
+      ConnectTarget.fromSessionHostId(opened.host.id)?.kind,
+      ConnectTargetKind.hc,
+    );
   });
 
   testWidgets('in project mode an unreachable machine keeps its notice as '

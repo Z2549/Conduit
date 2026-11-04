@@ -453,6 +453,18 @@ void main() {
       expect(ready.title, '2 Herdr app terminals');
       expect(ready.message, contains('Connect › Herdr app'));
       expect(ready.action, HomeBoardNoticeAction.openHerdrApp);
+      // Its spaces are listed: no card over them (CON-131).
+      expect(
+        HomeBoardNotice.of(
+          HomeBoardState(
+            phase: HomeBoardPhase.ready,
+            backend: HostBackend.hc,
+            hcTerminals: const [HcTerminalInfo(address: 't1')],
+            workspaces: [workspace('wHc1', 'Space')],
+          ),
+        ),
+        isNull,
+      );
       expect(
         of(HomeBoardPhase.ready, tmux: const [TmuxSessionInfo(name: 'main')]),
         isNull,
