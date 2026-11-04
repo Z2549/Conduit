@@ -90,7 +90,7 @@ void main() {
   test('a remembered hc terminal opens the picker on the Herdr app tab', () {
     expect(
       SessionConnectFlow.initialTabFor(const ConnectTarget.hc('t7')),
-      ConnectPickerTab.herdr,
+      ConnectPickerTab.hc,
     );
     expect(
       SessionConnectFlow.initialTabFor(
@@ -106,7 +106,7 @@ void main() {
     // Nothing remembered: an hc machine opens on its Herdr app tab.
     expect(
       SessionConnectFlow.initialTabFor(null, HostBackend.hc),
-      ConnectPickerTab.herdr,
+      ConnectPickerTab.hc,
     );
     expect(
       SessionConnectFlow.initialTabFor(

@@ -43,7 +43,7 @@ void main() {
           body: ConnectPickerSheet(
             host: buildHost('h').copyWith(backend: HostBackend.hc),
             runner: runner,
-            initialTab: ConnectPickerTab.herdr,
+            initialTab: ConnectPickerTab.hc,
             onPicked: picked.add,
           ),
         ),

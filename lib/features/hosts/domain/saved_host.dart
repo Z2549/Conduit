@@ -34,6 +34,40 @@ enum AgentMonitorKind {
 /// before this setting existed; sheprd's own extras (projects and marks) stay
 /// behind the "Sync with sheprd" setting. [hc] lists, reads, prompts and
 /// attaches through `hc` instead, see docs/herdr-core-contract.md.
+/// What a machine offers on the phone; any of them, per machine.
+enum HostTool {
+  herdrApp,
+  herdr,
+  tmux;
+
+  String get label => switch (this) {
+    HostTool.herdrApp => 'Herdr app',
+    HostTool.herdr => 'Herdr TUI',
+    HostTool.tmux => 'tmux',
+  };
+
+  String get description => switch (this) {
+    HostTool.herdrApp => "The app's spaces and terminals, through hc.",
+    HostTool.herdr =>
+      'Workspaces, tabs and panes, plus sheprd\'s projects when "Sync with '
+          'sheprd" is on.',
+    HostTool.tmux => 'tmux sessions and windows.',
+  };
+
+  /// What a machine saved before this choice existed had.
+  static Set<HostTool> of(HostBackend backend) => {
+    backend == HostBackend.hc ? HostTool.herdrApp : HostTool.herdr,
+    HostTool.tmux,
+  };
+
+  static Set<HostTool>? parse(Object? raw) => raw is List
+      ? {
+          for (final tool in HostTool.values)
+            if (raw.contains(tool.name)) tool,
+        }
+      : null;
+}
+
 enum HostBackend {
   herdr,
   sheprd,
@@ -270,6 +304,7 @@ class SavedHost {
     this.agentNotifyFinished = true,
     this.agentMonitor = AgentMonitorKind.auto,
     this.backend = HostBackend.herdr,
+    this.chosenTools,
     this.shareInboxDirectory = '',
     this.lastConnectedAt,
     this.isLocal = false,
@@ -346,6 +381,12 @@ class SavedHost {
 
   /// What drives this machine's agents and terminals (see [HostBackend]).
   final HostBackend backend;
+
+  /// The tools picked for this machine; null: what [backend] implies.
+  final Set<HostTool>? chosenTools;
+
+  /// What the phone lists and offers for this machine.
+  Set<HostTool> get tools => chosenTools ?? HostTool.of(backend);
 
   /// The notification level the two notify flags encode.
   AgentNotifyLevel get agentNotifyLevel => AgentNotifyLevel.fromFlags(
@@ -446,6 +487,7 @@ class SavedHost {
     AgentNotifyLevel? agentNotifyLevel,
     AgentMonitorKind? agentMonitor,
     HostBackend? backend,
+    Set<HostTool>? tools,
     String? shareInboxDirectory,
     DateTime? lastConnectedAt,
     bool clearLastConnectedAt = false,
@@ -489,7 +531,13 @@ class SavedHost {
           agentNotifyFinished ??
           this.agentNotifyFinished,
       agentMonitor: agentMonitor ?? this.agentMonitor,
-      backend: backend ?? this.backend,
+      // [backend] follows the tools; a new backend alone resets them.
+      backend: tools != null
+          ? (tools.contains(HostTool.herdrApp)
+                ? HostBackend.hc
+                : HostBackend.herdr)
+          : backend ?? this.backend,
+      chosenTools: tools ?? (backend != null ? null : chosenTools),
       shareInboxDirectory: shareInboxDirectory ?? this.shareInboxDirectory,
       lastConnectedAt: clearLastConnectedAt
           ? null
@@ -536,6 +584,7 @@ class SavedHost {
       'agentNotifyFinished': agentNotifyFinished,
       'agentMonitor': agentMonitor.name,
       'backend': backend.name,
+      'tools': [for (final tool in tools) tool.name],
       'shareInboxDirectory': shareInboxDirectory,
       'lastConnectedAt': lastConnectedAt?.toIso8601String(),
       'isLocal': isLocal,
@@ -595,6 +644,7 @@ class SavedHost {
       agentNotifyFinished: json['agentNotifyFinished'] as bool? ?? true,
       agentMonitor: AgentMonitorKind.parse(json['agentMonitor']),
       backend: HostBackend.parse(json['backend']),
+      chosenTools: HostTool.parse(json['tools']),
       shareInboxDirectory:
           (json['shareInboxDirectory'] as String?)?.trim() ?? '',
       lastConnectedAt: lastConnectedAtRaw == null

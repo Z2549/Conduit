@@ -643,7 +643,12 @@ class HomeBoardController extends ChangeNotifier {
   bool _attachFeed() {
     final host = _host;
     // The pushed model is Herdr's: an hc machine is polled with `hc ls`.
-    if (host == null || host.backend == HostBackend.hc) return false;
+    // So is one that leaves out Herdr or tmux, which the model holds.
+    if (host == null ||
+        host.backend == HostBackend.hc ||
+        !host.tools.containsAll(const {HostTool.herdr, HostTool.tmux})) {
+      return false;
+    }
     final feed = _feed ?? _liveFeed?.call(host);
     if (feed == null || feed.support == LiveSupport.unsupported) {
       return false;
@@ -956,13 +961,50 @@ class HomeBoardController extends ChangeNotifier {
   }
 
   Future<HomeBoardState> _load(AgentCommandRunner runner) async {
+    final tools = _host?.tools ?? const <HostTool>{};
+    final (tmux, tmuxSessions) = tools.contains(HostTool.tmux)
+        ? await _loadTmux(runner)
+        : (HomeTmuxStatus.unknown, const <TmuxSessionInfo>[]);
+    final hc = tools.contains(HostTool.herdrApp);
+    final herdr = tools.contains(HostTool.herdr);
+    if (hc && !herdr) return _loadHc(runner, tmux, tmuxSessions);
+    if (!hc && !herdr) {
+      return HomeBoardState(
+        phase: HomeBoardPhase.notInstalled,
+        tmux: tools.contains(HostTool.tmux) ? tmux : HomeTmuxStatus.available,
+        tmuxSessions: tmuxSessions,
+        updatedAt: DateTime.now(),
+      );
+    }
+    if (!hc) return _loadHerdr(runner, tmux, tmuxSessions);
+    // Both: each lists what it can; one being down keeps the other.
+    final app = await _loadHc(
+      runner,
+      HomeTmuxStatus.available,
+      tmuxSessions,
+    ).then<HomeBoardState?>((state) => state, onError: (Object _) => null);
+    final HomeBoardState? tui;
+    try {
+      tui = await _loadHerdr(runner, tmux, tmuxSessions);
+    } catch (_) {
+      if (app == null) rethrow;
+      return app.copyWith(tmux: tmux);
+    }
+    if (app == null || app.phase != HomeBoardPhase.ready) return tui;
+    return app.copyWith(
+      tmux: tmux,
+      workspaces: [...tui.workspaces, ...app.workspaces],
+    );
+  }
+
+  Future<(HomeTmuxStatus, List<TmuxSessionInfo>)> _loadTmux(
+    AgentCommandRunner runner,
+  ) async {
     final tmuxResult = await runner.run(
       RemoteSessionListing.tmuxListCommand,
       timeout: _timeout,
     );
-    final (tmux, tmuxSessions) = switch (RemoteSessionListing.interpretTmux(
-      tmuxResult,
-    )) {
+    return switch (RemoteSessionListing.interpretTmux(tmuxResult)) {
       RemoteListingAvailable<TmuxSessionInfo>(:final items) => (
         HomeTmuxStatus.available,
         items,
@@ -980,7 +1022,14 @@ class HomeBoardController extends ChangeNotifier {
         const <TmuxSessionInfo>[],
       ),
     };
-    if (_onHc) return _loadHc(runner, tmux, tmuxSessions);
+  }
+
+  /// The board from the herdr CLI, with the tmux side already listed.
+  Future<HomeBoardState> _loadHerdr(
+    AgentCommandRunner runner,
+    HomeTmuxStatus tmux,
+    List<TmuxSessionInfo> tmuxSessions,
+  ) async {
     final workspaceResult = await runner.run(
       RemoteSessionListing.herdrWorkspaceListCommand,
       timeout: _timeout,

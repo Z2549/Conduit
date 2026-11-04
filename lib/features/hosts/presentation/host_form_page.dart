@@ -82,7 +82,7 @@ class _HostFormPageState extends State<HostFormPage> {
   bool _agentNotifyInput = true;
   bool _agentNotifyFinished = true;
   AgentMonitorKind _agentMonitor = AgentMonitorKind.auto;
-  HostBackend _backend = HostBackend.herdr;
+  Set<HostTool> _tools = HostTool.of(HostBackend.herdr);
   bool _predictiveEchoEnabled = false;
   bool _externalAuthOfferKey = true;
   bool _forwardAgent = false;
@@ -148,7 +148,7 @@ class _HostFormPageState extends State<HostFormPage> {
       _agentNotifyInput = host.agentNotifyInput;
       _agentNotifyFinished = host.agentNotifyFinished;
       _agentMonitor = host.agentMonitor;
-      _backend = host.backend;
+      _tools = host.tools;
     }
     _keyInspection = _cheapPreview();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -330,7 +330,7 @@ class _HostFormPageState extends State<HostFormPage> {
           agentNotifyInput: _agentNotifyInput,
           agentNotifyFinished: _agentNotifyFinished,
           agentMonitor: _agentMonitor,
-          backend: _backend,
+          tools: _tools,
           snippets: _snippets,
           connectSnippetId: _connectSnippetId,
           timeoutValidator: _validateTimeout,
@@ -357,7 +357,7 @@ class _HostFormPageState extends State<HostFormPage> {
               setState(() => _agentNotifyFinished = value),
           onAgentMonitorChanged: (value) =>
               setState(() => _agentMonitor = value),
-          onBackendChanged: (value) => setState(() => _backend = value),
+          onToolsChanged: (value) => setState(() => _tools = value),
           companionSetup: CompanionSetupTile(
             host: widget.host,
             resolveHost: _validatedHost,
@@ -843,7 +843,10 @@ class _HostFormPageState extends State<HostFormPage> {
       agentNotifyInput: _agentNotifyInput,
       agentNotifyFinished: _agentNotifyFinished,
       agentMonitor: _agentMonitor,
-      backend: _backend,
+      backend: _tools.contains(HostTool.herdrApp)
+          ? HostBackend.hc
+          : HostBackend.herdr,
+      chosenTools: _tools,
       shareInboxDirectory: _shareInboxDirectoryController.text.trim(),
       snippets: List<TerminalSnippet>.unmodifiable(_snippets),
       connectSnippetId:
