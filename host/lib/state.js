@@ -153,6 +153,22 @@ function applyContext (agent, event) {
   if (name) agent.name = name
 }
 
+// The Herdr app terminal of agents that have not said yet: a session started
+// before the hook recorded it is idle and sends no event. terminalOf(agent)
+// reads it from the agent's process (null: none). Returns the change records.
+function syncHcTerminals (state, terminalOf) {
+  const changes = []
+  for (const agent of Object.values(state.agents)) {
+    if (agent.state === 'ended' || agent.hc) continue
+    const terminal = terminalOf(agent)
+    if (!terminal) continue
+    agent.hc = { terminal }
+    agent.herdr = null
+    changes.push(record(state, 'change', agent, 'hc-terminal'))
+  }
+  return changes
+}
+
 // Herdr workspace labels onto the agents in Herdr panes (CON-116).
 // labelOf(agent) is the label of the agent's workspace, '' for a
 // workspace Herdr no longer lists, or undefined when unknown (the live
@@ -527,6 +543,7 @@ function snapshot (state) {
 }
 
 module.exports = {
+  syncHcTerminals,
   STATES,
   PRUNE_AFTER_MS,
   STALE_AFTER_MS,

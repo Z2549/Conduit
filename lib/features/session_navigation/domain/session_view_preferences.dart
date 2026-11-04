@@ -41,7 +41,7 @@ String sessionViewKey(String sessionHostId) {
 /// Codex, OpenCode and others, which have no Chat View).
 bool isClaudeAgent(AgentInfo agent) {
   // Seen only by Herdr: no hooks, so no transcript for a chat view.
-  if (isHerdrOnlyAgent(agent)) return false;
+  if (isHerdrOnlyAgent(agent) || agent.hcOnly) return false;
   final kind = agent.kind.trim().toLowerCase();
   return kind.isEmpty || kind.startsWith('claude');
 }
@@ -55,7 +55,7 @@ bool supportsChatView(
   AgentKindCatalog catalog = AgentKindCatalog.legacy,
 ]) {
   // Seen only by Herdr: no hooks, so no transcript for a chat view.
-  if (isHerdrOnlyAgent(agent)) return false;
+  if (isHerdrOnlyAgent(agent) || agent.hcOnly) return false;
   final chat = catalog.of(agent.kind).chat;
   return chat != null && renderableChatFormats.contains(chat);
 }

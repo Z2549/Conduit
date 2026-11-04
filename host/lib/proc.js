@@ -65,4 +65,13 @@ function sameProcess (p) {
   return !!st && st.startTime === p.startTime
 }
 
-module.exports = { DAEMON_TITLE, pidAlive, commandLine, isDaemon, hasProc, stat, identifyClaude, sameProcess }
+// One variable of a live process's environment, when it can be read.
+function envOf (p, name) {
+  if (!p || !hasProc() || !sameProcess(p)) return null
+  try {
+    const line = fs.readFileSync(`/proc/${p.pid}/environ`, 'utf8').split('\0').find(kv => kv.startsWith(`${name}=`))
+    return line ? line.slice(name.length + 1) || null : null
+  } catch { return null }
+}
+
+module.exports = { envOf, DAEMON_TITLE, pidAlive, commandLine, isDaemon, hasProc, stat, identifyClaude, sameProcess }

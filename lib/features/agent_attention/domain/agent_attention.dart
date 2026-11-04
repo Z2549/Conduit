@@ -425,6 +425,10 @@ class AgentInfo {
   bool get ended =>
       state == AgentAttentionState.finished && herdrServer != 'hc';
 
+  /// A Herdr app terminal no companion session was matched to: it can be
+  /// attached, but has no transcript for Chat View.
+  bool get hcOnly => herdrServer == 'hc' && id == pane;
+
   /// Stable identity across polls (provider-specific; e.g. pane id or a
   /// unique live agent name). Used to deduplicate notifications.
   final String id;
