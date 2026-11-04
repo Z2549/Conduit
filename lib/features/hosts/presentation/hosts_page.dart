@@ -1742,7 +1742,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       // app tab instead, and an older one lands there too.
       case HomeBoardNoticeAction.startHerdr when host.backend == HostBackend.hc:
       case HomeBoardNoticeAction.openHerdrApp:
-        unawaited(_connect(host, initialTab: ConnectPickerTab.herdr));
+        unawaited(_connect(host, initialTab: ConnectPickerTab.hc));
       case HomeBoardNoticeAction.startHerdr:
         unawaited(
           _openTarget(host, const ConnectTarget.herdr(workspaceId: '')),

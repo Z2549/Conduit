@@ -267,8 +267,9 @@ class SessionConnectFlow {
     ConnectTarget? remembered, [
     HostBackend backend = HostBackend.herdr,
   ]) => switch (remembered?.kind) {
-    ConnectTargetKind.herdr || ConnectTargetKind.hc => ConnectPickerTab.herdr,
-    null when backend == HostBackend.hc => ConnectPickerTab.herdr,
+    ConnectTargetKind.herdr => ConnectPickerTab.herdr,
+    ConnectTargetKind.hc => ConnectPickerTab.hc,
+    null when backend == HostBackend.hc => ConnectPickerTab.hc,
     _ => ConnectPickerTab.tmux,
   };
 

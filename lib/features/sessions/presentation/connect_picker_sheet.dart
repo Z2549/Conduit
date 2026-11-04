@@ -41,7 +41,7 @@ class ConnectPickerResult {
   final String? agent;
 }
 
-enum ConnectPickerTab { tmux, herdr, recent }
+enum ConnectPickerTab { tmux, herdr, hc, recent }
 
 /// Shows the Moshi-style picker (Tmux / Herdr / Recent / Skip) for [host].
 ///
@@ -132,7 +132,17 @@ class ConnectPickerSheet extends StatefulWidget {
 }
 
 class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
-  late ConnectPickerTab _tab = widget.initialTab;
+  /// The tabs of what this machine uses, and Recent.
+  late final List<ConnectPickerTab> _tabs = [
+    if (widget.host.tools.contains(HostTool.tmux)) ConnectPickerTab.tmux,
+    if (widget.host.tools.contains(HostTool.herdr)) ConnectPickerTab.herdr,
+    if (widget.host.tools.contains(HostTool.herdrApp)) ConnectPickerTab.hc,
+    ConnectPickerTab.recent,
+  ];
+
+  late ConnectPickerTab _tab = _tabs.contains(widget.initialTab)
+      ? widget.initialTab
+      : _tabs.first;
   late bool _remember = widget.preferences.rememberChoice;
   late final RemoteSessionLister _lister = RemoteSessionLister(widget.runner);
 
@@ -153,7 +163,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   /// What to suggest when herdr is missing: `hc` if that is installed.
   Future<HostBackend>? _suggestion;
 
-  bool get _onHc => widget.host.backend == HostBackend.hc;
+  bool get _onHc => widget.host.tools.contains(HostTool.herdrApp);
 
   /// Hardware-key logins ask for a key touch per connection; the listing
   /// would be a second one, so it only runs on request.
@@ -169,7 +179,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
 
   void _load() {
     setState(() {
-      _tmux = _lister.listTmux();
+      if (widget.host.tools.contains(HostTool.tmux)) {
+        _tmux = _lister.listTmux();
+      }
       if (_onHc) {
         final hc = _hc = _lister.listHc();
         // Once the machines are known: the Herdr app's view may live on one
@@ -184,7 +196,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
             },
           ),
         );
-      } else {
+      }
+      if (widget.host.tools.contains(HostTool.herdr)) {
         _herdr = _lister.listHerdr();
       }
     });
@@ -200,12 +213,13 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   Map<ShortcutActivator, VoidCallback> get _tabShortcuts {
     final mac = defaultTargetPlatform == TargetPlatform.macOS;
     return {
-      for (final (index, tab) in ConnectPickerTab.values.indexed)
+      for (final (index, tab) in _tabs.indexed)
         SingleActivator(
           [
             LogicalKeyboardKey.digit1,
             LogicalKeyboardKey.digit2,
             LogicalKeyboardKey.digit3,
+            LogicalKeyboardKey.digit4,
           ][index],
           control: !mac,
           meta: mac,
@@ -312,35 +326,50 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                     ),
                   ),
                   segments: [
-                    const ButtonSegment(
-                      value: ConnectPickerTab.tmux,
-                      label: _TabLabel(
-                        icon: MultiplexerIcon(
-                          MultiplexerKind.tmux,
-                          size: 15,
-                          semanticLabel: '',
+                    for (final tab in _tabs)
+                      switch (tab) {
+                        ConnectPickerTab.tmux => const ButtonSegment(
+                          value: ConnectPickerTab.tmux,
+                          label: _TabLabel(
+                            icon: MultiplexerIcon(
+                              MultiplexerKind.tmux,
+                              size: 15,
+                              semanticLabel: '',
+                            ),
+                            label: 'Tmux',
+                          ),
                         ),
-                        label: 'Tmux',
-                      ),
-                    ),
-                    ButtonSegment(
-                      value: ConnectPickerTab.herdr,
-                      label: _TabLabel(
-                        icon: const MultiplexerIcon(
-                          MultiplexerKind.herdr,
-                          size: 15,
-                          semanticLabel: '',
+                        ConnectPickerTab.herdr => const ButtonSegment(
+                          value: ConnectPickerTab.herdr,
+                          label: _TabLabel(
+                            icon: MultiplexerIcon(
+                              MultiplexerKind.herdr,
+                              size: 15,
+                              semanticLabel: '',
+                            ),
+                            label: 'Herdr',
+                          ),
                         ),
-                        label: _onHc ? 'Herdr app' : 'Herdr',
-                      ),
-                    ),
-                    const ButtonSegment(
-                      value: ConnectPickerTab.recent,
-                      label: _TabLabel(
-                        icon: Icon(Icons.history_rounded, size: 16),
-                        label: 'Recent',
-                      ),
-                    ),
+                        ConnectPickerTab.hc => ButtonSegment(
+                          value: ConnectPickerTab.hc,
+                          label: _TabLabel(
+                            icon: const MultiplexerIcon(
+                              MultiplexerKind.herdr,
+                              size: 15,
+                              semanticLabel: '',
+                            ),
+                            // Four tabs leave no room on a phone.
+                            label: _tabs.length > 3 ? 'App' : 'Herdr app',
+                          ),
+                        ),
+                        ConnectPickerTab.recent => const ButtonSegment(
+                          value: ConnectPickerTab.recent,
+                          label: _TabLabel(
+                            icon: Icon(Icons.history_rounded, size: 16),
+                            label: 'Recent',
+                          ),
+                        ),
+                      },
                   ],
                   selected: {_tab},
                   onSelectionChanged: (selection) =>
@@ -384,7 +413,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
             padding: EdgeInsets.fromLTRB(12, 8, 12, 16 + bottomInset),
             children: switch (_tab) {
               ConnectPickerTab.tmux => _buildTmux(),
-              ConnectPickerTab.herdr => _onHc ? _buildHc() : _buildHerdr(),
+              ConnectPickerTab.herdr => _buildHerdr(),
+              ConnectPickerTab.hc => _buildHc(),
               ConnectPickerTab.recent => _buildRecent(),
             },
           ),
@@ -624,7 +654,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
         icon: Icons.extension_off_outlined,
         message: snapshot.data == HostBackend.hc
             ? 'Herdr is not installed on this machine, but the Herdr app '
-                  '(hc) is: choose "${HostBackend.hc.label}" under Agents '
+                  '(hc) is: tick "${HostTool.herdrApp.label}" under Agents '
                   "and terminals in this machine's settings."
             : 'Herdr is not installed on this machine.',
       ),

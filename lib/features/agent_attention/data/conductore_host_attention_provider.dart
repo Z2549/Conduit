@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/features/agent_attention/data/companion_reply.dart';
+import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/herdr_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
-import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';

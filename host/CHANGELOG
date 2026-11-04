@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.10.0 (2026-11-04)
+
 - Agents in a Herdr app terminal: the hook records the terminal (`hc`), and input, keys and dialog answers go through `hc` (capability `hc-terminals`).
 
 ## 1.9.0 (2026-10-31)
