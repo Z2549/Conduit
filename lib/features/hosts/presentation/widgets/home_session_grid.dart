@@ -1451,7 +1451,11 @@ class HomeBoardNotice {
                 action: HomeBoardNoticeAction.retry,
               );
       case HomeBoardPhase.ready when state.onHc:
-        if (state.tmuxSessions.isNotEmpty) return null;
+        // The app's spaces are listed as workspaces (CON-130): no card over
+        // them.
+        if (state.workspaces.isNotEmpty || state.tmuxSessions.isNotEmpty) {
+          return null;
+        }
         final count = state.hcTerminals.where((t) => t.live).length;
         return HomeBoardNotice(
           icon: Icons.space_dashboard_outlined,
