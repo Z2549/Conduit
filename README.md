@@ -38,6 +38,10 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 44**: **Chat View** opens on idle Herdr app terminals and on
+  terminals of your other machine (companion 1.10.1). "Needs you" now counts
+  only terminals really blocked or waiting on an approval. Open sessions show
+  their space's name, with their own state and preview line.
 - **Preview 43**: a machine's settings now have checkboxes for **Herdr app**,
   **Herdr TUI** and **tmux**: home and Connect show only what you tick.
   **Chat View** works on Herdr app terminals (companion 1.10). Terminals are
