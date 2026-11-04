@@ -1483,7 +1483,8 @@ class AgentAttentionController extends ChangeNotifier {
 
   /// Picks the provider for [monitor] from the host setting, probing the
   /// companion when the setting is automatic. On the Herdr app backend
-  /// (`hc`) only an explicit companion choice overrides hc. Cached for the
+  /// (`hc`): the companion when chosen, or when automatic and it knows hc
+  /// terminals, else hc. Cached for the
   /// life of the connection.
   Future<AgentAttentionProvider> _resolveProvider(_HostMonitor monitor) async {
     final cached = monitor.provider;
@@ -1491,10 +1492,14 @@ class AgentAttentionController extends ChangeNotifier {
       return cached;
     }
     final companion = _companionProvider;
+    // On the Herdr app, a companion that knows its terminals brings Chat
+    // View, approvals and notifications; hc alone is the fallback.
     final hc =
         monitor.host.backend == HostBackend.hc &&
-        (monitor.host.agentMonitor != AgentMonitorKind.companion ||
-            companion == null);
+        (companion == null ||
+            monitor.host.agentMonitor == AgentMonitorKind.herdr ||
+            (monitor.host.agentMonitor == AgentMonitorKind.auto &&
+                !await companion.supportsHcTerminals(monitor.runner)));
     final resolved = hc
         ? _hcProvider
         : switch (monitor.host.agentMonitor) {

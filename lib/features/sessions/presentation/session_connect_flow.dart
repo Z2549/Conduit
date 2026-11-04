@@ -154,7 +154,11 @@ class SessionConnectFlow {
     TerminalSessionController? session;
     if (agent.herdrServer == HcAttentionProvider.serverId && !host.isLocal) {
       unawaited(hostsController.markConnected(host));
-      session = open(host, ConnectTarget.hc(agent.id, label: agent.name));
+      // The companion's agents are sessions, in the terminal at their pane.
+      session = open(
+        host,
+        ConnectTarget.hc(agent.pane ?? agent.id, label: agent.name),
+      );
     } else if (tmuxLocation != null && !host.isLocal) {
       unawaited(hostsController.markConnected(host));
       session = await tmux.openAgentLocation(

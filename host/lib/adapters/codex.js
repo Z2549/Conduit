@@ -428,8 +428,8 @@ function identifyProcess (pid) {
   return st && st.startTime ? { pid, startTime: st.startTime } : null
 }
 
-const LOCATION_KEYS = ['tmux', 'tmux_pane', 'herdr_workspace', 'herdr_tab', 'herdr_pane', 'herdr_name', 'herdr_socket']
-const ENV_KEYS = { TMUX: 'tmux', TMUX_PANE: 'tmux_pane', HERDR_WORKSPACE_ID: 'herdr_workspace', HERDR_TAB_ID: 'herdr_tab', HERDR_PANE_ID: 'herdr_pane', HERDR_AGENT_NAME: 'herdr_name', HERDR_SOCKET_PATH: 'herdr_socket' }
+const LOCATION_KEYS = ['tmux', 'tmux_pane', 'herdr_workspace', 'herdr_tab', 'herdr_pane', 'herdr_name', 'herdr_socket', 'hc_terminal']
+const ENV_KEYS = { HC_TERMINAL_ID: 'hc_terminal', TMUX: 'tmux', TMUX_PANE: 'tmux_pane', HERDR_WORKSPACE_ID: 'herdr_workspace', HERDR_TAB_ID: 'herdr_tab', HERDR_PANE_ID: 'herdr_pane', HERDR_AGENT_NAME: 'herdr_name', HERDR_SOCKET_PATH: 'herdr_socket' }
 
 function locationOf (pid) {
   let text = ''

@@ -238,6 +238,7 @@ bool _located(SavedHost host) {
   final target = ConnectTarget.fromSessionHostId(host.id);
   return switch (target?.kind) {
     ConnectTargetKind.herdr => target!.name.isNotEmpty,
+    ConnectTargetKind.hc => true,
     _ => host.startTmuxOnConnect && host.tmuxSessionName.isNotEmpty,
   };
 }

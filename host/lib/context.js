@@ -85,6 +85,10 @@ function herdrContext (header) {
   }
 }
 
+function hcContext (header) {
+  return header.hc_terminal ? { terminal: header.hc_terminal } : null
+}
+
 // The environment for a herdr command aimed at `socket` (null: as is).
 function herdrEnv (socket) {
   return socket ? { ...process.env, HERDR_SOCKET_PATH: socket } : process.env
@@ -216,6 +220,8 @@ async function enrich (event, header) {
   const herdr = await herdrLocation(header, event)
   if (tmux) event.tmux = tmux
   if (herdr) event.herdr = herdr
+  const hc = hcContext(header)
+  if (hc) event.hc = hc
   return event
 }
 

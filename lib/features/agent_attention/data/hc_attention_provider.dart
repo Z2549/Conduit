@@ -58,6 +58,7 @@ class HcAttentionProvider extends AgentAttentionProvider {
           kind: terminal.agent,
           state: stateOf(terminal.status),
           stateSequence: terminal.turn,
+          pane: terminal.address,
           herdrServer: serverId,
         ),
   ];

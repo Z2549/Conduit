@@ -16,6 +16,8 @@
 // Anything else is refused and nothing is typed.
 
 const crypto = require('crypto')
+const os = require('os')
+const path = require('path')
 const { execFile, spawn } = require('child_process')
 const { log } = require('./log')
 const proc = require('./proc')
@@ -56,10 +58,11 @@ function run (cmd, args, input, env = process.env) {
 
 const why = r => (r.stderr || r.stdout || (r.err && r.err.message) || '').trim().split('\n')[0]
 
-// Where input for this agent goes: Herdr pane first (the multiplexer that
-// owns the agent), else its tmux pane.
+// Where input for this agent goes: its Herdr app terminal or Herdr pane
+// first (the multiplexer that owns the agent), else its tmux pane.
 function targets (agent) {
   const list = []
+  if (agent.hc && agent.hc.terminal) list.push({ via: 'hc', paneId: agent.hc.terminal })
   if (agent.herdr && agent.herdr.paneId) list.push({ via: 'herdr', paneId: agent.herdr.paneId, socket: agent.herdr.socket || null })
   if (agent.tmux && agent.tmux.paneId) {
     list.push({ via: 'tmux', paneId: agent.tmux.paneId, socket: agent.tmux.socket || null, panePid: agent.tmux.panePid || null })
@@ -73,8 +76,26 @@ const tmuxArgs = (t, args) => t.socket ? ['-S', t.socket, ...args] : args
 // A herdr command on the agent's own Herdr server.
 const herdr = (t, args) => run('herdr', args, undefined, herdrEnv(t.socket))
 
+// An hc command; the daemon's PATH may not have ~/.local/bin.
+const hc = args => run('hc', args, undefined, {
+  ...process.env,
+  PATH: `${process.env.PATH || ''}:${path.join(os.homedir(), '.local', 'bin')}`
+})
+
 // Null when the target still holds this agent, else why not.
 async function verify (agent, t) {
+  if (t.via === 'hc') {
+    // hc does not say which session a terminal runs: the live terminal, and
+    // the agent's process checked by verifiedTargets, are the proof.
+    const r = await hc(['get', '--json', '--', t.paneId])
+    if (r.err) return `Herdr app terminal ${t.paneId} is gone: ${why(r)}`
+    try {
+      if (JSON.parse(r.stdout).finished_ms != null) return `Herdr app terminal ${t.paneId} has finished`
+    } catch {
+      return `cannot read Herdr app terminal ${t.paneId}`
+    }
+    return null
+  }
   if (t.via === 'tmux') {
     if (!t.socket || !t.panePid) {
       return `cannot verify tmux pane ${t.paneId} (recorded by an older companion); it is checked again after the agent's next event`
@@ -135,6 +156,27 @@ async function tmuxType (t, text, enter) {
   return { ok: true }
 }
 
+// hc types a text only with Enter (`hc send`, which refuses a blocked
+// program); without Enter it goes key by key, so plain ASCII only.
+const hcKeyOf = c => c === ' ' ? 'space' : c
+async function hcType (t, text, enter) {
+  if (enter && text.length) {
+    const r = await hc(['send', '--', t.paneId, text])
+    if (r.err) return { error: `hc send failed: ${why(r)}` }
+    return { ok: true }
+  }
+  if (text.length) {
+    if (!/^[\x21-\x7e ]+$/.test(text)) return { error: 'hc cannot type this text without pressing Enter' }
+    const r = await hc(['keys', '--', t.paneId, ...[...text].map(hcKeyOf)])
+    if (r.err) return { error: `hc keys failed: ${why(r)}` }
+  }
+  if (enter) {
+    const r = await hc(['keys', '--', t.paneId, 'enter'])
+    if (r.err) return { error: `hc keys failed: ${why(r)}` }
+  }
+  return { ok: true }
+}
+
 async function herdrType (t, text, enter) {
   const paneId = t.paneId
   if (enter && text.length) {
@@ -159,19 +201,22 @@ async function herdrType (t, text, enter) {
 async function sendText (agent, text, { enter = true } = {}) {
   const { list, errors } = await verifiedTargets(agent)
   for (const t of list) {
-    const r = t.via === 'herdr' ? await herdrType(t, text, enter) : await tmuxType(t, text, enter)
+    const r = t.via === 'hc'
+      ? await hcType(t, text, enter)
+      : t.via === 'herdr' ? await herdrType(t, text, enter) : await tmuxType(t, text, enter)
     if (r.ok) return { ok: true, via: t.via, paneId: t.paneId }
     log('pane', r.error)
     errors.push(r.error)
     // A blocked agent is showing a prompt; typing there through tmux would
     // answer it. Stop instead.
-    if (/agent_blocked/.test(r.error)) break
+    if (/agent_blocked|blocked/.test(r.error)) break
   }
   return { error: errors.join('; ') }
 }
 
 // The keys typed into an agent's pane, by their tmux and Herdr names.
 const KEYS = {
+  // hc takes Herdr's names.
   escape: { tmux: 'Escape', herdr: 'esc' },
   enter: { tmux: 'Enter', herdr: 'enter' },
   tab: { tmux: 'Tab', herdr: 'tab' },
@@ -184,7 +229,9 @@ async function sendKey (agent, key) {
   if (!names) return { error: `unknown key ${key}` }
   const { list, errors } = await verifiedTargets(agent)
   for (const t of list) {
-    const r = t.via === 'herdr'
+    const r = t.via === 'hc'
+      ? await hc(['keys', '--', t.paneId, names.herdr])
+      : t.via === 'herdr'
       ? await herdr(t, ['pane', 'send-keys', t.paneId, names.herdr])
       : await run('tmux', tmuxArgs(t, ['send-keys', '-t', t.paneId, names.tmux]))
     if (!r.err) return { ok: true, via: t.via, paneId: t.paneId }
@@ -203,17 +250,23 @@ async function terminalIo (agent) {
   if (!t) return { error: errors.join('; ') || 'session not in tmux or Herdr' }
   const check = (r, what) => { if (r.err) throw new Error(`${t.via} ${what} failed: ${why(r)}`); return r }
   const io = {
-    read: async () => (t.via === 'herdr'
+    read: async () => (t.via === 'hc'
+      ? check(await hc(['read', '--', t.paneId]), 'read')
+      : t.via === 'herdr'
       ? check(await herdr(t, ['pane', 'read', t.paneId, '--source', 'visible', '--format', 'text']), 'pane read')
       : check(await run('tmux', tmuxArgs(t, ['capture-pane', '-p', '-J', '-t', t.paneId])), 'capture-pane')).stdout,
     text: async text => {
-      if (t.via === 'herdr') check(await herdr(t, ['pane', 'send-text', t.paneId, text]), 'pane send-text')
+      if (t.via === 'hc') {
+        const r = await hcType(t, text, false)
+        if (r.error) throw new Error(r.error)
+      } else if (t.via === 'herdr') check(await herdr(t, ['pane', 'send-text', t.paneId, text]), 'pane send-text')
       else check(await run('tmux', tmuxArgs(t, ['send-keys', '-t', t.paneId, '-l', '--', text])), 'send-keys')
     },
     key: async key => {
       const names = KEYS[key]
       if (!names) throw new Error(`unknown key ${key}`)
-      if (t.via === 'herdr') check(await herdr(t, ['pane', 'send-keys', t.paneId, names.herdr]), 'pane send-keys')
+      if (t.via === 'hc') check(await hc(['keys', '--', t.paneId, names.herdr]), 'keys')
+      else if (t.via === 'herdr') check(await herdr(t, ['pane', 'send-keys', t.paneId, names.herdr]), 'pane send-keys')
       else check(await run('tmux', tmuxArgs(t, ['send-keys', '-t', t.paneId, names.tmux])), 'send-keys')
     },
     sleep
@@ -226,6 +279,11 @@ async function terminalIo (agent) {
 async function focus (agent) {
   const { list, errors } = await verifiedTargets(agent)
   for (const t of list) {
+    if (t.via === 'hc') {
+      // hc cannot move the desktop app's focus; the phone attaches instead.
+      errors.push('the Herdr app has no focus command')
+      continue
+    }
     if (t.via === 'herdr') {
       const r = await herdr(t, ['agent', 'focus', t.paneId])
       if (!r.err) return { ok: true, via: 'herdr', paneId: t.paneId }
