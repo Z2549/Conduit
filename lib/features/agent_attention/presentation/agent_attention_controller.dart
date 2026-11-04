@@ -4,7 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/features/agent_attention/data/conductore_host_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
+import 'package:conduit/features/agent_attention/data/hc_companion_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_notifier.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_provider.dart';
@@ -1502,6 +1504,13 @@ class AgentAttentionController extends ChangeNotifier {
                 !await companion.supportsHcTerminals(monitor.runner)));
     final resolved = hc
         ? _hcProvider
+        : monitor.host.backend == HostBackend.hc &&
+              monitor.host.agentMonitor == AgentMonitorKind.auto &&
+              companion is ConductoreHostAttentionProvider
+        ? HcCompanionProvider(
+            keepHerdr: monitor.host.tools.contains(HostTool.herdr),
+            keepTmux: monitor.host.tools.contains(HostTool.tmux),
+          )
         : switch (monitor.host.agentMonitor) {
             AgentMonitorKind.herdr => _provider,
             AgentMonitorKind.companion => companion ?? _provider,

@@ -420,6 +420,15 @@ class AgentInfo {
     this.awaitsApproval = false,
   });
 
+  /// The session is over. A Herdr app terminal that is "done" only finished
+  /// a turn: it is still there to talk to.
+  bool get ended =>
+      state == AgentAttentionState.finished && herdrServer != 'hc';
+
+  /// A Herdr app terminal no companion session was matched to: it can be
+  /// attached, but has no transcript for Chat View.
+  bool get hcOnly => herdrServer == 'hc' && id == pane;
+
   /// Stable identity across polls (provider-specific; e.g. pane id or a
   /// unique live agent name). Used to deduplicate notifications.
   final String id;
@@ -522,12 +531,13 @@ class AgentInfo {
 
   /// A copy with [pendingRequests] and optionally [state] replaced.
   AgentInfo copyWith({
+    String? name,
     AgentAttentionState? state,
     List<PendingPermissionRequest>? pendingRequests,
   }) {
     return AgentInfo(
       id: id,
-      name: name,
+      name: name ?? this.name,
       state: state ?? this.state,
       kind: kind,
       workspace: workspace,

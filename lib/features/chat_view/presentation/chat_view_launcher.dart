@@ -33,8 +33,27 @@ bool chatViewAvailable(AgentAttentionController attention, SavedHost host) =>
 
 List<AgentInfo> _live(Iterable<AgentInfo> agents) => [
   for (final agent in agents)
-    if (agent.state != AgentAttentionState.finished) agent,
+    if (!agent.ended && !agent.hcOnly) agent,
 ];
+
+/// The machine that holds the chat of a session on [host]: [host] itself,
+/// unless it is a Herdr app terminal of another machine (`machine/t7`,
+/// reached through this one), whose agent only that machine's companion
+/// knows. Then the saved machine of that name, at its own address; null
+/// when it is not saved.
+SavedHost? hcChatHost(SavedHost host, Iterable<SavedHost> saved) {
+  final target = ConnectTarget.fromSessionHostId(host.id);
+  if (target?.kind != ConnectTargetKind.hc) return host;
+  final slash = target!.name.lastIndexOf('/');
+  if (slash == -1) return host;
+  final machine = target.name.substring(0, slash).toLowerCase();
+  final owner = saved
+      .where((candidate) => candidate.name.toLowerCase() == machine)
+      .firstOrNull;
+  return owner == null
+      ? null
+      : ConnectTarget.hc(target.name.substring(slash + 1)).apply(owner);
+}
 
 /// Where a terminal session is inside its multiplexer, as far as the app
 /// knows beyond its connect target: the Herdr workspace it was moved to and

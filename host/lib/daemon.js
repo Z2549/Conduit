@@ -968,11 +968,24 @@ class Daemon {
     this.reply(c, { ok: true, requestId, decision: verdict.decision, sessionId: found.agent.sessionId, ...(verdict.note ? { note: verdict.note } : {}) }); c.end()
   }
 
+  syncHcTerminals () {
+    // Asked once per process: its environment does not change, and most
+    // agents are in no hc terminal.
+    this.hcAsked = this.hcAsked || new Set()
+    this.commit(state.syncHcTerminals(this.state, agent => {
+      const pid = agent.process && agent.process.pid
+      if (!pid || this.hcAsked.has(pid)) return null
+      this.hcAsked.add(pid)
+      return proc.envOf(agent.process, 'HC_TERMINAL_ID')
+    }))
+  }
+
   // `status`; with the etag of the phone's last copy, only a marker when
   // nothing changed since (an idle machine's poll stays a few bytes).
   replyStatus (req, c) {
     // Before the etag: a label just seen bumps seq.
     this.syncHerdrLabels()
+    this.syncHcTerminals()
     const variant = `${req.live ? 'l' : ''}${req.herdrAgents ? 'h' : ''}`
     const etag = `${this.epoch}.${this.state.seq}${variant ? '.' + variant : ''}`
     if (typeof req.etag === 'string' && req.etag === etag) {

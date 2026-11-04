@@ -1011,7 +1011,18 @@ class _TerminalPageState extends State<TerminalPage>
     TerminalSessionController session, {
     String draft = '',
   }) async {
-    final host = session.host;
+    final host = hcChatHost(
+      session.host,
+      widget.connectFlow?.hostsController.hosts ?? const [],
+    );
+    if (host == null) {
+      _openComposerBecause(
+        "This terminal runs on another machine that isn't saved here, so "
+        'there is no Chat View. Add that machine to use it. Opened the '
+        'composer.',
+      );
+      return false;
+    }
     final List<AgentInfo> agents;
     if (chatViewAvailable(attention, host)) {
       agents = attention.statusFor(host.id)?.agents ?? const [];

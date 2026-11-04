@@ -284,3 +284,20 @@ test('an agent in a Herdr pane takes its workspace label, kept across hook event
   assert.equal(st.agents.h.herdr.workspaceLabel, undefined)
   assert.equal(st.agents.h.name, 'root')
 })
+
+test('an idle session gets its Herdr app terminal from its process, once', () => {
+  const s = state.createState()
+  s.agents.a = { sessionId: 'a', state: 'waiting_input', herdr: { paneId: 'p' }, hc: null, process: { pid: 1 } }
+  s.agents.b = { sessionId: 'b', state: 'waiting_input', herdr: null, hc: null, process: { pid: 2 } }
+  s.agents.c = { sessionId: 'c', state: 'ended', herdr: null, hc: null, process: { pid: 3 } }
+  s.agents.d = { sessionId: 'd', state: 'idle', herdr: null, hc: { terminal: 't9' }, process: { pid: 4 } }
+  const seq = s.seq
+  const changes = state.syncHcTerminals(s, a => a.sessionId === 'b' ? null : 't1')
+  assert.deepEqual(changes.map(ch => ch.sessionId), ['a'])
+  assert.deepEqual(s.agents.a.hc, { terminal: 't1' })
+  assert.equal(s.agents.a.herdr, null, 'its old Herdr pane is stale')
+  assert.equal(s.seq, seq + 1)
+  assert.equal(s.agents.b.hc, null)
+  assert.equal(s.agents.c.hc, null)
+  assert.deepEqual(s.agents.d.hc, { terminal: 't9' })
+})
