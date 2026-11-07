@@ -159,7 +159,9 @@ const hcNamedWorkspacePrefix = 'wHcn';
 abstract final class HcCommands {
   static String _hc(String args) => remoteToolCommand('hc', args);
 
-  /// The live terminals of every machine hc reaches: `terminal.list` over
+  /// The home board's list (the only caller: ~6x the bytes of [ls], so the
+  /// background monitors keep [ls]). The live terminals of every machine
+  /// hc reaches: `terminal.list` over
   /// `hc connect`, which carries each terminal's title and labels (CON-135),
   /// else `hc ls --json` (no titles) when that answer is missing, so an hc
   /// without the call, or a missing hc, reads as before.
@@ -179,7 +181,9 @@ abstract final class HcCommands {
     return 'sh -c ${shellQuoteArgument(inner)}';
   }();
 
-  /// `hc ls --json` alone: the machines hc reaches (`machines`).
+  /// `hc ls --json`: live terminals without titles or space ids, and the
+  /// machines hc reaches (`machines`). What the agent monitors and the
+  /// connect picker poll.
   static final ls = _hc('ls --json');
 
   /// `hc read <t> --lines <n>`: the screen plus [lines] of history, as text.

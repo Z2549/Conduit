@@ -1,4 +1,5 @@
 import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
+import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/project_tree.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_prefs.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
@@ -306,6 +307,90 @@ void main() {
       );
       expect(space.children.single.label, 'task of t2d');
       expect(space.children.single.openInApp, isTrue);
+    });
+  });
+
+  group('review of CON-135', () {
+    test('a space saved on the phone before CON-135 keeps its place', () {
+      // Before, an hc space id was `wHc` + FNV-1a of its name.
+      var hash = 0x811c9dc5;
+      for (final unit in 'Projects'.codeUnits) {
+        hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
+      }
+      final legacy = 'dev/wHc${hash.toRadixString(16)}:Projects';
+      final now = 'dev/${hcSpaceWorkspaceId('spe535')}:Projects';
+      expect(ProjectKeys.same(legacy, now), isTrue);
+      // Two different app spaces stay apart.
+      expect(
+        ProjectKeys.same('dev/${hcSpaceWorkspaceId('sp1d0c')}:Projects', now),
+        isFalse,
+      );
+    });
+
+    test('a terminal in no app space is not grouped by name when others '
+        'have ids', () {
+      final list = [
+        const HcTerminalInfo(
+          address: 't24',
+          status: 'done',
+          where: 'Projects / 1',
+          spaceId: 'spe535',
+        ),
+        const HcTerminalInfo(
+          address: 't50',
+          status: 'done',
+          cwd: '/root/Projects',
+        ),
+      ];
+      final spaces = HomeBoardController.hcWorkspaces(list);
+      final loose = spaces.firstWhere((w) => w.panes.single.agent.id == 't50');
+      expect(loose.label, 'Projects');
+      expect(loose.id, isNot(startsWith('wHcn')));
+      expect(
+        ProjectKeys.same(
+          'dev/${hcSpaceWorkspaceId('sp6224')}:Projects',
+          'dev/${loose.id}:Projects',
+        ),
+        isFalse,
+      );
+    });
+
+    test("a '#' in a space name is not an id", () {
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'Code',
+            'members': ['local/C# app'],
+          },
+        ],
+      })!;
+      expect(view.toProjectLayout('Dev').groups.single.members, ['dev/C# app']);
+    });
+
+    test('projectOf goes by the space id when both sides have one', () {
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'LF',
+            'members': ['local/Projects#sp6224'],
+          },
+          {
+            'name': 'Ops',
+            'members': ['local/Projects#sp1d0c'],
+          },
+        ],
+      })!;
+      HcTerminalInfo inSpace(String id) => HcTerminalInfo(
+        address: 't1',
+        cwd: '/home/a/Projects',
+        status: 'done',
+        spaceId: id,
+      );
+      expect(view.projectOf(inSpace('sp1d0c'))?.name, 'Ops');
+      expect(view.projectOf(inSpace('sp6224'))?.name, 'LF');
+      expect(view.projectOf(inSpace('spzzzz')), isNull);
     });
   });
 }

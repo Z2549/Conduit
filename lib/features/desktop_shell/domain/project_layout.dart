@@ -508,6 +508,18 @@ abstract final class ProjectKeys {
   /// free of the sessions feature.
   static const _hcNamed = 'wHcn';
 
+  /// An hc space id saved before CON-135, when it was `wHc` plus the
+  /// FNV-1a hash of the space's name: still matched by that name, so
+  /// spaces moved or hidden on the phone stay where they were.
+  static bool _isLegacyHc(String id, String label) {
+    if (!id.startsWith('wHc')) return false;
+    var hash = 0x811c9dc5;
+    for (final unit in label.codeUnits) {
+      hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
+    }
+    return id == 'wHc${hash.toRadixString(16)}';
+  }
+
   static (String, String)? _splitId(String rest) {
     final at = rest.indexOf(':');
     if (at < 2) return null;
@@ -532,7 +544,9 @@ abstract final class ProjectKeys {
     if (entryId != null && keyId != null) {
       // An hc space known only by name (no space id from hc) matches by
       // its label (CON-135).
-      if (entryId.$1.startsWith(_hcNamed) || keyId.$1.startsWith(_hcNamed)) {
+      if (entryId.$1.startsWith(_hcNamed) ||
+          keyId.$1.startsWith(_hcNamed) ||
+          _isLegacyHc(entryId.$1, entryId.$2)) {
         return entryId.$2 == keyId.$2;
       }
       return entryId.$1 == keyId.$1;

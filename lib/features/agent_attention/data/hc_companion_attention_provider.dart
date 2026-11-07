@@ -30,7 +30,7 @@ class HcCompanionProvider extends ConductoreHostAttentionProvider {
   @override
   Future<AgentAttentionSnapshot> fetchAgents(AgentCommandRunner runner) async {
     final snapshot = await super.fetchAgents(runner);
-    final result = await runner.run(HcCommands.list, timeout: _timeout);
+    final result = await runner.run(HcCommands.ls, timeout: _timeout);
     return switch (HcListing.interpret(result)) {
       RemoteListingAvailable(:final items) => AgentAttentionSnapshot(
         agents: merge(

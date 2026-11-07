@@ -1095,14 +1095,20 @@ class HomeBoardController extends ChangeNotifier {
   }) {
     final bySpace = <String, List<HcTerminalInfo>>{};
     final labels = <String, String>{};
+    // Space ids come with `terminal.list`; an `hc ls` listing has none.
+    final withIds = items.any((terminal) => terminal.spaceId.isNotEmpty);
     for (final terminal in items.where((terminal) => terminal.live)) {
       if (skipMachines.contains(terminal.machine.toLowerCase())) continue;
       final space = terminal.space.isNotEmpty
           ? terminal.space
           : (terminal.folder.isNotEmpty ? terminal.folder : terminal.address);
-      // A space may hold tabs of several machines: by name, without an id.
+      // A space may hold tabs of several machines: by name, without ids.
+      // In a listing with ids, a terminal without one is in no app space
+      // (`hc run` from a script): its own workspace, never matched by name.
       final key = terminal.spaceId.isNotEmpty
           ? terminal.spaceId
+          : withIds
+          ? 'loose:${terminal.machine}/$space'
           : 'name:$space';
       labels.putIfAbsent(key, () => space);
       bySpace.putIfAbsent(key, () => []).add(terminal);

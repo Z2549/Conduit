@@ -30,7 +30,7 @@ class HcAttentionProvider extends AgentAttentionProvider {
 
   @override
   Future<AgentAttentionSnapshot> fetchAgents(AgentCommandRunner runner) async {
-    final result = await runner.run(HcCommands.list, timeout: _commandTimeout);
+    final result = await runner.run(HcCommands.ls, timeout: _commandTimeout);
     return switch (HcListing.interpret(result)) {
       RemoteListingAvailable(:final items) => AgentAttentionSnapshot(
         agents: agentsOf(items),
