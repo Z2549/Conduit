@@ -135,7 +135,7 @@ class RemoteSessionLister {
   /// Lists herdr-core terminals with `hc ls --json` (CON-100000).
   Future<RemoteListing<HcTerminalInfo>> listHc() async {
     try {
-      final result = await _runner.run(HcCommands.list, timeout: _timeout);
+      final result = await _runner.run(HcCommands.ls, timeout: _timeout);
       return HcListing.interpret(result);
     } on AppFailure catch (failure) {
       return RemoteListingFailed(failure.toString(), error: failure);

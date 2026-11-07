@@ -1083,30 +1083,43 @@ class HomeBoardController extends ChangeNotifier {
 
   /// The Herdr app's spaces as workspaces, so the Projects view and the
   /// machine tree group hc agents the way they group Herdr's (CON-130):
-  /// live terminals by the space `hc ls` says they are in (`where`), else
-  /// by their folder. Ids are `wHc` plus a hash of the space name, stable
-  /// across refreshes; their panes are the agents [HcAttentionProvider]
-  /// reports, which open with `hc attach`.
+  /// live terminals by the space they are in (its id when hc gives it, so
+  /// two spaces both called "Projects" stay two, CON-135), else by the
+  /// space name `where` gives, else by their folder. Ids
+  /// are [hcWorkspaceId], stable across refreshes; their panes are the
+  /// agents [HcAttentionProvider] reports, which open with `hc attach`.
   @visibleForTesting
   static List<HomeBoardWorkspace> hcWorkspaces(
     List<HcTerminalInfo> items, {
     Set<String> skipMachines = const {},
   }) {
     final bySpace = <String, List<HcTerminalInfo>>{};
+    final labels = <String, String>{};
+    // Space ids come with `terminal.list`; an `hc ls` listing has none.
+    final withIds = items.any((terminal) => terminal.spaceId.isNotEmpty);
     for (final terminal in items.where((terminal) => terminal.live)) {
       if (skipMachines.contains(terminal.machine.toLowerCase())) continue;
       final space = terminal.space.isNotEmpty
           ? terminal.space
           : (terminal.folder.isNotEmpty ? terminal.folder : terminal.address);
-      bySpace.putIfAbsent(space, () => []).add(terminal);
+      // A space may hold tabs of several machines: by name, without ids.
+      // In a listing with ids, a terminal without one is in no app space
+      // (`hc run` from a script): its own workspace, never matched by name.
+      final key = terminal.spaceId.isNotEmpty
+          ? terminal.spaceId
+          : withIds
+          ? 'loose:${terminal.machine}/$space'
+          : 'name:$space';
+      labels.putIfAbsent(key, () => space);
+      bySpace.putIfAbsent(key, () => []).add(terminal);
     }
     return [
-      for (final (index, MapEntry(key: space, value: terminals))
+      for (final (index, MapEntry(key: key, value: terminals))
           in bySpace.entries.indexed)
         HomeBoardWorkspace(
           workspace: HerdrWorkspaceInfo(
-            id: 'wHc${_fnv(space)}',
-            label: space,
+            id: hcSpaceWorkspaceId(key, named: key.startsWith('name:')),
+            label: labels[key]!,
             number: index + 1,
             agentStatus: _mostUrgent(terminals.map((t) => t.status)),
             tabCount: terminals.length,
@@ -1125,15 +1138,6 @@ class HomeBoardController extends ChangeNotifier {
       if (statuses.contains(status)) return status;
     }
     return '';
-  }
-
-  /// FNV-1a, 32 bits, in hex: a short id that is the same on every run.
-  static String _fnv(String text) {
-    var hash = 0x811c9dc5;
-    for (final unit in text.codeUnits) {
-      hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
-    }
-    return hash.toRadixString(16);
   }
 
   /// The board of an hc machine: tmux as usual, then `hc ls` in place of

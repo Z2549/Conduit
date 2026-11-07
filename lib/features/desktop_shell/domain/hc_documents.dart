@@ -202,15 +202,28 @@ class HcSheprdView {
 
   /// This view as the Projects view's layout for the hc machine named
   /// [machine] in the app (CON-130). The machine's board lists every space
-  /// it reaches under its own name, so each member and hidden space keeps
-  /// only its space name (without the app's `#<space id>`).
+  /// it reaches under its own name. A member the app wrote with its space
+  /// id (`local/Projects#sp…`, `dev/web#dev/sp…`) names that one space by
+  /// the board's workspace id for it (CON-135: by name alone, every space
+  /// called "Projects" on any machine joined the first project listing
+  /// one); one without an id keeps its space name.
   ProjectLayout toProjectLayout(String machine) {
     final name = machine.toLowerCase();
     String key(String raw) {
       final slash = raw.indexOf('/');
-      var space = slash == -1 ? raw : raw.substring(slash + 1);
+      final space = slash == -1 ? raw : raw.substring(slash + 1);
       final hash = space.lastIndexOf('#');
-      if (hash > 0) space = space.substring(0, hash);
+      final id = hash > 0
+          ? space.substring(hash + 1).split('/').last.trim()
+          : '';
+      // Only the app's own `#sp…` is an id ("C# app" is a name).
+      if (id.startsWith('sp')) {
+        return ProjectKeys.herdr(
+          name,
+          hcSpaceWorkspaceId(id),
+          space.substring(0, hash),
+        );
+      }
       return '$name/$space';
     }
 
@@ -295,6 +308,13 @@ class HcSheprdView {
   bool _isSpace(String key, HcTerminalInfo terminal) {
     if (!key.contains('/')) return false;
     final hash = key.lastIndexOf('#');
+    // The app's space id, when both sides have one, settles it (CON-135).
+    final id = hash > key.indexOf('/')
+        ? key.substring(hash + 1).split('/').last
+        : '';
+    if (id.startsWith('sp') && terminal.spaceId.isNotEmpty) {
+      return id == terminal.spaceId;
+    }
     final (machine, space) = scope.split(
       hash > key.indexOf('/') ? key.substring(0, hash) : key,
     );

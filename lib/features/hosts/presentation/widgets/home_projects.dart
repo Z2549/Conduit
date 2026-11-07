@@ -96,6 +96,7 @@ class HomeProjectsList extends StatelessWidget {
                           )!.name)
                     : null,
                 tmuxSession: HomeSessionInfo.tmuxSessionOf(session),
+                hcTerminal: _hcTerminalOf(session),
                 agentState: summarizeAgentState(
                   attention.statusFor(session.host.id),
                   session.host.id,
@@ -105,6 +106,12 @@ class HomeProjectsList extends StatelessWidget {
         agents: _agentsOf(host),
       ),
   ], const SidebarPrefs());
+
+  /// The hc terminal [session] is attached to, for Herdr app sessions.
+  static String? _hcTerminalOf(TerminalSessionController session) {
+    final target = ConnectTarget.fromSessionHostId(session.host.id);
+    return target?.kind == ConnectTargetKind.hc ? target!.name : null;
+  }
 
   /// The on-device shells open now, once each.
   List<SavedHost> _localHosts() {

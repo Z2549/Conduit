@@ -38,6 +38,11 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 45**: on the Herdr app, the home **Projects** list matches the
+  desktop sidebar: each agent row shows its own task title ("Full first-pass
+  review") with the space and machine under it; agents in spaces that share a
+  name ("Projects", "~") go to the project you put them in; and a terminal
+  open on the phone is marked on its agent's row instead of showing twice.
 - **Preview 44**: **Chat View** opens on idle Herdr app terminals and on
   terminals of your other machine (companion 1.10.1). "Needs you" now counts
   only terminals really blocked or waiting on an approval. Open sessions show
