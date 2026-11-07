@@ -23,6 +23,8 @@ class HcTerminalInfo {
     this.status = '',
     this.turn = 0,
     this.where = '',
+    this.title = '',
+    this.spaceId = '',
   });
 
   /// `t7` on its own machine, `machine/t7` for one hc reaches elsewhere:
@@ -48,6 +50,30 @@ class HcTerminalInfo {
   /// Where the Herdr app shows it: `<space> / <tab>`; empty when no app
   /// window has it.
   final String where;
+
+  /// The terminal's own title (Claude Code names it after the task, the
+  /// way the Herdr app's sidebar shows it); empty when `hc ls` was the
+  /// source, which leaves it out (CON-135).
+  final String title;
+
+  /// The id of the Herdr app space it sits in (its `herdr.space` label):
+  /// tells apart spaces that share a name ("Projects", "~"); empty when
+  /// unknown.
+  final String spaceId;
+
+  /// The name an agent row shows, as the Herdr app's sidebar does: its
+  /// [title] without the spinner or status glyph a program puts in front,
+  /// else [displayLabel]. A shell's `user@host:dir` title is not a name.
+  String get agentTitle {
+    final clean = title.replaceFirst(_titleGlyphs, '').trim();
+    if (clean.isEmpty || _promptTitle.hasMatch(clean)) return displayLabel;
+    return clean;
+  }
+
+  static final _titleGlyphs = RegExp(
+    r'^[\u2800-\u28FF\u2700-\u27BF\u2600-\u26FF\u2022\u00B7*\s]+',
+  );
+  static final _promptTitle = RegExp(r'^[^\s@]+@[^\s:]+:');
 
   /// The Herdr app space it sits in (the part of [where] before ` / `).
   String get space {
@@ -88,23 +114,73 @@ class HcTerminalInfo {
       other.live == live &&
       other.status == status &&
       other.turn == turn &&
-      other.where == where;
+      other.where == where &&
+      other.title == title &&
+      other.spaceId == spaceId;
 
   @override
-  int get hashCode =>
-      Object.hash(address, name, agent, cwd, live, status, turn, where);
+  int get hashCode => Object.hash(
+    address,
+    name,
+    agent,
+    cwd,
+    live,
+    status,
+    turn,
+    where,
+    title,
+    spaceId,
+  );
 
   @override
   String toString() => 'HcTerminalInfo($address)';
 }
+
+/// The phone's workspace id for the Herdr app space [key]: `wHc` plus an
+/// FNV-1a hash of the space id (`sp…`). The board's workspaces and the
+/// Herdr app's project members (`name#sp…`) both go through it, so a
+/// member finds its own space (CON-135). With [named] the key is the
+/// space's name because hc gave no space id (an hc without
+/// `terminal.list`): the id starts `wHcn`, which [ProjectKeys.same]
+/// matches by name.
+String hcSpaceWorkspaceId(String key, {bool named = false}) {
+  var hash = 0x811c9dc5;
+  for (final unit in key.codeUnits) {
+    hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
+  }
+  return '${named ? hcNamedWorkspacePrefix : 'wHc'}${hash.toRadixString(16)}';
+}
+
+/// See [hcSpaceWorkspaceId].
+const hcNamedWorkspacePrefix = 'wHcn';
 
 /// `hc` commands, wrapped for a non-interactive SSH shell like the herdr
 /// ones (see [remoteToolCommand]). Every command was run against hc 0.1.16.
 abstract final class HcCommands {
   static String _hc(String args) => remoteToolCommand('hc', args);
 
-  /// `hc ls --json`: live terminals.
-  static final list = _hc('ls --json');
+  /// The live terminals of every machine hc reaches: `terminal.list` over
+  /// `hc connect`, which carries each terminal's title and labels (CON-135),
+  /// else `hc ls --json` (no titles) when that answer is missing, so an hc
+  /// without the call, or a missing hc, reads as before.
+  static final list = () {
+    final request = jsonEncode({
+      'jsonrpc': '2.0',
+      'id': 1,
+      'method': 'terminal.list',
+      'params': <String, Object?>{},
+    });
+    final inner =
+        'PATH="${remoteToolExtraPathDirs.join(':')}:\$PATH"; '
+        'out=\$(printf \'%s\\n\' ${shellQuoteArgument(request)} '
+        '| hc connect 2>/dev/null); '
+        'case "\$out" in *\'"terminals"\'*) printf \'%s\\n\' "\$out";; '
+        '*) exec hc ls --json;; esac';
+    return 'sh -c ${shellQuoteArgument(inner)}';
+  }();
+
+  /// `hc ls --json` alone: the machines hc reaches (`machines`).
+  static final ls = _hc('ls --json');
 
   /// `hc read <t> --lines <n>`: the screen plus [lines] of history, as text.
   static String read(String address, {int lines = 200}) =>
@@ -225,7 +301,11 @@ abstract final class HcListing {
     try {
       decoded = jsonDecode(trimmed);
     } catch (_) {
-      throw const FormatException('hc returned output that is not JSON.');
+      // `hc connect` may print more than the one answer: take that line.
+      decoded = _answerLine(trimmed);
+      if (decoded == null) {
+        throw const FormatException('hc returned output that is not JSON.');
+      }
     }
     if (decoded is Map && decoded['result'] is Map) {
       decoded = decoded['result'];
@@ -249,13 +329,17 @@ abstract final class HcListing {
             name: _string(item, const ['name']) ?? '',
             agent:
                 _string(item, const ['agent']) ??
+                _statusApp(item['status']) ??
                 _foregroundName(item['foreground']) ??
                 '',
             cwd: _string(item, const ['cwd']) ?? '',
             live: (_string(item, const ['state']) ?? 'live') == 'live',
             status: _status(item['status']),
             turn: item['turn'] is int ? item['turn'] as int : 0,
-            where: _string(item, const ['where']) ?? '',
+            where:
+                _string(item, const ['where']) ?? _label(item, 'where') ?? '',
+            title: _string(item, const ['title']) ?? '',
+            spaceId: _label(item, 'herdr.space') ?? '',
           ),
     ];
   }
@@ -269,6 +353,32 @@ abstract final class HcListing {
       _ => '',
     };
     return word.trim().toLowerCase();
+  }
+
+  /// The program the status record names (`claude-code`), as `hc ls`
+  /// prints it under `agent`.
+  static String? _statusApp(Object? status) =>
+      status is Map ? _string(status, const ['app']) : null;
+
+  /// Label [key] of a terminal record (`terminal.list`, `hc get`).
+  static String? _label(Map<Object?, Object?> item, String key) =>
+      item['labels'] is Map ? _string(item['labels'] as Map, [key]) : null;
+
+  /// The first line of [raw] that is a JSON answer carrying terminals.
+  static Object? _answerLine(String raw) {
+    for (final line in const LineSplitter().convert(raw)) {
+      try {
+        final decoded = jsonDecode(line);
+        if (decoded is Map &&
+            decoded['result'] is Map &&
+            (decoded['result'] as Map)['terminals'] is List) {
+          return decoded;
+        }
+      } catch (_) {
+        continue;
+      }
+    }
+    return null;
   }
 
   static String? _foregroundName(Object? foreground) =>

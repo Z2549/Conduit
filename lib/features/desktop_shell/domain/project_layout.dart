@@ -504,6 +504,10 @@ abstract final class ProjectKeys {
   static String named(String machine, String label) =>
       '${machine.toLowerCase()}/$label';
 
+  /// hc_terminals' `hcNamedWorkspacePrefix`, kept here so the layout stays
+  /// free of the sessions feature.
+  static const _hcNamed = 'wHcn';
+
   static (String, String)? _splitId(String rest) {
     final at = rest.indexOf(':');
     if (at < 2) return null;
@@ -525,7 +529,14 @@ abstract final class ProjectKeys {
     final rest = key.substring(k + 1);
     final entryId = _splitId(entryRest);
     final keyId = _splitId(rest);
-    if (entryId != null && keyId != null) return entryId.$1 == keyId.$1;
+    if (entryId != null && keyId != null) {
+      // An hc space known only by name (no space id from hc) matches by
+      // its label (CON-135).
+      if (entryId.$1.startsWith(_hcNamed) || keyId.$1.startsWith(_hcNamed)) {
+        return entryId.$2 == keyId.$2;
+      }
+      return entryId.$1 == keyId.$1;
+    }
     if (entryId == null && keyId != null) return entryRest == keyId.$2;
     if (entryId != null && keyId == null) return entryId.$2 == rest;
     return entryRest == rest;

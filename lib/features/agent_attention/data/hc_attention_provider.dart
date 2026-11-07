@@ -54,7 +54,7 @@ class HcAttentionProvider extends AgentAttentionProvider {
       if (terminal.live && terminal.status.isNotEmpty)
         AgentInfo(
           id: terminal.address,
-          name: terminal.displayLabel,
+          name: terminal.agentTitle,
           kind: terminal.agent,
           state: stateOf(terminal.status),
           stateSequence: terminal.turn,

@@ -233,11 +233,17 @@ class SidebarOpenSession {
     required this.title,
     this.herdrWorkspaceId,
     this.tmuxSession,
+    this.hcTerminal,
     this.agentState,
   });
 
   final String sessionHostId;
   final String title;
+
+  /// The hc terminal it is attached to (`t7`, `omarchy/t7`), for Herdr app
+  /// sessions: it belongs on that agent's row, not a row of its own
+  /// (CON-135).
+  final String? hcTerminal;
 
   /// The Herdr workspace it shows, for Herdr sessions.
   final String? herdrWorkspaceId;
@@ -298,11 +304,30 @@ abstract final class SidebarTreeBuilder {
     final children = <SidebarNode>[];
 
     for (final workspace in board?.workspaces ?? const <HomeBoardWorkspace>[]) {
+      final panes = {
+        for (final pane in workspace.panes)
+          if ((pane.agent.pane ?? '').isNotEmpty) pane.agent.pane!,
+      };
       final open = input.openSessions
-          .where((session) => session.herdrWorkspaceId == workspace.id)
+          .where(
+            (session) =>
+                session.herdrWorkspaceId == workspace.id ||
+                (session.hcTerminal != null &&
+                    panes.contains(session.hcTerminal)),
+          )
           .toList();
       claimed.addAll(open.map((session) => session.sessionHostId));
-      children.add(_herdrWorkspace(input, workspace, open.isNotEmpty));
+      children.add(
+        _herdrWorkspace(
+          input,
+          workspace,
+          open.isNotEmpty,
+          openPanes: {
+            for (final session in open)
+              if (session.hcTerminal != null) session.hcTerminal!,
+          },
+        ),
+      );
     }
     for (final session in board?.tmuxSessions ?? const <TmuxSessionInfo>[]) {
       final open = input.openSessions
@@ -369,8 +394,9 @@ abstract final class SidebarTreeBuilder {
   static SidebarNode _herdrWorkspace(
     SidebarMachineInput input,
     HomeBoardWorkspace workspace,
-    bool open,
-  ) {
+    bool open, {
+    Set<String> openPanes = const {},
+  }) {
     final host = input.host;
     final id = host.id;
     // The companion knows Claude's own session names and exact states;
@@ -411,6 +437,7 @@ abstract final class SidebarTreeBuilder {
         detail: agent.state.label,
         dot: SidebarDot.of(agent.state),
         agentKind: agent.kind,
+        openInApp: openPanes.contains(agent.pane),
         target: AgentPaneTarget(host, merged, pane),
       );
     }

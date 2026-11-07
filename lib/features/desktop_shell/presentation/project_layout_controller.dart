@@ -739,7 +739,7 @@ class ProjectLayoutController extends ChangeNotifier {
         )[1],
       );
       if (view == null) {
-        final machines = _hcMachines(await _run(host, HcCommands.list));
+        final machines = _hcMachines(await _run(host, HcCommands.ls));
         if (machines.isNotEmpty) {
           final answers = HcListing.parseDocAnswers(
             await _run(

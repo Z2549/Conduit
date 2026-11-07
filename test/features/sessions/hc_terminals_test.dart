@@ -332,4 +332,70 @@ void main() {
     );
     expect(nowhere.displayLabel, 'claude-code in Projects');
   });
+
+  // CON-135: `terminal.list` over `hc connect` carries the title and the
+  // app's space id, which `hc ls` leaves out.
+  group('terminal.list (CON-135)', () {
+    const answer =
+        '{"id":1,"jsonrpc":"2.0","result":{"hidden_finished":0,'
+        '"machines":[{"name":"omarchy","state":"connected"}],"terminals":['
+        '{"address":"t1d","argv":["claude","--resume","x]"],'
+        '"cwd":"/root/Projects/TheCalendar","foreground":{"name":"claude"},'
+        '"labels":{"herdr.space":"sp1007","where":"Security Audit / 1"},'
+        '"name":null,"state":"live",'
+        '"status":{"app":"claude-code","state":"done"},'
+        '"title":"Full first-pass review","turn":241},'
+        '{"address":"omarchy/t1j","cwd":"/home/a","foreground":{"name":"bash"},'
+        '"labels":{"herdr.space":"sp92ec","where":"1M plan / 2"},'
+        '"state":"live","status":null,"title":"andreconde@omarchy:~",'
+        '"turn":0}]}}';
+
+    test('reads title, space id, where and the agent from the record', () {
+      final terminals = HcListing.parseTerminals(answer);
+      final first = terminals.first;
+      expect(first.title, 'Full first-pass review');
+      expect(first.spaceId, 'sp1007');
+      expect(first.where, 'Security Audit / 1');
+      expect(first.space, 'Security Audit');
+      expect(first.agent, 'claude-code');
+      expect(first.status, 'done');
+      expect(first.turn, 241);
+      expect(first.agentTitle, 'Full first-pass review');
+      // A shell prompt title is no name: the space stands in.
+      expect(terminals.last.agent, 'bash');
+      expect(terminals.last.agentTitle, '1M plan / 2');
+    });
+
+    test('takes the answer line when hc connect prints more', () {
+      final terminals = HcListing.parseTerminals(
+        '{"jsonrpc":"2.0","method":"hello"}\n$answer\n',
+      );
+      expect(terminals.map((t) => t.address), ['t1d', 'omarchy/t1j']);
+    });
+
+    test('drops the spinner Claude Code puts before its title', () {
+      const t = HcTerminalInfo(
+        address: 't1',
+        where: 'Calendar / 1',
+        title: '✳ Calendar screenshots',
+      );
+      expect(t.agentTitle, 'Calendar screenshots');
+      const braille = HcTerminalInfo(
+        address: 't1',
+        where: 'Calendar / 1',
+        title: '⠂ Calendar screenshots',
+      );
+      expect(braille.agentTitle, 'Calendar screenshots');
+      const none = HcTerminalInfo(address: 't1', where: 'Calendar / 1');
+      expect(none.agentTitle, 'Calendar');
+    });
+
+    test('the list command asks terminal.list and falls back to hc ls', () {
+      expect(HcCommands.list, contains('terminal.list'));
+      expect(HcCommands.list, contains('hc connect'));
+      expect(HcCommands.list, contains('hc ls --json'));
+      expect(HcCommands.ls, contains('ls --json'));
+      expect(HcCommands.ls, isNot(contains('terminal.list')));
+    });
+  });
 }

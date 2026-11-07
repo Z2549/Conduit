@@ -635,6 +635,9 @@ class DesktopHomeState extends State<DesktopHome> {
                       title: session.title,
                       herdrWorkspaceId: herdr,
                       tmuxSession: HomeSessionInfo.tmuxSessionOf(session),
+                      hcTerminal: target?.kind == ConnectTargetKind.hc
+                          ? target!.name
+                          : null,
                       agentState: summarizeAgentState(
                         attention.statusFor(session.host.id),
                         session.host.id,
