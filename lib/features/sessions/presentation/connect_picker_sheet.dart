@@ -238,7 +238,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
   /// "New session" / "New workspace": name, folder and an agent (one of
   /// those installed on the machine), created over the picker's channel,
   /// then opened.
-  Future<void> _create(MultiplexerKind kind) async {
+  Future<void> _create(MultiplexerKind kind, {bool herdrApp = false}) async {
     final creator = WorkspaceCreator(
       widget.runner,
       mayMoveHerdrFocus: widget.mayMoveHerdrFocus,
@@ -258,6 +258,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
         agentLaunchCandidates(widget.agentKinds),
       ),
       initialAgent: widget.preferences.lastAgent,
+      herdrApp: herdrApp,
     );
     if (target == null || !mounted) {
       return;
@@ -664,10 +665,22 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
 
   List<Widget> _buildHc() {
     final pending = _hc;
+    // CON-136: a new space in the Herdr app with an agent in it, as the
+    // other tabs' New session / New workspace.
+    final create = ListTile(
+      key: const ValueKey('hc-new-agent'),
+      leading: const Icon(Icons.add_circle_outline_rounded),
+      title: const Text('New agent'),
+      subtitle: const Text(
+        'A new space in the Herdr app, in a folder you pick',
+      ),
+      onTap: () => unawaited(_create(MultiplexerKind.herdr, herdrApp: true)),
+    );
     if (pending == null) {
-      return [_LoadOnRequest(onLoad: _load)];
+      return [create, _LoadOnRequest(onLoad: _load)];
     }
     return [
+      create,
       FutureBuilder<RemoteListing<HcTerminalInfo>>(
         future: pending,
         builder: (context, snapshot) {

@@ -167,4 +167,43 @@ void main() {
     expect(runner.commands.last, contains('hc read --lines 200 -- t1'));
     expect(find.textContaining('line two'), findsOneWidget);
   });
+
+  // CON-137: a highlighted agent has the Herdr app's bar and tint.
+  testWidgets('a highlighted agent has the bar', (tester) async {
+    final highlighted = ok(
+      '{"id":1,"jsonrpc":"2.0","result":{"version":2,"value":{"v":1,'
+      '"projects":[],"marks":{"highlighted":["t2"]}}}}\n'
+      '{"id":2,"jsonrpc":"2.0","result":{"value":null,"version":0}}\n',
+    );
+    await pump(tester, [tmux, ls, highlighted]);
+    expect(find.byKey(const ValueKey('hc-highlight')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('hc-highlight')),
+        matching: find.text('shell'),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  // CON-136: the Herdr app tab starts new agents too, not only attaches.
+  testWidgets('New agent opens the Herdr app dialog with a first message', (
+    tester,
+  ) async {
+    await pump(tester, [
+      tmux,
+      ls,
+      noDocs,
+      // The agents installed on the machine.
+      ok('claude\n'),
+    ]);
+    await tester.tap(find.byKey(const ValueKey('hc-new-agent')));
+    await tester.pumpAndSettle();
+    expect(find.text('New agent in the Herdr app'), findsOneWidget);
+    expect(find.text('Space name'), findsOneWidget);
+    expect(find.byKey(const ValueKey('new-workspace-task')), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('new-workspace-agent-claude')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('new-workspace-task')), findsOneWidget);
+  });
 }
