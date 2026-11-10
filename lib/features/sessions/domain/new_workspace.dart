@@ -12,9 +12,18 @@ class NewWorkspaceRequest {
     required this.name,
     this.folder = '',
     this.agent,
+    this.herdrApp = false,
+    this.task = '',
   });
 
   final MultiplexerKind kind;
+
+  /// A space in the Herdr app (hc machines, CON-136) instead of a Herdr
+  /// TUI workspace; [kind] is [MultiplexerKind.herdr].
+  final bool herdrApp;
+
+  /// The agent's first message (Herdr app only); empty for none.
+  final String task;
 
   /// The workspace label or tmux session name, as typed.
   final String name;
@@ -193,6 +202,131 @@ abstract final class NewWorkspaceCommands {
         'tmux send-keys -t ${shellQuoteArgument('=$name:')} '
             '${_agentWord(agentCommand)} Enter',
     ]);
+  }
+
+  // The Herdr app (CON-136). Spaces belong to the app's window, not to
+  // herdr-core: `herdr-app do space.new` runs where the window is open
+  // (this machine, or one hc reaches, usually the laptop), naming this
+  // machine as the window's hc sees it.
+
+  /// Marks between the parts of [herdrAppPrepare]'s output.
+  static const herdrAppDirMark = '@@dir';
+  static const herdrAppStatusMark = '@@status';
+  static const herdrAppListMark = '@@ls';
+
+  /// [folder] (the home folder when empty) as an absolute path, this
+  /// machine's hc identity (`hc server status`) and its terminals
+  /// (`hc ls --json`), each after its mark. Exits [missingFolderExit] when
+  /// the folder is missing.
+  static String herdrAppPrepare(String folder) =>
+      _script(folder.isEmpty ? '~' : folder, [
+        "printf '%s\\n' $herdrAppDirMark",
+        '(cd "\$dir" && pwd)',
+        "printf '%s\\n' $herdrAppStatusMark",
+        'hc server status',
+        "printf '%s\\n' $herdrAppListMark",
+        'hc ls --json',
+      ]);
+
+  /// Where the Herdr app's window is open: `@@local` for this machine,
+  /// else `@@hub <machine>` and that machine's `hc machine ls`, for the
+  /// first of [machines] with one; `@@none` without.
+  static String herdrAppFindWindow(List<String> machines) => posixShellCommand(
+    [
+      'PATH="${remoteToolExtraPathDirs.join(':')}:\$PATH"',
+      'if command -v herdr-app >/dev/null 2>&1 && '
+          'herdr-app status >/dev/null 2>&1; then '
+          "printf '%s\\n' @@local; exit 0; fi",
+      for (final machine in machines)
+        'if hc exec --on ${shellQuoteArgument(machine)} herdr-app status '
+            '>/dev/null 2>&1; then '
+            "printf '%s %s\\n' @@hub ${shellQuoteArgument(machine)}; "
+            'hc exec --on ${shellQuoteArgument(machine)} hc machine ls; '
+            'exit 0; fi',
+      "printf '%s\\n' @@none",
+    ].join('\n'),
+  );
+
+  /// `herdr-app do space.new` on [hub] (this machine when empty) for a
+  /// space on [machine] as the window names it (`''`: the window's own),
+  /// in [folder] (absolute), with [agentCommand] and its first [task].
+  static String herdrAppSpaceNew({
+    required String hub,
+    required String machine,
+    required String folder,
+    String name = '',
+    String? agentCommand,
+    String task = '',
+  }) {
+    final args = [
+      'herdr-app',
+      'do',
+      'space.new',
+      if (name.isNotEmpty) ...['--name', name],
+      '--folder',
+      folder,
+      '--machine',
+      machine,
+      if (agentCommand != null) ...[
+        '--argv',
+        jsonEncode([agentCommand]),
+        if (task.isNotEmpty) ...['--task', task],
+      ],
+    ].map(shellQuoteArgument).join(' ');
+    return posixShellCommand(
+      [
+        'PATH="${remoteToolExtraPathDirs.join(':')}:\$PATH"',
+        if (hub.isEmpty)
+          'exec $args'
+        else
+          'exec hc exec --on ${shellQuoteArgument(hub)} $args',
+      ].join('\n'),
+    );
+  }
+
+  /// The part of [stdout] after [mark] up to the next `@@` mark.
+  static String herdrAppPart(String stdout, String mark) {
+    final lines = const LineSplitter().convert(stdout);
+    final start = lines.indexOf(mark);
+    if (start == -1) return '';
+    final out = <String>[];
+    for (final line in lines.skip(start + 1)) {
+      if (line.startsWith('@@')) break;
+      out.add(line);
+    }
+    return out.join('\n').trim();
+  }
+
+  /// The `core.id` in `hc server status`; empty when absent.
+  static String hcCoreId(String status) {
+    final core = _decode(status)?['core'];
+    final id = core is Map ? core['id'] : null;
+    return id is String ? id : '';
+  }
+
+  /// The name `hc machine ls` (on the window's machine) gives the machine
+  /// whose hc id is [coreId]; null when it lists none.
+  static String? machineNameFor(String machineLs, String coreId) {
+    final machines = _decode(machineLs)?['machines'];
+    if (machines is! List || coreId.isEmpty) return null;
+    for (final machine in machines) {
+      if (machine is Map && machine['id'] == coreId) {
+        final name = machine['name'];
+        if (name is String && name.isNotEmpty) return name;
+      }
+    }
+    return null;
+  }
+
+  /// The error in a `herdr-app do` answer (`{"error": "..."}`); null when
+  /// there is none.
+  static String? herdrAppError(String output) {
+    final error = _decode(output)?['error'];
+    if (error is String && error.isNotEmpty) return error;
+    if (error is Map && error['message'] is String) {
+      return error['message'] as String;
+    }
+    return null;
   }
 
   /// The workspace in `herdr workspace create`'s JSON answer; null when it

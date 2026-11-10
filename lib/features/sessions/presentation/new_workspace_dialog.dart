@@ -20,10 +20,12 @@ Future<ConnectTarget?> showNewWorkspaceDialog(
   FolderLister? listFolders,
   Future<List<KnownAgentKind>>? agents,
   String? initialAgent,
+  bool herdrApp = false,
 }) => showDialog<ConnectTarget>(
   context: context,
   builder: (context) => NewWorkspaceDialog(
     kind: kind,
+    herdrApp: herdrApp,
     create: create,
     folders: folders,
     listFolders: listFolders,
@@ -40,10 +42,15 @@ class NewWorkspaceDialog extends StatefulWidget {
     this.listFolders,
     this.agents,
     this.initialAgent,
+    this.herdrApp = false,
     super.key,
   });
 
   final MultiplexerKind kind;
+
+  /// A new space in the Herdr app (CON-136): an agent and its first
+  /// message besides the name and folder.
+  final bool herdrApp;
   final Future<ConnectTarget> Function(NewWorkspaceRequest request) create;
 
   /// Suggested starting folders, most recent first: where the machine's
@@ -71,6 +78,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
     text: widget.kind == MultiplexerKind.tmux ? defaultTmuxSessionName : '',
   );
   final _folder = TextEditingController();
+  final _task = TextEditingController();
 
   /// The chosen agent's kind; empty for none.
   late String _agent = widget.initialAgent ?? '';
@@ -116,6 +124,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
   void dispose() {
     _name.dispose();
     _folder.dispose();
+    _task.dispose();
     super.dispose();
   }
 
@@ -156,6 +165,8 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
           name: _name.text,
           folder: _folder.text,
           agent: _chosenAgent,
+          herdrApp: widget.herdrApp,
+          task: widget.herdrApp ? _task.text : '',
         ),
       );
       if (mounted) Navigator.of(context).pop(target);
@@ -228,7 +239,13 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
     final theme = Theme.of(context);
     return AlertDialog(
       key: const ValueKey('new-workspace-dialog'),
-      title: Text(_herdr ? 'New Herdr workspace' : 'New tmux session'),
+      title: Text(
+        widget.herdrApp
+            ? 'New agent in the Herdr app'
+            : _herdr
+            ? 'New Herdr workspace'
+            : 'New tmux session',
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -242,7 +259,11 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
               textInputAction: TextInputAction.next,
               onChanged: (_) => _nameFromFolder = false,
               decoration: InputDecoration(
-                labelText: _herdr ? 'Workspace name' : 'Session name',
+                labelText: widget.herdrApp
+                    ? 'Space name'
+                    : _herdr
+                    ? 'Workspace name'
+                    : 'Session name',
                 hintText: _herdr ? 'Named after the folder' : null,
               ),
             ),
@@ -268,6 +289,19 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
             ),
             const SizedBox(height: 12),
             _agentChoice(theme),
+            if (widget.herdrApp && _chosenAgent != null) ...[
+              const SizedBox(height: 8),
+              TextField(
+                key: const ValueKey('new-workspace-task'),
+                controller: _task,
+                enabled: !_busy,
+                minLines: 1,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  labelText: 'First message (optional)',
+                ),
+              ),
+            ],
             if (_error case final error?)
               Text(
                 error,

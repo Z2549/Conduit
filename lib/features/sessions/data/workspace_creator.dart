@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
+import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:conduit/features/sessions/domain/new_workspace.dart';
 import 'package:flutter/foundation.dart';
 
@@ -13,7 +16,14 @@ class WorkspaceCreator {
     this._runner, {
     this.mayMoveHerdrFocus = false,
     DateTime Function()? clock,
+    this.appearWait = const Duration(seconds: 20),
+    this.appearPoll = const Duration(seconds: 1),
   }) : _clock = clock ?? DateTime.now;
+
+  /// How long a new Herdr app space's terminal may take to show up in
+  /// `hc ls`, and how often it is asked for meanwhile.
+  final Duration appearWait;
+  final Duration appearPoll;
 
   final DateTime Function() _clock;
 
@@ -101,6 +111,7 @@ class WorkspaceCreator {
     var name = request.name.trim();
     if (name.isEmpty) name = NewWorkspaceCommands.folderName(folder);
     try {
+      if (request.herdrApp) return await _herdrApp(name, folder, request);
       return switch (request.kind) {
         MultiplexerKind.herdr => await _herdr(name, folder, request),
         MultiplexerKind.tmux => await _tmux(name, folder, request),
@@ -149,6 +160,134 @@ class WorkspaceCreator {
       workspaceId: created.workspaceId,
       label: created.label.isNotEmpty ? created.label : label,
     );
+  }
+
+  /// A space in the Herdr app on this machine (CON-136): found where the
+  /// app's window is open, made there with `herdr-app do space.new` naming
+  /// this machine, then opened by its first terminal once `hc ls` lists it.
+  Future<ConnectTarget> _herdrApp(
+    String name,
+    String folder,
+    NewWorkspaceRequest request,
+  ) async {
+    final prepared = await _runner.run(
+      NewWorkspaceCommands.herdrAppPrepare(folder),
+      timeout: _timeout,
+    );
+    _checkFolder(prepared);
+    if (prepared.exitCode != null && prepared.exitCode != 0) {
+      throw NewWorkspaceFailure(
+        _failure(prepared, 'Could not ask hc about this machine.'),
+      );
+    }
+    String part(String mark) =>
+        NewWorkspaceCommands.herdrAppPart(prepared.stdout, mark);
+    final dir = part(NewWorkspaceCommands.herdrAppDirMark);
+    final coreId = NewWorkspaceCommands.hcCoreId(
+      part(NewWorkspaceCommands.herdrAppStatusMark),
+    );
+    final listing = part(NewWorkspaceCommands.herdrAppListMark);
+    final before = {
+      for (final terminal in HcListing.parseTerminals(listing))
+        terminal.address,
+    };
+    final machines = _hcMachineNames(listing);
+
+    final window = await _runner.run(
+      NewWorkspaceCommands.herdrAppFindWindow(machines),
+      timeout: Duration(seconds: 10 + 5 * machines.length),
+    );
+    final lines = window.stdout.trim().split('\n');
+    final head = lines.first.trim();
+    final String hub;
+    final String machine;
+    if (head == '@@local') {
+      (hub, machine) = ('', '');
+    } else if (head.startsWith('@@hub ')) {
+      hub = head.substring('@@hub '.length).trim();
+      final name = NewWorkspaceCommands.machineNameFor(
+        lines.skip(1).join('\n'),
+        coreId,
+      );
+      if (name == null) {
+        throw NewWorkspaceFailure(
+          'The Herdr app is open on $hub, but its hc does not reach this '
+          'machine. Add it there with "hc machine add".',
+        );
+      }
+      machine = name;
+    } else {
+      throw const NewWorkspaceFailure(
+        'The Herdr app is not open on this machine or on one it reaches '
+        '(hc machine ls). Open it on your computer first.',
+      );
+    }
+
+    final made = await _runner.run(
+      NewWorkspaceCommands.herdrAppSpaceNew(
+        hub: hub,
+        machine: machine,
+        folder: dir,
+        name: name,
+        agentCommand: request.agent?.command,
+        task: request.agent == null ? '' : request.task.trim(),
+      ),
+      timeout: _timeout,
+    );
+    final refused =
+        NewWorkspaceCommands.herdrAppError(made.stdout) ??
+        NewWorkspaceCommands.herdrAppError(made.stderr);
+    if (refused != null) {
+      throw NewWorkspaceFailure('The Herdr app refused: $refused');
+    }
+    if (made.exitCode != null && made.exitCode != 0) {
+      throw NewWorkspaceFailure(
+        _failure(made, 'The Herdr app could not make the space.'),
+      );
+    }
+
+    // space.new does not say which terminal it started: the new one on
+    // this machine, in that folder if several came up.
+    final label = name.isNotEmpty ? name : NewWorkspaceCommands.folderName(dir);
+    final deadline = _clock().add(appearWait);
+    while (true) {
+      final now = await _runner.run(
+        HcCommands.ls,
+        timeout: const Duration(seconds: 10),
+      );
+      final fresh = [
+        for (final terminal in HcListing.parseTerminals(now.stdout))
+          if (!terminal.address.contains('/') &&
+              !before.contains(terminal.address))
+            terminal,
+      ];
+      if (fresh.isNotEmpty) {
+        final picked =
+            fresh.where((t) => t.cwd == dir).firstOrNull ?? fresh.first;
+        return ConnectTarget.hc(picked.address, label: label);
+      }
+      if (!_clock().isBefore(deadline)) break;
+      await Future<void>.delayed(appearPoll);
+    }
+    throw NewWorkspaceFailure(
+      'The Herdr app made "$label", but its terminal has not shown up yet. '
+      'Close this and pick it from the list in a moment.',
+    );
+  }
+
+  /// The machines `hc ls --json` says hc reaches.
+  static List<String> _hcMachineNames(String listing) {
+    try {
+      final decoded = jsonDecode(listing);
+      return [
+        if (decoded is Map && decoded['machines'] is List)
+          for (final machine in decoded['machines'] as List)
+            if (machine is Map && machine['name'] is String)
+              machine['name'] as String,
+      ];
+    } catch (_) {
+      return const [];
+    }
   }
 
   Future<ConnectTarget> _tmux(
