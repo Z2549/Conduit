@@ -10,6 +10,7 @@ import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
+import 'package:conduit/features/desktop_shell/presentation/widgets/hc_highlight.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sessions/data/remote_session_lister.dart';
 import 'package:conduit/features/sessions/data/workspace_creator.dart';
@@ -799,6 +800,29 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     final marked = docs.view?.isMarked(terminal) ?? false;
     // Compact, as the sidebar's density: the card or folder, no address.
     final compact = docs.view?.compact ?? false;
+    return HcHighlight(
+      highlighted: docs.view?.isHighlighted(terminal) ?? false,
+      child: _hcTargetTile(
+        terminal,
+        target,
+        cards,
+        questions,
+        needsYou,
+        marked,
+        compact,
+      ),
+    );
+  }
+
+  Widget _hcTargetTile(
+    HcTerminalInfo terminal,
+    ConnectTarget target,
+    List<HcCard> cards,
+    int questions,
+    bool needsYou,
+    bool marked,
+    bool compact,
+  ) {
     return _TargetTile(
       key: ValueKey('hc-terminal-${terminal.address}'),
       title: marked ? '★ ${terminal.displayLabel}' : terminal.displayLabel,

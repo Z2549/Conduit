@@ -73,6 +73,14 @@ class ProjectLayoutController extends ChangeNotifier {
   /// that machine).
   final Map<String, ProjectLayout> _machineLayouts = {};
   final Map<String, String> _machineErrors = {};
+
+  /// The agents highlighted in the Herdr app (CON-137), per saved machine
+  /// id, as addresses that machine's `hc ls` gives.
+  final Map<String, Set<String>> _hcHighlighted = {};
+
+  /// Projects whose team (the agents under its highlighted ones) is
+  /// unfolded, by project key; folded by default, as in the Herdr app.
+  final Set<String> _teamsOpen = {};
   final Map<String, DateTime> _fetchedAt = {};
   final Set<String> _inFlight = {};
 
@@ -109,6 +117,27 @@ class ProjectLayoutController extends ChangeNotifier {
   /// The layout read from the machines (merged), empty when none has one.
   ProjectLayout get machineLayout =>
       ProjectLayout.merge(_machineLayouts.values);
+
+  /// The hc agents the Herdr app highlights on machine [hostId]
+  /// (addresses as its `hc ls` gives them); empty when none.
+  Set<String> hcHighlighted(String hostId) =>
+      _hcHighlighted[baseHostId(hostId)] ?? const {};
+
+  /// Whether [row] is an hc agent the Herdr app highlights (CON-137).
+  bool isHighlighted(SidebarNode row) {
+    final target = row.target;
+    if (target is! AgentPaneTarget) return false;
+    final address = target.pane.agent.pane;
+    return address != null && hcHighlighted(row.machineId).contains(address);
+  }
+
+  /// Whether [projectKey]'s team is shown under its chiefs of staff.
+  bool isTeamOpen(String projectKey) => _teamsOpen.contains(projectKey);
+
+  void toggleTeam(String projectKey) {
+    if (!_teamsOpen.remove(projectKey)) _teamsOpen.add(projectKey);
+    if (!_disposed) notifyListeners();
+  }
 
   /// Whether a machine reported a sidebar.toml.
   bool get hasMachineLayout => _machineLayouts.isNotEmpty;
@@ -748,7 +777,11 @@ class ProjectLayoutController extends ChangeNotifier {
             ),
           );
           for (var i = 0; i < machines.length && view == null; i++) {
-            view = HcSheprdView.fromJson(answers[i + 1]);
+            // Its keys as the hub names machines: mapped to this host's
+            // addresses for the highlights (CON-137).
+            view = HcSheprdView.fromJson(
+              answers[i + 1],
+            )?.scoped(HcKeyScope(hub: machines[i], machines: {...machines}));
           }
         }
       }
@@ -780,12 +813,23 @@ class ProjectLayoutController extends ChangeNotifier {
   void applyHcView(SavedHost host, HcSheprdView? view) {
     final id = baseHostId(host.id);
     final before = _machineLayouts[id];
+    final highlightedBefore = _hcHighlighted[id];
     if (view == null) {
       _machineLayouts.remove(id);
+      _hcHighlighted.remove(id);
     } else {
       _machineLayouts[id] = view.toProjectLayout(host.name);
+      final highlighted = view.highlightedAddresses;
+      if (highlighted.isEmpty) {
+        _hcHighlighted.remove(id);
+      } else {
+        _hcHighlighted[id] = highlighted;
+      }
     }
-    if (before != _machineLayouts[id] && !_disposed) notifyListeners();
+    final changed =
+        before != _machineLayouts[id] ||
+        !setEquals(highlightedBefore, _hcHighlighted[id]);
+    if (changed && !_disposed) notifyListeners();
   }
 
   /// Takes one `sidebar-layout` reply from [host].

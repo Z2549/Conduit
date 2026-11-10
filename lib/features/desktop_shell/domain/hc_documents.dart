@@ -135,6 +135,7 @@ class HcSheprdView {
     this.kept = const {},
     this.dismissed = const {},
     this.marked = const {},
+    this.highlighted = const {},
     this.compact = false,
     this.scope = const HcKeyScope(),
   });
@@ -155,6 +156,11 @@ class HcSheprdView {
   /// The user's own flag on an agent (★ in the sidebar).
   final Set<String> marked;
 
+  /// Agents the user highlighted in the Herdr app (CON-137): only a look,
+  /// a violet bar and tint on the row; in a project the other agents fold
+  /// under the highlighted ones (its chiefs of staff).
+  final Set<String> highlighted;
+
   /// `density: compact`: one line per agent.
   final bool compact;
 
@@ -172,6 +178,7 @@ class HcSheprdView {
     kept: kept,
     dismissed: dismissed,
     marked: marked,
+    highlighted: highlighted,
     compact: compact,
     scope: scope,
   );
@@ -196,6 +203,7 @@ class HcSheprdView {
       kept: _strings(marks['kept']).toSet(),
       dismissed: _strings(marks['dismissed']).toSet(),
       marked: _strings(marks['marked']).toSet(),
+      highlighted: _strings(marks['highlighted']).toSet(),
       compact: json['density'] == 'compact',
     );
   }
@@ -283,6 +291,16 @@ class HcSheprdView {
   /// Whether the user marked [terminal] (★).
   bool isMarked(HcTerminalInfo terminal) =>
       marked.any((key) => _isTerminal(key, terminal));
+
+  /// Whether the user highlighted [terminal] (CON-137).
+  bool isHighlighted(HcTerminalInfo terminal) =>
+      highlighted.any((key) => _isTerminal(key, terminal));
+
+  /// The highlighted agents as addresses `hc ls` on the phone's host
+  /// gives (`t7`, `omarchy/t3`).
+  Set<String> get highlightedAddresses => {
+    for (final key in highlighted) scope.address(key),
+  };
 
   /// Whether sheprd counts [terminal] as needing you: unread, or blocked or
   /// done and not dismissed at its current turn.
