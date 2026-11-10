@@ -423,6 +423,58 @@ void main() {
       expect(view.highlightedAddresses, {'omarchy/t3', 't1d'});
     });
 
+    test('a key on a machine only the hub reaches lights nothing here; '
+        "this host's own name is its bare address", () {
+      final view =
+          HcSheprdView.fromJson({
+            'v': 1,
+            'marks': {
+              'highlighted': [
+                'build/t3',
+                'development-central/t1d',
+                'local/t5',
+              ],
+            },
+          })!.scoped(
+            const HcKeyScope(
+              hub: 'omarchy',
+              machines: {'omarchy'},
+              self: 'development-central',
+            ),
+          );
+      expect(view.highlightedAddresses, {'t1d', 'omarchy/t5'});
+      expect(
+        view.isHighlighted(const HcTerminalInfo(address: 't3', where: 'x')),
+        isFalse,
+      );
+    });
+
+    test('_fetchHc scopes the first hub with a view (fromHubs)', () {
+      final view = HcSheprdView.fromHubs(
+        {
+          1: null,
+          2: {
+            'v': 1,
+            'marks': {
+              'highlighted': ['local/t3', 'development-central/t1d'],
+            },
+          },
+        },
+        ['build', 'omarchy'],
+        self: 'development-central',
+      )!;
+      expect(view.scope.hub, 'omarchy');
+      expect(view.highlightedAddresses, {'omarchy/t3', 't1d'});
+      expect(HcSheprdView.fromHubs({1: null}, ['omarchy']), isNull);
+      expect(
+        HcSheprdView.coreName(
+          '{"core":{"id":"38de","name":"development-central"}}',
+        ),
+        'development-central',
+      );
+      expect(HcSheprdView.coreName('nope'), '');
+    });
+
     test(
       'the controller keeps them per machine and matches agent rows',
       () async {

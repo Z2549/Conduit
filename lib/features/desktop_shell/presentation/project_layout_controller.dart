@@ -776,13 +776,13 @@ class ProjectLayoutController extends ChangeNotifier {
               HcCommands.docGet(names, on: machines, skipLocal: true),
             ),
           );
-          for (var i = 0; i < machines.length && view == null; i++) {
-            // Its keys as the hub names machines: mapped to this host's
-            // addresses for the highlights (CON-137).
-            view = HcSheprdView.fromJson(
-              answers[i + 1],
-            )?.scoped(HcKeyScope(hub: machines[i], machines: {...machines}));
-          }
+          // Its keys as the hub names machines: mapped to this host's
+          // addresses for the highlights (CON-137).
+          view = HcSheprdView.fromHubs(
+            answers,
+            machines,
+            self: await _hcCoreName(host),
+          );
         }
       }
       applyHcView(host, view);
@@ -790,6 +790,16 @@ class ProjectLayoutController extends ChangeNotifier {
       // Unreachable now: the next refresh asks again.
     } finally {
       _inFlight.remove(id);
+    }
+  }
+
+  /// [host]'s hc core name, as its hub most likely names it; empty when
+  /// it cannot be asked (keys then read as before).
+  Future<String> _hcCoreName(SavedHost host) async {
+    try {
+      return HcSheprdView.coreName(await _run(host, HcCommands.serverStatus));
+    } catch (_) {
+      return '';
     }
   }
 

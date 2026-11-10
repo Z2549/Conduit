@@ -245,7 +245,7 @@ class HomeProjectsList extends StatelessWidget {
     final all = search.isEmpty || search.matches([project.name]);
     // Each row, whether the Herdr app highlights it (a chief of staff) and
     // whether it needs you, for the team fold below (CON-137).
-    final items = <({Widget row, bool chief, bool needsYou})>[];
+    final items = <({Widget row, bool chief, int agents, int needsYou})>[];
     for (final entry in entries) {
       final machine = names[entry.node.machineId] ?? '';
       if (controller.compact || entry.agentRows.isEmpty) {
@@ -263,10 +263,16 @@ class HomeProjectsList extends StatelessWidget {
             ])) {
           continue;
         }
-        final dot = entry.dot;
+        // One row for a whole space (compact, or no agent rows): the
+        // team line counts its agents, as the Herdr app does.
         items.add((
           chief: entry.agentRows.any(controller.isHighlighted),
-          needsYou: dot == SidebarDot.needsYou,
+          agents: entry.agentRows.length,
+          needsYou: entry.agentRows.isEmpty
+              ? (entry.dot == SidebarDot.needsYou ? 1 : 0)
+              : entry.agentRows
+                    .where((a) => entry.dotOf(a) == SidebarDot.needsYou)
+                    .length,
           row: _HomeProjectRow(
             key: ValueKey('home-project-row-${entry.node.key}'),
             highlighted: entry.agentRows.any(controller.isHighlighted),
@@ -303,7 +309,8 @@ class HomeProjectsList extends StatelessWidget {
         final chief = controller.isHighlighted(agent);
         items.add((
           chief: chief,
-          needsYou: entry.dotOf(agent) == SidebarDot.needsYou,
+          agents: 1,
+          needsYou: entry.dotOf(agent) == SidebarDot.needsYou ? 1 : 0,
           row: _HomeProjectRow(
             key: ValueKey('home-project-agent-${agent.key}'),
             highlighted: chief,
@@ -373,7 +380,7 @@ class HomeProjectsList extends StatelessWidget {
   List<Widget> _foldTeam(
     BuildContext context,
     ProjectGroup project,
-    List<({Widget row, bool chief, bool needsYou})> items,
+    List<({Widget row, bool chief, int agents, int needsYou})> items,
     HomeSearch search,
   ) {
     final chiefs = items.where((item) => item.chief).toList();
@@ -389,8 +396,9 @@ class HomeProjectsList extends StatelessWidget {
       for (final item in chiefs) item.row,
       _TeamLine(
         key: ValueKey('home-project-team-${project.key}'),
-        count: team.length,
-        needsYou: team.where((item) => item.needsYou).length,
+        count: team.fold(0, (sum, item) => sum + item.agents),
+        rows: team.length,
+        needsYou: team.fold(0, (sum, item) => sum + item.needsYou),
         open: open,
         onTap: () => controller.toggleTeam(project.key),
       ),
@@ -599,13 +607,16 @@ class _HomeProjectRow extends StatelessWidget {
 class _TeamLine extends StatelessWidget {
   const _TeamLine({
     required this.count,
+    required this.rows,
     required this.needsYou,
     required this.open,
     required this.onTap,
     super.key,
   });
 
+  /// The agents folded, and the rows (a shell-only space has none).
   final int count;
+  final int rows;
   final int needsYou;
   final bool open;
   final VoidCallback onTap;
@@ -614,7 +625,10 @@ class _TeamLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
     final text = [
-      '$count ${count == 1 ? 'agent' : 'agents'}',
+      if (count > 0)
+        '$count ${count == 1 ? 'agent' : 'agents'}'
+      else
+        '$rows more',
       if (needsYou > 0) '$needsYou ${needsYou == 1 ? 'needs' : 'need'} you',
     ].join(' · ');
     return Tooltip(

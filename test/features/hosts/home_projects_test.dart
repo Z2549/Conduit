@@ -686,7 +686,9 @@ void main() {
 {"address":"t2","agent":"claude-code","cwd":"/home/me","state":"live",
 "status":"working","turn":1,"where":"Workout / 1"},
 {"address":"t3","agent":"claude-code","cwd":"/home/me","state":"live",
-"status":"idle","turn":1,"where":"Gym / 1"}]}''';
+"status":"idle","turn":1,"where":"Gym / 1"},
+{"address":"t4","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"idle","turn":1,"where":"Gym / 2"}]}''';
     final h = await pumpShell(
       tester,
       size: const Size(390, 844),
@@ -740,7 +742,7 @@ void main() {
       ),
       findsWidgets,
     );
-    expect(find.text('2 agents · 1 needs you'), findsOneWidget);
+    expect(find.text('3 agents · 1 needs you'), findsOneWidget);
     expect(find.textContaining('Follow up'), findsNothing);
     expect(find.textContaining('Gym'), findsNothing);
 
@@ -753,6 +755,27 @@ void main() {
     await tester.tap(team);
     await settleShell(tester);
     expect(find.textContaining('Gym'), findsNothing);
+
+    // Compact: one row per space, the line still counts agents (Gym has
+    // two), as the Herdr app does.
+    layout.applyHcView(
+      host,
+      HcSheprdView.fromJson({
+        'v': 1,
+        'density': 'compact',
+        'projects': [
+          {
+            'name': 'Ops',
+            'members': ['local/Follow up', 'local/Workout', 'local/Gym'],
+          },
+        ],
+        'marks': {
+          'highlighted': ['local/t2'],
+        },
+      }),
+    );
+    await settleShell(tester);
+    expect(find.text('3 agents · 1 needs you'), findsOneWidget);
 
     // No highlight: no bar and no fold.
     layout.applyHcView(

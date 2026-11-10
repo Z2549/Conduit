@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/sessions/domain/hc_terminals.dart';
 import 'package:flutter/foundation.dart';
@@ -92,7 +94,26 @@ enum HcViewFilter {
 /// reaches is taken for the phone's host.
 @immutable
 class HcKeyScope {
-  const HcKeyScope({this.hub = '', this.machines = const {}});
+  const HcKeyScope({this.hub = '', this.machines = const {}, this.self = ''});
+
+  /// The phone's host as the hub names it (its hc core name); empty when
+  /// unknown, so a machine the phone's host does not reach is taken for it.
+  final String self;
+
+  /// Whether [key] names a terminal the phone's host can address: its own,
+  /// the hub's, or one it reaches. With [self] known, a key on a machine
+  /// only the hub reaches is not (CON-137 review: `build/t3` must not
+  /// light up this host's `t3`).
+  bool reaches(String key) {
+    final slash = key.indexOf('/');
+    if (slash == -1) return true;
+    final prefix = key.substring(0, slash);
+    return prefix == 'local' ||
+        prefix == hub ||
+        machines.contains(prefix) ||
+        self.isEmpty ||
+        prefix == self;
+  }
 
   /// The machine the document came from, as the phone names it; empty for
   /// the phone's host.
@@ -105,6 +126,7 @@ class HcKeyScope {
   String machineOf(String? prefix) {
     if (prefix == null || prefix == 'local') return hub;
     if (prefix == hub || machines.contains(prefix)) return prefix;
+    if (self.isNotEmpty && prefix == self) return '';
     return hub.isEmpty ? prefix : '';
   }
 
@@ -293,14 +315,47 @@ class HcSheprdView {
       marked.any((key) => _isTerminal(key, terminal));
 
   /// Whether the user highlighted [terminal] (CON-137).
-  bool isHighlighted(HcTerminalInfo terminal) =>
-      highlighted.any((key) => _isTerminal(key, terminal));
+  bool isHighlighted(HcTerminalInfo terminal) => highlighted.any(
+    (key) => scope.reaches(key) && _isTerminal(key, terminal),
+  );
 
   /// The highlighted agents as addresses `hc ls` on the phone's host
   /// gives (`t7`, `omarchy/t3`).
   Set<String> get highlightedAddresses => {
-    for (final key in highlighted) scope.address(key),
+    for (final key in highlighted)
+      if (scope.reaches(key)) scope.address(key),
   };
+
+  /// The first v1 view among [answers] (`doc.get` answers by id, the
+  /// [machines]' own from id 2 on, as `_fetchHc` asks them), scoped to the
+  /// hub it came from; [self] is this host's hc core name.
+  static HcSheprdView? fromHubs(
+    Map<int, Object?> answers,
+    List<String> machines, {
+    String self = '',
+  }) {
+    for (var i = 0; i < machines.length; i++) {
+      final view = fromJson(answers[i + 1]);
+      if (view != null) {
+        return view.scoped(
+          HcKeyScope(hub: machines[i], machines: {...machines}, self: self),
+        );
+      }
+    }
+    return null;
+  }
+
+  /// The core name in `hc server status`; empty when absent.
+  static String coreName(String status) {
+    try {
+      final decoded = jsonDecode(status.trim());
+      final core = decoded is Map ? decoded['core'] : null;
+      final name = core is Map ? core['name'] : null;
+      return name is String ? name : '';
+    } catch (_) {
+      return '';
+    }
+  }
 
   /// Whether sheprd counts [terminal] as needing you: unread, or blocked or
   /// done and not dismissed at its current turn.

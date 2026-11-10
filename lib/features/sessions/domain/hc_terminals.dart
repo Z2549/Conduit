@@ -186,6 +186,9 @@ abstract final class HcCommands {
   /// connect picker poll.
   static final ls = _hc('ls --json');
 
+  /// `hc server status`: this machine's hc core (`core.id`, `core.name`).
+  static final serverStatus = _hc('server status');
+
   /// `hc read <t> --lines <n>`: the screen plus [lines] of history, as text.
   static String read(String address, {int lines = 200}) =>
       _hc('read --lines $lines -- ${shellQuoteArgument(address)}');
