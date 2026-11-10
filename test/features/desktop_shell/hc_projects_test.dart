@@ -1,8 +1,10 @@
+import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
 import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/project_tree.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_prefs.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
+import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/presentation/home_board_controller.dart';
 import 'package:conduit/features/sessions/domain/hc_terminals.dart';
@@ -392,5 +394,131 @@ void main() {
       expect(view.projectOf(inSpace('sp6224'))?.name, 'LF');
       expect(view.projectOf(inSpace('spzzzz')), isNull);
     });
+  });
+
+  // CON-137: the Herdr app's highlight lives in `marks.highlighted`.
+  group('highlights (CON-137)', () {
+    test('read from marks.highlighted; missing means none', () {
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'marks': {
+          'highlighted': ['t1d', 'omarchy/t5', '  ', 7],
+        },
+      })!;
+      expect(view.isHighlighted(terminals[0]), isTrue);
+      expect(view.isHighlighted(terminals[1]), isFalse);
+      expect(view.isHighlighted(terminals[2]), isTrue);
+      expect(view.highlightedAddresses, {'t1d', 'omarchy/t5'});
+      expect(HcSheprdView.fromJson({'v': 1})!.highlighted, isEmpty);
+    });
+
+    test("read from the hub, its own agents get the hub's prefix and this "
+        "host's lose theirs", () {
+      final view = HcSheprdView.fromJson({
+        'v': 1,
+        'marks': {
+          'highlighted': ['local/t3', 'development-central/t1d'],
+        },
+      })!.scoped(const HcKeyScope(hub: 'omarchy', machines: {'omarchy'}));
+      expect(view.highlightedAddresses, {'omarchy/t3', 't1d'});
+    });
+
+    test('a key on a machine only the hub reaches lights nothing here; '
+        "this host's own name is its bare address", () {
+      final view =
+          HcSheprdView.fromJson({
+            'v': 1,
+            'marks': {
+              'highlighted': [
+                'build/t3',
+                'development-central/t1d',
+                'local/t5',
+              ],
+            },
+          })!.scoped(
+            const HcKeyScope(
+              hub: 'omarchy',
+              machines: {'omarchy'},
+              self: 'development-central',
+            ),
+          );
+      expect(view.highlightedAddresses, {'t1d', 'omarchy/t5'});
+      expect(
+        view.isHighlighted(const HcTerminalInfo(address: 't3', where: 'x')),
+        isFalse,
+      );
+    });
+
+    test('_fetchHc scopes the first hub with a view (fromHubs)', () {
+      final view = HcSheprdView.fromHubs(
+        {
+          1: null,
+          2: {
+            'v': 1,
+            'marks': {
+              'highlighted': ['local/t3', 'development-central/t1d'],
+            },
+          },
+        },
+        ['build', 'omarchy'],
+        self: 'development-central',
+      )!;
+      expect(view.scope.hub, 'omarchy');
+      expect(view.highlightedAddresses, {'omarchy/t3', 't1d'});
+      expect(HcSheprdView.fromHubs({1: null}, ['omarchy']), isNull);
+      expect(
+        HcSheprdView.coreName(
+          '{"core":{"id":"38de","name":"development-central"}}',
+        ),
+        'development-central',
+      );
+      expect(HcSheprdView.coreName('nope'), '');
+    });
+
+    test(
+      'the controller keeps them per machine and matches agent rows',
+      () async {
+        final theme = ThemeController(InMemoryThemePreferences());
+        await theme.load();
+        final controller = ProjectLayoutController(theme: theme);
+        addTearDown(controller.dispose);
+        final host = buildHost('dev').copyWith(name: 'Dev');
+        var notified = 0;
+        controller.addListener(() => notified++);
+        controller.applyHcView(
+          host,
+          HcSheprdView.fromJson({
+            'v': 1,
+            'marks': {
+              'highlighted': ['t1m'],
+            },
+          }),
+        );
+        expect(controller.hcHighlighted('dev'), {'t1m'});
+        expect(notified, 1);
+        final tree = SidebarTreeBuilder.build([
+          SidebarMachineInput(
+            host: host,
+            board: HomeBoardState(
+              phase: HomeBoardPhase.ready,
+              backend: HostBackend.hc,
+              hcTerminals: terminals,
+              workspaces: HomeBoardController.hcWorkspaces(terminals),
+            ),
+          ),
+        ], const SidebarPrefs());
+        final agents = [
+          for (final node in tree.single.descendantsAndSelf)
+            if (node.kind == SidebarNodeKind.agentPane) node,
+        ];
+        expect([
+          for (final a in agents)
+            if (controller.isHighlighted(a)) a.label,
+        ], hasLength(1));
+        controller.applyHcView(host, null);
+        expect(controller.hcHighlighted('dev'), isEmpty);
+        expect(notified, 2);
+      },
+    );
   });
 }

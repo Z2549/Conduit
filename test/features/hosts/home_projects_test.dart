@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
 import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
@@ -670,6 +671,129 @@ void main() {
     );
     await settleShell(tester);
     expect(old.targetTitle, endsWith(': Workout'));
+  });
+
+  // CON-137: the Herdr app's highlight (sheprd PR #62): a violet bar and
+  // tint on the agent's row, and in a project the other agents fold under
+  // the highlighted one behind "N agents · M need you".
+  testWidgets('an agent highlighted in the Herdr app has the bar and the '
+      'rest of its project folds under it', (tester) async {
+    late ProjectLayoutController layout;
+    const list = '''
+{"machines":[],"terminals":[
+{"address":"t1","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"blocked","turn":3,"where":"Follow up / 1"},
+{"address":"t2","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"working","turn":1,"where":"Workout / 1"},
+{"address":"t3","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"idle","turn":1,"where":"Gym / 1"},
+{"address":"t4","agent":"claude-code","cwd":"/home/me","state":"live",
+"status":"idle","turn":1,"where":"Gym / 2"}]}''';
+    final h = await pumpShell(
+      tester,
+      size: const Size(390, 844),
+      shellMode: false,
+      before: (h) {
+        unawaited(
+          h.hosts.upsert(workstation.copyWith(backend: HostBackend.hc)),
+        );
+        h.runners['workstation']!
+          ..hcList = list
+          ..tmuxSessions = '';
+        layout = ProjectLayoutController.instance = ProjectLayoutController(
+          theme: h.theme,
+          clock: () => h.now,
+        );
+      },
+    );
+    addTearDown(() {
+      ProjectLayoutController.instance = null;
+      layout.dispose();
+    });
+    await settleShell(tester);
+    final host = h.hosts.hosts.firstWhere((x) => x.id == 'workstation');
+    layout.applyHcView(
+      host,
+      HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'Ops',
+            'members': ['local/Follow up', 'local/Workout', 'local/Gym'],
+          },
+        ],
+        'marks': {
+          'highlighted': ['local/t2'],
+        },
+      }),
+    );
+    final projects = find.byKey(const ValueKey('home-mode-projects'));
+    await tester.scrollUntilVisible(projects, -200, scrollable: homeScrollable);
+    await tester.tap(projects);
+    await settleShell(tester);
+
+    final team = find.byKey(const ValueKey('home-project-team-ops'));
+    await tester.scrollUntilVisible(team, 200, scrollable: homeScrollable);
+    expect(find.byKey(const ValueKey('hc-highlight')), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('hc-highlight')),
+        matching: find.textContaining('Workout'),
+      ),
+      findsWidgets,
+    );
+    expect(find.text('3 agents · 1 needs you'), findsOneWidget);
+    expect(find.textContaining('Follow up'), findsNothing);
+    expect(find.textContaining('Gym'), findsNothing);
+
+    await tester.tap(team);
+    await settleShell(tester);
+    expect(find.textContaining('Follow up'), findsWidgets);
+    expect(find.textContaining('Gym'), findsWidgets);
+
+    // Folds again.
+    await tester.tap(team);
+    await settleShell(tester);
+    expect(find.textContaining('Gym'), findsNothing);
+
+    // Compact: one row per space, the line still counts agents (Gym has
+    // two), as the Herdr app does.
+    layout.applyHcView(
+      host,
+      HcSheprdView.fromJson({
+        'v': 1,
+        'density': 'compact',
+        'projects': [
+          {
+            'name': 'Ops',
+            'members': ['local/Follow up', 'local/Workout', 'local/Gym'],
+          },
+        ],
+        'marks': {
+          'highlighted': ['local/t2'],
+        },
+      }),
+    );
+    await settleShell(tester);
+    expect(find.text('3 agents · 1 needs you'), findsOneWidget);
+
+    // No highlight: no bar and no fold.
+    layout.applyHcView(
+      host,
+      HcSheprdView.fromJson({
+        'v': 1,
+        'projects': [
+          {
+            'name': 'Ops',
+            'members': ['local/Follow up', 'local/Workout', 'local/Gym'],
+          },
+        ],
+      }),
+    );
+    await settleShell(tester);
+    expect(find.byKey(const ValueKey('hc-highlight')), findsNothing);
+    expect(team, findsNothing);
+    expect(find.textContaining('Gym'), findsWidgets);
   });
 
   testWidgets('in project mode an unreachable machine keeps its notice as '

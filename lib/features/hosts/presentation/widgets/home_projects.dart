@@ -10,6 +10,7 @@ import 'package:conduit/features/desktop_shell/domain/sheprd_view.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_prefs.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
+import 'package:conduit/features/desktop_shell/presentation/widgets/hc_highlight.dart';
 import 'package:conduit/features/desktop_shell/presentation/widgets/project_layout_watch.dart';
 import 'package:conduit/features/desktop_shell/presentation/widgets/project_view.dart';
 import 'package:conduit/features/desktop_shell/presentation/widgets/shell_state_dot.dart';
@@ -242,7 +243,9 @@ class HomeProjectsList extends StatelessWidget {
     final collapsed = controller.isCollapsed(project);
     // The project's own name matches: all of it.
     final all = search.isEmpty || search.matches([project.name]);
-    final rows = <Widget>[];
+    // Each row, whether the Herdr app highlights it (a chief of staff) and
+    // whether it needs you, for the team fold below (CON-137).
+    final items = <({Widget row, bool chief, int agents, int needsYou})>[];
     for (final entry in entries) {
       final machine = names[entry.node.machineId] ?? '';
       if (controller.compact || entry.agentRows.isEmpty) {
@@ -260,9 +263,19 @@ class HomeProjectsList extends StatelessWidget {
             ])) {
           continue;
         }
-        rows.add(
-          _HomeProjectRow(
+        // One row for a whole space (compact, or no agent rows): the
+        // team line counts its agents, as the Herdr app does.
+        items.add((
+          chief: entry.agentRows.any(controller.isHighlighted),
+          agents: entry.agentRows.length,
+          needsYou: entry.agentRows.isEmpty
+              ? (entry.dot == SidebarDot.needsYou ? 1 : 0)
+              : entry.agentRows
+                    .where((a) => entry.dotOf(a) == SidebarDot.needsYou)
+                    .length,
+          row: _HomeProjectRow(
             key: ValueKey('home-project-row-${entry.node.key}'),
+            highlighted: entry.agentRows.any(controller.isHighlighted),
             node: entry.node,
             open: entry.node.openInApp,
             dot: entry.dot,
@@ -278,7 +291,7 @@ class HomeProjectsList extends StatelessWidget {
               project: project,
             ),
           ),
-        );
+        ));
         continue;
       }
       for (final agent in entry.agentRows) {
@@ -293,9 +306,14 @@ class HomeProjectsList extends StatelessWidget {
             ])) {
           continue;
         }
-        rows.add(
-          _HomeProjectRow(
+        final chief = controller.isHighlighted(agent);
+        items.add((
+          chief: chief,
+          agents: 1,
+          needsYou: entry.dotOf(agent) == SidebarDot.needsYou ? 1 : 0,
+          row: _HomeProjectRow(
             key: ValueKey('home-project-agent-${agent.key}'),
+            highlighted: chief,
             node: agent,
             open: entry.node.openInApp || agent.openInApp,
             dot: entry.dotOf(agent),
@@ -315,10 +333,11 @@ class HomeProjectsList extends StatelessWidget {
               row: agent,
             ),
           ),
-        );
+        ));
       }
     }
-    if (!search.isEmpty && rows.isEmpty) return null;
+    if (!search.isEmpty && items.isEmpty) return null;
+    final rows = _foldTeam(context, project, items, search);
     final menuless =
         project.isOther ||
         (!controller.canEditLayout && controller.sheprdEditsPaused == null);
@@ -350,6 +369,42 @@ class HomeProjectsList extends StatelessWidget {
               ),
       ),
       if (!collapsed || !search.isEmpty) ...rows,
+    ];
+  }
+
+  /// [items] as rows. A project with highlighted agents (its chiefs of
+  /// staff, CON-137) and others shows the chiefs, then one line for the
+  /// rest ("6 agents · 2 need you") that unfolds them, as the Herdr app's
+  /// sidebar does. Other, a project of only chiefs or of none, and a
+  /// search show every row.
+  List<Widget> _foldTeam(
+    BuildContext context,
+    ProjectGroup project,
+    List<({Widget row, bool chief, int agents, int needsYou})> items,
+    HomeSearch search,
+  ) {
+    final chiefs = items.where((item) => item.chief).toList();
+    if (project.isOther ||
+        !search.isEmpty ||
+        chiefs.isEmpty ||
+        chiefs.length == items.length) {
+      return [for (final item in items) item.row];
+    }
+    final team = items.where((item) => !item.chief).toList();
+    final open = controller.isTeamOpen(project.key);
+    return [
+      for (final item in chiefs) item.row,
+      _TeamLine(
+        key: ValueKey('home-project-team-${project.key}'),
+        count: team.fold(0, (sum, item) => sum + item.agents),
+        rows: team.length,
+        needsYou: team.fold(0, (sum, item) => sum + item.needsYou),
+        open: open,
+        onTap: () => controller.toggleTeam(project.key),
+      ),
+      if (open)
+        for (final item in team)
+          Padding(padding: const EdgeInsets.only(left: 12), child: item.row),
     ];
   }
 
@@ -427,6 +482,7 @@ class _HomeProjectRow extends StatelessWidget {
     required this.onTap,
     required this.onLongPress,
     this.open = false,
+    this.highlighted = false,
     this.title,
     this.dot,
     this.sheprd,
@@ -434,6 +490,9 @@ class _HomeProjectRow extends StatelessWidget {
   });
 
   final SidebarNode node;
+
+  /// Highlighted in the Herdr app: a violet bar and tint (CON-137).
+  final bool highlighted;
 
   /// Its workspace or session is open in the app: marked "open".
   final bool open;
@@ -538,7 +597,82 @@ class _HomeProjectRow extends StatelessWidget {
         ),
       ),
     );
-    return faded ? Opacity(opacity: 0.5, child: row) : row;
+    final shown = HcHighlight(highlighted: highlighted, child: row);
+    return faded ? Opacity(opacity: 0.5, child: shown) : shown;
+  }
+}
+
+/// The folded team of a project's chiefs of staff: "6 agents · 2 need
+/// you"; a tap shows or folds them.
+class _TeamLine extends StatelessWidget {
+  const _TeamLine({
+    required this.count,
+    required this.rows,
+    required this.needsYou,
+    required this.open,
+    required this.onTap,
+    super.key,
+  });
+
+  /// The agents folded, and the rows (a shell-only space has none).
+  final int count;
+  final int rows;
+  final int needsYou;
+  final bool open;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppPalette.of(context);
+    final text = [
+      if (count > 0)
+        '$count ${count == 1 ? 'agent' : 'agents'}'
+      else
+        '$rows more',
+      if (needsYou > 0) '$needsYou ${needsYou == 1 ? 'needs' : 'need'} you',
+    ].join(' · ');
+    return Tooltip(
+      message: open
+          ? 'Fold the team under its chief of staff'
+          : 'Show the team',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 6, 6, 6),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                child: Icon(
+                  open
+                      ? Icons.expand_more_rounded
+                      : Icons.chevron_right_rounded,
+                  size: 18,
+                  color: palette.mutedForeground,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: palette.mutedForeground,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              if (needsYou > 0) ...[
+                const SizedBox(width: 8),
+                const ShellStateDot(dot: SidebarDot.needsYou, size: 9),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
