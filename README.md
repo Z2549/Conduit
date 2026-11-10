@@ -38,6 +38,12 @@ More in [Screenshots](#screenshots). Jump to [Install](#install).
 
 Previews 30 to 40 (companion 1.9.0 bundled):
 
+- **Preview 46**: on the Herdr app, **New agent** in the connect picker
+  starts a new space with an agent (name, folder, agent and a first
+  message) on that machine, through the app on your computer. Agents you
+  **highlight** in the Herdr app get the same violet bar on the phone, and
+  in their project the other agents fold under them behind
+  "N agents · M need you" (tap to unfold).
 - **Preview 45**: on the Herdr app, the home **Projects** list matches the
   desktop sidebar: each agent row shows its own task title ("Full first-pass
   review") with the space and machine under it; agents in spaces that share a
