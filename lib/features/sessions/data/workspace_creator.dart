@@ -195,9 +195,13 @@ class WorkspaceCreator {
 
     final window = await _runner.run(
       NewWorkspaceCommands.herdrAppFindWindow(machines),
-      timeout: Duration(seconds: 10 + 5 * machines.length),
+      // Two hc exec round-trips per machine at most.
+      timeout: Duration(seconds: 10 + 10 * machines.length),
     );
-    final lines = window.stdout.trim().split('\n');
+    // A login shell may print first: the answer starts at the first mark.
+    final all = window.stdout.trim().split('\n');
+    final start = all.indexWhere((line) => line.startsWith('@@'));
+    final lines = start == -1 ? const [''] : all.sublist(start);
     final head = lines.first.trim();
     final String hub;
     final String machine;
@@ -205,6 +209,12 @@ class WorkspaceCreator {
       (hub, machine) = ('', '');
     } else if (head.startsWith('@@hub ')) {
       hub = head.substring('@@hub '.length).trim();
+      if (coreId.isEmpty) {
+        throw NewWorkspaceFailure(
+          'The Herdr app is open on $hub, but hc on this machine did not '
+          'say who it is (hc server status). Is hc running here?',
+        );
+      }
       final name = NewWorkspaceCommands.machineNameFor(
         lines.skip(1).join('\n'),
         coreId,
@@ -246,9 +256,13 @@ class WorkspaceCreator {
       );
     }
 
-    // space.new does not say which terminal it started: the new one on
-    // this machine, in that folder if several came up.
+    // space.new does not say which terminal it started: a new one on this
+    // machine in that folder or space. Other agents start terminals too,
+    // so a new one elsewhere is never taken for it.
     final label = name.isNotEmpty ? name : NewWorkspaceCommands.folderName(dir);
+    bool ours(HcTerminalInfo terminal) =>
+        terminal.cwd == dir ||
+        (name.isNotEmpty && terminal.where.startsWith('$name / '));
     final deadline = _clock().add(appearWait);
     while (true) {
       final now = await _runner.run(
@@ -258,13 +272,12 @@ class WorkspaceCreator {
       final fresh = [
         for (final terminal in HcListing.parseTerminals(now.stdout))
           if (!terminal.address.contains('/') &&
-              !before.contains(terminal.address))
+              !before.contains(terminal.address) &&
+              ours(terminal))
             terminal,
       ];
       if (fresh.isNotEmpty) {
-        final picked =
-            fresh.where((t) => t.cwd == dir).firstOrNull ?? fresh.first;
-        return ConnectTarget.hc(picked.address, label: label);
+        return ConnectTarget.hc(fresh.first.address, label: label);
       }
       if (!_clock().isBefore(deadline)) break;
       await Future<void>.delayed(appearPoll);
@@ -282,7 +295,9 @@ class WorkspaceCreator {
       return [
         if (decoded is Map && decoded['machines'] is List)
           for (final machine in decoded['machines'] as List)
-            if (machine is Map && machine['name'] is String)
+            if (machine is Map &&
+                machine['name'] is String &&
+                (machine['state'] ?? 'connected') == 'connected')
               machine['name'] as String,
       ];
     } catch (_) {

@@ -221,7 +221,9 @@ abstract final class NewWorkspaceCommands {
   static String herdrAppPrepare(String folder) =>
       _script(folder.isEmpty ? '~' : folder, [
         "printf '%s\\n' $herdrAppDirMark",
-        '(cd "\$dir" && pwd)',
+        // Physical, as hc reports a terminal's cwd (a symlinked folder
+        // would never match otherwise).
+        '(cd "\$dir" && pwd -P)',
         "printf '%s\\n' $herdrAppStatusMark",
         'hc server status',
         "printf '%s\\n' $herdrAppListMark",

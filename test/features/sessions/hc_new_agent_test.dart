@@ -132,6 +132,70 @@ void main() {
     expect((await creator(runner).create(request)).name, 't8');
   });
 
+  test(
+    "another agent's new terminal elsewhere is never taken for it",
+    () async {
+      final runner = ScriptedAgentCommandRunner([
+        _out(_prepared(['t1'])),
+        _out('@@local\n'),
+        _out(''),
+        _out(_ls([('t1', '/root'), ('t6', '/root/Projects')])),
+        _out(
+          _ls([('t1', '/root'), ('t6', '/root/Projects'), ('t7', '/srv/x')]),
+        ),
+        _out(
+          _ls([
+            ('t1', '/root'),
+            ('t6', '/root/Projects'),
+            ('t7', '/srv/x'),
+            ('t8', '/root/Projects/app'),
+          ]),
+        ),
+      ]);
+      expect((await creator(runner).create(request)).name, 't8');
+    },
+  );
+
+  test('disconnected machines are not asked; a login banner before the '
+      'answer is skipped', () async {
+    final runner = ScriptedAgentCommandRunner([
+      _out(
+        '@@dir\n/root/Projects/app\n'
+        '@@status\n{"core":{"id":"38de","name":"dev"}}\n'
+        '@@ls\n{"machines":[{"name":"gone","state":"disconnected"},'
+        '{"name":"omarchy","state":"connected"}],"terminals":[]}\n',
+      ),
+      _out('Welcome to dev!\n@@hub omarchy\n$_omarchyMachines\n'),
+      _out(''),
+      _out(_ls([('t2', '/root/Projects/app')])),
+    ]);
+    final target = await creator(runner).create(request);
+    expect(target.name, 't2');
+    final probe = _script(runner.commands[1]);
+    expect(probe, contains('omarchy'));
+    expect(probe, isNot(contains('gone')));
+  });
+
+  test("hc's identity unknown: said, nothing made", () async {
+    final runner = ScriptedAgentCommandRunner([
+      _out(
+        '@@dir\n/x\n@@status\n@@ls\n{"machines":[{"name":"omarchy"}],"terminals":[]}\n',
+      ),
+      _out('@@hub omarchy\n$_omarchyMachines\n'),
+    ]);
+    await expectLater(
+      creator(runner).create(request),
+      throwsA(
+        isA<NewWorkspaceFailure>().having(
+          (f) => f.message,
+          'message',
+          contains('hc server status'),
+        ),
+      ),
+    );
+    expect(runner.commands, hasLength(2));
+  });
+
   test('no window anywhere: said, nothing made', () async {
     final runner = ScriptedAgentCommandRunner([
       _out(_prepared(['t1'])),
