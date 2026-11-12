@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -28,27 +29,27 @@ import 'package:flutter/services.dart';
 /// * macOS uses Cmd, which never reaches the shell (iTerm2's Cmd+D /
 ///   Cmd+Shift+D split, Cmd+Option+arrows move).
 enum DesktopAction {
-  zoomIn('Zoom in'),
-  zoomOut('Zoom out'),
-  zoomReset('Reset zoom'),
-  newSession('New session on this machine'),
-  closeSession('Close session'),
-  nextSession('Next session'),
-  previousSession('Previous session'),
-  goToSession('Go to session 1 to 9'),
-  toggleFullscreen('Fullscreen terminal'),
-  showShortcuts('Keyboard shortcuts'),
-  splitRight('Split right'),
-  splitDown('Split down'),
+  zoomIn(tr('Zoom in')),
+  zoomOut(tr('Zoom out')),
+  zoomReset(tr('Reset zoom')),
+  newSession(tr('New session on this machine')),
+  closeSession(tr('Close session')),
+  nextSession(tr('Next session')),
+  previousSession(tr('Previous session')),
+  goToSession(tr('Go to session 1 to 9')),
+  toggleFullscreen(tr('Fullscreen terminal')),
+  showShortcuts(tr('Keyboard shortcuts')),
+  splitRight(tr('Split right')),
+  splitDown(tr('Split down')),
 
   /// [DesktopShortcutMatch.index]: 0 left, 1 right, 2 up, 3 down.
-  focusPane('Move between splits'),
-  nextUnread('Next unread'),
+  focusPane(tr('Move between splits')),
+  nextUnread(tr('Next unread')),
 
   /// The desktop shell's command palette (every action, session, agent).
-  commandPalette('Command palette'),
-  openSettings('Settings'),
-  toggleSidebar('Show or hide the sidebar');
+  commandPalette(tr('Command palette')),
+  openSettings(tr('Settings')),
+  toggleSidebar(tr('Show or hide the sidebar'));
 
   const DesktopAction(this.label);
 
@@ -267,31 +268,31 @@ class DesktopShortcutHelp {
   final String keys;
 }
 
-String get _mod => _mac ? 'Cmd' : 'Ctrl';
+String get _mod => _mac ? tr('Cmd') : tr('Ctrl');
 
 /// The quick switcher's keys (quick_switcher_shortcut.dart) for the
 /// running OS.
-String get quickSwitcherKeys => _mac ? 'Cmd+K' : 'Ctrl+Shift+K';
+String get quickSwitcherKeys => _mac ? tr('Cmd+K') : tr('Ctrl+Shift+K');
 
 /// The keys of [action] for the running OS, as shown in menus and tooltips.
 String desktopShortcutKeys(DesktopAction action) => switch (action) {
   DesktopAction.zoomIn => '$_mod+=',
   DesktopAction.zoomOut => '$_mod+-',
   DesktopAction.zoomReset => '$_mod+0',
-  DesktopAction.newSession => _mac ? 'Cmd+T' : 'Ctrl+Shift+T',
-  DesktopAction.closeSession => _mac ? 'Cmd+W' : 'Ctrl+Shift+W',
-  DesktopAction.nextSession => 'Ctrl+Tab',
-  DesktopAction.previousSession => 'Ctrl+Shift+Tab',
-  DesktopAction.goToSession => _mac ? 'Cmd+1…9' : 'Alt+1…9',
-  DesktopAction.toggleFullscreen => _mac ? 'Ctrl+Cmd+F' : 'F11',
-  DesktopAction.showShortcuts => _mac ? 'Cmd+/' : 'Ctrl+Shift+/',
-  DesktopAction.splitRight => _mac ? 'Cmd+D' : 'Ctrl+Shift+\\',
-  DesktopAction.splitDown => _mac ? 'Cmd+Shift+D' : 'Ctrl+Shift+-',
-  DesktopAction.focusPane => _mac ? 'Cmd+Option+arrows' : 'Alt+arrows',
-  DesktopAction.nextUnread => _mac ? 'Cmd+Shift+U' : 'Ctrl+Shift+U',
-  DesktopAction.commandPalette => _mac ? 'Cmd+Shift+P' : 'Ctrl+Shift+P',
+  DesktopAction.newSession => _mac ? tr('Cmd+T') : tr('Ctrl+Shift+T'),
+  DesktopAction.closeSession => _mac ? tr('Cmd+W') : tr('Ctrl+Shift+W'),
+  DesktopAction.nextSession => tr('Ctrl+Tab'),
+  DesktopAction.previousSession => tr('Ctrl+Shift+Tab'),
+  DesktopAction.goToSession => _mac ? tr('Cmd+1…9') : tr('Alt+1…9'),
+  DesktopAction.toggleFullscreen => _mac ? tr('Ctrl+Cmd+F') : 'F11',
+  DesktopAction.showShortcuts => _mac ? tr('Cmd+/') : tr('Ctrl+Shift+/'),
+  DesktopAction.splitRight => _mac ? tr('Cmd+D') : 'Ctrl+Shift+\\',
+  DesktopAction.splitDown => _mac ? tr('Cmd+Shift+D') : tr('Ctrl+Shift+-'),
+  DesktopAction.focusPane => _mac ? tr('Cmd+Option+arrows') : tr('Alt+arrows'),
+  DesktopAction.nextUnread => _mac ? tr('Cmd+Shift+U') : tr('Ctrl+Shift+U'),
+  DesktopAction.commandPalette => _mac ? tr('Cmd+Shift+P') : tr('Ctrl+Shift+P'),
   DesktopAction.openSettings => '$_mod+,',
-  DesktopAction.toggleSidebar => _mac ? 'Cmd+B' : 'Ctrl+Shift+B',
+  DesktopAction.toggleSidebar => _mac ? tr('Cmd+B') : tr('Ctrl+Shift+B'),
 };
 
 /// Everything the help sheet lists, for the running OS.
@@ -300,23 +301,23 @@ List<DesktopShortcutHelp> desktopShortcutHelp() => [
     DesktopShortcutHelp(action.label, switch (action) {
       DesktopAction.zoomIn => '$_mod+=  or  $_mod++',
       DesktopAction.nextSession =>
-        _mac ? 'Ctrl+Tab  or  Cmd+Shift+]' : 'Ctrl+Tab',
+        _mac ? tr('Ctrl+Tab  or  Cmd+Shift+]') : tr('Ctrl+Tab'),
       DesktopAction.previousSession =>
-        _mac ? 'Ctrl+Shift+Tab  or  Cmd+Shift+[' : 'Ctrl+Shift+Tab',
-      DesktopAction.toggleFullscreen => _mac ? 'Ctrl+Cmd+F  or  F11' : 'F11',
+        _mac ? tr('Ctrl+Shift+Tab  or  Cmd+Shift+[') : tr('Ctrl+Shift+Tab'),
+      DesktopAction.toggleFullscreen => _mac ? tr('Ctrl+Cmd+F  or  F11') : 'F11',
       _ => desktopShortcutKeys(action),
     }),
   // Bound by the multiplexer tab strip (Herdr / tmux sessions only).
-  const DesktopShortcutHelp(
-    'Previous / next Herdr tab or tmux window',
-    'Ctrl+PgUp / Ctrl+PgDn',
-  ),
-  DesktopShortcutHelp('Zoom with the mouse', '$_mod + wheel, or pinch'),
-  DesktopShortcutHelp('Quick switcher', quickSwitcherKeys),
-  DesktopShortcutHelp('Copy', _mac ? 'Cmd+C' : 'Ctrl+Shift+C'),
   DesktopShortcutHelp(
-    'Paste',
-    _mac ? 'Cmd+V' : 'Ctrl+Shift+V  or  Shift+Insert',
+    tr('Previous / next Herdr tab or tmux window'),
+    tr('Ctrl+PgUp / Ctrl+PgDn'),
+  ),
+  DesktopShortcutHelp(tr('Zoom with the mouse'), '$_mod + wheel, or pinch'),
+  DesktopShortcutHelp(tr('Quick switcher'), quickSwitcherKeys),
+  DesktopShortcutHelp(tr('Copy'), _mac ? tr('Cmd+C') : tr('Ctrl+Shift+C')),
+  DesktopShortcutHelp(
+    tr('Paste'),
+    _mac ? tr('Cmd+V') : tr('Ctrl+Shift+V  or  Shift+Insert'),
   ),
 ];
 

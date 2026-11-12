@@ -125,7 +125,7 @@ class _SyncPageState extends State<SyncPage> {
       ),
       if (_sync.activity.isNotEmpty) ...[
         const SizedBox(height: 24),
-        const _SectionTitle('Sync activity'),
+        _SectionTitle(tr('Sync activity')),
         for (final entry in _sync.activity.take(5)) _ActivityTile(entry: entry),
       ],
     ];
@@ -138,7 +138,7 @@ class _SyncPageState extends State<SyncPage> {
       builder: (_) => _SetUpPage(controller: _sync),
     );
     if (done == true) {
-      _snack('Sync is on.');
+      _snack(tr('Sync is on.'));
       unawaited(_refreshDevices());
     }
   }
@@ -150,7 +150,7 @@ class _SyncPageState extends State<SyncPage> {
       builder: (_) => _JoinPage(controller: _sync),
     );
     if (done == true) {
-      _snack('This device joined sync.');
+      _snack(tr('This device joined sync.'));
       unawaited(_refreshDevices());
     }
   }
@@ -164,7 +164,7 @@ class _SyncPageState extends State<SyncPage> {
         controller: _sync,
         onSyncNow: _busy != null
             ? null
-            : () => _guard('Syncing…', () async {
+            : () => _guard(tr('Syncing…'), () async {
                 await _sync.syncNow();
                 await _refreshDevices();
               }),
@@ -179,7 +179,7 @@ class _SyncPageState extends State<SyncPage> {
         onTap: _rename,
       ),
       const SizedBox(height: 8),
-      const _SectionTitle('What to sync'),
+      _SectionTitle(tr('What to sync')),
       for (final category in SyncCategory.values) ...[
         SwitchListTile(
           key: ValueKey('sync-category-${category.name}'),
@@ -200,13 +200,13 @@ class _SyncPageState extends State<SyncPage> {
       ],
       const SizedBox(height: 16),
       _SectionTitle(
-        'Devices',
+        tr('Devices'),
         trailing: IconButton(
           tooltip: tr('Refresh devices'),
           icon: const Icon(Icons.refresh_rounded),
           onPressed: _busy != null
               ? null
-              : () => _guard('Reading devices…', _sync.refreshDevices),
+              : () => _guard(tr('Reading devices…'), _sync.refreshDevices),
         ),
       ),
       if (_sync.devices.isEmpty)
@@ -229,7 +229,7 @@ class _SyncPageState extends State<SyncPage> {
         onPressed: _busy != null ? null : _addDevice,
       ),
       const SizedBox(height: 24),
-      const _SectionTitle('Sync activity'),
+      _SectionTitle(tr('Sync activity')),
       if (_sync.activity.isEmpty)
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -239,7 +239,7 @@ class _SyncPageState extends State<SyncPage> {
         _ActivityTile(
           entry: entry,
           onKeepMine: entry.canRestore && _busy == null
-              ? () => _guard('Restoring…', () => _sync.keepMine(entry))
+              ? () => _guard(tr('Restoring…'), () => _sync.keepMine(entry))
               : null,
         ),
       const SizedBox(height: 24),
@@ -299,7 +299,7 @@ class _SyncPageState extends State<SyncPage> {
       // The last record says nothing, so the other devices drop this
       // device's place and drafts rather than keep the old ones.
       continuity.retract();
-      await _guard('Syncing…', _sync.syncNow);
+      await _guard(tr('Syncing…'), _sync.syncNow);
     }
     await _sync.setCategory(category, on);
   }
@@ -315,9 +315,9 @@ class _SyncPageState extends State<SyncPage> {
               ? 'Its SSH key is removed from ${hub?.name ?? 'the hub'}\'s '
                     'authorized_keys, so it can no longer reach the hub. '
                     'Data already on that device stays there.'
-              : 'It is dropped from the device list and stops syncing the '
+              : tr('It is dropped from the device list and stops syncing the '
                     'next time it connects. Data already on that device '
-                    'stays there.',
+                    'stays there.'),
         ),
         actions: [
           TextButton(
@@ -332,7 +332,7 @@ class _SyncPageState extends State<SyncPage> {
       ),
     );
     if (confirmed != true) return;
-    await _guard('Removing…', () => _sync.removeDevice(device));
+    await _guard(tr('Removing…'), () => _sync.removeDevice(device));
   }
 
   Future<void> _addDevice() async {
@@ -346,7 +346,7 @@ class _SyncPageState extends State<SyncPage> {
 
   Future<void> _turnOff() async {
     var deleteHubData = false;
-    final hubName = _sync.hubHost?.name ?? 'the hub';
+    final hubName = _sync.hubHost?.name ?? tr('the hub');
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -356,9 +356,9 @@ class _SyncPageState extends State<SyncPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Everything already on this device stays. It stops '
-                'sending and receiving changes.',
+              Text(
+                tr('Everything already on this device stays. It stops '
+                'sending and receiving changes.'),
               ),
               const SizedBox(height: 8),
               CheckboxListTile(
@@ -388,7 +388,7 @@ class _SyncPageState extends State<SyncPage> {
     );
     if (confirmed != true) return;
     await _guard(
-      'Turning off…',
+      tr('Turning off…'),
       () => _sync.turnOff(deleteHubData: deleteHubData),
     );
   }
@@ -451,19 +451,19 @@ class _Explainer extends StatelessWidget {
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Keep saved machines, snippets, settings and the session list '
+            Text(
+              tr('Keep saved machines, snippets, settings and the session list '
               'the same on your phone, tablet and desktop. One of your '
               'saved machines is the hub: the app stores one encrypted file '
               'in ~/.conductore/sync there, over the SSH connection it '
               'already uses. No cloud service, no new port, nothing to '
-              'install.',
+              'install.'),
             ),
             const SizedBox(height: 8),
             Text(
-              'Everything is encrypted on this device with your sync '
+              tr('Everything is encrypted on this device with your sync '
               'passphrase before it is uploaded, so the hub cannot read it. '
-              'SSH keys and passwords only sync if you turn that on.',
+              'SSH keys and passwords only sync if you turn that on.'),
               style: theme.textTheme.bodySmall,
             ),
           ],
@@ -510,12 +510,12 @@ class _StatusCard extends StatelessWidget {
     final hub = controller.hubHost;
     final error = controller.error;
     final (icon, line) = switch (controller.status) {
-      SyncStatus.syncing => (Icons.sync_rounded, 'Syncing…'),
-      SyncStatus.error => (Icons.sync_problem_rounded, error ?? 'Sync failed.'),
+      SyncStatus.syncing => (Icons.sync_rounded, tr('Syncing…')),
+      SyncStatus.error => (Icons.sync_problem_rounded, error ?? tr('Sync failed.')),
       _ => (
         Icons.cloud_done_rounded,
         config.lastSyncAt == null
-            ? 'Not synced yet.'
+            ? tr('Not synced yet.')
             : 'Last synced ${describeSyncTime(config.lastSyncAt!)}.',
       ),
     };
@@ -571,7 +571,7 @@ String describeSyncTime(DateTime time, {DateTime? now}) {
   final current = now ?? DateTime.now();
   final local = time.toLocal();
   final age = current.difference(local);
-  if (age.inSeconds < 60) return 'just now';
+  if (age.inSeconds < 60) return tr('just now');
   if (age.inMinutes < 60) return '${age.inMinutes} min ago';
   final hh = local.hour.toString().padLeft(2, '0');
   final mm = local.minute.toString().padLeft(2, '0');
@@ -589,10 +589,10 @@ class _DeviceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = [
-      if (device.isThisDevice) 'This device',
+      if (device.isThisDevice) tr('This device'),
       if (device.platform.isNotEmpty) device.platform,
       if (device.pairedOnly)
-        'Key added, not synced yet'
+        tr('Key added, not synced yet')
       else if (device.lastSeen != null)
         'Last sync ${describeSyncTime(device.lastSeen!)}',
     ];
@@ -747,8 +747,8 @@ class _SetUpPageState extends State<_SetUpPage> {
             decoration: InputDecoration(
               labelText: tr('Hub machine'),
               helperText:
-                  'A machine you can reach from every device. Its sync '
-                  'data lives in ~/.conductore/sync.',
+                  tr('A machine you can reach from every device. Its sync '
+                  'data lives in ~/.conductore/sync.'),
               helperMaxLines: 3,
             ),
             items: [
@@ -767,9 +767,9 @@ class _SetUpPageState extends State<_SetUpPage> {
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'This machine logs in with a hardware key, so every sync '
+                tr('This machine logs in with a hardware key, so every sync '
                 'will ask for it. A machine with a key or password login '
-                'works better as a hub.',
+                'works better as a hub.'),
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -800,9 +800,9 @@ class _SetUpPageState extends State<_SetUpPage> {
               _hubHasData!
                   ? '${_hub!.name} already holds sync data. Enter its '
                         'passphrase to join it.'
-                  : 'Choose a sync passphrase. You type it once on each '
+                  : tr('Choose a sync passphrase. You type it once on each '
                         'device you set up by hand; lose it and the synced '
-                        'data cannot be read.',
+                        'data cannot be read.'),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -823,7 +823,7 @@ class _SetUpPageState extends State<_SetUpPage> {
               decoration: InputDecoration(
                 labelText: tr('Sync passphrase'),
                 suffixIcon: IconButton(
-                  tooltip: _obscure ? 'Show passphrase' : 'Hide passphrase',
+                  tooltip: _obscure ? tr('Show passphrase') : tr('Hide passphrase'),
                   onPressed: () => setState(() => _obscure = !_obscure),
                   icon: Icon(
                     _obscure
@@ -847,8 +847,8 @@ class _SetUpPageState extends State<_SetUpPage> {
                 decoration: InputDecoration(
                   labelText: tr('Confirm passphrase'),
                   helperText:
-                      'At least 12 characters and three of lowercase, '
-                      'uppercase, numbers and symbols.',
+                      tr('At least 12 characters and three of lowercase, '
+                      'uppercase, numbers and symbols.'),
                   helperMaxLines: 2,
                 ),
               ),
@@ -857,7 +857,7 @@ class _SetUpPageState extends State<_SetUpPage> {
             FilledButton(
               key: const ValueKey('sync-set-up-confirm'),
               onPressed: _busy ? null : _submit,
-              child: Text(_hubHasData! ? 'Join and sync' : 'Turn on sync'),
+              child: Text(_hubHasData! ? tr('Join and sync') : tr('Turn on sync')),
             ),
           ],
           if (_busy) ...[
@@ -931,9 +931,9 @@ class _JoinPageState extends State<_JoinPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'On a device that already syncs, open Settings › Sync › Add a '
-            'device. It shows a QR code (or a code to copy) and six words.',
+          Text(
+            tr('On a device that already syncs, open Settings › Sync › Add a '
+            'device. It shows a QR code (or a code to copy) and six words.'),
           ),
           const SizedBox(height: 16),
           if (setupCodeScanningAvailable) ...[
@@ -1013,7 +1013,7 @@ class _AddDevicePage extends StatefulWidget {
 }
 
 class _AddDevicePageState extends State<_AddDevicePage> {
-  final _name = TextEditingController(text: 'New device');
+  final _name = TextEditingController(text: tr('New device'));
   SyncPairingOffer? _offer;
   bool _busy = false;
   String? _error;
@@ -1027,7 +1027,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
   Future<void> _create() async {
     final hub = widget.controller.hubHost;
     if (hub == null) return;
-    final name = _name.text.trim().isEmpty ? 'New device' : _name.text.trim();
+    final name = _name.text.trim().isEmpty ? tr('New device') : _name.text.trim();
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -1097,11 +1097,11 @@ class _AddDevicePageState extends State<_AddDevicePage> {
         padding: const EdgeInsets.all(16),
         children: [
           if (offer == null) ...[
-            const Text(
-              'The new device gets a login key for the hub and the sync key. '
+            Text(
+              tr('The new device gets a login key for the hub and the sync key. '
               'It needs both the QR code (or the copied code) and the six '
               'words shown next, so a photo of the QR code alone is not '
-              'enough.',
+              'enough.'),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -1152,10 +1152,10 @@ class _AddDevicePageState extends State<_AddDevicePage> {
                 await Clipboard.setData(ClipboardData(text: offer.setupCode));
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'Copied. The code alone does not unlock anything '
-                      'without the six words.',
+                      tr('Copied. The code alone does not unlock anything '
+                      'without the six words.'),
                     ),
                   ),
                 );
