@@ -234,12 +234,12 @@ class TaskSourceField {
     this.key,
     String labelText, {
     this.hint = '',
-    String? helpText,
+    String? help,
     this.required = true,
     this.kind = TaskSourceFieldKind.text,
     this.initial,
   })  : _label = labelText,
-        _help = helpText;
+        _help = help;
 
   final String key;
   final String _label;

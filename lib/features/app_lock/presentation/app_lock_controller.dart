@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:conduit/features/app_lock/domain/app_lock_preferences.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:flutter/foundation.dart';
 
 enum AppLockStatus { locked, checking, unlocked, unavailable }
@@ -161,7 +162,7 @@ class AppLockController extends ChangeNotifier {
         unawaited(_saveUnlock(at));
       case AppAuthenticationResult.cancelled:
         _status = AppLockStatus.locked;
-        _message = 'Authentication was cancelled.';
+        _message = tr('Authentication was cancelled.');
       case AppAuthenticationResult.unavailable:
         _status = AppLockStatus.unavailable;
         _message =

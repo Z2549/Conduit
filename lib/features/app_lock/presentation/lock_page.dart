@@ -110,7 +110,7 @@ class _LockPageState extends State<LockPage> {
                                         ),
                                       )
                                     : const Icon(Icons.lock_open_rounded),
-                                label: Text(unavailable ? 'Retry' : 'Unlock'),
+                                label: Text(unavailable ? tr('Retry') : tr('Unlock')),
                               ),
                             ),
                             if (unavailable) ...[

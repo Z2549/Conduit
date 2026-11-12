@@ -1,4 +1,5 @@
 import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -25,7 +26,14 @@ class LocalAppAuthenticator implements AppAuthenticator {
   Future<AppAuthenticationResult> authenticate() async {
     try {
       final authenticated = await _localAuthentication.authenticate(
-        localizedReason: 'Unlock Conductore to access saved SSH machines.',
+        localizedReason: tr(
+          'Unlock Conductore to access saved SSH machines.',
+        ),
+        androidOptions: AndroidAuthMessages(
+          signInTitle: tr('Authentication required'),
+          signInHint: tr('Verify identity'),
+          cancelButton: tr('Cancel'),
+        ),
       );
       return authenticated
           ? AppAuthenticationResult.success
