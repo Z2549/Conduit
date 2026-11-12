@@ -626,7 +626,7 @@ class TransportBadge extends StatelessWidget {
 
 /// The "+" tile: opens the connect picker for the selected machine.
 class HomeAddTile extends StatelessWidget {
-  HomeAddTile({
+  const HomeAddTile({
     required this.palette,
     required this.brightness,
     required this.onTap,
