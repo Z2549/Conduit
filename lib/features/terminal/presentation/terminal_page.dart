@@ -1018,9 +1018,9 @@ class _TerminalPageState extends State<TerminalPage>
     );
     if (host == null) {
       _openComposerBecause(
-        "This terminal runs on another machine that isn't saved here, so "
+        tr("This terminal runs on another machine that isn't saved here, so "
         'there is no Chat View. Add that machine to use it. Opened the '
-        'composer.',
+        'composer.'),
       );
       return false;
     }
@@ -1093,7 +1093,7 @@ class _TerminalPageState extends State<TerminalPage>
           title: elsewhere
               ? 'No agent session in this ${_placeName(session)}. Open '
                     'another?'
-              : 'Open chat for…',
+              : tr('Open chat for…'),
         );
         if (agent != null && mounted) {
           _openChat(attention, host, agent, draft: draft);
@@ -1185,13 +1185,13 @@ class _TerminalPageState extends State<TerminalPage>
     // Floating well above the bottom edge: the chat bar that just opened
     // lives there and must stay tappable.
     final hint = ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         key: ValueKey('chat-button-hint'),
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.fromLTRB(16, 0, 16, 112),
         content: Text(
-          'Chat opens Chat View for agent sessions. Long-press it for the '
-          'chat line.',
+          tr('Chat opens Chat View for agent sessions. Long-press it for the '
+          'chat line.'),
         ),
       ),
     );
@@ -1212,10 +1212,10 @@ class _TerminalPageState extends State<TerminalPage>
     }
     unawaited(themeController.markTouchModeHintSeen());
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
-          'This app supports mouse taps. Use the Touch key to forward taps '
-          'as terminal mouse clicks.',
+          tr('This app supports mouse taps. Use the Touch key to forward taps '
+          'as terminal mouse clicks.'),
         ),
         duration: Duration(seconds: 6),
       ),
@@ -1363,9 +1363,9 @@ class _TerminalPageState extends State<TerminalPage>
         builder: (context) => AlertDialog(
           key: const ValueKey('close-session-confirm'),
           title: Text('Close ${session.title}?'),
-          content: const Text(
-            'This session is not in tmux or Herdr: closing it ends the shell '
-            'and anything still running in it.',
+          content: Text(
+            tr('This session is not in tmux or Herdr: closing it ends the shell '
+            'and anything still running in it.'),
           ),
           actions: [
             TextButton(
@@ -1431,7 +1431,7 @@ class _TerminalPageState extends State<TerminalPage>
               TextButton(
                 onPressed: () {
                   messenger.hideCurrentSnackBar();
-                  _copyToClipboard(url, 'Link copied');
+                  _copyToClipboard(url, tr('Link copied'));
                 },
                 child: Text(tr('Copy')),
               ),
@@ -1439,7 +1439,7 @@ class _TerminalPageState extends State<TerminalPage>
           ),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: previewPort == null ? 'Open' : 'Preview',
+            label: previewPort == null ? tr('Open') : tr('Preview'),
             onPressed: () => previewPort == null
                 ? unawaited(_openInBrowser(url))
                 : unawaited(
@@ -1480,9 +1480,9 @@ class _TerminalPageState extends State<TerminalPage>
           ),
         );
       case TerminalLinkAction.copyLink:
-        _copyToClipboard(url, 'Link copied');
+        _copyToClipboard(url, tr('Link copied'));
       case TerminalLinkAction.copyText:
-        _copyToClipboard(line, 'Line copied');
+        _copyToClipboard(line, tr('Line copied'));
     }
     return true;
   }
@@ -1713,10 +1713,10 @@ class _TerminalPageState extends State<TerminalPage>
         final ownWorkspace = herdr?.workspaceOf(session) ?? '';
         if (!mayFocus && ownWorkspace.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(
-                "This tab's Herdr workspace is not known: take the focus "
-                'first, then open the folder in a new tab.',
+                tr("This tab's Herdr workspace is not known: take the focus "
+                'first, then open the folder in a new tab.'),
               ),
             ),
           );
@@ -2212,7 +2212,7 @@ class _TerminalPageState extends State<TerminalPage>
         .where((session) => session.host.id == tab.host.id)
         .firstOrNull;
     if (session == null) {
-      _copyToClipboard(draft, 'Screenshot uploaded; its path is copied');
+      _copyToClipboard(draft, tr('Screenshot uploaded; its path is copied'));
       return;
     }
     await _deliverChatDraft(session, draft);
@@ -2512,13 +2512,13 @@ class _TerminalPageState extends State<TerminalPage>
       takeFocusOnce: () async {
         widget.workspace.activate(session);
         if (!await herdr.takeFocusOnce(session)) {
-          failed('Herdr did not switch: the typed keys are still held.');
+          failed(tr('Herdr did not switch: the typed keys are still held.'));
         }
         _focusNode.requestFocus();
       },
       useShownWorkspace: () async {
         if (!await herdr.useShownWorkspace(session)) {
-          failed("Couldn't read what Herdr shows.");
+          failed(tr("Couldn't read what Herdr shows."));
         }
         _focusNode.requestFocus();
       },
@@ -2539,7 +2539,7 @@ class _TerminalPageState extends State<TerminalPage>
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text("Couldn't read what Herdr shows.")),
+              SnackBar(content: Text(tr("Couldn't read what Herdr shows."))),
             );
         }
         _focusNode.requestFocus();
@@ -2719,8 +2719,8 @@ class _TerminalPageState extends State<TerminalPage>
                                   ? Icons.chevron_left_rounded
                                   : Icons.space_dashboard_outlined,
                               backTooltip: widget.shell == null
-                                  ? 'Machines'
-                                  : 'Home',
+                                  ? tr('Machines')
+                                  : tr('Home'),
                               leavesWhenEmpty: widget.shell == null,
                               onOpenSettings: () => unawaited(_openSettings()),
                               onTabsChanged: _showTerminal,
@@ -2976,10 +2976,10 @@ class _TerminalPageState extends State<TerminalPage>
                                 _composeRevision += 1;
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text(
-                                    'Not connected. The line was kept as a '
-                                    'draft.',
+                                    tr('Not connected. The line was kept as a '
+                                    'draft.'),
                                   ),
                                 ),
                               );
@@ -3136,7 +3136,7 @@ class _DesktopKeysToggle extends StatelessWidget {
             visible ? Icons.keyboard_hide_outlined : Icons.keyboard_outlined,
             size: 16,
           ),
-          label: Text(visible ? 'Hide on-screen keys' : 'On-screen keys'),
+          label: Text(visible ? tr('Hide on-screen keys') : tr('On-screen keys')),
         ),
       ),
     );
@@ -3479,7 +3479,7 @@ class _ShellExitedBar extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              code == null ? 'Shell exited' : 'Exited (code $code)',
+              code == null ? tr('Shell exited') : 'Exited (code $code)',
               style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(width: 12),
