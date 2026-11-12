@@ -1186,9 +1186,9 @@ class _TerminalPageState extends State<TerminalPage>
     // lives there and must stay tappable.
     final hint = ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        key: ValueKey('chat-button-hint'),
+        key: const ValueKey('chat-button-hint'),
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.fromLTRB(16, 0, 16, 112),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 112),
         content: Text(
           tr('Chat opens Chat View for agent sessions. Long-press it for the '
           'chat line.'),
@@ -1217,7 +1217,7 @@ class _TerminalPageState extends State<TerminalPage>
           tr('This app supports mouse taps. Use the Touch key to forward taps '
           'as terminal mouse clicks.'),
         ),
-        duration: Duration(seconds: 6),
+        duration: const Duration(seconds: 6),
       ),
     );
   }
