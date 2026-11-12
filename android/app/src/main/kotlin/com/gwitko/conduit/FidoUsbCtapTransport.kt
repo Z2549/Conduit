@@ -12,6 +12,8 @@ import android.hardware.usb.UsbEndpoint
 import android.hardware.usb.UsbInterface
 import android.hardware.usb.UsbManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import io.flutter.plugin.common.MethodChannel
 import java.security.SecureRandom
 import java.util.concurrent.atomic.AtomicBoolean
@@ -22,32 +24,55 @@ class FidoUsbCtapTransport(private val context: Context) {
     private val lock = Any()
     private var session: Session? = null
     private val random = SecureRandom()
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     fun handle(call: io.flutter.plugin.common.MethodCall, result: MethodChannel.Result) {
+        // USB transfers run on their own threads, and a MethodChannel.Result
+        // must be completed on the platform main thread: answering from a
+        // worker either throws or silently drops the reply.
+        val reply = mainThreadResult(result)
         when (call.method) {
-            "isSupported" -> result.success(true)
-            "hasDevice" -> result.success(findCandidate() != null)
-            "open" -> open(result)
+            "isSupported" -> reply.success(true)
+            "hasDevice" -> reply.success(findCandidate() != null)
+            "open" -> open(reply)
             "close" -> {
                 close()
-                result.success(null)
+                reply.success(null)
             }
             "transceive" -> {
                 val command = call.arguments as? ByteArray
                 if (command == null) {
-                    result.error("bad_arguments", "Expected a Uint8List CTAP command.", null)
+                    reply.error("bad_arguments", "Expected a Uint8List CTAP command.", null)
                     return
                 }
                 Thread {
                     try {
                         val response = transceive(command)
-                        result.success(response)
+                        reply.success(response)
                     } catch (error: Throwable) {
-                        result.error("usb_ctap", error.message ?: "USB security key failed.", null)
+                        reply.error("usb_ctap", error.message ?: "USB security key failed.", null)
                     }
                 }.start()
             }
-            else -> result.notImplemented()
+            else -> reply.notImplemented()
+        }
+    }
+
+    private fun mainThreadResult(result: MethodChannel.Result): MethodChannel.Result =
+        object : MethodChannel.Result {
+            override fun success(value: Any?) = onMainThread { result.success(value) }
+
+            override fun error(code: String, message: String?, details: Any?) =
+                onMainThread { result.error(code, message, details) }
+
+            override fun notImplemented() = onMainThread { result.notImplemented() }
+        }
+
+    private fun onMainThread(block: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            block()
+        } else {
+            mainHandler.post(block)
         }
     }
 
