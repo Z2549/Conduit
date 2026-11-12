@@ -478,7 +478,7 @@ void main() {
     phone(tester);
     await pumpLauncher(tester, appLock: services.appLock);
     final result = find.byKey(
-      const ValueKey('settings-result-$relockDelayTitle'),
+      ValueKey('settings-result-$relockDelayTitle'),
     );
     for (final query in [
       'lock',
@@ -540,7 +540,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     final result = find.byKey(
-      const ValueKey('settings-result-$sheprdSyncTitle'),
+      ValueKey('settings-result-$sheprdSyncTitle'),
     );
     expect(result, findsOneWidget);
     await tester.tap(result);
