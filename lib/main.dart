@@ -762,7 +762,7 @@ void main() {
 class ConduitApp extends StatefulWidget {
   const ConduitApp({
     required this.themeController,
-    required this.localeController,
+    this.localeController,
     required this.lockController,
     required this.hostsController,
     required this.terminalRepository,
@@ -790,7 +790,10 @@ class ConduitApp extends StatefulWidget {
   });
 
   final ThemeController themeController;
-  final LocaleController localeController;
+
+  /// The app language; null in tests and embedded builds that keep the
+  /// system locale.
+  final LocaleController? localeController;
   final AppLockController lockController;
   final HostsController hostsController;
   final SshTerminalRepository terminalRepository;
@@ -1122,7 +1125,7 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
           navigatorObservers: _navigatorObservers,
           title: 'Conductore',
           debugShowCheckedModeBanner: false,
-          locale: widget.localeController.locale,
+          locale: widget.localeController?.locale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: const [
             AppLocalizations.delegate,
