@@ -137,9 +137,9 @@ class GuideSettingsControls extends StatelessWidget {
             onChanged: (value) => Navigator.of(context).pop(value),
             child: Column(
               children: [
-                RadioListTile<String>(
+                const RadioListTile<String>(
                   value: '',
-                  title: Text('Automatic'),
+                  title: const Text('Automatic'),
                 ),
                 for (final host in machines)
                   RadioListTile<String>(value: host.id, title: Text(host.name)),
@@ -163,9 +163,9 @@ class GuideSettingsControls extends StatelessWidget {
             onChanged: (value) => Navigator.of(context).pop(value),
             child: Column(
               children: [
-                RadioListTile<String>(
+                const RadioListTile<String>(
                   value: '',
-                  title: Text('Same as dictation'),
+                  title: const Text('Same as dictation'),
                 ),
                 for (final language in speechLanguages)
                   if (!language.isDeviceDefault)

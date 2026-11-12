@@ -1879,31 +1879,31 @@ class _ChatMenu extends StatelessWidget {
         _ => null,
       },
       itemBuilder: (context) => [
-        PopupMenuItem<Object>(
-          key: ValueKey('chat-search'),
+        const PopupMenuItem<Object>(
+          key: const ValueKey('chat-search'),
           value: 'search',
-          child: ListTile(
+          child: const ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: Icon(Icons.search_rounded),
-            title: Text('Find in conversation'),
+            leading: const Icon(Icons.search_rounded),
+            title: const Text('Find in conversation'),
           ),
         ),
         if (onHandOff != null)
-          PopupMenuItem<Object>(
-            key: ValueKey('chat-menu-handoff'),
+          const PopupMenuItem<Object>(
+            key: const ValueKey('chat-menu-handoff'),
             value: 'handoff',
-            child: ListTile(
+            child: const ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.outbox_outlined),
-              title: Text('Hand off…'),
+              leading: const Icon(Icons.outbox_outlined),
+              title: const Text('Hand off…'),
             ),
           ),
         const PopupMenuDivider(),
         if (readAloud != null) ...[
-          PopupMenuItem<Object>(
+          const PopupMenuItem<Object>(
             enabled: false,
             height: 32,
-            child: Text('Read aloud'),
+            child: const Text('Read aloud'),
           ),
           CheckedPopupMenuItem<Object>(
             key: const ValueKey('chat-read-aloud'),
@@ -1925,10 +1925,10 @@ class _ChatMenu extends StatelessWidget {
               ),
           const PopupMenuDivider(),
         ],
-        PopupMenuItem<Object>(
+        const PopupMenuItem<Object>(
           enabled: false,
           height: 32,
-          child: Text('Tool activity'),
+          child: const Text('Tool activity'),
         ),
         for (final option in ToolActivity.values)
           CheckedPopupMenuItem<Object>(

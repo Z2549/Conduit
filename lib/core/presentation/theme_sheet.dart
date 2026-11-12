@@ -863,7 +863,7 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
                 ),
                 const ButtonSegment(
                   value: TerminalKeyboardItemKind.customControl,
-                  label: const Text('Ctrl'),
+                  label: Text('Ctrl'),
                 ),
               ],
               selected: {_kind},

@@ -351,11 +351,11 @@ class _QuickActionFormState extends State<QuickActionForm> {
                     ),
                   ),
                   RadioListTile<QuickActionHome>(
-                    key: ValueKey('quick-action-home-personal'),
+                    key: const ValueKey('quick-action-home-personal'),
                     contentPadding: EdgeInsets.zero,
                     dense: true,
                     value: QuickActionHome.personal,
-                    title: Text('My actions'),
+                    title: const Text('My actions'),
                     subtitle: Text(tr('Settings, synced to your devices')),
                   ),
                 ],

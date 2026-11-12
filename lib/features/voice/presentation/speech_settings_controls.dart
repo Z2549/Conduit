@@ -586,7 +586,7 @@ class _VoiceDialogState extends State<_VoiceDialog> {
                       children: [
                         RadioListTile<String>(
                           value: '',
-                          title: Text('Automatic'),
+                          title: const Text('Automatic'),
                           subtitle: Text(tr('The best offline voice')),
                           dense: true,
                         ),
@@ -725,9 +725,9 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
                           : Text(language.tag),
                       dense: true,
                     ),
-                  RadioListTile<String>(
+                  const RadioListTile<String>(
                     value: _custom,
-                    title: Text('Other'),
+                    title: const Text('Other'),
                     dense: true,
                   ),
                 ],

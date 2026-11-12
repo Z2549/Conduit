@@ -1,4 +1,3 @@
-import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/data/task_http.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:http/http.dart' as http;

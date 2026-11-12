@@ -233,8 +233,8 @@ class HostAuthenticationSection extends StatelessWidget {
               helperMaxLines: 2,
               alignLabelWithHint: true,
               prefixIcon: const Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: const Icon(Icons.vpn_key_outlined),
+                padding: EdgeInsets.only(top: 12),
+                child: Icon(Icons.vpn_key_outlined),
               ),
             ),
             minLines: 5,

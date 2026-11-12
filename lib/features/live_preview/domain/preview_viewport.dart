@@ -1,4 +1,3 @@
-import 'package:conduit/core/l10n/legacy_tr.dart';
 
 /// The device class Live preview emulates.
 ///
