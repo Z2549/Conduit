@@ -1,5 +1,5 @@
-import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:conduit/core/l10n/legacy_tr.dart';
+import 'package:conduit/features/app_lock/domain/app_authenticator.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
