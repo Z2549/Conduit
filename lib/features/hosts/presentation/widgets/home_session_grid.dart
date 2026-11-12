@@ -587,7 +587,7 @@ class TransportBadge extends StatelessWidget {
     if (host.isLocal) {
       return TransportBadge(label: tr('Local'));
     }
-    return TransportBadge(label: host.useMosh ? tr('Mosh') : tr('SSH'));
+    return TransportBadge(label: host.useMosh ? 'Mosh' : 'SSH');
   }
 
   final String label;
@@ -601,8 +601,8 @@ class TransportBadge extends StatelessWidget {
     final color =
         this.color ??
         switch (label) {
-          tr('Mosh') => palette.colors.cyan,
-          tr('SSH') => palette.colors.blue,
+          'Mosh' => palette.colors.cyan,
+          'SSH' => palette.colors.blue,
           _ => palette.inactive,
         };
     return Container(
@@ -630,7 +630,7 @@ class HomeAddTile extends StatelessWidget {
     required this.palette,
     required this.brightness,
     required this.onTap,
-    this.label = tr('New session'),
+    this.label = 'New session',
     super.key,
   });
 

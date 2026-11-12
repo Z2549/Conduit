@@ -121,6 +121,7 @@ def process(path, apply):
             continue
         joined = "".join(g[2][1:-1] for g in group)
         before = src[max(0, s - 24):s]
+        tail = src[group[-1][1]:group[-1][1] + 8].lstrip()
         head = src[max(0, s - 160):s]
         ok = (
             look(joined)
@@ -128,6 +129,8 @@ def process(path, apply):
             and not any(before.endswith(b) for b in BAD_BEFORE)
             and not re.search(r"\bconst\s+[A-Za-z_][A-Za-z0-9_]*\s*=\s*$", head)
             and not re.search(r"\bstatic\s+const\b[^;]{0,80}$", head)
+            and not tail.startswith("=>")
+            and not re.search(r"[A-Za-z_][A-Za-z0-9_]*\s*=\s*$", before)
         )
         if ok:
             start, end = group[0][0], group[-1][1]

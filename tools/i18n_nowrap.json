@@ -11,6 +11,11 @@
   "lib/features/desktop_shell/presentation/widgets/layout_picker.dart": [
     "Save this layout…"
   ],
+  "lib/features/hosts/presentation/widgets/home_session_grid.dart": [
+    "Mosh",
+    "SSH",
+    "New session"
+  ],
   "lib/features/live_preview/domain/preview_viewport.dart": [
     "Desktop",
     "Phone",
