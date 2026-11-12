@@ -1395,7 +1395,9 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       SliverToBoxAdapter(
         child: _SectionHeader(
           label: tr('SESSIONS'),
-          detail: sessions.isEmpty ? 'none open' : '${sessions.length} open',
+          detail: sessions.isEmpty
+              ? tr('none open')
+              : trf('{count} open', {'count': '${sessions.length}'}),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1450,7 +1452,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                 return HomeAddTile(
                   palette: palette,
                   brightness: brightness,
-                  label: sessions.isEmpty ? 'Connect' : 'New session',
+                  label: sessions.isEmpty ? tr('Connect') : tr('New session'),
                   onTap: _newSession,
                 );
               }
@@ -1626,7 +1628,9 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       SliverToBoxAdapter(
         child: _SectionHeader(
           label: tr('OTHER WORKSPACES'),
-          detail: count == 0 ? null : '$count not open',
+          detail: count == 0
+              ? null
+              : trf('{count} not open', {'count': '$count'}),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

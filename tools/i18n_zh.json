@@ -149,6 +149,7 @@
   "Confirm": "确认",
   "Confirm passphrase": "确认口令",
   "Confirm password": "确认密码",
+  "Connect": "连接",
   "Connect to…": "连接到…",
   "Connect with Mosh": "使用 Mosh 连接",
   "Connecting to the machine.": "正在连接机器。",
@@ -912,6 +913,7 @@
   "hc did not answer.": "hc 没有响应。",
   "just now": "刚刚",
   "no modifier": "无修饰键",
+  "none open": "无打开的会话",
   "not connected": "未连接",
   "open": "打开",
   "or open one: it lands in this pane": "或打开一个：它会落在当前窗格",
@@ -919,5 +921,7 @@
   "tmux is not installed on this machine.": "这台机器上没有安装 tmux。",
   "tmux session": "tmux 会话",
   "try again": "重试",
-  "unread": "未读"
+  "unread": "未读",
+  "{count} not open": "{count} 个未打开",
+  "{count} open": "{count} 个打开"
 }

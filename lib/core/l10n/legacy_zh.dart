@@ -155,6 +155,7 @@ const Map<String, String> legacyZh = <String, String>{
   'Confirm': '确认',
   'Confirm passphrase': '确认口令',
   'Confirm password': '确认密码',
+  'Connect': '连接',
   'Connect to…': '连接到…',
   'Connect with Mosh': '使用 Mosh 连接',
   'Connecting to the machine.': '正在连接机器。',
@@ -463,6 +464,7 @@ const Map<String, String> legacyZh = <String, String>{
   'No trusted keys yet': '还没有已信任的密钥',
   'Nobody has opened it yet.': '还没有人打开过。',
   'None': '无',
+  'none open': '无打开的会话',
   'None yet.': '还没有。',
   'Not a git repository': '不是 git 仓库',
   'Not available on this platform.': '此平台不可用。',
@@ -923,5 +925,7 @@ const Map<String, String> legacyZh = <String, String>{
   'Yes': '是',
   'You ran': '你运行了',
   'Your device couldn\'t connect to {address}. Check your network.': '你的设备无法连接到 {address}。请检查网络。',
-  'Your links': '你的链接'
+  'Your links': '你的链接',
+  '{count} not open': '{count} 个未打开',
+  '{count} open': '{count} 个打开'
 };

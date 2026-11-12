@@ -227,7 +227,9 @@ class _MainColumn extends StatelessWidget {
         ],
         _SectionTitle(
           'Recent sessions',
-          detail: sessions.isEmpty ? 'none open' : '${sessions.length} open',
+          detail: sessions.isEmpty
+              ? tr('none open')
+              : trf('{count} open', {'count': '${sessions.length}'}),
           icon: Icons.terminal_rounded,
         ),
         if (sessions.isEmpty)
@@ -254,7 +256,9 @@ class _MainColumn extends StatelessWidget {
         if (groups.isNotEmpty) ...[
           _SectionTitle(
             'Other workspaces',
-            detail: count == 0 ? null : '$count not open',
+            detail: count == 0
+              ? null
+              : trf('{count} not open', {'count': '$count'}),
             icon: Icons.layers_outlined,
           ),
           for (final group in groups) ...[
