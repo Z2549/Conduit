@@ -32,31 +32,36 @@ enum SyncCategory {
   continuity;
 
   String get label => switch (this) {
-    SyncCategory.machines => 'Saved machines',
-    SyncCategory.credentials => 'SSH keys and passwords',
-    SyncCategory.snippets => 'Snippets',
-    SyncCategory.appearance => 'Appearance and terminal settings',
-    SyncCategory.connections => 'Connect preferences and recents',
-    SyncCategory.sessions => 'Session list',
-    SyncCategory.continuity => 'Continue where you left off',
+    SyncCategory.machines => tr('Saved machines'),
+    SyncCategory.credentials => tr('SSH keys and passwords'),
+    SyncCategory.snippets => tr('Snippets'),
+    SyncCategory.appearance => tr('Appearance and terminal settings'),
+    SyncCategory.connections => tr('Connect preferences and recents'),
+    SyncCategory.sessions => tr('Session list'),
+    SyncCategory.continuity => tr('Continue where you left off'),
   };
 
   String get description => switch (this) {
-    SyncCategory.machines =>
+    SyncCategory.machines => tr(
       'Hostnames, ports, users, transport and per-machine settings, plus '
-          'trusted host keys.',
-    SyncCategory.credentials =>
+      'trusted host keys.',
+    ),
+    SyncCategory.credentials => tr(
       'Passwords, private keys and their passphrases, and hidden snippets. '
-          'Hardware-key stubs never sync.',
-    SyncCategory.snippets => 'Terminal snippets shared by every machine.',
-    SyncCategory.appearance =>
+      'Hardware-key stubs never sync.',
+    ),
+    SyncCategory.snippets => tr('Terminal snippets shared by every machine.'),
+    SyncCategory.appearance => tr(
       'Theme, font, keyboard rows, pill layout, gestures and speech.',
-    SyncCategory.connections =>
+    ),
+    SyncCategory.connections => tr(
       'Remembered connect choices, recent sessions and directories.',
-    SyncCategory.sessions => 'The sessions reopened when the app starts.',
-    SyncCategory.continuity =>
+    ),
+    SyncCategory.sessions => tr('The sessions reopened when the app starts.'),
+    SyncCategory.continuity => tr(
       'Where you are on each device and your unsent Chat View drafts, so '
-          'another device offers to open the same place.',
+      'another device offers to open the same place.',
+    ),
   };
 
   /// Categories a new sync setup turns on: everything except credentials.

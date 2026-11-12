@@ -1808,7 +1808,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsToolbarStyle => '工具栏样式';
 
   @override
-  String get settingsAgentHooks => 'Agent 钩子';
+  String get settingsAgentHooks => '智能体钩子';
 
   @override
   String get settingsApprovalRules => '审批规则';

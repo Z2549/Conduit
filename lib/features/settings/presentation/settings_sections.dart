@@ -525,8 +525,8 @@ class SettingsSectionBody extends StatelessWidget {
             leading: const Icon(Icons.outbox_outlined),
             title: Text(tr('Talkbawt')),
             subtitle: const Text(
-              'Hand work off to other people\'s agents through a link: '
-              'your links, opening one, paired machines, the server.',
+              tr('Hand work off to other people\'s agents through a link: '
+                  'your links, opening one, paired machines, the server.'),
             ),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => unawaited(

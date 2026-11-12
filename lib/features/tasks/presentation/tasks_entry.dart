@@ -205,9 +205,9 @@ class TasksSettingsTile extends StatelessWidget {
     key: const ValueKey('settings-tasks'),
     leading: const Icon(Icons.task_alt_outlined),
     title: Text(tr('Tasks')),
-    subtitle: const Text(
-      'Tasks from a markdown folder, GitHub, GitLab, Jira, Linear or '
-      'Azure Boards: list, open, move, comment.',
+    subtitle: Text(
+      tr('Tasks from a markdown folder, GitHub, GitLab, Jira, Linear or '
+          'Azure Boards: list, open, move, comment.'),
     ),
     trailing: const Icon(Icons.chevron_right_rounded),
     onTap: () =>

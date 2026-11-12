@@ -116,18 +116,21 @@ enum AgentNotifyLevel {
   none;
 
   String get label => switch (this) {
-    AgentNotifyLevel.all => 'All',
-    AgentNotifyLevel.approvalsAndErrors => 'Approvals and errors',
-    AgentNotifyLevel.none => 'None',
+    AgentNotifyLevel.all => tr('All'),
+    AgentNotifyLevel.approvalsAndErrors => tr('Approvals and errors'),
+    AgentNotifyLevel.none => tr('None'),
   };
 
   String get description => switch (this) {
-    AgentNotifyLevel.all =>
+    AgentNotifyLevel.all => tr(
       'Approvals, agents waiting for you, and finished agents.',
-    AgentNotifyLevel.approvalsAndErrors =>
+    ),
+    AgentNotifyLevel.approvalsAndErrors => tr(
       'Only approvals and agents waiting for you. Other changes update the '
-          'inbox quietly.',
-    AgentNotifyLevel.none => 'No notifications. The inbox still updates.',
+      'inbox quietly.',
+    ),
+    AgentNotifyLevel.none =>
+      tr('No notifications. The inbox still updates.'),
   };
 
   /// The level the legacy flags encode. Input notifications off means

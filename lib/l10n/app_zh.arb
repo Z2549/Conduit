@@ -897,7 +897,7 @@
   "settingsKeyboardShortcuts": "键盘快捷键",
   "settingsKeyboardShortcutsBody": "所有桌面快捷键：标签、分屏、缩放、快速切换。",
   "settingsToolbarStyle": "工具栏样式",
-  "settingsAgentHooks": "Agent 钩子",
+  "settingsAgentHooks": "智能体钩子",
   "settingsApprovalRules": "审批规则",
   "settingsNotifications": "通知",
   "settingsDashboard": "仪表盘",
