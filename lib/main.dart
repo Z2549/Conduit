@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:ui' show AppExitResponse;
 
 import 'package:conduit/core/diagnostics/app_error_log.dart';
+import 'package:conduit/core/l10n/l10n.dart';
+import 'package:conduit/core/l10n/locale_controller.dart';
+import 'package:conduit/core/l10n/locale_preferences_repository.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
@@ -131,6 +134,7 @@ import 'package:conduit/features/voice_guide/presentation/guide_overlay.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -147,6 +151,10 @@ void main() {
   final themeController = ThemeController(
     const ThemePreferencesRepository(secureStorage),
   );
+  final localeController = LocaleController(
+    const LocalePreferencesRepository(secureStorage),
+  );
+  unawaited(localeController.load());
   final lockController = AppLockController(
     LocalAppAuthenticator(),
     enabled: PlatformFeatures.appLock,
@@ -683,6 +691,7 @@ void main() {
     digest: digest,
     appLock: PlatformFeatures.appLock ? lockController : null,
     talkbawt: talkbawt,
+    locale: localeController,
     onLockNow: () async {
       // Locking closes every session; unlocking brings them back.
       await sessionRestore.holdForLock();
@@ -713,6 +722,7 @@ void main() {
                       controller: talkbawt,
                       child: ConduitApp(
                         themeController: themeController,
+                        localeController: localeController,
                         lockController: lockController,
                         hostsController: hostsController,
                         terminalRepository: terminalRepository,
@@ -752,6 +762,7 @@ void main() {
 class ConduitApp extends StatefulWidget {
   const ConduitApp({
     required this.themeController,
+    required this.localeController,
     required this.lockController,
     required this.hostsController,
     required this.terminalRepository,
@@ -779,6 +790,7 @@ class ConduitApp extends StatefulWidget {
   });
 
   final ThemeController themeController;
+  final LocaleController localeController;
   final AppLockController lockController;
   final HostsController hostsController;
   final SshTerminalRepository terminalRepository;
@@ -1099,7 +1111,10 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: widget.themeController,
+      listenable: Listenable.merge([
+        widget.themeController,
+        widget.localeController,
+      ]),
       builder: (context, _) {
         _updateThemes(widget.themeController.palette);
         final app = MaterialApp(
@@ -1107,10 +1122,21 @@ class _ConduitAppState extends State<ConduitApp> with WidgetsBindingObserver {
           navigatorObservers: _navigatorObservers,
           title: 'Conductore',
           debugShowCheckedModeBanner: false,
+          locale: widget.localeController.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           theme: _lightTheme,
           darkTheme: _darkTheme,
           themeMode: widget.themeController.effectiveThemeMode,
           builder: (context, child) {
+            // Publish the active localizations so layers without a
+            // BuildContext can still produce localized text.
+            AppLocalizationsHolder.install(AppLocalizations.of(context));
             final overlayStyle = AppTheme.systemUiOverlayStyle(
               Theme.of(context).brightness,
             );

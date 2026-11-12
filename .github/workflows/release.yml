@@ -1,596 +1,186 @@
 name: Release
 
-# Builds Conductore for both stores and ships to the closed channels only:
-# Google Play internal testing, TestFlight internal testers, and a GitHub
-# prerelease with the sideload APKs and the desktop bundles (Linux, Windows,
-# unsigned macOS; docs/desktop.md). Promotion is manual (promote.yml).
-# Each platform skips itself with a notice while its secrets are missing.
-# Setup and secrets: docs/release-pipeline.md.
+# Builds signed Android APKs for this fork and publishes a GitHub release.
+#
+# Signing reuses the fork's existing keystore secrets, so every release keeps
+# the same certificate as the previous builds:
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS,
+#   ANDROID_KEY_PASSWORD, ANDROID_STORE_PASSWORD
+#
+# The tag must equal the pubspec versionName (v1.5.0 for `version: 1.5.0+78`).
 
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
     inputs:
-      version:
-        description: Version name, e.g. 0.1.0-conductore.9 (empty = pubspec.yaml; a tag run uses the tag)
+      tag:
+        description: 'Release tag (must match pubspec versionName, e.g. v1.5.0)'
+        required: true
         type: string
-        default: ''
-      build_number:
-        description: Build number override (empty = BUILD_NUMBER_OFFSET + run number)
-        type: string
-        default: ''
-      platforms:
-        description: Platforms to build
-        type: choice
-        # both = the two phones; all = phones and desktops.
-        options: [all, both, android, ios, desktop]
-        default: all
-      publish:
-        description: Upload to Play internal / TestFlight (off = build and verify only)
-        type: boolean
-        default: true
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
-env:
-  FLUTTER_VERSION: '3.44.1'
-  PLAY_PACKAGE_NAME: ${{ vars.PLAY_PACKAGE_NAME || 'com.outsmartis.conductore' }}
-  IOS_BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID || 'com.outsmartis.conductore' }}
-
 jobs:
-  prepare:
-    name: Version
+  preflight:
+    name: Validate version
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      ios_version: ${{ steps.version.outputs.ios_version }}
-      build_number: ${{ steps.version.outputs.build_number }}
-      tag: ${{ steps.version.outputs.tag }}
-      prerelease: ${{ steps.version.outputs.prerelease }}
-      android: ${{ steps.version.outputs.android }}
-      ios: ${{ steps.version.outputs.ios }}
-      desktop: ${{ steps.version.outputs.desktop }}
-      publish: ${{ steps.version.outputs.publish }}
+      tag: ${{ steps.meta.outputs.tag }}
+      version: ${{ steps.meta.outputs.version }}
+      version_code: ${{ steps.meta.outputs.version_code }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Derive version and build number
-        id: version
+      - id: meta
         shell: bash
         env:
-          INPUT_VERSION: ${{ inputs.version }}
-          INPUT_BUILD_NUMBER: ${{ inputs.build_number }}
-          INPUT_PLATFORMS: ${{ inputs.platforms || 'all' }}
-          INPUT_PUBLISH: ${{ github.event_name == 'push' || inputs.publish }}
-          BUILD_NUMBER_OFFSET: ${{ vars.BUILD_NUMBER_OFFSET || '100' }}
-          RUN_NUMBER: ${{ github.run_number }}
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
-          pubspec="$(sed -n 's/^version:[[:space:]]*//p' pubspec.yaml | head -n 1)"
-          pubspec_build="${pubspec##*+}"
-          tag=""
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+          pubspec_version="$(sed -n 's/^version:[[:space:]]*//p' pubspec.yaml | head -n 1)"
+          app_version="${pubspec_version%%+*}"
+          version_code="${pubspec_version##*+}"
+          if [[ -z "${app_version}" || -z "${version_code}" || "${app_version}" == "${version_code}" ]]; then
+            echo "::error::pubspec.yaml must use versionName+versionCode (got '${pubspec_version}')."
+            exit 1
+          fi
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            tag="${INPUT_TAG}"
+          else
             tag="${GITHUB_REF_NAME}"
-            version="${tag#v}"
-          elif [[ -n "${INPUT_VERSION:-}" ]]; then
-            version="${INPUT_VERSION#v}"
-          else
-            version="${pubspec%%+*}"
           fi
-          if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error::Version '${version}' is not X.Y.Z or X.Y.Z-suffix (tag it as v0.1.0-conductore.9)."
+          expected="v${app_version}"
+          if [[ "${tag}" != "${expected}" ]]; then
+            echo "::error::Tag '${tag}' must equal pubspec versionName '${expected}'."
             exit 1
           fi
-          # App Store versions are plain X.Y.Z; the suffix stays Android-only.
-          ios_version="${version%%-*}"
-
-          if [[ -n "${INPUT_BUILD_NUMBER:-}" ]]; then
-            build="${INPUT_BUILD_NUMBER}"
-          else
-            build=$(( BUILD_NUMBER_OFFSET + RUN_NUMBER ))
-          fi
-          if ! [[ "${build}" =~ ^[0-9]+$ ]] || (( build <= pubspec_build )); then
-            echo "::error::Build number ${build} must be an integer above pubspec.yaml's ${pubspec_build} (the last hand-built release)."
-            exit 1
-          fi
-
-          android=false; ios=false; desktop=false
-          case "${INPUT_PLATFORMS}" in
-            all) android=true; ios=true; desktop=true ;;
-            both) android=true; ios=true ;;
-            android) android=true ;;
-            ios) ios=true ;;
-            desktop) desktop=true ;;
-          esac
-          prerelease=false
-          [[ "${version}" == *-* ]] && prerelease=true
-
           {
-            echo "version=${version}"
-            echo "ios_version=${ios_version}"
-            echo "build_number=${build}"
             echo "tag=${tag}"
-            echo "prerelease=${prerelease}"
-            echo "android=${android}"
-            echo "ios=${ios}"
-            echo "desktop=${desktop}"
-            echo "publish=${INPUT_PUBLISH}"
+            echo "version=${app_version}"
+            echo "version_code=${version_code}"
           } >> "${GITHUB_OUTPUT}"
-          {
-            echo "### Conductore ${version}"
-            echo ""
-            echo "| | |"
-            echo "|---|---|"
-            echo "| Android versionName | \`${version}\` |"
-            echo "| Android versionCode (AAB) | \`${build}\` |"
-            echo "| iOS version / build | \`${ios_version}\` / \`${build}\` |"
-            echo "| Desktop bundles | ${desktop} |"
-            echo "| Publish | ${INPUT_PUBLISH} |"
-          } >> "${GITHUB_STEP_SUMMARY}"
-
-  checks:
-    name: Checks
-    uses: ./.github/workflows/ci.yml
-    with:
-      builds: false
 
   android:
-    name: Android (Play internal + GitHub prerelease)
-    needs: [prepare, checks]
-    if: ${{ needs.prepare.outputs.android == 'true' }}
+    name: Build signed APKs
+    needs: preflight
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    permissions:
-      contents: write
-    env:
-      VERSION: ${{ needs.prepare.outputs.version }}
-      BUILD_NUMBER: ${{ needs.prepare.outputs.build_number }}
-      TAG: ${{ needs.prepare.outputs.tag }}
-      PUBLISH: ${{ needs.prepare.outputs.publish }}
     steps:
-      - name: Check signing and Play secrets
-        id: secrets
-        shell: bash
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-        run: |
-          missing=()
-          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
-            [[ -n "${!name}" ]] || missing+=("${name}")
-          done
-          if (( ${#missing[@]} )); then
-            echo "::notice title=Android release skipped::Missing secrets: ${missing[*]}. See docs/release-pipeline.md."
-            echo "enabled=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "enabled=true" >> "${GITHUB_OUTPUT}"
-          fi
-          if [[ -z "${PLAY_SERVICE_ACCOUNT_JSON}" ]]; then
-            echo "::notice title=Play upload skipped::PLAY_SERVICE_ACCOUNT_JSON is not set; the AAB is kept as a workflow artifact only."
-            echo "play=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "play=true" >> "${GITHUB_OUTPUT}"
-          fi
-
       - uses: actions/checkout@v4
-        if: steps.secrets.outputs.enabled == 'true'
-
-      - name: Set up Java
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: '17'
-          cache: gradle
+          ref: ${{ github.sha }}
+          fetch-depth: 0
 
-      - name: Set up Flutter
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: '3.44.1'
           channel: stable
           cache: true
 
-      - name: Configure release signing
-        if: steps.secrets.outputs.enabled == 'true'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test --concurrency=2
+
+      - name: Configure Android signing
         shell: bash
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
         run: |
           set -euo pipefail
-          # Both paths are gitignored; the runner is discarded after the job.
+          if [[ -z "${ANDROID_KEYSTORE_BASE64:-}" ]]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 must be set to produce a signed APK."
+            exit 1
+          fi
+          for name in ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD ANDROID_STORE_PASSWORD; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::${name} must be set when ANDROID_KEYSTORE_BASE64 is set."
+              exit 1
+            fi
+          done
           printf '%s' "${ANDROID_KEYSTORE_BASE64}" | base64 --decode > android/app/upload-keystore.jks
           {
             echo "storeFile=upload-keystore.jks"
-            echo "storePassword=${ANDROID_KEYSTORE_PASSWORD}"
+            echo "storePassword=${ANDROID_STORE_PASSWORD}"
             echo "keyPassword=${ANDROID_KEY_PASSWORD}"
             echo "keyAlias=${ANDROID_KEY_ALIAS}"
           } > android/key.properties
 
-      - name: Install dependencies
-        if: steps.secrets.outputs.enabled == 'true'
-        run: flutter pub get
+      - name: Build APKs
+        run: flutter build apk --release --flavor full --split-per-abi
 
-      - name: Build Play bundle (play flavor)
-        if: steps.secrets.outputs.enabled == 'true'
-        run: >-
-          flutter build appbundle --release --flavor play
-          --build-name "${VERSION}" --build-number "${BUILD_NUMBER}"
-
-      - name: Build sideload APKs (full flavor)
-        if: steps.secrets.outputs.enabled == 'true'
-        run: >-
-          flutter build apk --release --flavor full --split-per-abi
-          --build-name "${VERSION}" --build-number "${BUILD_NUMBER}"
-
-      - name: Fetch the previous release's arm64 APK
-        if: steps.secrets.outputs.enabled == 'true'
-        id: previous
+      - name: Collect APKs
+        id: apks
         shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          previous_tag="$(gh release list --exclude-drafts --limit 20 --json tagName -q '.[].tagName' \
-            | awk -v current="${TAG}" '$0 != current { print; exit }')"
-          if [[ -n "${previous_tag}" ]] && gh release download "${previous_tag}" \
-              --pattern '*arm64-v8a*.apk' --dir build/previous-release --clobber; then
-            apks=(build/previous-release/*.apk)
-            apk="${apks[0]}"
-            echo "Comparing against ${previous_tag}: ${apk}"
-            echo "apk=${apk}" >> "${GITHUB_OUTPUT}"
-          else
-            echo "No previous release APK to compare against."
-          fi
-
-      - name: Refuse stale app code
-        if: steps.secrets.outputs.enabled == 'true'
-        shell: bash
-        env:
-          PREVIOUS_APK: ${{ steps.previous.outputs.apk }}
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           set -euo pipefail
-          tools/verify-release-build.py build/app/outputs/bundle/playRelease/app-play-release.aab
-          tools/verify-release-build.py build/app/outputs/flutter-apk/app-arm64-v8a-full-release.apk ${PREVIOUS_APK:+"$PREVIOUS_APK"}
-
-      - name: Collect artifacts and checksums
-        if: steps.secrets.outputs.enabled == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p dist
-          for abi in arm64-v8a armeabi-v7a x86_64; do
-            cp "build/app/outputs/flutter-apk/app-${abi}-full-release.apk" "dist/conductore-v${VERSION}-${abi}.apk"
-          done
-          (cd dist && sha256sum conductore-*.apk > "SHA256SUMS-v${VERSION}.txt")
-          cp build/app/outputs/bundle/playRelease/app-play-release.aab "conductore-v${VERSION}-play.aab"
-          cat "dist/SHA256SUMS-v${VERSION}.txt"
-
-      - name: Keep the AAB and APKs as workflow artifacts
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-${{ env.VERSION }}-${{ env.BUILD_NUMBER }}
-          path: |
-            dist/
-            conductore-v${{ env.VERSION }}-play.aab
-          retention-days: 30
-
-      - name: Set up Ruby (fastlane)
-        if: steps.secrets.outputs.enabled == 'true' && steps.secrets.outputs.play == 'true' && env.PUBLISH == 'true'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: true
-
-      - name: Upload to Google Play internal testing
-        if: steps.secrets.outputs.enabled == 'true' && steps.secrets.outputs.play == 'true' && env.PUBLISH == 'true'
-        env:
-          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-          PLAY_RELEASE_STATUS: ${{ vars.PLAY_RELEASE_STATUS }}
-        run: bundle exec fastlane android upload track:internal "aab:conductore-v${VERSION}-play.aab"
-
-      - name: Write release notes
-        if: steps.secrets.outputs.enabled == 'true' && env.PUBLISH == 'true' && env.TAG != ''
-        id: notes
-        shell: bash
-        run: |
-          set -euo pipefail
-          notes="docs/release-notes/${TAG}.md"
-          {
-            if [[ -f "${notes}" ]]; then
-              cat "${notes}"
-              echo ""
-            else
-              echo "Conductore ${VERSION} (Android, sideload)."
-              echo ""
+          out="build/app/outputs/flutter-apk"
+          files=()
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            src="${out}/app-${abi}-full-release.apk"
+            [[ -f "${src}" ]] || src="${out}/app-${abi}-release.apk"
+            if [[ ! -f "${src}" ]]; then
+              echo "::error::Missing APK for ${abi} in ${out}"
+              ls -la "${out}" || true
+              exit 1
             fi
-            echo "Fork of [gwitko/Conduit](https://github.com/gwitko/Conduit) (Apache-2.0). Built by CI from ${GITHUB_SHA::7} and verified to contain the new code (tools/verify-release-build.py)."
-            echo ""
-            echo "APK \`conductore-v${VERSION}-arm64-v8a.apk\` (versionCode $(( BUILD_NUMBER * 10 + 2 ))) installs over previous previews."
-            echo ""
-            echo '```'
-            cat "dist/SHA256SUMS-v${VERSION}.txt"
-            echo '```'
-          } > build/release-notes.md
-          if [[ -f "${notes}" ]]; then
-            echo "generate=false" >> "${GITHUB_OUTPUT}"
-          else
-            echo "generate=true" >> "${GITHUB_OUTPUT}"
-          fi
-          if [[ "${VERSION}" =~ -conductore\.([0-9]+)$ ]]; then
-            echo "name=Conductore preview ${BASH_REMATCH[1]}" >> "${GITHUB_OUTPUT}"
-          else
-            echo "name=Conductore ${VERSION}" >> "${GITHUB_OUTPUT}"
-          fi
-
-      - name: Publish GitHub prerelease with the sideload APKs
-        if: steps.secrets.outputs.enabled == 'true' && env.PUBLISH == 'true' && env.TAG != ''
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.TAG }}
-          name: ${{ steps.notes.outputs.name }}
-          body_path: build/release-notes.md
-          generate_release_notes: ${{ steps.notes.outputs.generate == 'true' }}
-          prerelease: ${{ needs.prepare.outputs.prerelease == 'true' }}
-          make_latest: ${{ needs.prepare.outputs.prerelease != 'true' }}
-          files: |
-            dist/conductore-v${{ env.VERSION }}-arm64-v8a.apk
-            dist/conductore-v${{ env.VERSION }}-armeabi-v7a.apk
-            dist/conductore-v${{ env.VERSION }}-x86_64.apk
-            dist/SHA256SUMS-v${{ env.VERSION }}.txt
-          fail_on_unmatched_files: true
-
-      - name: Remove signing material
-        if: always()
-        run: rm -f android/key.properties android/app/upload-keystore.jks
-
-  ios:
-    name: iOS (TestFlight internal)
-    needs: [prepare, checks]
-    if: ${{ needs.prepare.outputs.ios == 'true' }}
-    runs-on: macos-latest
-    timeout-minutes: 90
-    env:
-      IOS_VERSION: ${{ needs.prepare.outputs.ios_version }}
-      BUILD_NUMBER: ${{ needs.prepare.outputs.build_number }}
-      PUBLISH: ${{ needs.prepare.outputs.publish }}
-    steps:
-      - name: Check App Store Connect secrets
-        id: secrets
-        shell: bash
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          IOS_DIST_CERT_P12_BASE64: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
-        run: |
-          missing=()
-          for name in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8_BASE64 APPLE_TEAM_ID; do
-            [[ -n "${!name}" ]] || missing+=("${name}")
+            dst="${out}/conduit-${VERSION}-${abi}.apk"
+            cp "${src}" "${dst}"
+            files+=("${dst}")
           done
-          if (( ${#missing[@]} )); then
-            echo "::notice title=iOS release skipped::Missing secrets: ${missing[*]}. See docs/release-pipeline.md."
-            echo "enabled=false" >> "${GITHUB_OUTPUT}"
-            exit 0
-          fi
-          echo "enabled=true" >> "${GITHUB_OUTPUT}"
-          if [[ -n "${IOS_DIST_CERT_P12_BASE64}" ]]; then
-            echo "Signing: manual, with the IOS_DIST_CERT_P12_BASE64 distribution certificate."
-          else
-            echo "Signing: Xcode automatic (cloud) signing through the App Store Connect key."
-          fi
-
-      - uses: actions/checkout@v4
-        if: steps.secrets.outputs.enabled == 'true'
-
-      - name: Select the newest stable Xcode
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
-      - name: Set up Flutter
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Set up Ruby (fastlane)
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: true
-
-      - name: Prepare the Xcode workspace
-        if: steps.secrets.outputs.enabled == 'true'
-        run: |
-          flutter pub get
-          flutter build ios --release --config-only --no-codesign \
-            --build-name "${IOS_VERSION}" --build-number "${BUILD_NUMBER}"
-
-      - name: Archive, sign and upload to TestFlight
-        if: steps.secrets.outputs.enabled == 'true'
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          IOS_DIST_CERT_P12_BASE64: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
-          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
-        run: bundle exec fastlane ios beta "upload:${PUBLISH}"
-
-      - name: Keep the IPA as a workflow artifact
-        if: steps.secrets.outputs.enabled == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-${{ env.IOS_VERSION }}-${{ env.BUILD_NUMBER }}
-          path: build/ios/ipa/*.ipa
-          retention-days: 30
-
-      - name: Remove signing material
-        if: always()
-        run: rm -f build/ios/asc-api-key.p8 build/ios/distribution.p12
-
-  desktop:
-    name: Desktop (${{ matrix.target }})
-    needs: [prepare, checks]
-    if: ${{ needs.prepare.outputs.desktop == 'true' }}
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: linux
-            os: ubuntu-latest
-            asset: linux-x64.tar.gz
-          - target: windows
-            os: windows-latest
-            asset: windows-x64.zip
-          - target: macos
-            os: macos-latest
-            asset: macos.zip
-    env:
-      VERSION: ${{ needs.prepare.outputs.version }}
-      # Windows file versions and macOS CFBundleShortVersionString are
-      # numeric: the -conductore.N suffix stays in the asset name only.
-      PLAIN_VERSION: ${{ needs.prepare.outputs.ios_version }}
-      BUILD_NUMBER: ${{ needs.prepare.outputs.build_number }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install the Linux desktop toolchain
-        if: matrix.target == 'linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config \
-            libgtk-3-dev liblzma-dev libsecret-1-dev libstdc++-12-dev
-
-      - name: Select the newest stable Xcode
-        if: matrix.target == 'macos'
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: stable
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build
-        shell: bash
-        run: |
-          set -euo pipefail
-          name="${VERSION}"
-          [[ "${{ matrix.target }}" == linux ]] || name="${PLAIN_VERSION}"
-          flutter build "${{ matrix.target }}" --release \
-            --build-name "${name}" --build-number "${BUILD_NUMBER}"
-
-      - name: Package (Linux)
-        if: matrix.target == 'linux'
-        run: |
-          mkdir -p dist
-          tar -C build/linux/x64/release --transform 's,^bundle,conductore,' \
-            -czf "dist/conductore-v${VERSION}-${{ matrix.asset }}" bundle
-
-      - name: Package (Windows)
-        if: matrix.target == 'windows'
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force dist, stage | Out-Null
-          Copy-Item -Recurse build/windows/x64/runner/Release stage/conductore
-          Compress-Archive -Path stage/conductore -DestinationPath "dist/conductore-v${env:VERSION}-${{ matrix.asset }}"
-
-      - name: Package (macOS)
-        if: matrix.target == 'macos'
-        run: |
-          mkdir -p dist
-          app=build/macos/Build/Products/Release/Conductore.app
-          codesign --verify --verbose=2 "${app}"
-          ditto -c -k --sequesterRsrc --keepParent "${app}" "dist/conductore-v${VERSION}-${{ matrix.asset }}"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: desktop-${{ matrix.target }}-${{ env.VERSION }}-${{ env.BUILD_NUMBER }}
-          path: dist/
-          retention-days: 30
-
-  desktop-publish:
-    name: Attach desktop bundles to the prerelease
-    # After the Android job, which creates the release when its secrets are
-    # set; without them this job creates it.
-    needs: [prepare, android, desktop]
-    if: >-
-      ${{ !cancelled() && needs.prepare.outputs.desktop == 'true'
-      && needs.prepare.outputs.publish == 'true' && needs.prepare.outputs.tag != '' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: write
-    env:
-      VERSION: ${{ needs.prepare.outputs.version }}
-      TAG: ${{ needs.prepare.outputs.tag }}
-      PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: desktop-*
-          path: dist
-          merge-multiple: true
-
-      - name: Upload the bundles and note them in the release
-        shell: bash
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=(dist/conductore-*)
-          if (( ${#files[@]} == 0 )); then
-            echo "::warning title=No desktop bundles::Every desktop build failed; nothing to attach."
-            exit 0
-          fi
-          (cd dist && sha256sum conductore-* > "SHA256SUMS-desktop-v${VERSION}.txt")
-          cat "dist/SHA256SUMS-desktop-v${VERSION}.txt"
           {
-            echo ""
-            echo "### Desktop test builds"
-            echo ""
-            echo "Unsigned, for testing (docs/desktop.md). macOS: right-click Conductore.app > Open the first time (Gatekeeper). Windows: SmartScreen > More info > Run anyway. Linux: needs GTK 3 and libsecret."
-            echo ""
-            echo '```'
-            cat "dist/SHA256SUMS-desktop-v${VERSION}.txt"
-            echo '```'
-          } > desktop-notes.md
+            echo "files<<EOF"
+            printf '%s\n' "${files[@]}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+          printf '%s\n' "${files[@]}"
+
+      - name: Verify signature
+        shell: bash
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          set -euo pipefail
+          APKSIGNER="$(find "${ANDROID_HOME}/build-tools" -name apksigner -type f | sort -V | tail -1)"
+          "${APKSIGNER}" verify --print-certs \
+            "build/app/outputs/flutter-apk/conduit-${VERSION}-arm64-v8a.apk" | tee certs.txt
+          grep -q "CN=Z2549" certs.txt || echo "::warning::Certificate subject is not the expected CN=Z2549."
+
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.preflight.outputs.tag }}
+          FILES: ${{ steps.apks.outputs.files }}
+        run: |
+          set -euo pipefail
+          mapfile -t files <<< "${FILES}"
           if gh release view "${TAG}" >/dev/null 2>&1; then
-            gh release view "${TAG}" --json body -q .body > notes.md
-            cat desktop-notes.md >> notes.md
-            gh release edit "${TAG}" --notes-file notes.md
+            echo "Release ${TAG} exists; replacing assets."
           else
-            flags=()
-            [[ "${PRERELEASE}" == true ]] && flags+=(--prerelease)
-            gh release create "${TAG}" "${flags[@]}" --verify-tag \
-              --title "Conductore ${VERSION}" --notes-file desktop-notes.md
+            gh release create "${TAG}" \
+              --title "Conduit ${TAG}" \
+              --target "${GITHUB_SHA}" \
+              --generate-notes \
+              --latest
           fi
-          gh release upload "${TAG}" --clobber "${files[@]}" "dist/SHA256SUMS-desktop-v${VERSION}.txt"
+          gh release upload "${TAG}" "${files[@]}" --clobber

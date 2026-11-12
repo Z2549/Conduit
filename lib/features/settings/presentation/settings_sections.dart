@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/l10n.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
+import 'package:conduit/core/presentation/language_sheet.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/core/telemetry/telemetry.dart';
@@ -82,7 +84,7 @@ class SettingsSectionBody extends StatelessWidget {
   List<Widget> _children(BuildContext context) {
     final theme = services.theme;
     return switch (section) {
-      SettingsSection.appearance => _appearance(theme),
+      SettingsSection.appearance => _appearance(context, theme),
       SettingsSection.terminal => _terminal(theme),
       SettingsSection.input => _input(context, theme),
       SettingsSection.chatVoice => _chatVoice(context, theme),
@@ -108,7 +110,27 @@ class SettingsSectionBody extends StatelessWidget {
     ],
   ];
 
-  List<Widget> _appearance(ThemeController theme) => [
+  List<Widget> _appearance(BuildContext context, ThemeController theme) => [
+    if (services.locale case final locale?) ...[
+      SettingsHeading(context.l10n.languageTitle),
+      SettingsCard(
+        child: ListTile(
+          key: const ValueKey('settings-language'),
+          leading: const Icon(Icons.translate_rounded),
+          title: Text(context.l10n.languageTitle),
+          subtitle: Text(
+            switch (locale.locale?.languageCode) {
+              null => context.l10n.languageSystem,
+              'zh' => '简体中文',
+              _ => 'English',
+            },
+          ),
+          trailing: const Icon(Icons.chevron_right_rounded),
+          onTap: () => showLanguageSheet(context: context, controller: locale),
+        ),
+      ),
+      _gap,
+    ],
     if (theme.omarchySync case final sync?) ...[
       SettingsCard(
         child: Padding(

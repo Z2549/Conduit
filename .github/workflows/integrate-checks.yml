@@ -1,0 +1,43 @@
+name: Integrate checks
+
+# Fast feedback while the fork merges the two upstream lines: analyze first,
+# then the test suite. The release workflow repeats both before it builds.
+
+on:
+  push:
+    branches: ['integrate/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrate-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.1'
+          channel: stable
+          cache: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test --concurrency=2

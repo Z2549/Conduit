@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/locale_controller.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
 import 'package:conduit/features/agents_digest/presentation/digest_controller.dart';
@@ -26,6 +27,7 @@ class SettingsServices {
     this.hasSync = false,
     this.hasSessionViews = false,
     this.talkbawt,
+    this.locale,
   });
 
   final ThemeController theme;
@@ -58,6 +60,9 @@ class SettingsServices {
   /// Talkbawt handoffs (Agents › Talkbawt).
   final TalkbawtController? talkbawt;
 
+  /// The app language; null hides the Language row (tests, embedded pages).
+  final LocaleController? locale;
+
   SettingsServices copyWith({
     bool? hasSync,
     bool? hasSessionViews,
@@ -74,6 +79,7 @@ class SettingsServices {
     hasSync: hasSync ?? this.hasSync,
     hasSessionViews: hasSessionViews ?? this.hasSessionViews,
     talkbawt: talkbawt,
+    locale: locale,
   );
 }
 
