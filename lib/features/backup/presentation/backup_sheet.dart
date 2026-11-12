@@ -55,7 +55,7 @@ class _BackupSheet extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              backupCoverage,
+              tr(backupCoverage),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -94,8 +94,8 @@ class _BackupActionsState extends State<BackupActions> {
           icon: Icons.ios_share_rounded,
           title: tr('Export backup'),
           subtitle:
-              'Machines, snippets and all settings. Passwords and private '
-              'keys are left out.',
+              tr('Machines, snippets and all settings. Passwords and private '
+              'keys are left out.'),
           onTap: _busy ? null : () => _export(includeSecrets: false),
         ),
         const SizedBox(height: 10),
@@ -104,8 +104,8 @@ class _BackupActionsState extends State<BackupActions> {
           icon: Icons.enhanced_encryption_rounded,
           title: tr('Export backup with credentials'),
           subtitle:
-              'Also passwords, private keys and hardware-key stubs. Keep '
-              'this file safe.',
+              tr('Also passwords, private keys and hardware-key stubs. Keep '
+              'this file safe.'),
           onTap: _busy ? null : () => _export(includeSecrets: true),
         ),
         const SizedBox(height: 10),
@@ -114,8 +114,8 @@ class _BackupActionsState extends State<BackupActions> {
           icon: Icons.restore_rounded,
           title: tr('Import backup'),
           subtitle:
-              'Merges machines, keys, snippets and settings from a backup '
-              'file or sync bundle into this device. Nothing else is removed.',
+              tr('Merges machines, keys, snippets and settings from a backup '
+              'file or sync bundle into this device. Nothing else is removed.'),
           onTap: _busy ? null : _import,
         ),
         if (_busy) ...[
@@ -141,7 +141,7 @@ class _BackupActionsState extends State<BackupActions> {
         bytes: bytes,
       );
       if (!mounted) return;
-      _showMessage(path == null ? 'Export cancelled.' : 'Backup exported.');
+      _showMessage(path == null ? tr('Export cancelled.') : tr('Backup exported.'));
     });
   }
 
@@ -173,7 +173,7 @@ class _BackupActionsState extends State<BackupActions> {
           if (!mounted) return;
           final nextPassword = await _requestExistingPassword(error.message);
           if (nextPassword == null) {
-            _showMessage('Import cancelled.');
+            _showMessage(tr('Import cancelled.'));
             return;
           }
           password = nextPassword;
@@ -297,7 +297,7 @@ class _BackupPasswordDialogState extends State<_BackupPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.confirm ? 'Backup password' : 'Enter password'),
+      title: Text(widget.confirm ? tr('Backup password') : tr('Enter password')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -313,7 +313,7 @@ class _BackupPasswordDialogState extends State<_BackupPasswordDialog> {
               labelText: tr('Password'),
               errorText: _error,
               suffixIcon: IconButton(
-                tooltip: _obscure ? 'Show password' : 'Hide password',
+                tooltip: _obscure ? tr('Show password') : tr('Hide password'),
                 onPressed: () => setState(() => _obscure = !_obscure),
                 icon: Icon(
                   _obscure

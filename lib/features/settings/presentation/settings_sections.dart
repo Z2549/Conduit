@@ -784,7 +784,7 @@ class SettingsSectionBody extends StatelessWidget {
       if (backup != null) ...[
         _gap,
         SettingsHeading(context.l10n.settingsBackupFile),
-        const SettingsNote(backupCoverage),
+        SettingsNote(tr(backupCoverage)),
         const SizedBox(height: 10),
         BackupActions(backupService: backup),
       ],

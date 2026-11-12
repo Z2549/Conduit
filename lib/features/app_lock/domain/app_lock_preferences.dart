@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// How long the app may stay in the background before it locks again.
 ///
 /// The ones above 15 minutes ([lastsAcrossRestarts]) count from the last
@@ -13,15 +15,19 @@ enum RelockDelay {
   oneDay(Duration(days: 1), '1 day'),
   never(null, 'a restart');
 
-  const RelockDelay(this.duration, this.label);
+  const RelockDelay(this.duration, this._label);
 
   static const standard = RelockDelay.oneMinute;
 
   /// Null: the lock only comes back on the next start (or "Lock now").
   final Duration? duration;
 
-  /// What follows "Ask again after" in Settings.
-  final String label;
+  final String _label;
+
+  /// What follows "Ask again after" in Settings. The English stored in the
+  /// enum is the lookup key: an enum value is a compile-time constant, so
+  /// the translation happens when it is read.
+  String get label => tr(_label);
 
   /// Longer than 15 minutes: the unlock holds for [duration] from the last
   /// unlock, across app restarts, and choosing it asks first.
