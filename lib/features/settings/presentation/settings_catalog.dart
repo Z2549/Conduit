@@ -182,99 +182,99 @@ bool _windowsShell(SettingsServices s) =>
 /// where it says, so nothing gets lost.
 final List<SettingsEntry> settingsCatalog = [
   // Appearance
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.appearance,
     'Follow Omarchy theme from machine',
     keywords: ['omarchy', 'sync theme', 'machine theme'],
     availableWhen: _omarchy,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.appearance,
     'Themes',
     keywords: ['theme', 'palette', 'colours', 'colors', 'dark', 'light'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.appearance,
     'Terminal font',
     keywords: ['font', 'typeface', 'nerd'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.appearance,
     'Font size',
     keywords: ['text size', 'zoom', 'bigger', 'smaller'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.appearance,
     'Show local shell',
     keywords: ['home', 'local terminal'],
     under: settingsAdvanced,
   ),
   // Terminal
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'This computer: shell',
     keywords: ['windows', 'powershell', 'cmd', 'command prompt', 'wsl'],
     availableWhen: _windowsShell,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Phone may move Herdr focus',
     keywords: _herdrFocusKeywords,
     availableWhen: _notDesktop,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'This device may move Herdr focus',
     keywords: _herdrFocusKeywords,
     availableWhen: _desktop,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Open agent sessions in',
     keywords: ['default view', 'chat view', 'claude'],
     availableWhen: _sessionViews,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Global snippets',
     keywords: ['snippet', 'snip', 'macro', 'command'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Quick actions',
     keywords: ['commands', 'buttons', 'project', 'code-workspace', 'run'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Enter sends',
     keywords: ['enter', 'return', 'crlf', 'newline', 'sequence'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Send mouse taps',
     keywords: ['mouse', 'click', 'tap'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Remote clipboard',
     keywords: ['osc 52', 'copy', 'clipboard'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Menu buttons',
     keywords: ['prompts', 'y/n', 'numbered menus'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Paste images as uploaded files',
     keywords: ['image', 'paste', 'screenshot'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Restore sessions on launch',
     keywords: ['restore', 'reopen', 'startup'],
@@ -292,7 +292,7 @@ final List<SettingsEntry> settingsCatalog = [
     keywords: ['keepalive', 'keep-alive', 'battery', 'data', 'disconnect'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.terminal,
     'Multiplexer tabs on phone',
     keywords: ['herdr tabs', 'tmux windows', 'strip', 'compact', 'tablet'],
@@ -312,50 +312,50 @@ final List<SettingsEntry> settingsCatalog = [
       'buttons',
     ],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Keyboard shortcuts',
     keywords: ['hotkeys', 'desktop', 'keys', 'ctrl'],
     availableWhen: _desktop,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Toolbar style',
     keywords: ['pill', 'keyboard bar', 'toolbar'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Key rows',
     keywords: ['keys', 'shortcuts', 'ctrl', 'esc', 'tab', 'keyboard'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Swipe switches window',
     keywords: ['gesture', 'swipe'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Pinch to zoom',
     keywords: ['gesture', 'zoom'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.input,
     'Drag scrolls the remote app (mouse wheel)',
     keywords: ['gesture', 'scroll', 'drag', 'terminal'],
     under: settingsAdvanced,
   ),
   // Chat & Voice
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Language',
     keywords: ['dictation', 'speech', 'microphone'],
     availableWhen: _speech,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Keep listening until I tap stop',
     keywords: ['continuous dictation', 'dictation'],
@@ -423,33 +423,33 @@ final List<SettingsEntry> settingsCatalog = [
     availableWhen: _guide,
     under: voiceGuideTitle,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Press Enter after inserting',
     keywords: ['composer', 'prompt', 'chat mode', 'enter', 'submit', 'send'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Review changes',
     keywords: ['review', 'diff', 'after each turn', 'accept', 'reject'],
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Silence beeps between phrases',
     keywords: ['beep', 'mute', 'experimental'],
     availableWhen: _beeps,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Read replies aloud by default',
     keywords: ['tts', 'text to speech', 'speak', 'read aloud'],
     availableWhen: _tts,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Reading language',
     keywords: [
@@ -463,7 +463,7 @@ final List<SettingsEntry> settingsCatalog = [
     availableWhen: _tts,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.chatVoice,
     'Talk: send after a pause of',
     keywords: ['talk', 'voice mode', 'hands-free'],
@@ -471,19 +471,19 @@ final List<SettingsEntry> settingsCatalog = [
     under: settingsAdvanced,
   ),
   // Agents
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Agent hooks',
     keywords: ['companion', 'hooks', 'hostd', 'install'],
     availableWhen: _machines,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Approval rules',
     keywords: ['trust', 'always', 'auto-approve', 'permissions', 'risk'],
     availableWhen: _machines,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Notifications',
     keywords: [
@@ -497,13 +497,13 @@ final List<SettingsEntry> settingsCatalog = [
     ],
     availableWhen: _machines,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Talkbawt',
     keywords: ['handoff', 'hand off', 'link', 'share', 'thread', 'paired'],
     availableWhen: _talkbawt,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Dashboard',
     keywords: ['digest', 'summaries', 'stuck', 'catch up', 'while away'],
@@ -524,19 +524,19 @@ final List<SettingsEntry> settingsCatalog = [
     ],
     availableWhen: _projects,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Usage',
     keywords: ['context', 'rate limit', 'tokens'],
     availableWhen: _usage,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Add quick-settings tile',
     keywords: ['tile', 'widget', 'quick settings'],
     availableWhen: _homeWidget,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Ongoing notification',
     keywords: [
@@ -554,28 +554,28 @@ final List<SettingsEntry> settingsCatalog = [
     availableWhen: _agentNotifications,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Also alert when an agent finishes',
     keywords: ['notify', 'finished', 'done', 'turn ended', 'idle'],
     availableWhen: _agentNotifications,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Stuck or looping',
     keywords: ['notify', 'stuck', 'loop', 'repeating', 'no progress'],
     availableWhen: _agentNotifications,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Summary only',
     keywords: ['notify', 'buttons', 'allow', 'deny', 'actions'],
     availableWhen: _agentNotifications,
     under: settingsAdvanced,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.agents,
     'Quiet updates',
     keywords: ['notify', 'silent', 'sound', 'vibrate', 'verbose'],
@@ -583,43 +583,43 @@ final List<SettingsEntry> settingsCatalog = [
     under: settingsAdvanced,
   ),
   // Sync & Backup
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     SelfMachineCard.title,
     keywords: ['this computer', 'ssh to itself', 'duplicate', 'same machine'],
     availableWhen: _selfMachine,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     'Device sync',
     keywords: ['sync', 'hub', 'devices', 'other phone'],
     availableWhen: _sync,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     'What syncs',
     keywords: ['categories', 'sync'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     'Continue where you left off',
     keywords: ['continuity', 'handoff', 'drafts', 'other device', 'resume'],
     availableWhen: _sync,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     'Export backup',
     keywords: ['backup', 'export', 'save', 'file'],
     availableWhen: _backup,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.syncBackup,
     'Import backup',
     keywords: ['restore', 'import', 'backup', 'file'],
     availableWhen: _backup,
   ),
   // Security
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.security,
     'App lock',
     keywords: ['biometric', 'fingerprint', 'face', 'pin', 'lock'],
@@ -640,46 +640,46 @@ final List<SettingsEntry> settingsCatalog = [
     ],
     availableWhen: _relock,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.security,
     'Lock now',
     keywords: ['lock'],
     availableWhen: _lock,
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.security,
     'Trusted host keys',
     keywords: ['known hosts', 'fingerprint', 'ssh keys'],
     availableWhen: _trustedKeys,
   ),
   // Privacy
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.privacy,
     'Send crash reports',
     keywords: ['crash', 'errors', 'glitchtip', 'sentry', 'telemetry'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.privacy,
     'Send anonymous usage stats',
     keywords: ['analytics', 'plausible', 'statistics', 'telemetry'],
   ),
   // About
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.about,
     'Based on Conduit by gwitko (Apache-2.0)',
     keywords: ['credits', 'upstream', 'conduit'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.about,
     'Open-source licenses',
     keywords: ['licences', 'licenses', 'legal'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.about,
     'Conductore on GitHub',
     keywords: ['source', 'code', 'repository', 'links', 'version'],
   ),
-  SettingsEntry(
+  const SettingsEntry(
     SettingsSection.about,
     'Recent errors',
     keywords: ['bug', 'log', 'crash', 'report'],
