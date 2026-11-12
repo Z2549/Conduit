@@ -410,7 +410,7 @@ void main() {
     AppErrorLog.instance.clear();
     await openSection(tester, SettingsSection.about);
 
-    expect(find.text('Conductore'), findsOneWidget);
+    expect(find.text('Conduit'), findsOneWidget);
     expect(find.byKey(const ValueKey('about-upstream-credit')), findsOneWidget);
     expect(
       find.text('Based on Conduit by gwitko (Apache-2.0)'),
