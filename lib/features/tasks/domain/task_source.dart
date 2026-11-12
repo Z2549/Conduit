@@ -492,11 +492,10 @@ enum TaskSourceKind {
     String label,
     String description,
     this.capabilities,
-    String? tokenLabel,
+    this.tokenLabel,
     this.fields,
   )  : _label = label,
-        _description = description,
-        tokenLabel = tokenLabel;
+        _description = description;
 
   /// As stored.
   final String wire;
