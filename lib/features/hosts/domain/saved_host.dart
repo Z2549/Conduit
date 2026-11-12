@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 import 'package:conduit/features/hosts/domain/multiplexer_prefix_key.dart';
 import 'package:conduit/features/snippets/domain/terminal_snippet.dart';
 

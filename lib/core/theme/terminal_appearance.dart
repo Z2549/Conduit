@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// Bundled terminal fonts. JetBrains Mono Nerd Font is Omarchy's default
 /// monospace font and the app default.
 enum TerminalFontOption {

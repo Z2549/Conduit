@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// What sync carries, as the switches of Settings › Sync.
 ///
 /// Every record key starts with a prefix that names its category (see
