@@ -19,6 +19,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TABLE = os.path.join(ROOT, "tools", "i18n_zh.json")
+NOWRAP = os.path.join(ROOT, "tools", "i18n_nowrap.json")
 GENERATED = os.path.join(ROOT, "lib", "core", "l10n", "legacy_zh.dart")
 IMPORT = "import 'package:conduit/core/l10n/legacy_tr.dart';"
 
@@ -50,7 +51,16 @@ def eligible(body: str, table: dict[str, str]) -> bool:
     return True
 
 
-def wrap_file(path: str, table: dict[str, str]) -> tuple[str, int]:
+def load_nowrap() -> dict[str, set[str]]:
+    if not os.path.exists(NOWRAP):
+        return {}
+    with open(NOWRAP, encoding="utf-8") as fh:
+        return {k: set(v) for k, v in json.load(fh).items()}
+
+
+def wrap_file(
+    path: str, table: dict[str, str], nowrap: dict[str, set[str]], rel: str
+) -> tuple[str, int]:
     src = open(path, encoding="utf-8").read()
     # A `part of` file cannot carry its own imports; it inherits the owner's.
     if re.search(r"^\s*part of\b", src, re.M):
@@ -59,14 +69,16 @@ def wrap_file(path: str, table: dict[str, str]) -> tuple[str, int]:
 
     def repl_text(m: re.Match[str]) -> str:
         nonlocal count
-        if not eligible(m.group("body"), table):
+        text = unescape(m.group("body"))
+        if not eligible(m.group("body"), table) or text in nowrap.get(rel, ()):
             return m.group(0)
         count += 1
         return "Text(tr('%s')" % m.group("body")
 
     def repl_named(m: re.Match[str]) -> str:
         nonlocal count
-        if not eligible(m.group("body"), table):
+        text = unescape(m.group("body"))
+        if not eligible(m.group("body"), table) or text in nowrap.get(rel, ()):
             return m.group(0)
         count += 1
         return "%s: tr('%s')" % (m.group("name"), m.group("body"))
@@ -170,9 +182,13 @@ def ensure_import(src: str) -> str:
     return "\n".join(lines)
 
 
+def dart_string(value: str) -> str:
+    return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
 def write_table(table: dict[str, str]) -> None:
     entries = ",\n".join(
-        "  %s: %s" % (json.dumps(k, ensure_ascii=False), json.dumps(v, ensure_ascii=False))
+        "  %s: %s" % (dart_string(k), dart_string(v))
         for k, v in sorted(table.items(), key=lambda kv: kv[0].lower())
     )
     body = (
@@ -195,6 +211,7 @@ def main() -> None:
         if arg.startswith("--only="):
             only = arg.split("=", 1)[1]
     table = load_table()
+    nowrap = load_nowrap()
     total = 0
     touched = 0
     for base, _, names in os.walk(os.path.join(ROOT, "lib")):
@@ -205,7 +222,7 @@ def main() -> None:
             rel = os.path.relpath(path, ROOT).replace("\\", "/")
             if only and not rel.startswith(only):
                 continue
-            new, count = wrap_file(path, table)
+            new, count = wrap_file(path, table, nowrap, rel)
             if not count:
                 continue
             touched += 1

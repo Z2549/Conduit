@@ -160,7 +160,7 @@ class _EntryActionsButton extends StatelessWidget {
             PopupMenuItem(
               value: EntryAction.open,
               child: ListTile(
-                leading: Icon(Icons.open_in_new_rounded),
+                leading: const Icon(Icons.open_in_new_rounded),
                 title: Text(tr('Open')),
                 contentPadding: EdgeInsets.zero,
                 minLeadingWidth: 24,
@@ -178,7 +178,7 @@ class _EntryActionsButton extends StatelessWidget {
           PopupMenuItem(
             value: EntryAction.copyPath,
             child: ListTile(
-              leading: Icon(Icons.copy_rounded),
+              leading: const Icon(Icons.copy_rounded),
               title: Text(tr('Copy path')),
               contentPadding: EdgeInsets.zero,
               minLeadingWidth: 24,
@@ -187,7 +187,7 @@ class _EntryActionsButton extends StatelessWidget {
           PopupMenuItem(
             value: EntryAction.rename,
             child: ListTile(
-              leading: Icon(Icons.drive_file_rename_outline_rounded),
+              leading: const Icon(Icons.drive_file_rename_outline_rounded),
               title: Text(tr('Rename')),
               contentPadding: EdgeInsets.zero,
               minLeadingWidth: 24,

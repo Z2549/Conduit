@@ -277,7 +277,7 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
             decoration: InputDecoration(
               labelText: tr('Name'),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             textInputAction: TextInputAction.next,
             onSubmitted: desktop ? _onNameSubmitted : null,
@@ -291,7 +291,7 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
             decoration: InputDecoration(
               labelText: tr('Command or text'),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
             obscureText: _hidden,
             minLines: _hidden ? 1 : 3,

@@ -465,7 +465,7 @@ class _LivePreviewViewState extends State<LivePreviewView> {
                       child: ListTile(
                         dense: true,
                         contentPadding: EdgeInsets.zero,
-                        leading: Icon(Icons.open_in_browser_rounded),
+                        leading: const Icon(Icons.open_in_browser_rounded),
                         title: Text(tr('Open in browser')),
                       ),
                     ),

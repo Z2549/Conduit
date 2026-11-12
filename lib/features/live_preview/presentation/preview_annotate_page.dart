@@ -146,12 +146,12 @@ class _PreviewAnnotatePageState extends State<PreviewAnnotatePage> {
             segments: [
               ButtonSegment(
                 value: PreviewAnnotationKind.rectangle,
-                icon: Icon(Icons.crop_square_rounded, size: 18),
+                icon: const Icon(Icons.crop_square_rounded, size: 18),
                 tooltip: tr('Rectangle'),
               ),
               ButtonSegment(
                 value: PreviewAnnotationKind.arrow,
-                icon: Icon(Icons.north_east_rounded, size: 18),
+                icon: const Icon(Icons.north_east_rounded, size: 18),
                 tooltip: tr('Arrow'),
               ),
             ],
@@ -236,7 +236,7 @@ class _PreviewAnnotatePageState extends State<PreviewAnnotatePage> {
                       decoration: InputDecoration(
                         isDense: true,
                         hintText: tr('Note for the agent (optional)'),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),

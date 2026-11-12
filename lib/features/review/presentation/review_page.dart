@@ -348,7 +348,7 @@ class _ReviewPageState extends State<ReviewPage> {
         return _Centered(
           icon: null,
           title: tr('Loading the turn…'),
-          child: CircularProgressIndicator(),
+          child: const CircularProgressIndicator(),
         );
       case ReviewPhase.failed || ReviewPhase.empty:
         return _Centered(

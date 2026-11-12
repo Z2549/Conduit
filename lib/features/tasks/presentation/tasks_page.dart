@@ -319,7 +319,7 @@ class _TasksPageState extends State<TasksPage> {
             key: const ValueKey('tasks-search'),
             controller: _search,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               hintText: tr('Search title or key'),
               isDense: true,
             ),

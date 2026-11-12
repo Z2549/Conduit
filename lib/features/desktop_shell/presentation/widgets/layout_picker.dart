@@ -81,7 +81,7 @@ class LayoutPickerButton extends StatelessWidget {
             ),
           ),
         const PopupMenuDivider(),
-        const PopupMenuItem<LayoutPick>(
+        PopupMenuItem<LayoutPick>(
           key: ValueKey('layout-save'),
           value: LayoutPickSave(),
           height: 36,
@@ -90,7 +90,7 @@ class LayoutPickerButton extends StatelessWidget {
               Icon(Icons.bookmark_add_outlined, size: 18),
               SizedBox(width: 10),
               Flexible(
-                child: Text(tr('Save this layout…'),
+                child: Text('Save this layout…',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

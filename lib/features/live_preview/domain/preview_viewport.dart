@@ -8,16 +8,16 @@ import 'package:conduit/core/l10n/legacy_tr.dart';
 /// a layout from it. [phone] is the WebView as it is: the phone's own width
 /// and user agent.
 enum PreviewViewport {
-  phone(label: tr('Phone'), cssWidth: null, userAgent: null),
+  phone(label: 'Phone', cssWidth: null, userAgent: null),
   tablet(
-    label: tr('Tablet'),
+    label: 'Tablet',
     cssWidth: 820,
     userAgent:
         'Mozilla/5.0 (Linux; Android 14; SM-X710) AppleWebKit/537.36 '
         '(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
   ),
   desktop(
-    label: tr('Desktop'),
+    label: 'Desktop',
     cssWidth: 1280,
     userAgent:
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '

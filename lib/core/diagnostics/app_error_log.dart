@@ -205,7 +205,7 @@ class AppErrorCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               Text(tr('Something went wrong here'),
-                style: TextStyle(
+                style: const TextStyle(
                   color: _accent,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -272,7 +272,7 @@ class AppErrorCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(tr('Copy error'),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: _background,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

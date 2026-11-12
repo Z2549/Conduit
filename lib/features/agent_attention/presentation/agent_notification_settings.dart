@@ -46,10 +46,10 @@ class AgentNotifyChoiceCard extends StatelessWidget {
               ),
               if (choice == null)
                 ListTile(
-                  key: ValueKey('agent-notify-choice-custom'),
-                  leading: Icon(Icons.tune_rounded),
+                  key: const ValueKey('agent-notify-choice-custom'),
+                  leading: const Icon(Icons.tune_rounded),
                   title: Text(tr('Custom')),
-                  subtitle: Text(
+                  subtitle: const Text(
                     'Your own mix, kept under Advanced › Notification '
                     'details. Pick one above to replace it.',
                   ),

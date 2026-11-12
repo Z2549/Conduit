@@ -153,7 +153,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.connectTo,
                           child: ListTile(
-                            leading: Icon(Icons.login_rounded),
+                            leading: const Icon(Icons.login_rounded),
                             title: Text(tr('Connect to…')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
@@ -162,7 +162,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.files,
                           child: ListTile(
-                            leading: Icon(Icons.folder_open_outlined),
+                            leading: const Icon(Icons.folder_open_outlined),
                             title: Text(tr('Files')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
@@ -171,7 +171,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.edit,
                           child: ListTile(
-                            leading: Icon(Icons.edit_outlined),
+                            leading: const Icon(Icons.edit_outlined),
                             title: Text(tr('Edit')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
@@ -180,7 +180,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.duplicate,
                           child: ListTile(
-                            leading: Icon(Icons.copy_rounded),
+                            leading: const Icon(Icons.copy_rounded),
                             title: Text(tr('Duplicate')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
@@ -189,7 +189,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.copyAddress,
                           child: ListTile(
-                            leading: Icon(Icons.content_copy_rounded),
+                            leading: const Icon(Icons.content_copy_rounded),
                             title: Text(tr('Copy address')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
@@ -198,7 +198,7 @@ class HostCard extends StatelessWidget {
                         PopupMenuItem(
                           value: HostAction.delete,
                           child: ListTile(
-                            leading: Icon(Icons.delete_outline_rounded),
+                            leading: const Icon(Icons.delete_outline_rounded),
                             title: Text(tr('Delete')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,

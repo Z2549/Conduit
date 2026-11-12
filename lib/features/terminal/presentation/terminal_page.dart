@@ -2183,7 +2183,7 @@ class _TerminalPageState extends State<TerminalPage>
       ..showSnackBar(
         SnackBar(
           content: Text(tr('Uploading screenshot…')),
-          duration: Duration(minutes: 1),
+          duration: const Duration(minutes: 1),
         ),
       );
     final String draft;
@@ -3340,8 +3340,8 @@ class _ComposeInputBarState extends State<_ComposeInputBar> {
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: tr('Chat: type a line, Enter to send …'),
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 8,
                   ),

@@ -60,7 +60,7 @@ Future<ChatForwardTarget?> pickChatForwardTarget(
       shrinkWrap: true,
       children: [
         ListTile(
-          key: ValueKey('chat-forward-title'),
+          key: const ValueKey('chat-forward-title'),
           title: Text(tr('Send to another agent')),
           subtitle: Text(tr('It arrives as a prompt, quoted, with where it is from.'),
           ),

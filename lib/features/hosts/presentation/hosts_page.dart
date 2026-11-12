@@ -1226,7 +1226,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                       height: height,
                       child: Center(
                         child: Text(tr('Projects'),
-                          key: ValueKey('home-mode-projects'),
+                          key: const ValueKey('home-mode-projects'),
                         ),
                       ),
                     ),
@@ -1237,7 +1237,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                     label: SizedBox(
                       height: height,
                       child: Center(
-                        child: Text(tr('Open'), key: ValueKey('home-mode-open')),
+                        child: Text(tr('Open'), key: const ValueKey('home-mode-open')),
                       ),
                     ),
                   ),
@@ -2140,7 +2140,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
             children: [
               ListTile(
                 title: Text(tr('New session on'),
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
               for (final host in candidates)

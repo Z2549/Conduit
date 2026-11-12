@@ -1,0 +1,41 @@
+{
+  "lib/features/agents_digest/presentation/agents_dashboard.dart": [
+    "Mark all seen"
+  ],
+  "lib/features/chat_view/presentation/chat_view_page.dart": [
+    "Find in conversation",
+    "Hand off…",
+    "Read aloud",
+    "Tool activity"
+  ],
+  "lib/features/desktop_shell/presentation/widgets/layout_picker.dart": [
+    "Save this layout…"
+  ],
+  "lib/features/live_preview/domain/preview_viewport.dart": [
+    "Desktop",
+    "Phone",
+    "Tablet"
+  ],
+  "lib/features/quick_actions/presentation/quick_action_form.dart": [
+    "My actions"
+  ],
+  "lib/features/tasks/data/asana_task_source.dart": [
+    "Completed"
+  ],
+  "lib/features/tasks/data/github_task_source.dart": [
+    "Closed",
+    "Open"
+  ],
+  "lib/features/tasks/data/gitlab_task_source.dart": [
+    "Closed",
+    "Open"
+  ],
+  "lib/features/voice/presentation/speech_settings_controls.dart": [
+    "Automatic",
+    "Other"
+  ],
+  "lib/features/voice_guide/presentation/guide_settings.dart": [
+    "Automatic",
+    "Same as dictation"
+  ]
+}

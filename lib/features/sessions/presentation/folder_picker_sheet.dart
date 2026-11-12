@@ -170,7 +170,7 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                 enableSuggestions: false,
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                   hintText: tr('Search, or type a path'),
                 ),
               ),
@@ -225,9 +225,9 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                     ),
                   if (!loading && rows.isEmpty && typed.isEmpty)
                     Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Text(tr('No folders found.'),
-                        key: ValueKey('folder-picker-empty'),
+                        key: const ValueKey('folder-picker-empty'),
                       ),
                     ),
                 ],

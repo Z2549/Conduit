@@ -387,7 +387,7 @@ class _HandoffPageState extends State<HandoffPage> {
         decoration: InputDecoration(
           labelText: tr('Handoff'),
           helperText: tr('Say where secrets live, never what they are.'),
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
       const SizedBox(height: 8),

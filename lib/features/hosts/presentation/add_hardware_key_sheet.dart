@@ -267,9 +267,9 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
               helperText: tr('Import or paste the id_ed25519_sk or id_ecdsa_sk file.'),
               helperMaxLines: 2,
               alignLabelWithHint: true,
-              prefixIcon: Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Icon(Icons.vpn_key_outlined),
+              prefixIcon: const Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: const Icon(Icons.vpn_key_outlined),
               ),
             ),
             minLines: 5,
@@ -321,7 +321,7 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
                     'Shown when Conductore asks for this key, e.g. "5C work" '
                     'or "NFC backup".',
                 helperMaxLines: 2,
-                prefixIcon: Icon(Icons.label_outline_rounded),
+                prefixIcon: const Icon(Icons.label_outline_rounded),
               ),
               textInputAction: TextInputAction.done,
             ),

@@ -433,7 +433,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                                 PopupMenuItem(
                                   value: PromptImageOrigin.camera,
                                   child: ListTile(
-                                    leading: Icon(Icons.photo_camera_outlined),
+                                    leading: const Icon(Icons.photo_camera_outlined),
                                     title: Text(tr('Camera')),
                                   ),
                                 ),
@@ -441,7 +441,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                                 PopupMenuItem(
                                   value: PromptImageOrigin.clipboard,
                                   child: ListTile(
-                                    leading: Icon(
+                                    leading: const Icon(
                                       Icons.content_paste_go_rounded,
                                     ),
                                     title: Text(tr('Paste image')),
@@ -499,7 +499,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                   textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     hintText: tr('Type, dictate, or paste a prompt…'),
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),

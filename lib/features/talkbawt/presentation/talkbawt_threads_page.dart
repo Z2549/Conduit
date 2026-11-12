@@ -89,7 +89,7 @@ class TalkbawtHubPage extends StatelessWidget {
               Text(tr('Your links'), style: Theme.of(context).textTheme.titleSmall),
               if (threads.isEmpty)
                 Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(tr('None yet.')),
                 ),
               for (final t in threads)

@@ -20,12 +20,12 @@ class GitLabTaskSource implements TaskSource {
 
   static const open = TaskStatusOption(
     id: 'opened',
-    label: tr('Open'),
+    label: 'Open',
     category: TaskStatusCategory.todo,
   );
   static const closed = TaskStatusOption(
     id: 'closed',
-    label: tr('Closed'),
+    label: 'Closed',
     category: TaskStatusCategory.done,
   );
 

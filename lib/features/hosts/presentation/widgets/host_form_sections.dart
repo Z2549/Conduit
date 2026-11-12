@@ -44,7 +44,7 @@ class HostConnectionSection extends StatelessWidget {
           decoration: InputDecoration(
             labelText: tr('Display name'),
             hintText: 'production-edge-01',
-            prefixIcon: Icon(Icons.label_important_outline_rounded),
+            prefixIcon: const Icon(Icons.label_important_outline_rounded),
           ),
           textInputAction: TextInputAction.next,
           validator: requiredValidator,
@@ -60,7 +60,7 @@ class HostConnectionSection extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: tr('Host or IP'),
                   hintText: 'edge.example.com',
-                  prefixIcon: Icon(Icons.public_rounded),
+                  prefixIcon: const Icon(Icons.public_rounded),
                 ),
                 keyboardType: TextInputType.url,
                 textInputAction: TextInputAction.next,
@@ -85,7 +85,7 @@ class HostConnectionSection extends StatelessWidget {
           controller: usernameController,
           decoration: InputDecoration(
             labelText: tr('Username'),
-            prefixIcon: Icon(Icons.person_outline_rounded),
+            prefixIcon: const Icon(Icons.person_outline_rounded),
           ),
           textInputAction: TextInputAction.next,
         ),
@@ -232,9 +232,9 @@ class HostAuthenticationSection extends StatelessWidget {
               helperText: tr('Import, paste, or generate a key.'),
               helperMaxLines: 2,
               alignLabelWithHint: true,
-              prefixIcon: Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Icon(Icons.vpn_key_outlined),
+              prefixIcon: const Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: const Icon(Icons.vpn_key_outlined),
               ),
             ),
             minLines: 5,
@@ -395,7 +395,7 @@ class HostAdvancedSection extends StatelessWidget {
           decoration: InputDecoration(
             labelText: tr('Connection timeout'),
             suffixText: 'sec',
-            prefixIcon: Icon(Icons.timer_outlined),
+            prefixIcon: const Icon(Icons.timer_outlined),
           ),
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -423,7 +423,7 @@ class HostAdvancedSection extends StatelessWidget {
               labelText: tr('Mosh locale'),
               helperText: tr('Must be a UTF-8 locale installed on the host.'),
               helperMaxLines: 2,
-              prefixIcon: Icon(Icons.language_outlined),
+              prefixIcon: const Icon(Icons.language_outlined),
             ),
             autocorrect: false,
             enableSuggestions: false,
@@ -437,7 +437,7 @@ class HostAdvancedSection extends StatelessWidget {
               helperText: tr('Port or range like 60000:61000. Empty uses 60001:60999.'),
               helperMaxLines: 2,
               errorMaxLines: 2,
-              prefixIcon: Icon(Icons.settings_ethernet_rounded),
+              prefixIcon: const Icon(Icons.settings_ethernet_rounded),
             ),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
@@ -481,7 +481,7 @@ class HostAdvancedSection extends StatelessWidget {
               hintText: defaultTmuxSessionName,
               helperText: tr('Conductore attaches to this session, or creates it.'),
               helperMaxLines: 2,
-              prefixIcon: Icon(Icons.view_stream_outlined),
+              prefixIcon: const Icon(Icons.view_stream_outlined),
             ),
             autocorrect: false,
             enableSuggestions: false,
@@ -497,7 +497,7 @@ class HostAdvancedSection extends StatelessWidget {
                   'Used when a new tmux session is created. An existing tmux '
                   'session keeps its directory.',
               helperMaxLines: 2,
-              prefixIcon: Icon(Icons.folder_outlined),
+              prefixIcon: const Icon(Icons.folder_outlined),
             ),
             autocorrect: false,
             enableSuggestions: false,
@@ -592,7 +592,7 @@ class HostAdvancedSection extends StatelessWidget {
                   'is installed (permission prompts answerable from the '
                   'phone), otherwise Herdr.',
               helperMaxLines: 3,
-              prefixIcon: Icon(Icons.monitor_heart_outlined),
+              prefixIcon: const Icon(Icons.monitor_heart_outlined),
             ),
             items: [
               for (final kind in AgentMonitorKind.values)
@@ -619,7 +619,7 @@ class HostAdvancedSection extends StatelessWidget {
                 'Files shared to Conductore are uploaded here before their '
                 'paths go into Chat mode.',
             helperMaxLines: 2,
-            prefixIcon: Icon(Icons.move_to_inbox_outlined),
+            prefixIcon: const Icon(Icons.move_to_inbox_outlined),
           ),
           autocorrect: false,
           enableSuggestions: false,

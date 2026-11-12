@@ -376,7 +376,7 @@ class _HostChooserState extends State<HostChooser> {
                   key: const ValueKey('host-chooser-filter'),
                   decoration: InputDecoration(
                     isDense: true,
-                    prefixIcon: Icon(Icons.search_rounded, size: 18),
+                    prefixIcon: const Icon(Icons.search_rounded, size: 18),
                     hintText: tr('Filter machines'),
                   ),
                   textInputAction: TextInputAction.go,

@@ -1049,7 +1049,7 @@ class _ChatViewPageState extends State<ChatViewPage>
         onUploading: () => messenger?.showSnackBar(
           SnackBar(
             content: Text(tr('Uploading image…')),
-            duration: Duration(minutes: 1),
+            duration: const Duration(minutes: 1),
           ),
         ),
       );
@@ -1130,7 +1130,7 @@ class _ChatViewPageState extends State<ChatViewPage>
     messenger?.showSnackBar(
       SnackBar(
         content: Text(tr('Uploading image…')),
-        duration: Duration(minutes: 1),
+        duration: const Duration(minutes: 1),
       ),
     );
     try {
@@ -1879,31 +1879,31 @@ class _ChatMenu extends StatelessWidget {
         _ => null,
       },
       itemBuilder: (context) => [
-        const PopupMenuItem<Object>(
+        PopupMenuItem<Object>(
           key: ValueKey('chat-search'),
           value: 'search',
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             leading: Icon(Icons.search_rounded),
-            title: Text(tr('Find in conversation')),
+            title: Text('Find in conversation'),
           ),
         ),
         if (onHandOff != null)
-          const PopupMenuItem<Object>(
+          PopupMenuItem<Object>(
             key: ValueKey('chat-menu-handoff'),
             value: 'handoff',
             child: ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.outbox_outlined),
-              title: Text(tr('Hand off…')),
+              title: Text('Hand off…'),
             ),
           ),
         const PopupMenuDivider(),
         if (readAloud != null) ...[
-          const PopupMenuItem<Object>(
+          PopupMenuItem<Object>(
             enabled: false,
             height: 32,
-            child: Text(tr('Read aloud')),
+            child: Text('Read aloud'),
           ),
           CheckedPopupMenuItem<Object>(
             key: const ValueKey('chat-read-aloud'),
@@ -1925,10 +1925,10 @@ class _ChatMenu extends StatelessWidget {
               ),
           const PopupMenuDivider(),
         ],
-        const PopupMenuItem<Object>(
+        PopupMenuItem<Object>(
           enabled: false,
           height: 32,
-          child: Text(tr('Tool activity')),
+          child: Text('Tool activity'),
         ),
         for (final option in ToolActivity.values)
           CheckedPopupMenuItem<Object>(

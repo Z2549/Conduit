@@ -306,7 +306,7 @@ class TaskRunsPage extends StatelessWidget {
           children: [
             if (controller.batches.isEmpty)
               Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Center(child: Text(tr('No tasks started yet.'))),
               ),
             TaskBatchesPanel(

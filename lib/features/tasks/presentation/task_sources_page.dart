@@ -123,7 +123,7 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
             const SizedBox(height: 12),
             if (widget.controller.loaded && sources.isEmpty)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Center(child: Text(tr('No sources yet.'))),
               ),
             for (final s in sources)

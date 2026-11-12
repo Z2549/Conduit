@@ -406,7 +406,7 @@ class _DesktopSnippetPaletteState extends State<_DesktopSnippetPalette> {
               autofocus: true,
               decoration: InputDecoration(
                 isDense: true,
-                prefixIcon: Icon(Icons.search_rounded),
+                prefixIcon: const Icon(Icons.search_rounded),
                 hintText: tr('Filter prompts and snippets'),
               ),
               onChanged: (_) => setState(() => _highlighted = 0),

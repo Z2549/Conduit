@@ -236,7 +236,7 @@ class _ContinuityList extends StatelessWidget {
       children: [
         ListTile(
           title: Text(tr('Continue on…'),
-            style: TextStyle(fontWeight: FontWeight.w800),
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(tr('Where your other devices are and were lately')),
         ),

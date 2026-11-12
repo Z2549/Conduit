@@ -861,9 +861,9 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
                   value: TerminalKeyboardItemKind.customText,
                   label: Text(tr('Text')),
                 ),
-                ButtonSegment(
+                const ButtonSegment(
                   value: TerminalKeyboardItemKind.customControl,
-                  label: Text('Ctrl'),
+                  label: const Text('Ctrl'),
                 ),
               ],
               selected: {_kind},
@@ -876,7 +876,7 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
               controller: _labelController,
               decoration: InputDecoration(
                 labelText: tr('Label'),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.next,
               // Desktop: a Ctrl key needs nothing more, so Enter adds it.
@@ -890,7 +890,7 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
                 controller: _textController,
                 decoration: InputDecoration(
                   labelText: tr('Text'),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 minLines: 1,
                 maxLines: 3,
@@ -916,7 +916,7 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
                 initialValue: _controlKey,
                 decoration: InputDecoration(
                   labelText: tr('Control key'),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 items: [
                   for (final key in terminalKeyboardControlKeys)

@@ -97,11 +97,11 @@ class ChatFindBar extends StatelessWidget {
                               decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.search_rounded,
                                   size: 20,
                                 ),
-                                prefixIconConstraints: BoxConstraints(
+                                prefixIconConstraints: const BoxConstraints(
                                   minWidth: 32,
                                 ),
                                 hintText: tr('Find in conversation'),

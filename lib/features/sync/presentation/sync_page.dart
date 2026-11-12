@@ -211,7 +211,7 @@ class _SyncPageState extends State<SyncPage> {
       ),
       if (_sync.devices.isEmpty)
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(tr('Tap refresh to read the device list from the hub.')),
         ),
       for (final device in _sync.devices)
@@ -232,7 +232,7 @@ class _SyncPageState extends State<SyncPage> {
       const _SectionTitle('Sync activity'),
       if (_sync.activity.isEmpty)
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(tr('Nothing yet.')),
         ),
       for (final entry in _sync.activity)

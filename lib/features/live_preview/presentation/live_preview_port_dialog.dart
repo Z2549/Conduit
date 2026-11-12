@@ -90,7 +90,7 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
             onSubmitted: (_) => _submit(),
             decoration: InputDecoration(
               labelText: tr('Remote port'),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 12),

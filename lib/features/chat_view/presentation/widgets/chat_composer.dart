@@ -192,7 +192,7 @@ class _ChatComposerState extends State<ChatComposer> {
         PopupMenuItem(
           value: PromptImageOrigin.clipboard,
           child: ListTile(
-            leading: Icon(Icons.content_paste_rounded),
+            leading: const Icon(Icons.content_paste_rounded),
             title: Text(tr('Paste image from clipboard')),
           ),
         ),
@@ -209,7 +209,7 @@ class _ChatComposerState extends State<ChatComposer> {
           PopupMenuItem(
             value: PromptImageOrigin.camera,
             child: ListTile(
-              leading: Icon(Icons.photo_camera_outlined),
+              leading: const Icon(Icons.photo_camera_outlined),
               title: Text(tr('Take a photo')),
             ),
           ),

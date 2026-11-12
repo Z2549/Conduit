@@ -30,7 +30,7 @@ class AsanaTaskSource implements TaskSource {
   /// The status of a completed task.
   static const completed = TaskStatusOption(
     id: 'completed',
-    label: tr('Completed'),
+    label: 'Completed',
     category: TaskStatusCategory.done,
   );
 

@@ -187,17 +187,17 @@ class _QuickActionFormState extends State<QuickActionForm> {
               segments: [
                 ButtonSegment(
                   value: QuickActionKind.shell,
-                  icon: Icon(Icons.terminal_rounded, size: 16),
+                  icon: const Icon(Icons.terminal_rounded, size: 16),
                   label: Text(tr('Command')),
                 ),
                 ButtonSegment(
                   value: QuickActionKind.prompt,
-                  icon: Icon(Icons.smart_toy_outlined, size: 16),
+                  icon: const Icon(Icons.smart_toy_outlined, size: 16),
                   label: Text(tr('Prompt')),
                 ),
                 ButtonSegment(
                   value: QuickActionKind.url,
-                  icon: Icon(Icons.public_rounded, size: 16),
+                  icon: const Icon(Icons.public_rounded, size: 16),
                   label: Text(tr('Link')),
                 ),
               ],
@@ -350,12 +350,12 @@ class _QuickActionFormState extends State<QuickActionForm> {
                           : '$repoFile (asks before writing)',
                     ),
                   ),
-                  const RadioListTile<QuickActionHome>(
+                  RadioListTile<QuickActionHome>(
                     key: ValueKey('quick-action-home-personal'),
                     contentPadding: EdgeInsets.zero,
                     dense: true,
                     value: QuickActionHome.personal,
-                    title: Text(tr('My actions')),
+                    title: Text('My actions'),
                     subtitle: Text(tr('Settings, synced to your devices')),
                   ),
                 ],

@@ -190,10 +190,10 @@ class DigestWindowMenu extends StatelessWidget {
             child: Text(window.label),
           ),
         const PopupMenuDivider(),
-        const PopupMenuItem<Object>(
+        PopupMenuItem<Object>(
           key: ValueKey('digest-mark-seen'),
           value: 'seen',
-          child: Text(tr('Mark all seen')),
+          child: Text('Mark all seen'),
         ),
       ],
     );

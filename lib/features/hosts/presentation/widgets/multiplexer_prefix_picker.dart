@@ -39,8 +39,8 @@ class MultiplexerPrefixField extends StatelessWidget {
               'Sent before every tmux and Herdr shortcut: the Tmux, Tmux+ and '
               'Herdr keys, the Herdr navigator and swipe window switching.',
           helperMaxLines: 3,
-          prefixIcon: Icon(Icons.keyboard_command_key_rounded),
-          suffixIcon: Icon(Icons.chevron_right_rounded),
+          prefixIcon: const Icon(Icons.keyboard_command_key_rounded),
+          suffixIcon: const Icon(Icons.chevron_right_rounded),
         ),
         child: Text(value.label, style: theme.textTheme.bodyLarge),
       ),

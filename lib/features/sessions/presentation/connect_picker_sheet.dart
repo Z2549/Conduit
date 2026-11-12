@@ -367,7 +367,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                         ConnectPickerTab.recent => ButtonSegment(
                           value: ConnectPickerTab.recent,
                           label: _TabLabel(
-                            icon: Icon(Icons.history_rounded, size: 16),
+                            icon: const Icon(Icons.history_rounded, size: 16),
                             label: tr('Recent'),
                           ),
                         ),
@@ -388,7 +388,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                 ),
                 onPressed: () => _pick(const ConnectTarget.shell()),
                 child: _TabLabel(
-                  icon: Icon(Icons.skip_next_rounded, size: 16),
+                  icon: const Icon(Icons.skip_next_rounded, size: 16),
                   label: tr('Skip'),
                 ),
               ),
@@ -402,7 +402,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
               key: const ValueKey('connect-picker-filter'),
               decoration: InputDecoration(
                 isDense: true,
-                prefixIcon: Icon(Icons.search_rounded, size: 18),
+                prefixIcon: const Icon(Icons.search_rounded, size: 18),
                 hintText: tr('Filter'),
               ),
               onChanged: (value) => setState(() => _query = value),
