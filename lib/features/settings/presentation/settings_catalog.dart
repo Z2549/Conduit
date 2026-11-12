@@ -180,7 +180,7 @@ bool _windowsShell(SettingsServices s) =>
 /// section pages, the rest under Advanced or on a row's own page
 /// ([SettingsEntry.under]). A test walks this list and checks each title
 /// where it says, so nothing gets lost.
-const List<SettingsEntry> settingsCatalog = [
+final List<SettingsEntry> settingsCatalog = [
   // Appearance
   SettingsEntry(
     SettingsSection.appearance,
