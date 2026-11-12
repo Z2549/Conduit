@@ -24,7 +24,7 @@ enum TaskStatusCategory {
   /// A best guess from a status name (the markdown folder has no
   /// categories of its own).
   static TaskStatusCategory guess(String name) {
-    final n = name.toLowerCase().replaceAll(RegExp('[ _]'), '-');
+    final n = name.toLowerCase().replaceAll(RegExp(r'[ _]'), '-');
     const todo = {'backlog', 'todo', 'to-do', 'open', 'new', 'proposed'};
     if (doneNames.contains(n)) return TaskStatusCategory.done;
     if (todo.contains(n)) return TaskStatusCategory.todo;
@@ -234,12 +234,12 @@ class TaskSourceField {
     this.key,
     String labelText, {
     this.hint = '',
-    String? help,
+    String? helpText,
     this.required = true,
     this.kind = TaskSourceFieldKind.text,
     this.initial,
   })  : _label = labelText,
-        _help = help;
+        _help = helpText;
 
   final String key;
   final String _label;
@@ -260,8 +260,8 @@ enum TaskSourceKind {
   markdownFolder(
     'markdown',
     'Markdown folder',
-    ('One .md file per task (YAML frontmatter) in a folder on a machine, '
-        'read and written through its companion.'),
+    'One .md file per task (YAML frontmatter) in a folder on a machine, '
+        'read and written through its companion.',
     TaskSourceCapabilities(),
     null,
     [
@@ -269,13 +269,13 @@ enum TaskSourceKind {
         'host',
         'Machine',
         kind: TaskSourceFieldKind.machine,
-        help: 'A machine with the Conductore companion.',
+        helpText: 'A machine with the Conductore companion.',
       ),
       TaskSourceField(
         'folder',
         'Folder',
         hint: '~/tasks/my-project',
-        help: 'An absolute path (or ~/...). Only this folder is touched.',
+        helpText: 'An absolute path (or ~/...). Only this folder is touched.',
       ),
     ],
   ),
@@ -293,7 +293,7 @@ enum TaskSourceKind {
         hint: 'https://api.github.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: 'Only for GitHub Enterprise Server (https://host/api/v3).',
+        helpText: 'Only for GitHub Enterprise Server (https://host/api/v3).',
       ),
     ],
   ),
@@ -305,13 +305,13 @@ enum TaskSourceKind {
     'Personal access token (classic: project, repo; or fine-grained)',
     [
       TaskSourceField('owner', 'Owner', hint: 'my-org or my-user'),
-      TaskSourceField('number', ('Project number'), hint: '3'),
+      TaskSourceField('number', 'Project number', hint: '3'),
       TaskSourceField(
         'statusField',
         'Status field',
         hint: 'Status',
         required: false,
-        help: 'A single-select field of the project.',
+        helpText: 'A single-select field of the project.',
       ),
       TaskSourceField(
         'apiBase',
@@ -319,7 +319,7 @@ enum TaskSourceKind {
         hint: 'https://api.github.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: 'Only for GitHub Enterprise Server (https://host/api/v3).',
+        helpText: 'Only for GitHub Enterprise Server (https://host/api/v3).',
       ),
     ],
   ),
@@ -358,13 +358,13 @@ enum TaskSourceKind {
         'Account email',
         kind: TaskSourceFieldKind.email,
       ),
-      TaskSourceField('project', ('Project key'), hint: 'PROJ', required: false),
+      TaskSourceField('project', 'Project key', hint: 'PROJ', required: false),
       TaskSourceField(
         'jql',
         'JQL',
         hint: 'assignee = currentUser() ORDER BY updated DESC',
         required: false,
-        help: 'Overrides the project key.',
+        helpText: 'Overrides the project key.',
       ),
     ],
   ),
@@ -381,13 +381,13 @@ enum TaskSourceKind {
         hint: 'https://jira.example.com',
         kind: TaskSourceFieldKind.url,
       ),
-      TaskSourceField('project', ('Project key'), hint: 'PROJ', required: false),
+      TaskSourceField('project', 'Project key', hint: 'PROJ', required: false),
       TaskSourceField(
         'jql',
         'JQL',
         hint: 'assignee = currentUser() ORDER BY updated DESC',
         required: false,
-        help: 'Overrides the project key.',
+        helpText: 'Overrides the project key.',
       ),
     ],
   ),
@@ -403,14 +403,14 @@ enum TaskSourceKind {
         'Team key',
         hint: 'ENG',
         required: false,
-        help: 'Empty: issues of every team you can see.',
+        helpText: 'Empty: issues of every team you can see.',
       ),
     ],
   ),
   trello(
     'trello',
     'Trello',
-    ("Cards of a Trello board; a card's list is its status."),
+    "Cards of a Trello board; a card's list is its status.",
     TaskSourceCapabilities(),
     'Token (authorize your API key at trello.com/1/authorize)',
     [
@@ -423,8 +423,8 @@ enum TaskSourceKind {
         'apiKey',
         'API key',
         help:
-            ('From trello.com/power-ups/admin. The key identifies the app; '
-            'the token below is the secret.'),
+            'From trello.com/power-ups/admin. The key identifies the app; '
+            'the token below is the secret.',
       ),
     ],
   ),
@@ -434,7 +434,7 @@ enum TaskSourceKind {
     'Tasks of a ClickUp list, with its statuses.',
     TaskSourceCapabilities(),
     'Personal API token (Settings › Apps, starts with pk_)',
-    [TaskSourceField('list', ('List id'), hint: 'the number in …/li/<id>')],
+    [TaskSourceField('list', 'List id', hint: 'the number in …/li/<id>')],
   ),
   asana(
     'asana',
@@ -463,7 +463,7 @@ enum TaskSourceKind {
         'Status property',
         hint: 'Status',
         required: false,
-        help: 'A status or select property of the database.',
+        helpText: 'A status or select property of the database.',
       ),
     ],
   ),
@@ -482,7 +482,7 @@ enum TaskSourceKind {
         hint: 'https://dev.azure.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: 'Only for Azure DevOps Server.',
+        helpText: 'Only for Azure DevOps Server.',
       ),
     ],
   );
@@ -550,7 +550,7 @@ class TaskSourceConfig {
     if ((kind == TaskSourceKind.jira || kind == TaskSourceKind.jiraServer) &&
         this['project'] == null &&
         this['jql'] == null) {
-      return ('Project key or JQL');
+      return 'Project key or JQL';
     }
     return null;
   }
