@@ -236,10 +236,10 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
             SwitchListTile(
               key: const ValueKey('speech-voice-commands'),
               secondary: const Icon(Icons.keyboard_voice_outlined),
-              title: const Text(voiceCommandsTitle),
+              title: Text(voiceCommandsTitle),
               subtitle: Text(
-                'End a dictation with a short pause, then "send" to send '
-                'it or "cancel" to discard it. Only the last words count.',
+                tr('End a dictation with a short pause, then "send" to send '
+                    'it or "cancel" to discard it. Only the last words count.'),
                 style: muted,
               ),
               value: voice.voiceCommands,

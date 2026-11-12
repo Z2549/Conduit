@@ -256,6 +256,7 @@
   "Empty folder": "空文件夹",
   "Encrypted SSH sessions • zero cloud sync": "加密的 SSH 会话 • 不同步到云端",
   "Encrypts the private key. Leave empty for none.": "加密私钥。留空则不加密。",
+  "End a dictation with a short pause, then \"send\" to send it or \"cancel\" to discard it. Only the last words count.": "以短暂停顿结束听写，然后说“send”发送，或说“cancel”丢弃。只识别最后几个词。",
   "Ended": "已结束",
   "English": "英语",
   "Errors": "错误",

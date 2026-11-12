@@ -403,7 +403,7 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-voice-commands'),
             leading: const Icon(Icons.keyboard_voice_outlined),
-            title: const Text(voiceCommandsTitle),
+            title: Text(voiceCommandsTitle),
             subtitle: Text(voice.voiceCommands ? tr('On') : tr('Off')),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _openPage(
@@ -524,7 +524,7 @@ class SettingsSectionBody extends StatelessWidget {
             key: const ValueKey('settings-talkbawt'),
             leading: const Icon(Icons.outbox_outlined),
             title: Text(tr('Talkbawt')),
-            subtitle: const Text(
+            subtitle: Text(
               tr('Hand work off to other people\'s agents through a link: '
                   'your links, opening one, paired machines, the server.'),
             ),
