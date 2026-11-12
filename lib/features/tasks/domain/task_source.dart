@@ -422,7 +422,7 @@ enum TaskSourceKind {
       TaskSourceField(
         'apiKey',
         'API key',
-        help:
+        helpText:
             'From trello.com/power-ups/admin. The key identifies the app; '
             'the token below is the secret.',
       ),
@@ -495,7 +495,8 @@ enum TaskSourceKind {
     String? tokenLabel,
     this.fields,
   )  : _label = label,
-        _description = description;
+        _description = description,
+        tokenLabel = tokenLabel;
 
   /// As stored.
   final String wire;
