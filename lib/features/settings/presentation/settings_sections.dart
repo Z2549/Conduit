@@ -323,11 +323,15 @@ class SettingsSectionBody extends StatelessWidget {
           title: Text(customizeKeysTitle),
           subtitle: Text(
             pill
-                ? '${theme.terminalPillItems.length} buttons on the floating '
-                      'pill. Long-press the pill in a session to change them '
-                      'there too.'
-                : '${theme.terminalKeyboardRows.length} key rows above the '
-                      'keyboard.',
+                ? trf(
+                    '{count} buttons on the floating pill. Long-press the '
+                    'pill in a session to change them there too.',
+                    {'count': '${theme.terminalPillItems.length}'},
+                  )
+                : trf(
+                    '{count} key rows above the keyboard.',
+                    {'count': '${theme.terminalKeyboardRows.length}'},
+                  ),
           ),
           trailing: const Icon(Icons.chevron_right_rounded),
           onTap: () => pill
@@ -400,7 +404,7 @@ class SettingsSectionBody extends StatelessWidget {
             key: const ValueKey('settings-voice-commands'),
             leading: const Icon(Icons.keyboard_voice_outlined),
             title: const Text(voiceCommandsTitle),
-            subtitle: Text(voice.voiceCommands ? 'On' : tr('Off')),
+            subtitle: Text(voice.voiceCommands ? tr('On') : tr('Off')),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _openPage(
               context,

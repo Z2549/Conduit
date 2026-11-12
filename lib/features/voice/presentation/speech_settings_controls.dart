@@ -195,8 +195,8 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
               secondary: const Icon(Icons.all_inclusive_rounded),
               title: Text(tr('Keep listening until I tap stop')),
               subtitle: Text(
-                'Dictation carries on across pauses instead of stopping '
-                'after the first one.',
+                tr('Dictation carries on across pauses instead of stopping '
+                    'after the first one.'),
                 style: muted,
               ),
               value: voice.continuousDictation,
@@ -405,7 +405,8 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
 }
 
 /// The voice commands setting (CON-098).
-const voiceCommandsTitle = 'Voice commands: "send" and "cancel"';
+String get voiceCommandsTitle =>
+    tr('Voice commands: "send" and "cancel"');
 
 class _WordsDialog extends StatefulWidget {
   const _WordsDialog({required this.title, required this.current});
@@ -717,8 +718,8 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
                       value: language.tag,
                       title: Text(
                         language.isDeviceDefault
-                            ? widget.defaultLabel ?? language.label
-                            : language.label,
+                            ? widget.defaultLabel ?? tr(language.label)
+                            : tr(language.label),
                       ),
                       subtitle: language.isDeviceDefault
                           ? null
