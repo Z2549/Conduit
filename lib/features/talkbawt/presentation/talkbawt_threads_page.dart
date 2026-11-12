@@ -26,7 +26,7 @@ class TalkbawtHubPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Talkbawt'),
+        title: Text(tr('Talkbawt')),
         actions: [
           IconButton(
             key: const ValueKey('talkbawt-settings'),

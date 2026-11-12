@@ -487,20 +487,20 @@ class HomeSessionTile extends StatelessWidget {
 
   static String statusLabel(TerminalConnectionStatus status) =>
       switch (status) {
-        TerminalConnectionStatus.idle => 'not connected',
+        TerminalConnectionStatus.idle => tr('not connected'),
         TerminalConnectionStatus.connecting => 'connecting',
         TerminalConnectionStatus.connected => 'connected',
         TerminalConnectionStatus.disconnected => 'disconnected',
-        TerminalConnectionStatus.failed => 'connection failed',
+        TerminalConnectionStatus.failed => tr('connection failed'),
       };
 
   static String? placeholderFor(TerminalConnectionStatus status) =>
       switch (status) {
-        TerminalConnectionStatus.idle => 'Not connected',
-        TerminalConnectionStatus.connecting => 'Connecting…',
+        TerminalConnectionStatus.idle => tr('Not connected'),
+        TerminalConnectionStatus.connecting => tr('Connecting…'),
         TerminalConnectionStatus.connected => null,
-        TerminalConnectionStatus.disconnected => 'Disconnected',
-        TerminalConnectionStatus.failed => 'Connection failed',
+        TerminalConnectionStatus.disconnected => tr('Disconnected'),
+        TerminalConnectionStatus.failed => tr('Connection failed'),
       };
 
   /// Agent needing input wins; otherwise the connection state.
@@ -587,7 +587,7 @@ class TransportBadge extends StatelessWidget {
     if (host.isLocal) {
       return TransportBadge(label: tr('Local'));
     }
-    return TransportBadge(label: host.useMosh ? 'Mosh' : 'SSH');
+    return TransportBadge(label: host.useMosh ? tr('Mosh') : tr('SSH'));
   }
 
   final String label;
@@ -601,8 +601,8 @@ class TransportBadge extends StatelessWidget {
     final color =
         this.color ??
         switch (label) {
-          'Mosh' => palette.colors.cyan,
-          'SSH' => palette.colors.blue,
+          tr('Mosh') => palette.colors.cyan,
+          tr('SSH') => palette.colors.blue,
           _ => palette.inactive,
         };
     return Container(
@@ -626,11 +626,11 @@ class TransportBadge extends StatelessWidget {
 
 /// The "+" tile: opens the connect picker for the selected machine.
 class HomeAddTile extends StatelessWidget {
-  const HomeAddTile({
+  HomeAddTile({
     required this.palette,
     required this.brightness,
     required this.onTap,
-    this.label = 'New session',
+    this.label = tr('New session'),
     super.key,
   });
 
@@ -866,13 +866,13 @@ class DormantTmuxTile extends StatelessWidget {
 /// "2 windows · active 5m ago" for a tmux session.
 String tmuxDetails(TmuxSessionInfo session, {DateTime? now}) {
   final windows = session.windows == 1
-      ? '1 window'
+      ? tr('1 window')
       : '${session.windows} windows';
   final activity = session.lastActivity;
   if (activity == null) return windows;
   final diff = (now ?? DateTime.now()).toUtc().difference(activity.toUtc());
   final ago = diff.inMinutes < 1
-      ? 'just now'
+      ? tr('just now')
       : diff.inHours < 1
       ? '${diff.inMinutes}m ago'
       : diff.inDays < 1
@@ -886,10 +886,10 @@ String herdrDetails(HomeBoardWorkspace workspace) {
   final panes = workspace.panes.length;
   final tabs = workspace.workspace.tabCount;
   final details = [
-    if (panes > 0) panes == 1 ? '1 agent' : '$panes agents',
-    if (tabs > 0) tabs == 1 ? '1 tab' : '$tabs tabs',
+    if (panes > 0) panes == 1 ? tr('1 agent') : '$panes agents',
+    if (tabs > 0) tabs == 1 ? tr('1 tab') : '$tabs tabs',
   ].join(' · ');
-  return details.isEmpty ? 'Not open in the app' : details;
+  return details.isEmpty ? tr('Not open in the app') : details;
 }
 
 /// Pill marking a tmux session another client is attached to.
@@ -1282,10 +1282,10 @@ class HomeBoardNotice {
           'trusted, so Conductore stopped connecting to it. Tap Review to '
           'compare the keys and decide.',
       fields: [
-        ('Trusted', change.pinnedFingerprint),
-        ('Presented now', change.shownFingerprint),
+        (tr('Trusted'), change.pinnedFingerprint),
+        (tr('Presented now'), change.shownFingerprint),
       ],
-      actionLabel: 'Review',
+      actionLabel: tr('Review'),
       action: HomeBoardNoticeAction.reviewHostKey,
     );
   }
@@ -1317,18 +1317,18 @@ class HomeBoardNotice {
                 icon: Icons.usb_rounded,
                 title: tr('Hardware-key login'),
                 message:
-                    'Listing tmux sessions and Herdr workspaces opens a '
-                    'connection and asks for a key touch.',
-                actionLabel: 'List workspaces',
+                    tr('Listing tmux sessions and Herdr workspaces opens a '
+                    'connection and asks for a key touch.'),
+                actionLabel: tr('List workspaces'),
                 action: HomeBoardNoticeAction.request,
               )
             : HomeBoardNotice(
                 icon: Icons.verified_user_outlined,
                 title: tr('Not connected yet'),
                 message:
-                    'Listing tmux sessions and Herdr workspaces connects to '
-                    'this machine and may ask you to trust its host key.',
-                actionLabel: 'List workspaces',
+                    tr('Listing tmux sessions and Herdr workspaces connects to '
+                    'this machine and may ask you to trust its host key.'),
+                actionLabel: tr('List workspaces'),
                 action: HomeBoardNoticeAction.request,
               );
       case HomeBoardPhase.loading:
@@ -1345,8 +1345,8 @@ class HomeBoardNotice {
           title: tr('The Herdr app is not installed'),
           message:
               state.message ??
-              'hc (herdr-core) is not installed on this machine.',
-          actionLabel: 'Open a shell',
+              tr('hc (herdr-core) is not installed on this machine.'),
+          actionLabel: tr('Open a shell'),
           action: HomeBoardNoticeAction.openShell,
         );
       case HomeBoardPhase.notInstalled:
@@ -1356,17 +1356,17 @@ class HomeBoardNotice {
             icon: Icons.extension_off_outlined,
             title: tr('No tmux or Herdr here'),
             message:
-                'Install tmux or Herdr to keep sessions running on this '
-                'machine.',
-            actionLabel: 'Open a shell',
+                tr('Install tmux or Herdr to keep sessions running on this '
+                'machine.'),
+            actionLabel: tr('Open a shell'),
             action: HomeBoardNoticeAction.openShell,
           ),
           HomeTmuxStatus.unknown || HomeTmuxStatus.failed => HomeBoardNotice(
             icon: Icons.extension_off_outlined,
             title: tr('Herdr is not installed'),
             message:
-                state.message ?? 'Install Herdr to see its workspaces here.',
-            actionLabel: 'Open a shell',
+                state.message ?? tr('Install Herdr to see its workspaces here.'),
+            actionLabel: tr('Open a shell'),
             action: HomeBoardNoticeAction.openShell,
           ),
         };
@@ -1376,8 +1376,8 @@ class HomeBoardNotice {
         return HomeBoardNotice(
           icon: Icons.history_rounded,
           title: tr('Could not list the Herdr app terminals'),
-          message: state.message ?? 'hc did not answer.',
-          actionLabel: 'Retry',
+          message: state.message ?? tr('hc did not answer.'),
+          actionLabel: tr('Retry'),
           action: HomeBoardNoticeAction.retry,
         );
       case HomeBoardPhase.notRunning:
@@ -1386,7 +1386,7 @@ class HomeBoardNotice {
           icon: Icons.pause_circle_outline_rounded,
           title: tr('Herdr is not running'),
           message: tr('Start Herdr to run agents on this machine.'),
-          actionLabel: 'Start Herdr',
+          actionLabel: tr('Start Herdr'),
           action: HomeBoardNoticeAction.startHerdr,
         );
       case HomeBoardPhase.failed:
@@ -1407,17 +1407,17 @@ class HomeBoardNotice {
                 ? 'Showing the last list. ${problem.message}'
                 : problem.message,
             detail: problem.detail,
-            actionLabel: 'Retry',
+            actionLabel: tr('Retry'),
             action: HomeBoardNoticeAction.retry,
           );
         }
-        final reason = state.message ?? 'The machine did not answer.';
+        final reason = state.message ?? tr('The machine did not answer.');
         if (state.onHc) {
           return HomeBoardNotice(
             icon: Icons.history_rounded,
             title: tr('Could not list the Herdr app terminals'),
             message: reason,
-            actionLabel: 'Retry',
+            actionLabel: tr('Retry'),
             action: HomeBoardNoticeAction.retry,
           );
         }
@@ -1428,7 +1428,7 @@ class HomeBoardNotice {
             icon: Icons.history_rounded,
             title: tr('Could not list Herdr workspaces'),
             message: reason,
-            actionLabel: 'Retry',
+            actionLabel: tr('Retry'),
             action: HomeBoardNoticeAction.retry,
           );
         }
@@ -1436,17 +1436,17 @@ class HomeBoardNotice {
             ? HomeBoardNotice(
                 icon: Icons.cloud_off_rounded,
                 title: herdrOnly
-                    ? 'Could not list Herdr workspaces'
-                    : 'Could not list workspaces',
+                    ? tr('Could not list Herdr workspaces')
+                    : tr('Could not list workspaces'),
                 message: reason,
-                actionLabel: 'Retry',
+                actionLabel: tr('Retry'),
                 action: HomeBoardNoticeAction.retry,
               )
             : HomeBoardNotice(
                 icon: Icons.history_rounded,
                 title: tr('Showing the last list'),
                 message: reason,
-                actionLabel: 'Retry',
+                actionLabel: tr('Retry'),
                 action: HomeBoardNoticeAction.retry,
               );
       case HomeBoardPhase.ready when state.onHc:
@@ -1459,13 +1459,13 @@ class HomeBoardNotice {
         return HomeBoardNotice(
           icon: Icons.space_dashboard_outlined,
           title: count == 1
-              ? '1 Herdr app terminal'
+              ? tr('1 Herdr app terminal')
               : '$count Herdr app terminals',
           // The board lists Herdr workspaces; hc has terminals instead.
           message:
-              'This machine uses the Herdr app: open its terminals '
-              'from Connect › Herdr app.',
-          actionLabel: 'Open',
+              tr('This machine uses the Herdr app: open its terminals '
+              'from Connect › Herdr app.'),
+          actionLabel: tr('Open'),
           action: HomeBoardNoticeAction.openHerdrApp,
         );
       case HomeBoardPhase.ready:
@@ -1478,7 +1478,7 @@ class HomeBoardNotice {
           icon: Icons.space_dashboard_outlined,
           title: tr('No Herdr workspaces'),
           message: tr('Herdr is running but has no workspaces yet.'),
-          actionLabel: 'Open Herdr',
+          actionLabel: tr('Open Herdr'),
           action: HomeBoardNoticeAction.startHerdr,
         );
     }
@@ -1593,7 +1593,7 @@ class _HomeBoardNoticeTileState extends State<HomeBoardNoticeTile> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2),
                       child: Text(
-                        _showDetail ? 'Hide details' : 'Details',
+                        _showDetail ? tr('Hide details') : tr('Details'),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 11.5,
@@ -1652,12 +1652,12 @@ class AgentStateChip extends StatelessWidget {
   final bool dense;
 
   static String labelFor(AgentAttentionState state) => switch (state) {
-    AgentAttentionState.working => 'Working',
-    AgentAttentionState.needsInput => 'Needs input',
-    AgentAttentionState.blocked => 'Blocked',
-    AgentAttentionState.finished => 'Done',
-    AgentAttentionState.idle => 'Idle',
-    AgentAttentionState.unknown => 'Unknown',
+    AgentAttentionState.working => tr('Working'),
+    AgentAttentionState.needsInput => tr('Needs input'),
+    AgentAttentionState.blocked => tr('Blocked'),
+    AgentAttentionState.finished => tr('Done'),
+    AgentAttentionState.idle => tr('Idle'),
+    AgentAttentionState.unknown => tr('Unknown'),
   };
 
   @override

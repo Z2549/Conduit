@@ -58,14 +58,14 @@ enum MachineMenuChoice {
   };
 
   String get label => switch (this) {
-    MachineMenuChoice.connectTo => 'Connect to…',
-    MachineMenuChoice.files => 'Files',
-    MachineMenuChoice.edit => 'Edit',
-    MachineMenuChoice.agentHooks => 'Agent hooks',
-    MachineMenuChoice.shell => 'Shell…',
-    MachineMenuChoice.duplicate => 'Duplicate',
-    MachineMenuChoice.copyAddress => 'Copy address',
-    MachineMenuChoice.delete => 'Delete',
+    MachineMenuChoice.connectTo => tr('Connect to…'),
+    MachineMenuChoice.files => tr('Files'),
+    MachineMenuChoice.edit => tr('Edit'),
+    MachineMenuChoice.agentHooks => tr('Agent hooks'),
+    MachineMenuChoice.shell => tr('Shell…'),
+    MachineMenuChoice.duplicate => tr('Duplicate'),
+    MachineMenuChoice.copyAddress => tr('Copy address'),
+    MachineMenuChoice.delete => tr('Delete'),
   };
 
   IconData get icon => switch (this) {
@@ -109,13 +109,13 @@ class MachineFilter {
 
   /// "All machines", one or two names, or the first name and a count.
   String label(List<SavedHost> hosts) {
-    if (keys.isEmpty) return 'All machines';
+    if (keys.isEmpty) return tr('All machines');
     final names = [
       for (final host in hosts)
         if (keys.contains(host.id)) host.name,
-      if (keys.contains(localMachineFilterKey)) 'This device',
+      if (keys.contains(localMachineFilterKey)) tr('This device'),
     ];
-    if (names.isEmpty) return 'All machines';
+    if (names.isEmpty) return tr('All machines');
     if (names.length <= 2) return names.join(', ');
     return '${names.first} +${names.length - 1}';
   }
@@ -612,10 +612,10 @@ class HostSortMenu extends StatelessWidget {
   }
 
   static String _sortLabel(HostListSortMode mode) => switch (mode) {
-    HostListSortMode.lastConnected => 'Last connected',
-    HostListSortMode.name => 'Name',
-    HostListSortMode.added => 'Added',
-    HostListSortMode.manual => 'Manual',
+    HostListSortMode.lastConnected => tr('Last connected'),
+    HostListSortMode.name => tr('Name'),
+    HostListSortMode.added => tr('Added'),
+    HostListSortMode.manual => tr('Manual'),
   };
 
   static IconData _sortIcon(HostListSortMode mode) => switch (mode) {

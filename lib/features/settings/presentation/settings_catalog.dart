@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/features/desktop_shell/presentation/project_layout_controller.dart';
 import 'package:conduit/features/settings/presentation/settings_sections.dart';
@@ -49,11 +50,16 @@ enum SettingsSection {
     Icons.info_outline_rounded,
   );
 
-  const SettingsSection(this.title, this.subtitle, this.icon);
+  const SettingsSection(this._title, this._subtitle, this.icon);
 
-  final String title;
-  final String subtitle;
+  final String _title;
+  final String _subtitle;
   final IconData icon;
+
+  /// The English stored in the enum is the lookup key: an enum value is a
+  /// compile-time constant, so the translation happens when it is read.
+  String get title => tr(_title);
+  String get subtitle => tr(_subtitle);
 }
 
 /// Where a section keeps the settings most people never change (CON-108).

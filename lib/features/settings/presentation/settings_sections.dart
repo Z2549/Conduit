@@ -123,7 +123,7 @@ class SettingsSectionBody extends StatelessWidget {
             switch (locale.locale?.languageCode) {
               null => context.l10n.languageSystem,
               'zh' => '简体中文',
-              _ => 'English',
+              _ => tr('English'),
             },
           ),
           trailing: const Icon(Icons.chevron_right_rounded),
@@ -169,8 +169,8 @@ class SettingsSectionBody extends StatelessWidget {
           icon: Icons.computer_rounded,
           title: context.l10n.settingsThisComputerShell,
           description:
-              'What a local session on this PC opens. Kept on this device, '
-              'never synced.',
+              tr('What a local session on this PC opens. Kept on this device, '
+              'never synced.'),
           values: WindowsShellKind.values,
           label: (value) => value.label,
           selected: hosts.windowsShell,
@@ -186,9 +186,9 @@ class SettingsSectionBody extends StatelessWidget {
       icon: Icons.center_focus_strong_rounded,
       title: herdrMayMoveFocusTitle,
       subtitle:
-          'Herdr shares one focus across all screens, including your '
+          tr('Herdr shares one focus across all screens, including your '
           'laptop. Off: this device never moves it; typing is sent to the '
-          'right pane instead.',
+          'right pane instead.'),
       value: theme.herdrMayMoveFocus,
       onChanged: theme.setHerdrMayMoveFocus,
     ),
@@ -198,7 +198,7 @@ class SettingsSectionBody extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
         child: SnippetListEditor(
           title: context.l10n.settingsGlobalSnippets,
-          caption: 'Shown in the Snip palette on every machine.',
+          caption: tr('Shown in the Snip palette on every machine.'),
           snippets: theme.terminalSnippets,
           onChanged: theme.setTerminalSnippets,
         ),
@@ -221,8 +221,8 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.mouse_rounded,
         title: context.l10n.settingsSendMouseTaps,
         subtitle:
-            'Forward terminal taps as mouse clicks when apps enable mouse '
-            'tracking.',
+            tr('Forward terminal taps as mouse clicks when apps enable mouse '
+            'tracking.'),
         value: theme.terminalMouseInput,
         onChanged: theme.setTerminalMouseInput,
       ),
@@ -231,8 +231,8 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.content_paste_go_rounded,
         title: context.l10n.settingsRemoteClipboard,
         subtitle:
-            'Let programs on the host copy to this device (OSC 52: vim, '
-            'tmux with set-clipboard on). The host can never read it.',
+            tr('Let programs on the host copy to this device (OSC 52: vim, '
+            'tmux with set-clipboard on). The host can never read it.'),
         value: theme.remoteClipboardEnabled,
         onChanged: theme.setRemoteClipboardEnabled,
       ),
@@ -241,8 +241,8 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.smart_button_rounded,
         title: context.l10n.settingsMenuButtons,
         subtitle:
-            'Answer numbered menus and y/n prompts (Claude Code, installers) '
-            'with buttons above the keyboard bar.',
+            tr('Answer numbered menus and y/n prompts (Claude Code, installers) '
+            'with buttons above the keyboard bar.'),
         value: theme.menuButtonsEnabled,
         onChanged: theme.setMenuButtonsEnabled,
       ),
@@ -252,9 +252,9 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.image_outlined,
         title: context.l10n.settingsPasteImages,
         subtitle:
-            "Pasting an image uploads it to the machine's share inbox and "
+            tr("Pasting an image uploads it to the machine's share inbox and "
             'pastes its path, which Claude Code reads as an image. Off: '
-            'paste text only.',
+            'paste text only.'),
         value: theme.pasteImagesAsFiles,
         onChanged: theme.setPasteImagesAsFiles,
       ),
@@ -264,8 +264,8 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.restore_page_rounded,
         title: context.l10n.settingsRestoreSessions,
         subtitle:
-            'Bring back the open sessions after the app restarts. tmux and '
-            'Herdr sessions reattach; plain shells start fresh.',
+            tr('Bring back the open sessions after the app restarts. tmux and '
+            'Herdr sessions reattach; plain shells start fresh.'),
         value: theme.restoreSessionsOnLaunch,
         onChanged: theme.setRestoreSessionsOnLaunch,
       ),
@@ -275,8 +275,8 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.light_mode_outlined,
         title: keepScreenOnTitle,
         subtitle:
-            'Only while a connected terminal is on screen and the app is in '
-            'front. Off: the screen sleeps and locks as usual.',
+            tr('Only while a connected terminal is on screen and the app is in '
+            'front. Off: the screen sleeps and locks as usual.'),
         value: theme.keepScreenOn,
         onChanged: theme.setKeepScreenOn,
       ),
@@ -286,12 +286,12 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.network_ping_rounded,
         title: sshKeepaliveTitle,
         description:
-            'How often SSH connections check the link while the app is in '
+            tr('How often SSH connections check the link while the app is in '
             'front. Longer saves battery and data; in the background '
             'terminals check every 2 minutes and other connections not at '
-            'all. Off: a dropped network is noticed only on the next use.',
+            'all. Off: a dropped network is noticed only on the next use.'),
         values: SshKeepalivePolicy.choices,
-        label: (seconds) => seconds == 0 ? 'Off' : '$seconds s',
+        label: (seconds) => seconds == 0 ? tr('Off') : '$seconds s',
         selected: theme.sshKeepaliveSeconds,
         onChanged: theme.setSshKeepaliveSeconds,
       ),
@@ -301,9 +301,9 @@ class SettingsSectionBody extends StatelessWidget {
         icon: Icons.tab_rounded,
         title: context.l10n.settingsMultiplexerTabs,
         description:
-            'Herdr tabs and tmux windows. Compact names the current one in the '
+            tr('Herdr tabs and tmux windows. Compact names the current one in the '
             'session tab (tap it for the list) and costs no screen space; '
-            'Strip adds a row, for tablets. A computer always shows the strip.',
+            'Strip adds a row, for tablets. A computer always shows the strip.'),
         values: MultiplexerTabsMode.values,
         label: (value) => value.label,
         selected: theme.multiplexerTabs,
@@ -400,7 +400,7 @@ class SettingsSectionBody extends StatelessWidget {
             key: const ValueKey('settings-voice-commands'),
             leading: const Icon(Icons.keyboard_voice_outlined),
             title: const Text(voiceCommandsTitle),
-            subtitle: Text(voice.voiceCommands ? 'On' : 'Off'),
+            subtitle: Text(voice.voiceCommands ? 'On' : tr('Off')),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _openPage(
               context,
@@ -423,8 +423,8 @@ class SettingsSectionBody extends StatelessWidget {
               title: const Text(voiceGuideTitle),
               subtitle: Text(
                 voice.guide.enabled
-                    ? 'On. Talk to all your agents hands-free.'
-                    : 'Off',
+                    ? tr('On. Talk to all your agents hands-free.')
+                    : tr('Off'),
               ),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => _openPage(
@@ -451,8 +451,8 @@ class SettingsSectionBody extends StatelessWidget {
           icon: Icons.keyboard_return_rounded,
           title: tr('Press Enter after inserting'),
           subtitle:
-              'The prompt composer inserts your text and presses Enter, so '
-              'the agent gets it right away. Off: the text is only inserted.',
+              tr('The prompt composer inserts your text and presses Enter, so '
+              'the agent gets it right away. Off: the text is only inserted.'),
           value: theme.composeSubmitEnter,
           onChanged: theme.setComposeSubmitEnter,
         ),
@@ -463,12 +463,12 @@ class SettingsSectionBody extends StatelessWidget {
           title: tr('Review changes'),
           description: switch (voice.reviewOpens) {
             ReviewOpens.onDemand =>
-              'Review opens from its button in Chat View, the Agents '
+              tr('Review opens from its button in Chat View, the Agents '
                   'dashboard and the inbox, or when you tell the voice guide '
-                  '"review".',
+                  '"review".'),
             ReviewOpens.afterEachTurn =>
-              'When a turn ends in Chat View, Review opens with a card per '
-                  'changed file: accept, reject, comment, or undo the turn.',
+              tr('When a turn ends in Chat View, Review opens with a card per '
+                  'changed file: accept, reject, comment, or undo the turn.'),
           },
           values: ReviewOpens.values,
           label: (mode) => mode.label,
@@ -519,7 +519,7 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-talkbawt'),
             leading: const Icon(Icons.outbox_outlined),
-            title: const Text('Talkbawt'),
+            title: Text(tr('Talkbawt')),
             subtitle: const Text(
               'Hand work off to other people\'s agents through a link: '
               'your links, opening one, paired machines, the server.',
@@ -548,15 +548,15 @@ class SettingsSectionBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SettingsHeading(context.l10n.settingsAgentHooks),
-                const SettingsNote(
-                  'The Conductore companion reports coding agent sessions '
+                SettingsNote(
+                  tr('The Conductore companion reports coding agent sessions '
                   '(Claude Code, Codex, OpenCode), approvals and usage from '
                   'each machine. Set it up per '
-                  'machine, and pick how loudly each one notifies.',
+                  'machine, and pick how loudly each one notifies.'),
                 ),
                 const SizedBox(height: 10),
                 if (machines.isEmpty)
-                  const SettingsNote('Add a machine to set up agent hooks.'),
+                  SettingsNote(tr('Add a machine to set up agent hooks.')),
                 for (final host in machines) ...[
                   _AgentMachineCard(
                     host: host,
@@ -567,9 +567,9 @@ class SettingsSectionBody extends StatelessWidget {
                 ],
                 if (attention != null) ...[
                   SettingsHeading(context.l10n.settingsApprovalRules),
-                  const SettingsNote(
-                    'Rules and time-boxed trust the companion answers by '
-                    'itself, per machine. High-risk requests always ask.',
+                  SettingsNote(
+                    tr('Rules and time-boxed trust the companion answers by '
+                    'itself, per machine. High-risk requests always ask.'),
                   ),
                   const SizedBox(height: 6),
                   if (machines.isNotEmpty)
@@ -611,7 +611,7 @@ class SettingsSectionBody extends StatelessWidget {
                 if (attention != null &&
                     PlatformFeatures.agentNotifications) ...[
                   const SizedBox(height: 10),
-                  const SettingsNote('Notify me on this device about:'),
+                  SettingsNote(tr('Notify me on this device about:')),
                   const SizedBox(height: 6),
                   AgentNotifyChoiceCard(controller: attention),
                 ],
@@ -622,10 +622,10 @@ class SettingsSectionBody extends StatelessWidget {
       if (services.digest case final digest?) ...[
         _gap,
         SettingsHeading(context.l10n.settingsDashboard),
-        const SettingsNote(
-          'The Agents dashboard (home bar) shows what every agent did '
+        SettingsNote(
+          tr('The Agents dashboard (home bar) shows what every agent did '
           'since you last looked: files, tests, failures, waiting time, '
-          'agents that look stuck, and a short summary.',
+          'agents that look stuck, and a short summary.'),
         ),
         const SizedBox(height: 6),
         DigestSettingsCards(controller: digest),
@@ -666,7 +666,7 @@ class SettingsSectionBody extends StatelessWidget {
       ],
       if (CompanionPreferences.instance case final companion?) ...[
         _gap,
-        const SettingsHeading('Herdr and worktrees'),
+        SettingsHeading(tr('Herdr and worktrees')),
         const SizedBox(height: 6),
         CompanionPreferencesCards(preferences: companion),
       ],
@@ -680,8 +680,8 @@ class SettingsSectionBody extends StatelessWidget {
               icon: Icons.notifications_active_outlined,
               title: tr('Alert near the 5-hour limit'),
               subtitle:
-                  'Notify when 80% of the Claude 5-hour window is used, once '
-                  'per window, with the time it resets. This device only.',
+                  tr('Notify when 80% of the Claude 5-hour window is used, once '
+                  'per window, with the time it resets. This device only.'),
               value: usage.preferences.alertEnabled,
               onChanged: usage.setAlertEnabled,
             ),
@@ -715,11 +715,11 @@ class SettingsSectionBody extends StatelessWidget {
         if (hosts != null &&
             attention != null &&
             PlatformFeatures.agentNotifications) ...[
-          const SettingsHeading('Notification details'),
-          const SettingsNote(
-            'One notification per agent, updated in place with what it '
+          SettingsHeading(tr('Notification details')),
+          SettingsNote(
+            tr('One notification per agent, updated in place with what it '
             'needs now. It alerts only when an agent newly needs you, and '
-            'goes away once everything is answered. This device only.',
+            'goes away once everything is answered. This device only.'),
           ),
           const SizedBox(height: 6),
           AgentNotificationDetailsCard(controller: attention),
@@ -753,10 +753,10 @@ class SettingsSectionBody extends StatelessWidget {
             key: const ValueKey('settings-device-sync'),
             leading: const Icon(Icons.devices_rounded),
             title: Text(context.l10n.settingsDeviceSync),
-            subtitle: const Text(
-              'Keep machines and settings the same on every device, end-to-'
+            subtitle: Text(
+              tr('Keep machines and settings the same on every device, end-to-'
               'end encrypted through one of your machines. Devices and '
-              'pairing live here.',
+              'pairing live here.'),
             ),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => showSyncPage(context),
@@ -764,7 +764,7 @@ class SettingsSectionBody extends StatelessWidget {
         ),
         _gap,
       ],
-      const SettingsHeading('What syncs'),
+      SettingsHeading(tr('What syncs')),
       SettingsCard(
         child: Column(
           children: [
@@ -814,10 +814,10 @@ class SettingsSectionBody extends StatelessWidget {
               title: Text(context.l10n.settingsAppLock),
               subtitle: Text(
                 PlatformFeatures.appLock
-                    ? 'On. Conductore asks for your fingerprint, face or '
+                    ? tr('On. Conductore asks for your fingerprint, face or '
                           'device PIN when it opens, and closes sessions '
-                          'while locked.'
-                    : 'Not available on this platform.',
+                          'while locked.')
+                    : tr('Not available on this platform.'),
               ),
             ),
             // Its timer, right under it (CON-120).
@@ -1078,8 +1078,8 @@ class _AgentMachineCard extends StatelessWidget {
             ),
             subtitle: Text(
               host.agentAttentionEnabled
-                  ? 'Agent monitoring on'
-                  : 'Agent monitoring off (machine settings)',
+                  ? tr('Agent monitoring on')
+                  : tr('Agent monitoring off (machine settings)'),
             ),
             trailing: hasCompanion
                 ? const Icon(Icons.chevron_right_rounded)
@@ -1171,12 +1171,12 @@ class _RelockDelayTile extends StatelessWidget {
       builder: (context, _) {
         final delay = controller.relockDelay;
         final how = delay.lastsAcrossRestarts
-            ? ' from the unlock, also across restarts'
+            ? tr(' from the unlock, also across restarts')
             : delay == RelockDelay.never
-            ? ', or Lock now'
+            ? tr(', or Lock now')
             : delay.duration == Duration.zero
             ? ''
-            : ' in the background';
+            : tr(' in the background');
         // The value is the row's second line; a tap picks another.
         return PopupMenuButton<RelockDelay>(
           key: const ValueKey('settings-relock-delay'),
