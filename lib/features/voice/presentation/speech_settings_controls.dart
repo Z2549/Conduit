@@ -727,7 +727,7 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
                     ),
                   const RadioListTile<String>(
                     value: _custom,
-                    title: const Text('Other'),
+                    title: Text('Other'),
                     dense: true,
                   ),
                 ],

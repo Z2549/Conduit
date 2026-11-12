@@ -1880,22 +1880,22 @@ class _ChatMenu extends StatelessWidget {
       },
       itemBuilder: (context) => [
         const PopupMenuItem<Object>(
-          key: const ValueKey('chat-search'),
+          key: ValueKey('chat-search'),
           value: 'search',
-          child: const ListTile(
+          child: ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.search_rounded),
-            title: const Text('Find in conversation'),
+            leading: Icon(Icons.search_rounded),
+            title: Text('Find in conversation'),
           ),
         ),
         if (onHandOff != null)
           const PopupMenuItem<Object>(
-            key: const ValueKey('chat-menu-handoff'),
+            key: ValueKey('chat-menu-handoff'),
             value: 'handoff',
-            child: const ListTile(
+            child: ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.outbox_outlined),
-              title: const Text('Hand off…'),
+              leading: Icon(Icons.outbox_outlined),
+              title: Text('Hand off…'),
             ),
           ),
         const PopupMenuDivider(),
@@ -1903,7 +1903,7 @@ class _ChatMenu extends StatelessWidget {
           const PopupMenuItem<Object>(
             enabled: false,
             height: 32,
-            child: const Text('Read aloud'),
+            child: Text('Read aloud'),
           ),
           CheckedPopupMenuItem<Object>(
             key: const ValueKey('chat-read-aloud'),
@@ -1928,7 +1928,7 @@ class _ChatMenu extends StatelessWidget {
         const PopupMenuItem<Object>(
           enabled: false,
           height: 32,
-          child: const Text('Tool activity'),
+          child: Text('Tool activity'),
         ),
         for (final option in ToolActivity.values)
           CheckedPopupMenuItem<Object>(
