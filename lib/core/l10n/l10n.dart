@@ -3,12 +3,16 @@ import 'package:flutter/widgets.dart';
 
 export 'package:conduit/l10n/app_localizations.dart' show AppLocalizations;
 
-/// Shorthand for `AppLocalizations.of(context)`.
+/// Shorthand for the active [AppLocalizations].
 ///
-/// `l10n.yaml` sets `nullable-getter: false`, so this never returns null and
-/// callers can use `context.l10n.someMessage` directly.
+/// Falls back to English where no [Localizations] ancestor carries the app's
+/// delegate — widget tests that pump a single screen, and embedded pages that
+/// render outside `MaterialApp`. Without the fallback those call sites would
+/// throw instead of showing a label.
 extension AppLocalizationsX on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this);
+  AppLocalizations get l10n =>
+      Localizations.of<AppLocalizations>(this, AppLocalizations) ??
+      lookupAppLocalizations(const Locale('en'));
 }
 
 /// Ambient access to the [AppLocalizations] the app is currently rendering.
