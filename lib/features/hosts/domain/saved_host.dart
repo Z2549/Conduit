@@ -17,7 +17,7 @@ enum AgentMonitorKind {
   String get label => switch (this) {
     AgentMonitorKind.auto => 'Auto',
     AgentMonitorKind.herdr => 'Herdr',
-    AgentMonitorKind.companion => 'Conductore companion',
+    AgentMonitorKind.companion => tr('Conductore companion'),
   };
 
   static AgentMonitorKind parse(Object? raw) {
@@ -43,13 +43,13 @@ enum HostTool {
   tmux;
 
   String get label => switch (this) {
-    HostTool.herdrApp => 'Herdr app',
-    HostTool.herdr => 'Herdr TUI',
+    HostTool.herdrApp => tr('Herdr app'),
+    HostTool.herdr => tr('Herdr TUI'),
     HostTool.tmux => 'tmux',
   };
 
   String get description => switch (this) {
-    HostTool.herdrApp => "The app's spaces and terminals, through hc.",
+    HostTool.herdrApp => tr("The app's spaces and terminals, through hc."),
     HostTool.herdr =>
       'Workspaces, tabs and panes, plus sheprd\'s projects when "Sync with '
           'sheprd" is on.',
@@ -76,13 +76,13 @@ enum HostBackend {
   hc;
 
   String get label => switch (this) {
-    HostBackend.herdr => 'Herdr (TUI)',
+    HostBackend.herdr => tr('Herdr (TUI)'),
     HostBackend.sheprd => 'sheprd',
-    HostBackend.hc => 'Herdr app (hc)',
+    HostBackend.hc => tr('Herdr app (hc)'),
   };
 
   String get description => switch (this) {
-    HostBackend.herdr => 'Workspaces, tabs and panes through the herdr CLI.',
+    HostBackend.herdr => tr('Workspaces, tabs and panes through the herdr CLI.'),
     HostBackend.sheprd =>
       'Like Herdr, plus sheprd\'s projects when "Sync with sheprd" is on.',
     HostBackend.hc =>

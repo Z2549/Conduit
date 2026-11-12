@@ -85,7 +85,10 @@ def look(text):
         return False
     if re.fullmatch(r"[a-z0-9_./:#-]+", text):
         return False
-    return bool(re.search(r"[A-Z]", text)) or " " in text
+    # 单个词（无空格）多半是键名/标识符：键名绝不能被翻译
+    if " " not in text:
+        return False
+    return bool(re.search(r"[A-Z]", text))
 
 
 def process(path, apply):

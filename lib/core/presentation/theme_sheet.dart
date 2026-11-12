@@ -1366,14 +1366,14 @@ class AboutControls extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Conductore', style: theme.textTheme.titleMedium),
+        Text(tr('Conduit'), style: theme.textTheme.titleMedium),
         FutureBuilder<String?>(
           future: _version(),
           builder: (context, snapshot) {
             final version = snapshot.data;
             if (version == null) return const SizedBox.shrink();
             return Text(
-              'Version $version',
+              trf('Version {version}', {'version': version}),
               key: const ValueKey('about-version'),
               style: muted,
             );
@@ -1390,7 +1390,7 @@ class AboutControls extends StatelessWidget {
           child: TextButton.icon(
             onPressed: () => showLicensePage(
               context: context,
-              applicationName: 'Conductore',
+              applicationName: 'Conduit',
               applicationLegalese: 'Based on Conduit by gwitko (Apache-2.0)',
             ),
             icon: const Icon(Icons.description_outlined, size: 18),
@@ -1398,8 +1398,8 @@ class AboutControls extends StatelessWidget {
           ),
         ),
         const _ErrorLogButton(),
-        link('Conductore on GitHub', conductoreRepositoryUrl, Icons.code),
-        link('Conduit (upstream)', conduitUpstreamUrl, Icons.call_split),
+        link(tr('Conductore on GitHub'), conductoreRepositoryUrl, Icons.code),
+        link(tr('Conduit (upstream)'), conduitUpstreamUrl, Icons.call_split),
       ],
     );
   }
@@ -1424,7 +1424,9 @@ class _ErrorLogButton extends StatelessWidget {
             onPressed: () => showRecentErrors(context, log),
             icon: const Icon(Icons.bug_report_outlined, size: 18),
             label: Text(
-              count == 0 ? 'Recent errors' : 'Recent errors ($count)',
+              count == 0
+                  ? tr('Recent errors')
+                  : trf('Recent errors ({count})', {'count': '$count'}),
             ),
           ),
         );
