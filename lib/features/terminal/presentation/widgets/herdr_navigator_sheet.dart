@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -209,7 +210,7 @@ class _HerdrNavigatorSheetState extends State<HerdrNavigatorSheet> {
             else if (widget.load != null)
               IconButton(
                 key: const ValueKey('herdr-refresh'),
-                tooltip: 'Refresh panes',
+                tooltip: tr('Refresh panes'),
                 visualDensity: VisualDensity.compact,
                 onPressed: _refresh,
                 icon: const Icon(Icons.refresh_rounded),
@@ -224,7 +225,7 @@ class _HerdrNavigatorSheetState extends State<HerdrNavigatorSheet> {
               child: ActionChip(
                 key: const ValueKey('herdr-cd-to'),
                 avatar: const Icon(Icons.folder_open_rounded, size: 16),
-                label: const Text('cd to…'),
+                label: Text(tr('cd to…')),
                 onPressed: () =>
                     Navigator.of(context).pop(const HerdrCdToPick()),
               ),

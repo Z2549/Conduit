@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:flutter/material.dart';
 import 'package:qr/qr.dart';
 
@@ -18,7 +19,7 @@ class QrCodeView extends StatelessWidget {
       ),
     );
     return Semantics(
-      label: 'Setup QR code',
+      label: tr('Setup QR code'),
       image: true,
       child: Container(
         width: size,

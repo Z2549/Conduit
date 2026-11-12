@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -422,7 +423,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
           content: Text(closed.message),
           duration: const Duration(seconds: 8),
           action: SnackBarAction(
-            label: 'Undo',
+            label: tr('Undo'),
             onPressed: () => unawaited(restore.undoAutoClose(closed)),
           ),
         ),
@@ -1157,7 +1158,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
         SliverToBoxAdapter(
           child: MessageState(
             icon: Icons.error_outline,
-            title: 'Something went wrong',
+            title: tr('Something went wrong'),
             message: controller.errorMessage!,
             actionLabel: 'Retry',
             onAction: controller.load,
@@ -1203,7 +1204,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
               child: HostSearchField(
                 key: const ValueKey('home-workspace-search'),
                 controller: _searchText,
-                hintText: 'Search workspaces',
+                hintText: tr('Search workspaces'),
                 hasContent: !_search.isEmpty,
                 height: height,
                 onChanged: (query) =>
@@ -1220,12 +1221,11 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                 segments: [
                   ButtonSegment(
                     value: HomeMode.projects,
-                    tooltip: 'Everything by project',
+                    tooltip: tr('Everything by project'),
                     label: SizedBox(
                       height: height,
-                      child: const Center(
-                        child: Text(
-                          'Projects',
+                      child: Center(
+                        child: Text(tr('Projects'),
                           key: ValueKey('home-mode-projects'),
                         ),
                       ),
@@ -1233,11 +1233,11 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                   ),
                   ButtonSegment(
                     value: HomeMode.openClosed,
-                    tooltip: 'Open sessions, then the rest by machine',
+                    tooltip: tr('Open sessions, then the rest by machine'),
                     label: SizedBox(
                       height: height,
-                      child: const Center(
-                        child: Text('Open', key: ValueKey('home-mode-open')),
+                      child: Center(
+                        child: Text(tr('Open'), key: ValueKey('home-mode-open')),
                       ),
                     ),
                   ),
@@ -1324,7 +1324,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
           const SizedBox(height: 24),
           MessageState(
             icon: Icons.dns_outlined,
-            title: 'No saved machines yet',
+            title: tr('No saved machines yet'),
             message:
                 'Add an SSH or Mosh server and Conductore will keep its '
                 'credentials in your device’s secure storage.',
@@ -1336,7 +1336,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
               child: TextButton.icon(
                 onPressed: _openLocalShellSetup,
                 icon: const Icon(Icons.phone_android_rounded),
-                label: const Text('Or set up a local shell'),
+                label: Text(tr('Or set up a local shell')),
               ),
             ),
         ]),
@@ -1394,13 +1394,13 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     return [
       SliverToBoxAdapter(
         child: _SectionHeader(
-          label: 'SESSIONS',
+          label: tr('SESSIONS'),
           detail: sessions.isEmpty ? 'none open' : '${sessions.length} open',
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                tooltip: 'New session',
+                tooltip: tr('New session'),
                 icon: const Icon(Icons.add_rounded),
                 onPressed: _newSession,
               ),
@@ -1625,7 +1625,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     return [
       SliverToBoxAdapter(
         child: _SectionHeader(
-          label: 'OTHER WORKSPACES',
+          label: tr('OTHER WORKSPACES'),
           detail: count == 0 ? null : '$count not open',
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -1741,9 +1741,9 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
   ) => [
     SliverToBoxAdapter(
       child: _SectionHeader(
-        label: 'PROJECTS',
+        label: tr('PROJECTS'),
         trailing: IconButton(
-          tooltip: 'New session',
+          tooltip: tr('New session'),
           icon: const Icon(Icons.add_rounded),
           onPressed: _newSession,
         ),
@@ -1864,7 +1864,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                   workspace.label,
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
-                subtitle: const Text('Open the workspace at an agent'),
+                subtitle: Text(tr('Open the workspace at an agent')),
               ),
               const Divider(height: 1),
               for (final pane in workspace.panes)
@@ -1925,7 +1925,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                       session.name,
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
-                    subtitle: const Text('Open the session at a window'),
+                    subtitle: Text(tr('Open the session at a window')),
                   ),
                   const Divider(height: 1),
                   if (list == null)
@@ -1934,9 +1934,9 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                       child: Center(child: CircularProgressIndicator()),
                     )
                   else if (list.isEmpty)
-                    const ListTile(
-                      title: Text('Could not list the windows'),
-                      subtitle: Text('Tap the session to attach to it.'),
+                    ListTile(
+                      title: Text(tr('Could not list the windows')),
+                      subtitle: Text(tr('Tap the session to attach to it.')),
                     )
                   else
                     for (final window in list)
@@ -1959,7 +1959,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                               ? '1 pane'
                               : '${window.panes} panes',
                         ),
-                        trailing: window.active ? const Text('current') : null,
+                        trailing: window.active ? Text(tr('current')) : null,
                         onTap: () => Navigator.of(context).pop(window),
                       ),
                 ],
@@ -2085,7 +2085,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     final picked = await showDialog<WindowsShellKind>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text('Shell on this computer'),
+        title: Text(tr('Shell on this computer')),
         children: [
           RadioGroup<WindowsShellKind>(
             groupValue: controller.windowsShell,
@@ -2098,7 +2098,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
                     value: kind,
                     title: Text(kind.label),
                     subtitle: kind == WindowsShellKind.wsl
-                        ? const Text('Local tmux, Herdr and agent hooks')
+                        ? Text(tr('Local tmux, Herdr and agent hooks'))
                         : null,
                   ),
               ],
@@ -2138,9 +2138,8 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
           child: ListView(
             shrinkWrap: true,
             children: [
-              const ListTile(
-                title: Text(
-                  'New session on',
+              ListTile(
+                title: Text(tr('New session on'),
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
@@ -2328,19 +2327,19 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.refresh_rounded),
-              title: const Text('Reconnect'),
+              title: Text(tr('Reconnect')),
               onTap: () => Navigator.of(context).pop(_SessionAction.reconnect),
             ),
             ListTile(
               leading: const Icon(Icons.drive_file_rename_outline_rounded),
-              title: const Text('Rename'),
+              title: Text(tr('Rename')),
               onTap: () => Navigator.of(context).pop(_SessionAction.rename),
             ),
             if (views != null)
               ListTile(
                 key: const ValueKey('session-action-open-in'),
                 leading: const Icon(Icons.forum_outlined),
-                title: const Text('Open in…'),
+                title: Text(tr('Open in…')),
                 subtitle: Text(sessionViewSummary(views, session.host.id)),
                 onTap: () => Navigator.of(context).pop(_SessionAction.openIn),
               ),
@@ -2348,14 +2347,14 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
               ListTile(
                 key: const ValueKey('session-action-continue-on'),
                 leading: const Icon(Icons.devices_rounded),
-                title: const Text('Continue on…'),
-                subtitle: const Text('Where your other devices are'),
+                title: Text(tr('Continue on…')),
+                subtitle: Text(tr('Where your other devices are')),
                 onTap: () =>
                     Navigator.of(context).pop(_SessionAction.continueOn),
               ),
             ListTile(
               leading: const Icon(Icons.close_rounded),
-              title: const Text('Close session'),
+              title: Text(tr('Close session')),
               onTap: () => Navigator.of(context).pop(_SessionAction.close),
             ),
           ],
@@ -2472,8 +2471,8 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       if (!widget.localShellController.sharedStorageAccessGranted) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Grant file access, then open the shell again.'),
+          SnackBar(
+            content: Text(tr('Grant file access, then open the shell again.')),
           ),
         );
         return;
@@ -2595,22 +2594,21 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     final keepSecrets = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Duplicate machine'),
-        content: const Text(
-          'Copy the saved password and key material into the new machine?',
+        title: Text(tr('Duplicate machine')),
+        content: Text(tr('Copy the saved password and key material into the new machine?'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Without secrets'),
+            child: Text(tr('Without secrets')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Copy secrets'),
+            child: Text(tr('Copy secrets')),
           ),
         ],
       ),
@@ -2660,7 +2658,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Delete machine?'),
+          title: Text(tr('Delete machine?')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2698,14 +2696,14 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Delete'),
+              child: Text(tr('Delete')),
             ),
           ],
         ),
@@ -2751,15 +2749,13 @@ class _MachineSectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Saved machines',
+        Text(tr('Saved machines'),
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w800,
           ),
         ),
         const SizedBox(height: 3),
-        Text(
-          'SSH and Mosh connections you have saved.',
+        Text(tr('SSH and Mosh connections you have saved.'),
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
             height: 1.25,
@@ -2924,7 +2920,7 @@ class _RenameDialogState extends State<_RenameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Rename session'),
+      title: Text(tr('Rename session')),
       content: TextField(
         controller: _text,
         autofocus: true,
@@ -2934,15 +2930,15 @@ class _RenameDialogState extends State<_RenameDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(''),
-          child: const Text('Reset'),
+          child: Text(tr('Reset')),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_text.text),
-          child: const Text('Rename'),
+          child: Text(tr('Rename')),
         ),
       ],
     );

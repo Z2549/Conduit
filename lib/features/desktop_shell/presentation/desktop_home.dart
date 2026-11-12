@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/desktop_window.dart';
@@ -1030,7 +1031,7 @@ class DesktopHomeState extends State<DesktopHome> {
           (prefs) => prefs.setGroup(node.machineId, null),
         );
       case _NodeActionKind.newGroup:
-        final name = await _askName(context, title: 'New group');
+        final name = await _askName(context, title: tr('New group'));
         if (name == null || name.isEmpty) return;
         final id = 'g${_controller.now().microsecondsSinceEpoch}';
         _controller.updatePrefs(
@@ -1097,7 +1098,7 @@ class DesktopHomeState extends State<DesktopHome> {
       case 'rename':
         final name = await _askName(
           context,
-          title: 'Rename group',
+          title: tr('Rename group'),
           initial: group.name,
         );
         if (name == null || name.isEmpty) return;
@@ -1259,7 +1260,7 @@ class DesktopHomeState extends State<DesktopHome> {
   Future<void> saveLayoutAs() async {
     final name = await _askName(
       context,
-      title: 'Save layout',
+      title: tr('Save layout'),
       hint: 'Morning check, VTM work…',
     );
     if (name == null || name.isEmpty || !mounted) return;
@@ -1487,7 +1488,7 @@ class DesktopHomeState extends State<DesktopHome> {
           ),
           IconButton(
             key: const ValueKey('sidebar-collapse'),
-            tooltip: 'Collapse the sidebar',
+            tooltip: tr('Collapse the sidebar'),
             iconSize: 18,
             onPressed: _controller.toggleSidebar,
             icon: const Icon(Icons.keyboard_double_arrow_left_rounded),
@@ -1503,14 +1504,14 @@ class DesktopHomeState extends State<DesktopHome> {
     final buttons = [
       IconButton(
         key: const ValueKey('sidebar-add-machine'),
-        tooltip: 'Add machine',
+        tooltip: tr('Add machine'),
         iconSize: 18,
         onPressed: () => unawaited(widget.actions.addMachine()),
         icon: const Icon(Icons.add_to_queue_rounded),
       ),
       IconButton(
         key: const ValueKey('sidebar-settings'),
-        tooltip: 'Settings',
+        tooltip: tr('Settings'),
         iconSize: 18,
         onPressed: () => unawaited(widget.actions.openSettings()),
         icon: const Icon(Icons.settings_outlined),
@@ -1518,7 +1519,7 @@ class DesktopHomeState extends State<DesktopHome> {
       if (widget.actions.lock case final lock?)
         IconButton(
           key: const ValueKey('sidebar-lock'),
-          tooltip: 'Lock',
+          tooltip: tr('Lock'),
           iconSize: 18,
           onPressed: () => unawaited(lock()),
           icon: const Icon(Icons.lock_outline_rounded),
@@ -1852,7 +1853,7 @@ class DesktopHomeState extends State<DesktopHome> {
                         ),
                       ),
                       IconButton(
-                        tooltip: 'Close the panel',
+                        tooltip: tr('Close the panel'),
                         iconSize: 18,
                         onPressed: () =>
                             _controller.rightPanel = ShellRightPanel.none,
@@ -1944,7 +1945,7 @@ class DesktopHomeState extends State<DesktopHome> {
                 unawaited(host?.openPreviewForFocused());
               },
               icon: const Icon(Icons.play_arrow_rounded),
-              label: const Text('Start live preview'),
+              label: Text(tr('Start live preview')),
             ),
           ],
         ],
@@ -2080,12 +2081,12 @@ class _NameDialogState extends State<_NameDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           key: const ValueKey('group-name-save'),
           onPressed: () => Navigator.of(context).pop(_text.text.trim()),
-          child: const Text('Save'),
+          child: Text(tr('Save')),
         ),
       ],
     );

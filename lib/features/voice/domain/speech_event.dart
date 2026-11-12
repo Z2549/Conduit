@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// Events streamed by a [SpeechRecognizer] during one listening session.
 sealed class SpeechEvent {
   const SpeechEvent();
@@ -33,7 +35,7 @@ sealed class SpeechEvent {
         final message = raw['message'];
         return SpeechError(
           code: code is int ? code : -1,
-          message: message is String ? message : 'Speech recognition failed.',
+          message: message is String ? message: tr('Speech recognition failed.'),
         );
     }
     return null;

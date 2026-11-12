@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_inbox.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agent_inbox_widgets.dart';
@@ -23,8 +24,7 @@ List<Widget> buildAgentUsageChildren(
     return [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Text(
-          'No agents are running on the monitored machines.',
+        child: Text(tr('No agents are running on the monitored machines.'),
           style: theme.textTheme.bodyMedium,
         ),
       ),

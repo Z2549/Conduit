@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/data/task_http.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:http/http.dart' as http;
@@ -29,7 +30,7 @@ class AsanaTaskSource implements TaskSource {
   /// The status of a completed task.
   static const completed = TaskStatusOption(
     id: 'completed',
-    label: 'Completed',
+    label: tr('Completed'),
     category: TaskStatusCategory.done,
   );
 

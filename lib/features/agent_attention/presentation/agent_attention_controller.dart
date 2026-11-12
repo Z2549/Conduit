@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/data/conductore_host_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/hc_companion_attention_provider.dart';
@@ -511,7 +512,7 @@ class AgentAttentionController extends ChangeNotifier {
       if (!hasAgent) {
         await notifier?.show(
           id: action.notificationId,
-          title: 'Permission decision failed',
+          title: tr('Permission decision failed'),
           body: body,
         );
         return;

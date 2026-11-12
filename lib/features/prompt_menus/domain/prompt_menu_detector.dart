@@ -25,6 +25,8 @@
 /// near the bottom of the screen, where an interactive prompt would be.
 library;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// How the terminal application expects the answer to be delivered.
 enum PromptMenuInput {
   /// A single digit selects immediately (Claude Code menus).
@@ -396,13 +398,13 @@ PromptMenu? _detectYesNo(_Screen screen) {
       options: [
         PromptMenuOption(
           index: 0,
-          label: 'Yes',
+          label: tr('Yes'),
           text: yes,
           selected: yes == yes.toUpperCase(),
         ),
         PromptMenuOption(
           index: 1,
-          label: 'No',
+          label: tr('No'),
           text: no,
           selected: no == no.toUpperCase(),
         ),

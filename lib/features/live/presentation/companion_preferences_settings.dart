@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/features/live/presentation/companion_preferences.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
             SettingsSwitchCard(
               switchKey: const ValueKey('tmux-live-switch'),
               icon: Icons.bolt_outlined,
-              title: 'Live tmux updates (adds a hidden tmux client)',
+              title: tr('Live tmux updates (adds a hidden tmux client)'),
               subtitle:
                   'Off: the phone lists tmux itself. On: tmux changes arrive '
                   'at once, but tmux ls shows one more attached client and '
@@ -85,7 +86,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
             SettingsSegmentCard<WorktreeLocationKind>(
               key: const ValueKey('worktree-location-setting'),
               icon: Icons.account_tree_outlined,
-              title: 'Worktree location for new tasks',
+              title: tr('Worktree location for new tasks'),
               description:
                   'Where a task started from here gets its git worktree: '
                   '${worktree.describe()}.',
@@ -112,8 +113,8 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
                 key: const ValueKey('worktree-template-field'),
                 controller: _template,
                 decoration: InputDecoration(
-                  labelText: 'Path template',
-                  helperText: 'Use <repo> and <branch>',
+                  labelText: tr('Path template'),
+                  helperText: tr('Use <repo> and <branch>'),
                   errorText: _template.text.isEmpty || customValid
                       ? null
                       : 'It must contain <branch>',

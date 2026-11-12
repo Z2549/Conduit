@@ -1,4 +1,5 @@
 import 'package:conduit/core/l10n/l10n.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/l10n/locale_controller.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -67,7 +68,7 @@ class _LanguageSheet extends StatelessWidget {
                 // Language names are always rendered in their own language so
                 // the list stays readable no matter which one is active.
                 _LanguageOption(
-                  label: 'English',
+                  label: tr('English'),
                   selected: controller.locale?.languageCode == 'en',
                   onTap: () => controller.setLocale(const Locale('en')),
                 ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/terminal/domain/clipboard_image_paste.dart';
@@ -381,8 +382,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                   // Five icon buttons fit a 360 dp phone only when the
                   // title may shrink.
                   Expanded(
-                    child: Text(
-                      'Chat mode',
+                    child: Text(tr('Chat mode'),
                       style: theme.textTheme.titleMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -408,7 +408,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                             ),
                           )
                         : PopupMenuButton<PromptImageOrigin>(
-                            tooltip: 'Attach image',
+                            tooltip: tr('Attach image'),
                             icon: const Icon(
                               Icons.add_photo_alternate_outlined,
                             ),
@@ -430,21 +430,21 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                                 ),
                               ),
                               if (PlatformFeatures.camera)
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   value: PromptImageOrigin.camera,
                                   child: ListTile(
                                     leading: Icon(Icons.photo_camera_outlined),
-                                    title: Text('Camera'),
+                                    title: Text(tr('Camera')),
                                   ),
                                 ),
                               if (PlatformFeatures.clipboardImage)
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   value: PromptImageOrigin.clipboard,
                                   child: ListTile(
                                     leading: Icon(
                                       Icons.content_paste_go_rounded,
                                     ),
-                                    title: Text('Paste image'),
+                                    title: Text(tr('Paste image')),
                                   ),
                                 ),
                             ],
@@ -453,12 +453,12 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                   // and in the field's right-click menu.
                   if (!desktop) ...[
                     IconButton(
-                      tooltip: 'Paste clipboard',
+                      tooltip: tr('Paste clipboard'),
                       icon: const Icon(Icons.content_paste_rounded),
                       onPressed: _sending ? null : _pasteFromClipboard,
                     ),
                     IconButton(
-                      tooltip: 'Select all',
+                      tooltip: tr('Select all'),
                       icon: const Icon(Icons.select_all_rounded),
                       onPressed: _sending || length == 0 ? null : _selectAll,
                     ),
@@ -468,7 +468,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                   if (length > 0)
                     IconButton(
                       key: const ValueKey('composer-clear'),
-                      tooltip: 'Clear draft',
+                      tooltip: tr('Clear draft'),
                       icon: const Icon(Icons.backspace_outlined),
                       onPressed: _sending ? null : _clear,
                     ),
@@ -497,8 +497,8 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                   maxLines: 8,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.newline,
-                  decoration: const InputDecoration(
-                    hintText: 'Type, dictate, or paste a prompt…',
+                  decoration: InputDecoration(
+                    hintText: tr('Type, dictate, or paste a prompt…'),
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -512,8 +512,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                       child: Row(
                         children: [
                           Flexible(
-                            child: Text(
-                              'Draft cleared',
+                            child: Text(tr('Draft cleared'),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: noticeColor,
                               ),
@@ -526,7 +525,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             onPressed: _undoClear,
-                            child: const Text('Undo'),
+                            child: Text(tr('Undo')),
                           ),
                         ],
                       ),
@@ -555,7 +554,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: const Text('Press Enter after inserting'),
+                title: Text(tr('Press Enter after inserting')),
                 subtitle: Text(
                   _submitEnter
                       ? 'The prompt is submitted immediately.'
@@ -577,7 +576,7 @@ class _PromptComposerSheetState extends State<PromptComposerSheet> {
                     onPressed: _sending
                         ? null
                         : () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: Text(tr('Cancel')),
                   ),
                   // Shrinks before it overflows (360 dp, large text).
                   Flexible(

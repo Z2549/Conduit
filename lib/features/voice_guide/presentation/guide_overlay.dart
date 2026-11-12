@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/voice_guide/presentation/guide_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -69,9 +70,9 @@ class GuideOverlay extends StatelessWidget {
                         // outside any Overlay.
                         IconButton(
                           key: const ValueKey('guide-stop'),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close_rounded,
-                            semanticLabel: 'Stop the guide',
+                            semanticLabel: tr('Stop the guide'),
                           ),
                           onPressed: controller.stop,
                         ),

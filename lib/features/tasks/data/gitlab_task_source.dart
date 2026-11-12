@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/data/task_http.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:http/http.dart' as http;
@@ -19,12 +20,12 @@ class GitLabTaskSource implements TaskSource {
 
   static const open = TaskStatusOption(
     id: 'opened',
-    label: 'Open',
+    label: tr('Open'),
     category: TaskStatusCategory.todo,
   );
   static const closed = TaskStatusOption(
     id: 'closed',
-    label: 'Closed',
+    label: tr('Closed'),
     category: TaskStatusCategory.done,
   );
 

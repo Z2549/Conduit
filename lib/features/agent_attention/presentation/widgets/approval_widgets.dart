@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/approval_rules.dart';
@@ -154,7 +155,7 @@ class BatchApprovalCard extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: busy ? null : onReviewEach,
-                    child: const Text('Review each'),
+                    child: Text(tr('Review each')),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -271,7 +272,7 @@ class _AutoApprovedSectionState extends State<AutoApprovedSection> {
                 onPressed: _revoking.contains(rule.id)
                     ? null
                     : () => _revoke(rule),
-                child: const Text('Revoke'),
+                child: Text(tr('Revoke')),
               ),
             ),
           ),
@@ -378,12 +379,12 @@ class _EntryRow extends StatelessWidget {
             if (rule != null)
               TextButton(
                 onPressed: busy ? null : () => onUndo(rule),
-                child: const Text('Undo trust'),
+                child: Text(tr('Undo trust')),
               )
             else
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text('Rule gone', style: muted),
+                child: Text(tr('Rule gone'), style: muted),
               ),
           ],
         ),
@@ -601,7 +602,7 @@ class TerminalOnlyNote extends StatelessWidget {
             key: const ValueKey('terminal-only-open-terminal'),
             onPressed: open,
             icon: const Icon(Icons.terminal_rounded, size: 18),
-            label: const Text('Open terminal'),
+            label: Text(tr('Open terminal')),
           ),
         ),
       ],

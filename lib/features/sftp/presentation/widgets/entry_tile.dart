@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/features/sftp/domain/sftp_entry.dart';
 import 'package:flutter/material.dart';
@@ -146,7 +147,7 @@ class _EntryActionsButton extends StatelessWidget {
       width: 36,
       height: 36,
       child: PopupMenuButton<EntryAction>(
-        tooltip: 'Item options',
+        tooltip: tr('Item options'),
         padding: EdgeInsets.zero,
         iconSize: 18,
         icon: Icon(
@@ -156,11 +157,11 @@ class _EntryActionsButton extends StatelessWidget {
         onSelected: onAction,
         itemBuilder: (context) => [
           if (!entry.isDirectory)
-            const PopupMenuItem(
+            PopupMenuItem(
               value: EntryAction.open,
               child: ListTile(
                 leading: Icon(Icons.open_in_new_rounded),
-                title: Text('Open'),
+                title: Text(tr('Open')),
                 contentPadding: EdgeInsets.zero,
                 minLeadingWidth: 24,
               ),
@@ -174,20 +175,20 @@ class _EntryActionsButton extends StatelessWidget {
               minLeadingWidth: 24,
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: EntryAction.copyPath,
             child: ListTile(
               leading: Icon(Icons.copy_rounded),
-              title: Text('Copy path'),
+              title: Text(tr('Copy path')),
               contentPadding: EdgeInsets.zero,
               minLeadingWidth: 24,
             ),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: EntryAction.rename,
             child: ListTile(
               leading: Icon(Icons.drive_file_rename_outline_rounded),
-              title: Text('Rename'),
+              title: Text(tr('Rename')),
               contentPadding: EdgeInsets.zero,
               minLeadingWidth: 24,
             ),
@@ -199,7 +200,7 @@ class _EntryActionsButton extends StatelessWidget {
                 Icons.delete_outline_rounded,
                 color: colorScheme.error,
               ),
-              title: const Text('Delete'),
+              title: Text(tr('Delete')),
               contentPadding: EdgeInsets.zero,
               minLeadingWidth: 24,
             ),

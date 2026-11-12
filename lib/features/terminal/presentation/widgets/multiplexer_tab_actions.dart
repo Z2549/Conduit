@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -102,14 +103,14 @@ Future<void> showMultiplexerTabActions(
               key: const ValueKey('mux-tab-move-left'),
               enabled: index > 0,
               leading: const Icon(Icons.arrow_back_rounded),
-              title: const Text('Move left'),
+              title: Text(tr('Move left')),
               onTap: () => Navigator.of(context).pop(_TabAction.moveLeft),
             ),
             ListTile(
               key: const ValueKey('mux-tab-move-right'),
               enabled: index < last,
               leading: const Icon(Icons.arrow_forward_rounded),
-              title: const Text('Move right'),
+              title: Text(tr('Move right')),
               onTap: () => Navigator.of(context).pop(_TabAction.moveRight),
             ),
           ],
@@ -191,12 +192,12 @@ Future<void> _runTabAction(
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               key: const ValueKey('mux-tab-close-confirm'),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Close'),
+              child: Text(tr('Close')),
             ),
           ],
         ),
@@ -243,11 +244,11 @@ class _RenameDialogState extends State<_RenameDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_field.text),
-          child: const Text('Rename'),
+          child: Text(tr('Rename')),
         ),
       ],
     );

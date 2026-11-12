@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/terminal/presentation/desktop_shortcuts.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class DesktopShortcutsSheet extends StatelessWidget {
       shrinkWrap: true,
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       children: [
-        Text('Keyboard shortcuts', style: theme.textTheme.titleMedium),
+        Text(tr('Keyboard shortcuts'), style: theme.textTheme.titleMedium),
         const SizedBox(height: 12),
         for (final row in rows)
           Padding(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
@@ -296,21 +297,21 @@ class _TerminalSurfaceState extends State<TerminalSurface> {
             dense: true,
             enabled: selection != null,
             leading: const Icon(Icons.copy_rounded, size: 18),
-            title: const Text('Copy'),
+            title: Text(tr('Copy')),
             onTap: () => Navigator.of(context).pop(_TerminalMenuAction.copy),
           ),
           ListTile(
             key: const ValueKey('terminal-menu-paste'),
             dense: true,
             leading: const Icon(Icons.content_paste_rounded, size: 18),
-            title: const Text('Paste'),
+            title: Text(tr('Paste')),
             onTap: () => Navigator.of(context).pop(_TerminalMenuAction.paste),
           ),
           ListTile(
             key: const ValueKey('terminal-menu-select-all'),
             dense: true,
             leading: const Icon(Icons.select_all_rounded, size: 18),
-            title: const Text('Select all'),
+            title: Text(tr('Select all')),
             onTap: () =>
                 Navigator.of(context).pop(_TerminalMenuAction.selectAll),
           ),
@@ -921,7 +922,7 @@ class _StartupCoverState extends State<_StartupCover> {
                 child: CircularProgressIndicator(strokeWidth: 2, color: muted),
               ),
               const SizedBox(width: 10),
-              Text('Opening Herdr…', style: TextStyle(color: muted)),
+              Text(tr('Opening Herdr…'), style: TextStyle(color: muted)),
             ],
           ),
         ),

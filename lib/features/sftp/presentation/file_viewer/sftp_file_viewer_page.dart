@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/terminal_appearance.dart';
@@ -63,7 +64,7 @@ class _SftpFileViewerPageState extends State<SftpFileViewerPage> {
                 Row(
                   children: [
                     IconButton(
-                      tooltip: 'Back',
+                      tooltip: tr('Back'),
                       onPressed: () => _handlePop(false),
                       icon: const Icon(Icons.arrow_back_rounded),
                     ),

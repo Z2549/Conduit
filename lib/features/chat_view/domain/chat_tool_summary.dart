@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/chat_view/domain/chat_items.dart';
 
 /// One line of an Edit/Write preview.
@@ -60,7 +61,7 @@ class ChatToolSummary {
         );
       case 'Edit':
         return ChatToolSummary(
-          title: 'Edit',
+          title: tr('Edit'),
           subject: str('file_path') ?? '',
           detail: input['replace_all'] == true ? 'replace all' : null,
           diff: _diff(str('old_string') ?? '', str('new_string') ?? ''),
@@ -92,7 +93,7 @@ class ChatToolSummary {
         final content = str('content') ?? '';
         final lines = content.split('\n').length;
         return ChatToolSummary(
-          title: 'Write',
+          title: tr('Write'),
           subject: str('file_path') ?? '',
           detail: '$lines line${lines == 1 ? '' : 's'}',
           diff: _diff('', content),
@@ -104,7 +105,7 @@ class ChatToolSummary {
           if (input['limit'] != null) '${input['limit']} lines',
         ].join(', ');
         return ChatToolSummary(
-          title: 'Read',
+          title: tr('Read'),
           subject: str('file_path') ?? str('notebook_path') ?? '',
           detail: range.isEmpty ? null : range,
           resultPreview: _errorPreview(result),
@@ -129,13 +130,13 @@ class ChatToolSummary {
         );
       case 'WebFetch':
         return ChatToolSummary(
-          title: 'Fetch',
+          title: tr('Fetch'),
           subject: str('url') ?? '',
           resultPreview: _errorPreview(result),
         );
       case 'WebSearch':
         return ChatToolSummary(
-          title: 'Search the web',
+          title: tr('Search the web'),
           subject: str('query') ?? '',
           resultPreview: _errorPreview(result),
         );
@@ -154,7 +155,7 @@ class ChatToolSummary {
     // patch (Codex's apply_patch).
     if (call.kind == ChatToolKind.bash && str('command') != null) {
       return ChatToolSummary(
-        title: 'Shell',
+        title: tr('Shell'),
         subject: _firstLine(str('command')!),
         detail: str('description'),
         exitCode: _exitCode(result),
@@ -164,7 +165,7 @@ class ChatToolSummary {
     if (call.kind == ChatToolKind.edit && str('patch') != null) {
       final files = input['files'];
       return ChatToolSummary(
-        title: 'Edit',
+        title: tr('Edit'),
         subject: files is List ? files.whereType<String>().join(', ') : '',
         diff: _patchDiff(str('patch')!),
         resultPreview: _errorPreview(result),

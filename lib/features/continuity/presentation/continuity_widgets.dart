@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/command_palette/domain/palette_entry.dart';
 import 'package:conduit/features/continuity/domain/continuity_preferences.dart';
@@ -110,7 +111,7 @@ class _OfferChip extends StatelessWidget {
               ),
               IconButton(
                 key: const ValueKey('continuity-dismiss'),
-                tooltip: 'Dismiss',
+                tooltip: tr('Dismiss'),
                 visualDensity: VisualDensity.compact,
                 onPressed: onDismiss,
                 icon: Icon(
@@ -233,12 +234,11 @@ class _ContinuityList extends StatelessWidget {
       key: const ValueKey('continuity-sheet'),
       shrinkWrap: true,
       children: [
-        const ListTile(
-          title: Text(
-            'Continue on…',
+        ListTile(
+          title: Text(tr('Continue on…'),
             style: TextStyle(fontWeight: FontWeight.w800),
           ),
-          subtitle: Text('Where your other devices are and were lately'),
+          subtitle: Text(tr('Where your other devices are and were lately')),
         ),
         const Divider(height: 1),
         if (devices.isEmpty)
@@ -335,8 +335,8 @@ List<PaletteEntry> continuityPaletteEntries(
         ),
     PaletteEntry(
       id: 'command:continue-on',
-      title: 'Continue on…',
-      subtitle: 'Where your other devices are',
+      title: tr('Continue on…'),
+      subtitle: tr('Where your other devices are'),
       kind: PaletteKind.command,
       icon: Icons.devices_rounded,
       keywords: const ['continuity', 'handoff', 'other device', 'phone'],
@@ -492,7 +492,7 @@ class ContinuityDraftBar extends StatelessWidget {
           row(Icons.devices_rounded, 'Draft from ${device.name}', [
             IconButton(
               key: const ValueKey('continuity-draft-hint-close'),
-              tooltip: 'Hide',
+              tooltip: tr('Hide'),
               visualDensity: VisualDensity.compact,
               iconSize: 16,
               onPressed: onDismissHint,

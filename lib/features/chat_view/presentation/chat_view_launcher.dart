@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/connection_details.dart';
 import 'package:conduit/core/presentation/terminal_route.dart';
@@ -367,7 +368,7 @@ Future<ChatViewAccess> checkChatViewAccess({
     if (unreached != null) return ChatViewAccess.connection(unreached);
     final detail = error is AppFailure ? error.userMessage : '$error';
     return ChatViewAccess.blocked(
-      title: 'Could not list agent sessions',
+      title: tr('Could not list agent sessions'),
       problem:
           'The companion${_version(status)} is installed on ${host.name}, '
           'but "conductore-hostd status" failed: $detail',
@@ -398,28 +399,28 @@ ChatViewAccess _blockedBy(CompanionStatus status, SavedHost host) {
   return switch (status.state) {
     CompanionState.notInstalled => ChatViewAccess.blocked(
       companionMissing: true,
-      title: 'Chat view needs the companion',
+      title: tr('Chat view needs the companion'),
       problem:
           '"conductore-hostd" was not found on $name'
           '${status.user == null ? '' : ' for ${status.user}'}. '
           '${ConductoreChatClient.installHint}',
     ),
     CompanionState.hooksMissing => ChatViewAccess.blocked(
-      title: 'Claude Code hooks are not registered',
+      title: tr('Claude Code hooks are not registered'),
       problem:
           'The companion${_version(status)} is installed on $name, but '
           'Claude Code\'s hooks are not registered, so it cannot see '
           'sessions. Register them from Agent hooks.',
     ),
     CompanionState.outdated => ChatViewAccess.blocked(
-      title: 'The companion needs an update',
+      title: tr('The companion needs an update'),
       problem:
           'The companion on $name is version '
           '${status.installedVersion ?? 'unknown'}; this app needs '
           '$kCompanionMinVersion or newer. Update it from Agent hooks.',
     ),
     _ => ChatViewAccess.blocked(
-      title: 'Could not check the companion',
+      title: tr('Could not check the companion'),
       problem:
           'Checking the companion on $name failed: '
           '${[status.message, status.errorDetail].nonNulls.join(' ').trim()}',
@@ -606,7 +607,7 @@ Future<void> showChatViewUnavailable(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(),
-          child: const Text('OK'),
+          child: Text(tr('OK')),
         ),
         if (canSetUp)
           FilledButton(
@@ -615,7 +616,7 @@ Future<void> showChatViewUnavailable(
               Navigator.of(dialogContext).pop();
               showCompanionSetup(context, _machine(host));
             },
-            child: const Text('Agent hooks'),
+            child: Text(tr('Agent hooks')),
           ),
       ],
     ),

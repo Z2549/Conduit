@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/desktop_shell/domain/hc_documents.dart';
@@ -121,7 +122,7 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
+            child: Text(tr('Close')),
           ),
         ],
       ),
@@ -140,19 +141,19 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
           autofocus: true,
           minLines: 1,
           maxLines: 5,
-          decoration: const InputDecoration(
-            helperText: 'Pasted, then Enter once nobody is typing there.',
+          decoration: InputDecoration(
+            helperText: tr('Pasted, then Enter once nobody is typing there.'),
             helperMaxLines: 2,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
-            child: const Text('Send'),
+            child: Text(tr('Send')),
           ),
         ],
       ),
@@ -202,7 +203,7 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
           if (sent != null)
             Text('→ $sent (sent)', style: theme.textTheme.bodySmall)
           else if (q.isSending)
-            Text('Being sent…', style: theme.textTheme.bodySmall)
+            Text(tr('Being sent…'), style: theme.textTheme.bodySmall)
           else
             Wrap(
               spacing: 8,
@@ -218,7 +219,7 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
                   ),
                 ActionChip(
                   key: ValueKey('hc-answer-${card.id}-${q.number}-other'),
-                  label: const Text('Other…'),
+                  label: Text(tr('Other…')),
                   onPressed: _busy
                       ? null
                       : () => unawaited(_answerOther(card, q)),
@@ -257,22 +258,22 @@ class _HcTerminalActionsSheetState extends State<HcTerminalActionsSheet> {
           ListTile(
             key: const ValueKey('hc-action-open'),
             leading: const Icon(Icons.terminal_rounded),
-            title: const Text('Open'),
+            title: Text(tr('Open')),
             subtitle: const Text('Attach here; ctrl+\\ detaches.'),
             onTap: widget.onOpen,
           ),
           ListTile(
             key: const ValueKey('hc-action-read'),
             leading: const Icon(Icons.article_outlined),
-            title: const Text('Read'),
-            subtitle: const Text('Its screen and the last 200 lines.'),
+            title: Text(tr('Read')),
+            subtitle: Text(tr('Its screen and the last 200 lines.')),
             enabled: !_busy,
             onTap: () => unawaited(_read()),
           ),
           ListTile(
             key: const ValueKey('hc-action-send'),
             leading: const Icon(Icons.send_outlined),
-            title: const Text('Send…'),
+            title: Text(tr('Send…')),
             subtitle: const Text(
               'A line and Enter. A program waiting on a decision is answered '
               'in the terminal itself.',
@@ -368,11 +369,11 @@ class _AnswerDialogState extends State<_AnswerDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.of(context).pop(),
-        child: const Text('Cancel'),
+        child: Text(tr('Cancel')),
       ),
       FilledButton(
         onPressed: () => Navigator.of(context).pop(_controller.text),
-        child: const Text('Send'),
+        child: Text(tr('Send')),
       ),
     ],
   );

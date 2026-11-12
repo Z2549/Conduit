@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
@@ -70,7 +71,7 @@ class UsageExplorerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: const ValueKey('usage-explorer-page'),
-      appBar: AppBar(title: const Text('Usage')),
+      appBar: AppBar(title: Text(tr('Usage'))),
       body: SafeArea(
         top: false,
         child: UsageExplorerView(
@@ -320,13 +321,13 @@ class _UsageExplorerViewState extends State<UsageExplorerView>
           else
             IconButton(
               key: const ValueKey('usage-explorer-refresh'),
-              tooltip: 'Refresh usage',
+              tooltip: tr('Refresh usage'),
               icon: const Icon(Icons.refresh_rounded, size: 20),
               onPressed: () => unawaited(explorer.refresh()),
             ),
           IconButton(
             key: const ValueKey('usage-explorer-export'),
-            tooltip: 'Export CSV',
+            tooltip: tr('Export CSV'),
             icon: const Icon(Icons.file_download_outlined, size: 20),
             onPressed: explorer.current.rows.isEmpty
                 ? null
@@ -335,7 +336,7 @@ class _UsageExplorerViewState extends State<UsageExplorerView>
           if (widget.onClose case final close?)
             IconButton(
               key: const ValueKey('usage-explorer-close'),
-              tooltip: 'Close usage',
+              tooltip: tr('Close usage'),
               icon: const Icon(Icons.close_rounded, size: 20),
               onPressed: close,
             ),
@@ -359,7 +360,7 @@ class _UsageExplorerViewState extends State<UsageExplorerView>
       if (explorer.loading)
         Padding(
           padding: const EdgeInsets.only(top: 12),
-          child: Text('Counting…', style: theme.textTheme.bodySmall),
+          child: Text(tr('Counting…'), style: theme.textTheme.bodySmall),
         ),
     ];
   }
@@ -501,7 +502,7 @@ class _UsageExplorerViewState extends State<UsageExplorerView>
       for (final (name, error) in explorer.errors)
         Text('$name: could not read usage: $error', style: muted),
       if (explorer.partial)
-        Text('Still counting older transcripts…', style: muted),
+        Text(tr('Still counting older transcripts…'), style: muted),
       for (final name in explorer.rebuilding)
         Text(
           '$name: recounting after the companion update; hours and sessions '
@@ -658,8 +659,8 @@ class _Headline extends StatelessWidget {
         FilterChip(
           key: const ValueKey('usage-split'),
           visualDensity: VisualDensity.compact,
-          label: const Text('Split'),
-          tooltip: 'Input, output and cache apart',
+          label: Text(tr('Split')),
+          tooltip: tr('Input, output and cache apart'),
           selected: explorer.split,
           onSelected: explorer.setSplit,
         ),
@@ -682,8 +683,7 @@ class _Headline extends StatelessWidget {
           ),
         ),
         if (metric == UsageMetric.cost)
-          Text(
-            'API-price estimate',
+          Text(tr('API-price estimate'),
             key: const ValueKey('usage-explorer-estimate'),
             style: muted,
           )
@@ -800,13 +800,13 @@ class _FilterRow extends StatelessWidget {
           key: const ValueKey('usage-filter-add'),
           visualDensity: VisualDensity.compact,
           avatar: const Icon(Icons.filter_list_rounded, size: 16),
-          label: const Text('Filter'),
+          label: Text(tr('Filter')),
           onPressed: () => unawaited(_pick(context)),
         ),
         if (chips.length > 1)
           TextButton(
             onPressed: explorer.clearFilter,
-            child: const Text('Clear'),
+            child: Text(tr('Clear')),
           ),
       ],
     );
@@ -828,7 +828,7 @@ class _FilterRow extends StatelessWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
           children: [
-            Text('Filter usage', style: theme.textTheme.titleMedium),
+            Text(tr('Filter usage'), style: theme.textTheme.titleMedium),
             for (final dimension in const [
               UsageDimension.machine,
               UsageDimension.account,
@@ -866,7 +866,7 @@ class _FilterRow extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Done'),
+                child: Text(tr('Done')),
               ),
             ),
           ],
@@ -1266,7 +1266,7 @@ class _DayDetail extends StatelessWidget {
       children: [
         IconButton(
           key: const ValueKey('usage-day-previous'),
-          tooltip: 'Previous day',
+          tooltip: tr('Previous day'),
           icon: const Icon(Icons.chevron_left_rounded),
           onPressed: explorer.canStep(-1) ? () => explorer.stepDay(-1) : null,
         ),
@@ -1280,14 +1280,14 @@ class _DayDetail extends StatelessWidget {
         ),
         IconButton(
           key: const ValueKey('usage-day-next'),
-          tooltip: 'Next day',
+          tooltip: tr('Next day'),
           icon: const Icon(Icons.chevron_right_rounded),
           onPressed: explorer.canStep(1) ? () => explorer.stepDay(1) : null,
         ),
         if (onClose case final close?)
           IconButton(
             key: const ValueKey('usage-day-close'),
-            tooltip: 'Close the day',
+            tooltip: tr('Close the day'),
             icon: const Icon(Icons.close_rounded, size: 20),
             onPressed: close,
           ),
@@ -1314,10 +1314,10 @@ class _DayDetail extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 10),
-        Text('By hour', style: theme.textTheme.labelLarge),
+        Text(tr('By hour'), style: theme.textTheme.labelLarge),
         const SizedBox(height: 6),
         if (explorer.dayLoading)
-          Text('Loading the hours…', style: muted)
+          Text(tr('Loading the hours…'), style: muted)
         else if (explorer.dayHasHours)
           UsageHourChart(
             hours: slice.hours(day),
@@ -1398,7 +1398,7 @@ class _UsageDayPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final page = Scaffold(
       key: const ValueKey('usage-day-page'),
-      appBar: AppBar(title: const Text('Usage by day')),
+      appBar: AppBar(title: Text(tr('Usage by day'))),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onHorizontalDragEnd: (details) {
@@ -1653,8 +1653,7 @@ class _BreakdownSection extends StatelessWidget {
               ),
             ),
           if (groups.isEmpty)
-            Text(
-              'Nothing here.',
+            Text(tr('Nothing here.'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: palette.mutedForeground,
               ),
@@ -1819,7 +1818,7 @@ class _UpdateNote extends StatelessWidget {
           if (onUpdateCompanion case final update?)
             TextButton(
               onPressed: () => update(hostIds.first),
-              child: const Text('Update agent hooks'),
+              child: Text(tr('Update agent hooks')),
             ),
         ],
       ),

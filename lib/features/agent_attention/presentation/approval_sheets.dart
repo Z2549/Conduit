@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/approval_rules.dart';
@@ -150,7 +151,7 @@ class _TrustSheetState extends State<TrustSheet> {
               RiskLine(risk: risk),
             ],
             const SizedBox(height: 16),
-            Text('Rule', style: theme.textTheme.labelLarge),
+            Text(tr('Rule'), style: theme.textTheme.labelLarge),
             const SizedBox(height: 6),
             Wrap(
               spacing: 6,
@@ -187,14 +188,14 @@ class _TrustSheetState extends State<TrustSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Where', style: theme.textTheme.labelLarge),
+            Text(tr('Where'), style: theme.textTheme.labelLarge),
             const SizedBox(height: 6),
             SegmentedButton<ApprovalScopeKind>(
               showSelectedIcon: false,
               segments: [
-                const ButtonSegment(
+                ButtonSegment(
                   value: ApprovalScopeKind.session,
-                  label: Text('This session'),
+                  label: Text(tr('This session')),
                 ),
                 ButtonSegment(
                   value: ApprovalScopeKind.repo,
@@ -204,9 +205,9 @@ class _TrustSheetState extends State<TrustSheet> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const ButtonSegment(
+                ButtonSegment(
                   value: ApprovalScopeKind.any,
-                  label: Text('All repos'),
+                  label: Text(tr('All repos')),
                 ),
               ],
               selected: {_scope},
@@ -214,7 +215,7 @@ class _TrustSheetState extends State<TrustSheet> {
                   setState(() => _scope = value.first),
             ),
             const SizedBox(height: 16),
-            Text('For how long', style: theme.textTheme.labelLarge),
+            Text(tr('For how long'), style: theme.textTheme.labelLarge),
             const SizedBox(height: 6),
             Wrap(
               spacing: 6,
@@ -233,12 +234,12 @@ class _TrustSheetState extends State<TrustSheet> {
             ApprovalSheetActions(
               cancel: OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child: Text(tr('Cancel')),
               ),
               confirm: FilledButton(
                 key: const ValueKey('trust-save'),
                 onPressed: save,
-                child: const Text('Allow and trust'),
+                child: Text(tr('Allow and trust')),
               ),
             ),
             if (widget.offerClaudeCodeAlways)
@@ -437,7 +438,7 @@ Future<bool> showBatchApproveSheet(
             ApprovalSheetActions(
               cancel: OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(tr('Cancel')),
               ),
               confirm: FilledButton(
                 key: const ValueKey('batch-confirm'),

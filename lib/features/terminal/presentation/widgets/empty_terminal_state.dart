@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +18,9 @@ class EmptyTerminalState extends StatelessWidget {
           children: [
             const ConduitGlyph(size: 48),
             const SizedBox(height: 16),
-            Text('No sessions open', style: theme.textTheme.titleLarge),
+            Text(tr('No sessions open'), style: theme.textTheme.titleLarge),
             const SizedBox(height: 6),
-            Text(
-              'Pick a machine to spin up a new tab.',
+            Text(tr('Pick a machine to spin up a new tab.'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -29,7 +29,7 @@ class EmptyTerminalState extends StatelessWidget {
             FilledButton.icon(
               onPressed: onBack,
               icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Back to machines'),
+              label: Text(tr('Back to machines')),
             ),
           ],
         ),

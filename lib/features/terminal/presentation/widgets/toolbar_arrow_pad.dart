@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit_vt/conduit_vt.dart';
@@ -204,8 +205,7 @@ class _ToolbarArrowPadState extends State<ToolbarArrowPad> {
       _ => Icons.open_with_rounded,
     };
     return Semantics(
-      label:
-          'Arrow pad. Drag to move the cursor, tap an edge for a single arrow.',
+      label: tr('Arrow pad. Drag to move the cursor, tap an edge for a single arrow.'),
       button: true,
       child: RawGestureDetector(
         // Win the gesture arena on touch-down so neither the toolbar's

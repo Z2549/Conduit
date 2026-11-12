@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/features/terminal/domain/host_key_prompt.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
     if (isMismatch && _confirming) {
       return AlertDialog(
         icon: Icon(Icons.gpp_maybe_outlined, color: colorScheme.error),
-        title: const Text('Replace the trusted key?'),
+        title: Text(tr('Replace the trusted key?')),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +61,7 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
               ),
               const SizedBox(height: 12),
               _PromptField(
-                label: 'New fingerprint',
+                label: tr('New fingerprint'),
                 value: request.sha256Fingerprint ?? request.fingerprint,
               ),
               CheckboxListTile(
@@ -83,13 +84,13 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
             onPressed: _checked
                 ? () => Navigator.of(context).pop(HostKeyDecision.trust)
                 : null,
-            child: const Text('Replace key'),
+            child: Text(tr('Replace key')),
           ),
           FilledButton(
             // Enter keeps the old key on desktop: the safe answer.
             autofocus: PlatformFeatures.isDesktop,
             onPressed: reject,
-            child: const Text('Keep old key'),
+            child: Text(tr('Keep old key')),
           ),
         ],
       );
@@ -127,20 +128,19 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
                   '(ssh-keygen -lf /etc/ssh/ssh_host_*_key.pub).',
                 ),
               ),
-            _PromptField(label: 'Host', value: endpoint),
-            _PromptField(label: 'Algorithm', value: request.type),
+            _PromptField(label: tr('Host'), value: endpoint),
+            _PromptField(label: tr('Algorithm'), value: request.type),
             ..._fingerprintFields(
               sha256: request.sha256Fingerprint,
               md5: request.fingerprint,
             ),
             if (isMismatch && request.existing != null) ...[
               const Divider(height: 24),
-              Text(
-                'Previously trusted:',
+              Text(tr('Previously trusted:'),
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               const SizedBox(height: 6),
-              _PromptField(label: 'Algorithm', value: request.existing!.type),
+              _PromptField(label: tr('Algorithm'), value: request.existing!.type),
               ..._fingerprintFields(
                 sha256: request.existing!.sha256Fingerprint,
                 md5: request.existing!.fingerprint,
@@ -154,12 +154,12 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
               TextButton(
                 style: TextButton.styleFrom(foregroundColor: colorScheme.error),
                 onPressed: () => setState(() => _confirming = true),
-                child: const Text('Review replacement…'),
+                child: Text(tr('Review replacement…')),
               ),
               FilledButton(
                 autofocus: PlatformFeatures.isDesktop,
                 onPressed: reject,
-                child: const Text('Reject'),
+                child: Text(tr('Reject')),
               ),
             ]
           : [
@@ -168,12 +168,12 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
                 // pop up while the user is still typing in a terminal.
                 autofocus: PlatformFeatures.isDesktop,
                 onPressed: reject,
-                child: const Text('Reject'),
+                child: Text(tr('Reject')),
               ),
               FilledButton(
                 onPressed: () =>
                     Navigator.of(context).pop(HostKeyDecision.trust),
-                child: const Text('Trust'),
+                child: Text(tr('Trust')),
               ),
             ],
     );
@@ -184,7 +184,7 @@ class _HostKeyPromptDialogState extends State<_HostKeyPromptDialog> {
     required String? sha256,
     required String md5,
   }) => [
-    if (sha256 != null) _PromptField(label: 'Fingerprint', value: sha256),
+    if (sha256 != null) _PromptField(label: tr('Fingerprint'), value: sha256),
     _PromptField(
       label: sha256 == null ? 'Fingerprint' : 'MD5 fingerprint',
       value: md5,

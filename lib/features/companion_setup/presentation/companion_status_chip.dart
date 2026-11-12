@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/companion_setup/domain/companion_status.dart';
 import 'package:conduit/features/companion_setup/presentation/companion_setup_controller.dart';
@@ -232,7 +233,7 @@ class _CompanionSetupTileState extends State<CompanionSetupTile> {
             contentPadding: EdgeInsets.zero,
             leading: Icon(icon, color: color),
             title: Text('Agent hooks: $text'),
-            subtitle: const Text('Conductore companion for approvals and chat'),
+            subtitle: Text(tr('Conductore companion for approvals and chat')),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () async {
               final resolved = widget.resolveHost();

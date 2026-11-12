@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/chat_view/data/platform_text_share.dart';
@@ -275,7 +276,7 @@ class _HoverBar extends StatelessWidget {
         children: [
           IconButton(
             key: const ValueKey('chat-message-copy'),
-            tooltip: 'Copy',
+            tooltip: tr('Copy'),
             visualDensity: VisualDensity.compact,
             iconSize: 16,
             onPressed: onCopy,
@@ -284,7 +285,7 @@ class _HoverBar extends StatelessWidget {
           Builder(
             builder: (context) => IconButton(
               key: const ValueKey('chat-message-more'),
-              tooltip: 'More actions',
+              tooltip: tr('More actions'),
               visualDensity: VisualDensity.compact,
               iconSize: 16,
               onPressed: () => onMore(context),
@@ -307,15 +308,15 @@ Future<void> showChatSelectText(
     fullscreenDialog: true,
     builder: (context) => Scaffold(
       appBar: AppBar(
-        title: const Text('Select text'),
+        title: Text(tr('Select text')),
         actions: [
           IconButton(
-            tooltip: 'Copy all',
+            tooltip: tr('Copy all'),
             onPressed: () {
               unawaited(Clipboard.setData(ClipboardData(text: content.plain)));
               ScaffoldMessenger.maybeOf(context)
                 ?..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(content: Text('Copied')));
+                ..showSnackBar(SnackBar(content: Text(tr('Copied'))));
             },
             icon: const Icon(Icons.copy_all_rounded),
           ),

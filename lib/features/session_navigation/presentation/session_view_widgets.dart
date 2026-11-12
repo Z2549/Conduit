@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/session_navigation/domain/session_view_preferences.dart';
@@ -125,8 +126,7 @@ class SessionViewSettingsTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: Text(
-                      'Open agent sessions in',
+                    child: Text(tr('Open agent sessions in'),
                       style: theme.textTheme.titleMedium,
                     ),
                   ),
@@ -150,14 +150,14 @@ class SessionViewSettingsTile extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 40),
                 child: SegmentedButton<SessionView>(
                   showSelectedIcon: false,
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: SessionView.chat,
-                      label: Text('Chat View'),
+                      label: Text(tr('Chat View')),
                     ),
                     ButtonSegment(
                       value: SessionView.terminal,
-                      label: Text('Terminal'),
+                      label: Text(tr('Terminal')),
                     ),
                   ],
                   selected: {controller.defaultView},

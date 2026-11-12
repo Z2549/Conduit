@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/companion_setup/domain/companion_status.dart';
 import 'package:conduit/features/companion_setup/presentation/companion_setup_controller.dart';
 import 'package:conduit/features/companion_setup/presentation/companion_setup_page.dart';
@@ -74,7 +75,7 @@ class _UsageUpdateHintState extends State<UsageUpdateHint> {
               TextButton.icon(
                 onPressed: () => showCompanionSetup(context, widget.host),
                 icon: const Icon(Icons.system_update_alt_rounded, size: 18),
-                label: const Text('Update agent hooks for usage'),
+                label: Text(tr('Update agent hooks for usage')),
               ),
             ],
           ),

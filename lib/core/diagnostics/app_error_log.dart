@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -203,8 +204,7 @@ class AppErrorCard extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const Text(
-                'Something went wrong here',
+              Text(tr('Something went wrong here'),
                 style: TextStyle(
                   color: _accent,
                   fontSize: 18,
@@ -271,8 +271,7 @@ class AppErrorCard extends StatelessWidget {
                       color: _accent,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'Copy error',
+                    child: Text(tr('Copy error'),
                       style: TextStyle(
                         color: _background,
                         fontSize: 14,

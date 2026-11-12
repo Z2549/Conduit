@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
 import 'package:conduit/features/companion_setup/presentation/companion_status_chip.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -25,8 +26,7 @@ class AgentMachinesSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 14, 4, 2),
-          child: Text(
-            'MACHINES',
+          child: Text(tr('MACHINES'),
             style: theme.textTheme.labelMedium?.copyWith(
               letterSpacing: 0.8,
               fontWeight: FontWeight.w700,

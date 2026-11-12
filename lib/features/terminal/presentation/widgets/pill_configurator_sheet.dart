@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/terminal_appearance.dart';
@@ -88,8 +89,7 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    'Toolbar buttons',
+                  child: Text(tr('Toolbar buttons'),
                     style: theme.textTheme.titleLarge,
                   ),
                 ),
@@ -100,7 +100,7 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
                       ..clear()
                       ..addAll(defaultTerminalPillItems);
                   }),
-                  child: const Text('Reset'),
+                  child: Text(tr('Reset')),
                 ),
               ],
             ),
@@ -136,7 +136,7 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
                         subtitle: Text(_description(item)),
                         trailing: IconButton(
                           key: ValueKey('pill-config-remove-${item.encode()}'),
-                          tooltip: 'Remove',
+                          tooltip: tr('Remove'),
                           icon: const Icon(Icons.remove_circle_outline),
                           onPressed: () =>
                               setState(() => _items.removeAt(index)),
@@ -151,11 +151,10 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Add', style: theme.textTheme.labelLarge),
+                        Text(tr('Add'), style: theme.textTheme.labelLarge),
                         const SizedBox(height: 8),
                         if (available.isEmpty)
-                          Text(
-                            'Every button is on the toolbar.',
+                          Text(tr('Every button is on the toolbar.'),
                             style: theme.textTheme.bodySmall,
                           )
                         else
@@ -189,7 +188,7 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: Text(tr('Cancel')),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -197,7 +196,7 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
                   child: FilledButton(
                     key: const ValueKey('pill-config-save'),
                     onPressed: () => Navigator.of(context).pop(List.of(_items)),
-                    child: const Text('Save'),
+                    child: Text(tr('Save')),
                   ),
                 ),
               ],

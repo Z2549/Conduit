@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/features/share_target/domain/shared_payload.dart';
@@ -198,13 +199,13 @@ class _ImageCropPageState extends State<ImageCropPage> {
     final page = Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Attach image'),
+        title: Text(tr('Attach image')),
         actions: [
           TextButton(
             onPressed: isFullImageCrop(_crop)
                 ? null
                 : () => setState(() => _crop = fullImageCrop),
-            child: const Text('Reset'),
+            child: Text(tr('Reset')),
           ),
         ],
       ),
@@ -272,8 +273,7 @@ class _ImageCropPageState extends State<ImageCropPage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      'Drag the corners to crop, or attach as is.',
+                    child: Text(tr('Drag the corners to crop, or attach as is.'),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.75),
                       ),
@@ -281,13 +281,13 @@ class _ImageCropPageState extends State<ImageCropPage> {
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: Text(tr('Cancel')),
                   ),
                   const SizedBox(width: 8),
                   FilledButton.icon(
                     onPressed: _attach,
                     icon: const Icon(Icons.attach_file_rounded),
-                    label: const Text('Attach'),
+                    label: Text(tr('Attach')),
                   ),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/chat_view/presentation/widgets/chat_working_indicator.dart';
@@ -107,18 +108,18 @@ class TalkPanel extends StatelessWidget {
                         TextButton(
                           key: const ValueKey('talk-cancel'),
                           onPressed: onStop,
-                          child: const Text('Cancel'),
+                          child: Text(tr('Cancel')),
                         ),
                         IconButton(
                           key: const ValueKey('talk-send-now'),
-                          tooltip: 'Send now',
+                          tooltip: tr('Send now'),
                           onPressed: controller.sendNow,
                           icon: const Icon(Icons.send_rounded),
                         ),
                       ] else
                         IconButton(
                           key: const ValueKey('talk-stop'),
-                          tooltip: 'Stop talking',
+                          tooltip: tr('Stop talking'),
                           onPressed: onStop,
                           icon: Icon(
                             Icons.stop_circle_rounded,

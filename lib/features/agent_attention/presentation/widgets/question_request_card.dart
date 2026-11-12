@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
@@ -210,13 +211,13 @@ class _QuestionRequestCardState extends State<QuestionRequestCard> {
                   TextButton(
                     key: ValueKey('question-open-terminal-${request.id}'),
                     onPressed: widget.onOpenTerminal,
-                    child: const Text('Open terminal'),
+                    child: Text(tr('Open terminal')),
                   )
                 else if (!widget.viaTerminal)
                   TextButton(
                     key: ValueKey('question-decline-${request.id}'),
                     onPressed: busy ? null : widget.onDecline,
-                    child: const Text('Decline'),
+                    child: Text(tr('Decline')),
                   ),
                 if (answerable)
                   FilledButton(
@@ -273,7 +274,7 @@ class _QuestionBlock extends StatelessWidget {
           if (question.description case final description?)
             Text(description, style: theme.textTheme.bodySmall),
           if (question.multiSelect)
-            Text('Pick any', style: theme.textTheme.bodySmall),
+            Text(tr('Pick any'), style: theme.textTheme.bodySmall),
           const SizedBox(height: 6),
           for (final option in question.options)
             Padding(

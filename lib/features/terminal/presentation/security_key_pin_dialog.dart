@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/terminal/domain/security_key_interaction.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _SecurityKeyPinDialogState extends State<_SecurityKeyPinDialog> {
   Widget build(BuildContext context) {
     final retriesRemaining = widget.request.retriesRemaining;
     return AlertDialog(
-      title: const Text('Security key PIN'),
+      title: Text(tr('Security key PIN')),
       content: TextField(
         controller: _controller,
         autofocus: true,
@@ -54,11 +55,11 @@ class _SecurityKeyPinDialogState extends State<_SecurityKeyPinDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_controller.text),
-          child: const Text('Continue'),
+          child: Text(tr('Continue')),
         ),
       ],
     );

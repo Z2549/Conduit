@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -192,7 +193,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
           const SizedBox(width: 8),
-          Text('Looking for agents…', style: theme.textTheme.bodySmall),
+          Text(tr('Looking for agents…'), style: theme.textTheme.bodySmall),
         ],
       );
     }
@@ -200,7 +201,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Start an agent in it', style: theme.textTheme.labelLarge),
+        Text(tr('Start an agent in it'), style: theme.textTheme.labelLarge),
         const SizedBox(height: 6),
         Wrap(
           spacing: 6,
@@ -277,11 +278,11 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => unawaited(_submit()),
               decoration: InputDecoration(
-                labelText: 'Starting folder',
+                labelText: tr('Starting folder'),
                 hintText: '~/Projects/app',
                 suffixIcon: IconButton(
                   key: const ValueKey('new-workspace-browse'),
-                  tooltip: 'Pick a folder',
+                  tooltip: tr('Pick a folder'),
                   icon: const Icon(Icons.folder_open_outlined),
                   onPressed: _busy ? null : () => unawaited(_browse()),
                 ),
@@ -297,8 +298,8 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
                 enabled: !_busy,
                 minLines: 1,
                 maxLines: 4,
-                decoration: const InputDecoration(
-                  labelText: 'First message (optional)',
+                decoration: InputDecoration(
+                  labelText: tr('First message (optional)'),
                 ),
               ),
             ],
@@ -314,7 +315,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
       actions: [
         TextButton(
           onPressed: _busy ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           key: const ValueKey('new-workspace-create'),
@@ -324,7 +325,7 @@ class _NewWorkspaceDialogState extends State<NewWorkspaceDialog> {
                   dimension: 18,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('Create'),
+              : Text(tr('Create')),
         ),
       ],
     );

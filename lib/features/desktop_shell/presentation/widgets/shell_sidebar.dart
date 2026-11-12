@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
@@ -269,13 +270,13 @@ class _ShellSidebarState extends State<ShellSidebar> {
                   style: const TextStyle(fontSize: 13),
                   decoration: InputDecoration(
                     isDense: true,
-                    hintText: 'Filter',
+                    hintText: tr('Filter'),
                     prefixIcon: const Icon(Icons.search_rounded, size: 17),
                     prefixIconConstraints: const BoxConstraints(minWidth: 32),
                     suffixIcon: _filter.text.isEmpty
                         ? null
                         : IconButton(
-                            tooltip: 'Clear filter',
+                            tooltip: tr('Clear filter'),
                             iconSize: 15,
                             padding: EdgeInsets.zero,
                             onPressed: () {
@@ -399,7 +400,7 @@ class _ShellSidebarState extends State<ShellSidebar> {
           if (group != null)
             Builder(
               builder: (context) => Tooltip(
-                message: 'Group actions',
+                message: tr('Group actions'),
                 child: InkWell(
                   key: ValueKey('sidebar-group-menu-${group.id}'),
                   borderRadius: BorderRadius.circular(4),
@@ -742,7 +743,7 @@ class _SidebarRowTile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: Tooltip(
-                        message: 'Open in the app',
+                        message: tr('Open in the app'),
                         child: Icon(
                           Icons.tab_rounded,
                           key: ValueKey('sidebar-open-${node.key}'),
@@ -875,7 +876,7 @@ class CollapsedShellSidebar extends StatelessWidget {
           const SizedBox(height: 6),
           IconButton(
             key: const ValueKey('sidebar-expand'),
-            tooltip: 'Show the sidebar',
+            tooltip: tr('Show the sidebar'),
             icon: const Icon(Icons.keyboard_double_arrow_right_rounded),
             onPressed: onExpand,
           ),

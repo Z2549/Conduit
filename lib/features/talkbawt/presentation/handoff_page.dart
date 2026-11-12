@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/chat_view/data/platform_text_share.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -263,7 +264,7 @@ class _HandoffPageState extends State<HandoffPage> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Post it anyway?'),
+        title: Text(tr('Post it anyway?')),
         content: Text(
           'It still looks like it holds '
           '${findings.map((f) => f.label).join(', ')}. Anyone with the link '
@@ -272,12 +273,12 @@ class _HandoffPageState extends State<HandoffPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('handoff-override-confirm'),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Post anyway'),
+            child: Text(tr('Post anyway')),
           ),
         ],
       ),
@@ -318,7 +319,7 @@ class _HandoffPageState extends State<HandoffPage> {
                     key: const ValueKey('handoff-use-summary'),
                     onPressed: () =>
                         unawaited(_start(HandoffDraftSource.summary)),
-                    child: const Text('Use a summary instead'),
+                    child: Text(tr('Use a summary instead')),
                   ),
               ],
               _Step.review => _reviewStep(),
@@ -353,8 +354,8 @@ class _HandoffPageState extends State<HandoffPage> {
       child: ListTile(
         key: const ValueKey('handoff-source-summary'),
         leading: const Icon(Icons.summarize_outlined),
-        title: const Text('Summarise its transcript'),
-        subtitle: const Text('A coding agent on the machine, with tools off.'),
+        title: Text(tr('Summarise its transcript')),
+        subtitle: Text(tr('A coding agent on the machine, with tools off.')),
         onTap: () => unawaited(_start(HandoffDraftSource.summary)),
       ),
     ),
@@ -362,7 +363,7 @@ class _HandoffPageState extends State<HandoffPage> {
       child: ListTile(
         key: const ValueKey('handoff-source-manual'),
         leading: const Icon(Icons.edit_outlined),
-        title: const Text('Write it myself'),
+        title: Text(tr('Write it myself')),
         onTap: () => unawaited(_start(HandoffDraftSource.manual)),
       ),
     ),
@@ -374,7 +375,7 @@ class _HandoffPageState extends State<HandoffPage> {
       TextField(
         key: const ValueKey('handoff-title'),
         controller: _title,
-        decoration: const InputDecoration(labelText: 'Title'),
+        decoration: InputDecoration(labelText: tr('Title')),
       ),
       const SizedBox(height: 10),
       TextField(
@@ -383,9 +384,9 @@ class _HandoffPageState extends State<HandoffPage> {
         minLines: 8,
         maxLines: 20,
         style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
-        decoration: const InputDecoration(
-          labelText: 'Handoff',
-          helperText: 'Say where secrets live, never what they are.',
+        decoration: InputDecoration(
+          labelText: tr('Handoff'),
+          helperText: tr('Say where secrets live, never what they are.'),
           border: OutlineInputBorder(),
         ),
       ),
@@ -400,16 +401,16 @@ class _HandoffPageState extends State<HandoffPage> {
       const SizedBox(height: 12),
       SegmentedButton<TalkbawtMode>(
         key: const ValueKey('handoff-mode'),
-        segments: const [
+        segments: [
           ButtonSegment(
             value: TalkbawtMode.thread,
-            label: Text('Thread'),
-            tooltip: 'Two-way: they can reply',
+            label: Text(tr('Thread')),
+            tooltip: tr('Two-way: they can reply'),
           ),
           ButtonSegment(
             value: TalkbawtMode.handoff,
-            label: Text('Handoff'),
-            tooltip: 'One-shot, read-only',
+            label: Text(tr('Handoff')),
+            tooltip: tr('One-shot, read-only'),
           ),
         ],
         selected: {_mode},
@@ -428,7 +429,7 @@ class _HandoffPageState extends State<HandoffPage> {
       SwitchListTile(
         key: const ValueKey('handoff-passphrase'),
         contentPadding: EdgeInsets.zero,
-        title: const Text('Passphrase'),
+        title: Text(tr('Passphrase')),
         subtitle: Text(
           _usePassphrase
               ? '$_passphrase · send it over a different channel than the link'
@@ -438,7 +439,7 @@ class _HandoffPageState extends State<HandoffPage> {
         onChanged: (v) => setState(() => _usePassphrase = v),
         secondary: _usePassphrase
             ? IconButton(
-                tooltip: 'New passphrase',
+                tooltip: tr('New passphrase'),
                 onPressed: () => setState(
                   () => _passphrase = widget.controller.newPassphrase(),
                 ),
@@ -449,14 +450,14 @@ class _HandoffPageState extends State<HandoffPage> {
       DropdownButtonFormField<int?>(
         key: const ValueKey('handoff-max-reads'),
         initialValue: _maxReads,
-        decoration: const InputDecoration(
-          labelText: 'Readers',
-          helperText: 'A browser and an agent count as two readers.',
+        decoration: InputDecoration(
+          labelText: tr('Readers'),
+          helperText: tr('A browser and an agent count as two readers.'),
         ),
-        items: const [
-          DropdownMenuItem(child: Text('No limit')),
-          DropdownMenuItem(value: 1, child: Text('1 reader')),
-          DropdownMenuItem(value: 2, child: Text('2 readers')),
+        items: [
+          DropdownMenuItem(child: Text(tr('No limit'))),
+          DropdownMenuItem(value: 1, child: Text(tr('1 reader'))),
+          DropdownMenuItem(value: 2, child: Text(tr('2 readers'))),
         ],
         onChanged: (v) => setState(() => _maxReads = v),
       ),
@@ -464,9 +465,9 @@ class _HandoffPageState extends State<HandoffPage> {
       TextField(
         key: const ValueKey('handoff-from'),
         controller: _from,
-        decoration: const InputDecoration(
-          labelText: 'From',
-          helperText: 'Shown to them as unverified.',
+        decoration: InputDecoration(
+          labelText: tr('From'),
+          helperText: tr('Shown to them as unverified.'),
         ),
       ),
       const SizedBox(height: 16),
@@ -480,7 +481,7 @@ class _HandoffPageState extends State<HandoffPage> {
         TextButton(
           key: const ValueKey('handoff-override'),
           onPressed: () => unawaited(_overrideAndPost()),
-          child: const Text('It is not a secret: post anyway…'),
+          child: Text(tr('It is not a secret: post anyway…')),
         ),
     ];
   }
@@ -510,21 +511,21 @@ class _HandoffPageState extends State<HandoffPage> {
           if (!shared) {
             await widget.copy(created.shareUrl);
             messenger.showSnackBar(
-              const SnackBar(content: Text('Link copied')),
+              SnackBar(content: Text(tr('Link copied'))),
             );
           }
         },
         icon: const Icon(Icons.share_rounded),
-        label: const Text('Share link'),
+        label: Text(tr('Share link')),
       ),
       OutlinedButton.icon(
         key: const ValueKey('handoff-copy-link'),
         onPressed: () async {
           await widget.copy(created.shareUrl);
-          messenger.showSnackBar(const SnackBar(content: Text('Link copied')));
+          messenger.showSnackBar(SnackBar(content: Text(tr('Link copied'))));
         },
         icon: const Icon(Icons.link_rounded),
-        label: const Text('Copy link'),
+        label: Text(tr('Copy link')),
       ),
       if (_usePassphrase) ...[
         const SizedBox(height: 12),
@@ -533,17 +534,16 @@ class _HandoffPageState extends State<HandoffPage> {
           onPressed: () async {
             await widget.copy(_passphrase);
             messenger.showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Passphrase copied. Send it over a different channel.',
+              SnackBar(
+                content: Text(tr('Passphrase copied. Send it over a different channel.'),
                 ),
               ),
             );
           },
           icon: const Icon(Icons.key_rounded),
-          label: const Text('Copy passphrase'),
+          label: Text(tr('Copy passphrase')),
         ),
-        const Text('Send the passphrase over a different channel.'),
+        Text(tr('Send the passphrase over a different channel.')),
       ],
       const SizedBox(height: 12),
       Text(
@@ -569,7 +569,7 @@ Future<bool> ensureTalkbawtServerChosen(
     context: context,
     builder: (context) => AlertDialog(
       key: const ValueKey('talkbawt-first-use'),
-      title: const Text('Which Talkbawt server?'),
+      title: Text(tr('Which Talkbawt server?')),
       content: Text(
         'Handoffs go through a Talkbawt server: the link lives there until '
         'it expires. The default is ${controller.settings.server}. You can '
@@ -591,7 +591,7 @@ Future<bool> ensureTalkbawtServerChosen(
               ).pop(saved ?? !controller.needsFirstUseChoice);
             }
           },
-          child: const Text('Another server…'),
+          child: Text(tr('Another server…')),
         ),
         FilledButton(
           key: const ValueKey('talkbawt-first-use-default'),
@@ -599,7 +599,7 @@ Future<bool> ensureTalkbawtServerChosen(
             await controller.markFirstUseAsked();
             if (context.mounted) Navigator.of(context).pop(true);
           },
-          child: const Text('Use the default'),
+          child: Text(tr('Use the default')),
         ),
       ],
     ),

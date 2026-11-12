@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
@@ -153,7 +154,7 @@ class _ReviewPageState extends State<ReviewPage> {
     if (!ok || !mounted) return;
     _tell(
       'Reverted ${_basename(file.path)}',
-      action: SnackBarAction(label: 'Redo', onPressed: _redo),
+      action: SnackBarAction(label: tr('Redo'), onPressed: _redo),
     );
   }
 
@@ -230,7 +231,7 @@ class _ReviewPageState extends State<ReviewPage> {
     _tell(
       'Turn undone: ${_files(outcome.restored.length)} restored',
       action: outcome.redoAvailable
-          ? SnackBarAction(label: 'Redo', onPressed: _redo)
+          ? SnackBarAction(label: tr('Redo'), onPressed: _redo)
           : null,
     );
   }
@@ -344,9 +345,9 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget _body(BuildContext context, bool wide) {
     switch (_review.phase) {
       case ReviewPhase.loading:
-        return const _Centered(
+        return _Centered(
           icon: null,
-          title: 'Loading the turn…',
+          title: tr('Loading the turn…'),
           child: CircularProgressIndicator(),
         );
       case ReviewPhase.failed || ReviewPhase.empty:
@@ -362,7 +363,7 @@ class _ReviewPageState extends State<ReviewPage> {
             spacing: 8,
             alignment: WrapAlignment.center,
             children: [
-              TextButton(onPressed: _review.load, child: const Text('Retry')),
+              TextButton(onPressed: _review.load, child: Text(tr('Retry'))),
               if (_review.needsUpdate || _unsupported) _updateButton(context),
             ],
           ),
@@ -392,7 +393,7 @@ class _ReviewPageState extends State<ReviewPage> {
     final host = widget.host;
     return TextButton(
       onPressed: host == null ? null : () => showCompanionSetup(context, host),
-      child: const Text('Update agent hooks'),
+      child: Text(tr('Update agent hooks')),
     );
   }
 
@@ -496,7 +497,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       key: const ValueKey('review-file-tile-summary'),
                       selected: _review.onSummary,
                       leading: const Icon(Icons.fact_check_outlined),
-                      title: const Text('Summary'),
+                      title: Text(tr('Summary')),
                       onTap: () => _review.goTo(files.length),
                     ),
                   ],
@@ -752,10 +753,10 @@ class _FileCardState extends State<_FileCard> {
     final fileComments = review.comments.where((c) => c.path == path).length;
     final Widget body;
     if (change.omitted) {
-      body = const _Centered(
+      body = _Centered(
         icon: Icons.unfold_less_rounded,
-        title: 'Too large to show here',
-        message: 'The turn changed more than fits in one review.',
+        title: tr('Too large to show here'),
+        message: tr('The turn changed more than fits in one review.'),
       );
     } else if (change.binary || change.submodule) {
       body = _Centered(
@@ -907,13 +908,13 @@ class _DecisionBar extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.undo_rounded),
-              label: const Text('Reject'),
+              label: Text(tr('Reject')),
             ),
           ),
           const SizedBox(width: 8),
           IconButton.outlined(
             key: const ValueKey('review-comment'),
-            tooltip: 'Comment on this file',
+            tooltip: tr('Comment on this file'),
             constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
             onPressed: onComment,
             icon: const Icon(Icons.add_comment_outlined),
@@ -928,7 +929,7 @@ class _DecisionBar extends StatelessWidget {
               ),
               onPressed: busy || !canAccept ? null : onAccept,
               icon: const Icon(Icons.check_rounded),
-              label: const Text('Accept'),
+              label: Text(tr('Accept')),
             ),
           ),
         ],
@@ -1129,7 +1130,7 @@ class _SummaryCard extends StatelessWidget {
             ),
             onPressed: review.undoing ? null : onLooksGood,
             icon: const Icon(Icons.thumb_up_alt_outlined),
-            label: const Text('Looks good'),
+            label: Text(tr('Looks good')),
           ),
           const SizedBox(height: 10),
           FilledButton.tonalIcon(
@@ -1151,7 +1152,7 @@ class _SummaryCard extends StatelessWidget {
                 ),
                 onPressed: review.undoing ? null : onRedo,
                 icon: const Icon(Icons.redo_rounded),
-                label: const Text('Redo (put the changes back)'),
+                label: Text(tr('Redo (put the changes back)')),
               ),
             if (review.redoAvailable && !review.undone)
               const SizedBox(height: 10),
@@ -1170,7 +1171,7 @@ class _SummaryCard extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.undo_rounded),
-                label: const Text('Undo this turn'),
+                label: Text(tr('Undo this turn')),
               ),
           ],
         ],
@@ -1196,7 +1197,7 @@ class _UndoDialogState extends State<_UndoDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: const Text('Undo this turn?'),
+      title: Text(tr('Undo this turn?')),
       content: FutureBuilder<UndoOutcome?>(
         future: _preview,
         builder: (context, snapshot) {
@@ -1256,7 +1257,7 @@ class _UndoDialogState extends State<_UndoDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FutureBuilder<UndoOutcome?>(
           future: _preview,
@@ -1271,7 +1272,7 @@ class _UndoDialogState extends State<_UndoDialog> {
                     (snapshot.data?.restored.isNotEmpty ?? false)
                 ? () => Navigator.of(context).pop(true)
                 : null,
-            child: const Text('Undo'),
+            child: Text(tr('Undo')),
           ),
         ),
       ],
@@ -1397,7 +1398,7 @@ class _TextSheetState extends State<_TextSheet> {
           ),
           if (preview.isNotEmpty && preview != _text.text.trim()) ...[
             const SizedBox(height: 10),
-            Text('The agent gets:', style: theme.textTheme.labelMedium),
+            Text(tr('The agent gets:'), style: theme.textTheme.labelMedium),
             const SizedBox(height: 4),
             ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 140),
@@ -1414,11 +1415,11 @@ class _TextSheetState extends State<_TextSheet> {
           Row(
             children: [
               if (widget.onDelete case final delete?)
-                TextButton(onPressed: delete, child: const Text('Delete')),
+                TextButton(onPressed: delete, child: Text(tr('Delete'))),
               const Spacer(),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child: Text(tr('Cancel')),
               ),
               const SizedBox(width: 8),
               FilledButton(

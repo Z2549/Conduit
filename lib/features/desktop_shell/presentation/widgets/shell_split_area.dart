@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/desktop_shell/domain/shell_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
@@ -363,7 +364,7 @@ class _PaneHeader extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Close pane',
+            tooltip: tr('Close pane'),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 26, height: 26),
             iconSize: 14,
@@ -520,16 +521,14 @@ class _EmptyPane extends StatelessWidget {
                   color: muted,
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  'Drag a session, agent or workspace here',
+                Text(tr('Drag a session, agent or workspace here'),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: muted, fontSize: 12.5),
                 ),
                 if (focused)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      'or open one: it lands in this pane',
+                    child: Text(tr('or open one: it lands in this pane'),
                       textAlign: TextAlign.center,
                       style: TextStyle(color: muted, fontSize: 11.5),
                     ),
@@ -539,7 +538,7 @@ class _EmptyPane extends StatelessWidget {
                   OutlinedButton.icon(
                     onPressed: onOpen,
                     icon: const Icon(Icons.add_rounded, size: 16),
-                    label: const Text('Open…'),
+                    label: Text(tr('Open…')),
                   ),
                 ],
               ],

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -54,7 +55,7 @@ class _LockPageState extends State<LockPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(14),
                       child: IconButton(
-                        tooltip: 'Appearance',
+                        tooltip: tr('Appearance'),
                         icon: const Icon(Icons.palette_outlined),
                         color: colorScheme.onSurfaceVariant,
                         onPressed: () => showThemeSheet(
@@ -119,7 +120,7 @@ class _LockPageState extends State<LockPage> {
                                 child: OutlinedButton(
                                   onPressed:
                                       widget.controller.continueWithoutAuth,
-                                  child: const Text('Continue without auth'),
+                                  child: Text(tr('Continue without auth')),
                                 ),
                               ),
                             ],
@@ -132,8 +133,7 @@ class _LockPageState extends State<LockPage> {
                     alignment: Alignment.bottomCenter,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        'Encrypted SSH sessions • zero cloud sync',
+                      child: Text(tr('Encrypted SSH sessions • zero cloud sync'),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),

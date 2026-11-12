@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -232,13 +233,13 @@ class _SectionList extends StatelessWidget {
         Row(
           children: [
             IconButton(
-              tooltip: 'Back',
+              tooltip: tr('Back'),
               onPressed: () => Navigator.of(context).maybePop(),
               icon: const Icon(Icons.arrow_back_rounded),
             ),
             const SizedBox(width: 6),
             Expanded(
-              child: Text('Settings', style: theme.textTheme.headlineSmall),
+              child: Text(tr('Settings'), style: theme.textTheme.headlineSmall),
             ),
             const ConduitGlyph(size: 24),
             const SizedBox(width: 8),
@@ -259,12 +260,12 @@ class _SectionList extends StatelessWidget {
                     }
                   : null,
               decoration: InputDecoration(
-                hintText: 'Search settings',
+                hintText: tr('Search settings'),
                 prefixIcon: const Icon(Icons.search_rounded),
                 isDense: true,
                 suffixIcon: searching
                     ? IconButton(
-                        tooltip: 'Clear search',
+                        tooltip: tr('Clear search'),
                         onPressed: search.clear,
                         icon: const Icon(Icons.close_rounded),
                       )
@@ -377,7 +378,7 @@ class SettingsSectionPage extends StatelessWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        tooltip: 'Back',
+                        tooltip: tr('Back'),
                         onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.arrow_back_rounded),
                       ),

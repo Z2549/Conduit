@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/tasks/domain/task_run.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
@@ -275,9 +276,9 @@ class _StartTasksPageState extends State<StartTasksPage> {
     isExpanded: true,
     decoration: InputDecoration(labelText: label, isDense: true),
     items: [
-      const DropdownMenuItem(
+      DropdownMenuItem(
         value: autoMachine,
-        child: Text('Automatic (least busy)'),
+        child: Text(tr('Automatic (least busy)')),
       ),
       for (final m in _machines)
         DropdownMenuItem(value: m.id, child: Text(m.name)),
@@ -303,13 +304,13 @@ class _StartTasksPageState extends State<StartTasksPage> {
     children: [
       Expanded(child: Text(label)),
       IconButton(
-        tooltip: 'Fewer',
+        tooltip: tr('Fewer'),
         icon: const Icon(Icons.remove),
         onPressed: _busy || value <= min ? null : () => onChanged(value - 1),
       ),
       Text('$value'),
       IconButton(
-        tooltip: 'More',
+        tooltip: tr('More'),
         icon: const Icon(Icons.add),
         onPressed: _busy || value >= max ? null : () => onChanged(value + 1),
       ),
@@ -345,7 +346,7 @@ class _StartTasksPageState extends State<StartTasksPage> {
                 else ...[
                   _machineMenu(
                     key: const ValueKey('start-machine'),
-                    label: 'Machine',
+                    label: tr('Machine'),
                     value: _machine,
                     onChanged: (v) => setState(() => _machine = v),
                   ),
@@ -382,13 +383,13 @@ class _StartTasksPageState extends State<StartTasksPage> {
                   enabled: !_busy,
                   autocorrect: false,
                   enableSuggestions: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Repository on the machine',
+                  decoration: InputDecoration(
+                    labelText: tr('Repository on the machine'),
                     hintText: '~/Projects/app',
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('Agent', style: theme.textTheme.labelLarge),
+                Text(tr('Agent'), style: theme.textTheme.labelLarge),
                 const SizedBox(height: 6),
                 if (agents == null)
                   const LinearProgressIndicator()
@@ -417,7 +418,7 @@ class _StartTasksPageState extends State<StartTasksPage> {
                     ],
                   ),
                 const SizedBox(height: 16),
-                Text('Where it runs', style: theme.textTheme.labelLarge),
+                Text(tr('Where it runs'), style: theme.textTheme.labelLarge),
                 const SizedBox(height: 6),
                 SegmentedButton<TaskPlace>(
                   key: const ValueKey('start-place'),
@@ -443,7 +444,7 @@ class _StartTasksPageState extends State<StartTasksPage> {
                 SwitchListTile(
                   key: const ValueKey('start-worktree'),
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Fresh worktree and branch'),
+                  title: Text(tr('Fresh worktree and branch')),
                   subtitle: Text(
                     _worktree
                         ? 'One per task and attempt, where Settings › Herdr '
@@ -477,7 +478,7 @@ class _StartTasksPageState extends State<StartTasksPage> {
                 SwitchListTile(
                   key: const ValueKey('start-mark-done'),
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Mark done in the source when finished'),
+                  title: Text(tr('Mark done in the source when finished')),
                   subtitle: Text(
                     _canMarkDone
                         ? 'Moves the task to a done status and comments, once '
@@ -495,8 +496,8 @@ class _StartTasksPageState extends State<StartTasksPage> {
                   enabled: !_busy,
                   minLines: 1,
                   maxLines: 4,
-                  decoration: const InputDecoration(
-                    labelText: 'Extra instructions (optional)',
+                  decoration: InputDecoration(
+                    labelText: tr('Extra instructions (optional)'),
                   ),
                 ),
                 const SizedBox(height: 16),

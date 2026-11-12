@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agent_inbox_widgets.dart';
@@ -106,7 +107,7 @@ List<PaletteEntry> buildShellPaletteEntries({
   entries.add(
     PaletteEntry(
       id: 'command:save-layout',
-      title: 'Save this layout…',
+      title: tr('Save this layout…'),
       kind: PaletteKind.layout,
       icon: Icons.bookmark_add_outlined,
       keywords: const ['name', 'remember', 'layout'],
@@ -118,7 +119,7 @@ List<PaletteEntry> buildShellPaletteEntries({
   entries.addAll([
     PaletteEntry(
       id: 'command:new-session',
-      title: 'New session',
+      title: tr('New session'),
       kind: PaletteKind.command,
       icon: Icons.add_rounded,
       shortcut: desktopShortcutKeys(DesktopAction.newSession),
@@ -128,7 +129,7 @@ List<PaletteEntry> buildShellPaletteEntries({
     if (actions.closeFocused case final close? when hasViews)
       PaletteEntry(
         id: 'command:close-tab',
-        title: 'Close the focused tab',
+        title: tr('Close the focused tab'),
         kind: PaletteKind.command,
         icon: Icons.close_rounded,
         shortcut: desktopShortcutKeys(DesktopAction.closeSession),
@@ -137,7 +138,7 @@ List<PaletteEntry> buildShellPaletteEntries({
       ),
     PaletteEntry(
       id: 'command:home',
-      title: 'Go to the dashboard',
+      title: tr('Go to the dashboard'),
       kind: PaletteKind.command,
       icon: Icons.space_dashboard_outlined,
       keywords: const ['home', 'overview'],
@@ -145,7 +146,7 @@ List<PaletteEntry> buildShellPaletteEntries({
     ),
     PaletteEntry(
       id: 'command:add-machine',
-      title: 'Add machine…',
+      title: tr('Add machine…'),
       kind: PaletteKind.command,
       icon: Icons.add_to_queue_rounded,
       keywords: const ['host', 'ssh', 'server', 'new'],
@@ -203,7 +204,7 @@ List<PaletteEntry> buildShellPaletteEntries({
     ),
     PaletteEntry(
       id: 'command:next-unread',
-      title: 'Next unread',
+      title: tr('Next unread'),
       kind: PaletteKind.command,
       icon: Icons.mark_email_unread_outlined,
       shortcut: desktopShortcutKeys(DesktopAction.nextUnread),
@@ -213,7 +214,7 @@ List<PaletteEntry> buildShellPaletteEntries({
     ),
     PaletteEntry(
       id: 'command:shortcuts',
-      title: 'Keyboard shortcuts',
+      title: tr('Keyboard shortcuts'),
       kind: PaletteKind.command,
       icon: Icons.keyboard_outlined,
       shortcut: desktopShortcutKeys(DesktopAction.showShortcuts),
@@ -223,7 +224,7 @@ List<PaletteEntry> buildShellPaletteEntries({
     if (actions.lock case final lock?)
       PaletteEntry(
         id: 'command:lock',
-        title: 'Lock the app',
+        title: tr('Lock the app'),
         kind: PaletteKind.command,
         icon: Icons.lock_outline_rounded,
         keywords: const ['security', 'away'],
@@ -238,7 +239,7 @@ List<PaletteEntry> buildShellPaletteEntries({
       title: voice.readAloudByDefault
           ? 'Turn off reading replies aloud'
           : 'Turn on reading replies aloud',
-      subtitle: 'Chat View default',
+      subtitle: tr('Chat View default'),
       kind: PaletteKind.command,
       icon: voice.readAloudByDefault
           ? Icons.volume_off_outlined
@@ -282,7 +283,7 @@ List<PaletteEntry> buildShellPaletteEntries({
   entries.add(
     PaletteEntry(
       id: 'settings:open',
-      title: 'Settings',
+      title: tr('Settings'),
       kind: PaletteKind.settings,
       icon: Icons.settings_outlined,
       shortcut: desktopShortcutKeys(DesktopAction.openSettings),

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agents_icon.dart';
@@ -228,7 +229,7 @@ class TerminalHeader extends StatelessWidget {
               ),
             if (onOpenAgentAttention != null)
               _RowButton(
-                tooltip: 'Agents',
+                tooltip: tr('Agents'),
                 color: foreground,
                 icon: AgentsIcon(count: attentionCount, size: 20),
                 onPressed: onOpenAgentAttention!,
@@ -407,7 +408,7 @@ class _OverflowMenu extends StatelessWidget {
     final session = this.session;
     final tools = onOpenSessionTool;
     return PopupMenuButton<TerminalHeaderAction>(
-      tooltip: 'More',
+      tooltip: tr('More'),
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(minWidth: 200),
       iconColor: color,

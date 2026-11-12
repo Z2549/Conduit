@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
 import 'package:conduit/features/chat_view/presentation/chat_view_launcher.dart';
@@ -222,14 +223,14 @@ Future<void> relayThroughTalkbawt(
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('talkbawt-relay-send'),
             onPressed: safety == AgentModeSafety.unknown && !confirmedUnknown
                 ? null
                 : () => Navigator.of(context).pop(true),
-            child: const Text('Send'),
+            child: Text(tr('Send')),
           ),
         ],
       ),

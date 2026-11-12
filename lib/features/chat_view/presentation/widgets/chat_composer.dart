@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
@@ -183,16 +184,16 @@ class _ChatComposerState extends State<ChatComposer> {
     }
     return PopupMenuButton<PromptImageOrigin>(
       key: const ValueKey('chat-attach-image'),
-      tooltip: 'Attach image',
+      tooltip: tr('Attach image'),
       enabled: widget.enabled,
       icon: const Icon(Icons.add_photo_alternate_outlined),
       onSelected: attach,
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: PromptImageOrigin.clipboard,
           child: ListTile(
             leading: Icon(Icons.content_paste_rounded),
-            title: Text('Paste image from clipboard'),
+            title: Text(tr('Paste image from clipboard')),
           ),
         ),
         PopupMenuItem(
@@ -205,11 +206,11 @@ class _ChatComposerState extends State<ChatComposer> {
           ),
         ),
         if (PlatformFeatures.camera)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: PromptImageOrigin.camera,
             child: ListTile(
               leading: Icon(Icons.photo_camera_outlined),
-              title: Text('Take a photo'),
+              title: Text(tr('Take a photo')),
             ),
           ),
       ],
@@ -361,10 +362,10 @@ class _ChatComposerState extends State<ChatComposer> {
       ?..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: const Text('Message cleared'),
+          content: Text(tr('Message cleared')),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: 'Undo',
+            label: tr('Undo'),
             onPressed: () {
               if (mounted && _controller.text.isEmpty) {
                 _controller.value = previous;
@@ -401,7 +402,7 @@ class _ChatComposerState extends State<ChatComposer> {
             customBorder: const CircleBorder(),
             onTap: _clear,
             child: Tooltip(
-              message: 'Clear message',
+              message: tr('Clear message'),
               child: Padding(
                 padding: const EdgeInsets.all(3),
                 child: Icon(
@@ -461,7 +462,7 @@ class _ChatComposerState extends State<ChatComposer> {
         if (widget.showInterrupt)
           IconButton(
             key: const ValueKey('chat-interrupt'),
-            tooltip: 'Interrupt (Esc)',
+            tooltip: tr('Interrupt (Esc)'),
             onPressed: _interrupt,
             icon: Icon(
               Icons.stop_circle_outlined,
@@ -502,7 +503,7 @@ class _ChatComposerState extends State<ChatComposer> {
                 ),
               )
             : IconButton(
-                tooltip: 'Send',
+                tooltip: tr('Send'),
                 onPressed: widget.enabled ? _send : null,
                 icon: const Icon(Icons.send_rounded),
               ),
@@ -612,7 +613,7 @@ class _PasteImageMenuState extends State<_PasteImageMenu> {
       buttonItems: [
         ...state.contextMenuButtonItems,
         ContextMenuButtonItem(
-          label: 'Paste image',
+          label: tr('Paste image'),
           onPressed: () {
             state.hideToolbar();
             widget.onPasteImage();

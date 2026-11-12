@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
@@ -289,7 +290,7 @@ class _DiffViewState extends State<DiffView> {
     if (controller.phase == DiffViewPhase.failed) {
       return _Notice(
         icon: Icons.error_outline_rounded,
-        title: 'Could not load the diff',
+        title: tr('Could not load the diff'),
         message: controller.error ?? '',
         palette: palette,
         brightness: brightness,
@@ -305,13 +306,13 @@ class _DiffViewState extends State<DiffView> {
     if (!snapshot.isGitRepository) {
       return _Notice(
         icon: Icons.folder_off_outlined,
-        title: 'Not a git repository',
+        title: tr('Not a git repository'),
         message: snapshot.path,
         palette: palette,
         brightness: brightness,
         action: TextButton(
           onPressed: _editPath,
-          child: const Text('Change directory'),
+          child: Text(tr('Change directory')),
         ),
       );
     }
@@ -437,7 +438,7 @@ class _DirectoryDialogState extends State<_DirectoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Directory to diff'),
+      title: Text(tr('Directory to diff')),
       content: TextField(
         controller: _text,
         autofocus: true,
@@ -454,11 +455,11 @@ class _DirectoryDialogState extends State<_DirectoryDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_text.text),
-          child: const Text('Load'),
+          child: Text(tr('Load')),
         ),
       ],
     );
@@ -499,7 +500,7 @@ class _Toolbar extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Tooltip(
-              message: 'Change directory',
+              message: tr('Change directory'),
               child: InkWell(
                 onTap: onEditPath,
                 borderRadius: BorderRadius.circular(6),
@@ -521,14 +522,14 @@ class _Toolbar extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Changed files',
+            tooltip: tr('Changed files'),
             iconSize: 19,
             color: muted,
             icon: const Icon(Icons.list_rounded),
             onPressed: onShowFiles,
           ),
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: tr('Refresh'),
             iconSize: 19,
             color: muted,
             icon: const Icon(Icons.refresh_rounded),

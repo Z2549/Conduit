@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_models.dart';
 import 'package:conduit/features/talkbawt/presentation/open_link_page.dart';
@@ -29,7 +30,7 @@ class TalkbawtHubPage extends StatelessWidget {
         actions: [
           IconButton(
             key: const ValueKey('talkbawt-settings'),
-            tooltip: 'Server and relay',
+            tooltip: tr('Server and relay'),
             icon: const Icon(Icons.tune_rounded),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -67,7 +68,7 @@ class TalkbawtHubPage extends StatelessWidget {
                       ),
                     ),
                     icon: const Icon(Icons.link_rounded),
-                    label: const Text('Open a link…'),
+                    label: Text(tr('Open a link…')),
                   ),
                   OutlinedButton.icon(
                     key: const ValueKey('talkbawt-paired'),
@@ -80,16 +81,16 @@ class TalkbawtHubPage extends StatelessWidget {
                       ),
                     ),
                     icon: const Icon(Icons.sync_alt_rounded),
-                    label: const Text('Paired machines'),
+                    label: Text(tr('Paired machines')),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              Text('Your links', style: Theme.of(context).textTheme.titleSmall),
+              Text(tr('Your links'), style: Theme.of(context).textTheme.titleSmall),
               if (threads.isEmpty)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 8),
-                  child: Text('None yet.'),
+                  child: Text(tr('None yet.')),
                 ),
               for (final t in threads)
                 _ThreadTile(controller: controller, thread: t),
@@ -204,7 +205,7 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Revoke this link?'),
+        title: Text(tr('Revoke this link?')),
         content: const Text(
           'Nobody can read or reply through it any more, and its messages '
           'are deleted. Who opened it is saved here first.',
@@ -212,12 +213,12 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('talkbawt-revoke-confirm'),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Revoke'),
+            child: Text(tr('Revoke')),
           ),
         ],
       ),
@@ -241,8 +242,8 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
         return Scaffold(
           appBar: AppBar(title: Text(t?.title ?? 'Talkbawt link')),
           body: t == null
-              ? const Center(
-                  child: Text('This link is no longer on this phone.'),
+              ? Center(
+                  child: Text(tr('This link is no longer on this phone.')),
                 )
               : ListView(
                   padding: const EdgeInsets.all(16),
@@ -279,11 +280,11 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                               onPressed: () async {
                                 await widget.copy(share);
                                 messenger?.showSnackBar(
-                                  const SnackBar(content: Text('Link copied')),
+                                  SnackBar(content: Text(tr('Link copied'))),
                                 );
                               },
                               icon: const Icon(Icons.link_rounded),
-                              label: const Text('Copy link'),
+                              label: Text(tr('Copy link')),
                             ),
                           if (t.passphrase case final pass?)
                             OutlinedButton.icon(
@@ -300,7 +301,7 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                                 );
                               },
                               icon: const Icon(Icons.key_rounded),
-                              label: const Text('Copy passphrase'),
+                              label: Text(tr('Copy passphrase')),
                             ),
                           if (t.mode == TalkbawtMode.thread)
                             OutlinedButton.icon(
@@ -319,13 +320,13 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                                 ),
                               ),
                               icon: const Icon(Icons.reply_rounded),
-                              label: const Text('Reply…'),
+                              label: Text(tr('Reply…')),
                             ),
                           OutlinedButton.icon(
                             key: const ValueKey('talkbawt-revoke'),
                             onPressed: () => unawaited(_revoke(t)),
                             icon: const Icon(Icons.link_off_rounded),
-                            label: const Text('Revoke'),
+                            label: Text(tr('Revoke')),
                           ),
                         ],
                       ),
@@ -334,14 +335,12 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                     if (_read case final read?) ...[
                       TalkbawtPreview(read: read),
                       const SizedBox(height: 16),
-                      Text(
-                        'Who opened it',
+                      Text(tr('Who opened it'),
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       AccessLogList(entries: read.accessLog ?? const []),
                     ] else if (!t.live) ...[
-                      Text(
-                        'Access log saved when it was revoked',
+                      Text(tr('Access log saved when it was revoked'),
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       AccessLogList(entries: t.accessLog),
@@ -352,7 +351,7 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                           await widget.controller.forget(t.id);
                           navigator.pop();
                         },
-                        child: const Text('Forget it'),
+                        child: Text(tr('Forget it')),
                       ),
                     ],
                   ],

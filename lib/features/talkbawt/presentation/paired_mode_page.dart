@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -122,7 +123,7 @@ class _PairedModePageState extends State<PairedModePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Paired machines')),
+      appBar: AppBar(title: Text(tr('Paired machines'))),
       body: ListenableBuilder(
         listenable: widget.controller,
         builder: (context, _) {
@@ -163,10 +164,10 @@ class _PairedModePageState extends State<PairedModePage> {
               const SizedBox(height: 12),
               SegmentedButton<int>(
                 key: const ValueKey('paired-duration'),
-                segments: const [
-                  ButtonSegment(value: 15, label: Text('15 min')),
-                  ButtonSegment(value: 30, label: Text('30 min')),
-                  ButtonSegment(value: 60, label: Text('1 hour')),
+                segments: [
+                  ButtonSegment(value: 15, label: Text(tr('15 min'))),
+                  ButtonSegment(value: 30, label: Text(tr('30 min'))),
+                  ButtonSegment(value: 60, label: Text(tr('1 hour'))),
                 ],
                 selected: {_minutes},
                 onSelectionChanged: (s) => setState(() => _minutes = s.first),
@@ -177,8 +178,8 @@ class _PairedModePageState extends State<PairedModePage> {
                 controller: _opening,
                 minLines: 2,
                 maxLines: 6,
-                decoration: const InputDecoration(
-                  labelText: 'First message, from A to B',
+                decoration: InputDecoration(
+                  labelText: tr('First message, from A to B'),
                 ),
               ),
               if (_error case final error?)
@@ -257,7 +258,7 @@ class _PairedModeBannerState extends State<PairedModeBanner> {
         final stop = TextButton(
           key: const ValueKey('paired-stop'),
           onPressed: () => unawaited(widget.controller.stopPaired()),
-          child: const Text('Stop'),
+          child: Text(tr('Stop')),
         );
         final body = widget.compact
             ? Row(
@@ -277,8 +278,7 @@ class _PairedModeBannerState extends State<PairedModeBanner> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Paired and relaying',
+                  Text(tr('Paired and relaying'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text('${s.a.label} ⇄ ${s.b.label}'),

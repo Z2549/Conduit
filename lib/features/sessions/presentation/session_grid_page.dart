@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -138,12 +139,12 @@ class _SessionGridPageState extends State<SessionGridPage>
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.refresh_rounded),
-              title: const Text('Reconnect'),
+              title: Text(tr('Reconnect')),
               onTap: () => Navigator.of(context).pop(_TileAction.reconnect),
             ),
             ListTile(
               leading: const Icon(Icons.close_rounded),
-              title: const Text('Close session'),
+              title: Text(tr('Close session')),
               onTap: () => Navigator.of(context).pop(_TileAction.close),
             ),
           ],
@@ -206,14 +207,13 @@ class _SessionGridPageState extends State<SessionGridPage>
                         child: Row(
                           children: [
                             IconButton(
-                              tooltip: 'Back',
+                              tooltip: tr('Back'),
                               icon: const Icon(Icons.arrow_back_rounded),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
                             const SizedBox(width: 4),
                             Expanded(
-                              child: Text(
-                                'Sessions',
+                              child: Text(tr('Sessions'),
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(fontWeight: FontWeight.w800),
                               ),
@@ -270,8 +270,7 @@ class _SessionGridPageState extends State<SessionGridPage>
                       SliverFillRemaining(
                         hasScrollBody: false,
                         child: Center(
-                          child: Text(
-                            'No open sessions.',
+                          child: Text(tr('No open sessions.'),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
@@ -657,8 +656,7 @@ class _AddTile extends StatelessWidget {
             children: [
               Icon(Icons.add_rounded, size: 34, color: palette.accent),
               const SizedBox(height: 6),
-              Text(
-                'New session',
+              Text(tr('New session'),
                 style: TextStyle(
                   color: muted,
                   fontSize: 12.5,

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/live_preview/domain/dev_server_detection.dart';
 import 'package:conduit/features/live_preview/presentation/preview_ready_controller.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class PreviewReadyChip extends StatelessWidget {
               ),
               IconButton(
                 key: const ValueKey('preview-ready-dismiss'),
-                tooltip: 'Dismiss',
+                tooltip: tr('Dismiss'),
                 visualDensity: VisualDensity.compact,
                 iconSize: 16,
                 color: scheme.onPrimaryContainer,

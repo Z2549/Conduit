@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_instance.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_state.dart';
@@ -81,15 +82,13 @@ class _SectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Device',
+              Text(tr('Device'),
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: 3),
-              Text(
-                'Run commands locally, no server required.',
+              Text(tr('Run commands locally, no server required.'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   height: 1.25,
@@ -100,7 +99,7 @@ class _SectionHeader extends StatelessWidget {
         ),
         if (showAdd)
           IconButton(
-            tooltip: 'New local shell',
+            tooltip: tr('New local shell'),
             visualDensity: VisualDensity.compact,
             onPressed: onAdd,
             icon: Icon(
@@ -126,8 +125,7 @@ class _CheckingCard extends StatelessWidget {
           const _Avatar(ready: false),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              'Checking local shells…',
+            child: Text(tr('Checking local shells…'),
               style: TextStyle(
                 color: colorScheme.onSurfaceVariant,
                 fontSize: 12,
@@ -170,8 +168,7 @@ class _SetupPromptCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Set up a local shell',
+                    Text(tr('Set up a local shell'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -180,8 +177,7 @@ class _SetupPromptCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      'Arch, Debian, Ubuntu, Alpine and more',
+                    Text(tr('Arch, Debian, Ubuntu, Alpine and more'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -302,7 +298,7 @@ class _InstanceCard extends StatelessWidget {
       );
     }
     return IconButton(
-      tooltip: 'Manage',
+      tooltip: tr('Manage'),
       iconSize: 18,
       onPressed: onManage,
       icon: Icon(Icons.tune_rounded, color: colorScheme.onSurfaceVariant),

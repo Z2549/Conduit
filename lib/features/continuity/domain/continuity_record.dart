@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
 import 'package:flutter/foundation.dart';
 
@@ -75,7 +76,7 @@ class ContinuityPlace {
     };
     if (targetTitle.isNotEmpty) return targetTitle;
     if (machineName.isNotEmpty) return machineName;
-    return title.isNotEmpty ? title : 'a session';
+    return title.isNotEmpty ? title: tr('a session');
   }
 
   /// "VTM · Chat view".

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/chat_view/presentation/chat_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,7 +94,7 @@ class ChatFindBar extends StatelessWidget {
                               onSubmitted: (_) => onOlder(),
                               // Keep the field focused for the next Enter.
                               onEditingComplete: () {},
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
                                 prefixIcon: Icon(
@@ -103,7 +104,7 @@ class ChatFindBar extends StatelessWidget {
                                 prefixIconConstraints: BoxConstraints(
                                   minWidth: 32,
                                 ),
-                                hintText: 'Find in conversation',
+                                hintText: tr('Find in conversation'),
                               ),
                             ),
                           ),
@@ -146,7 +147,7 @@ class ChatFindBar extends StatelessWidget {
                         ),
                         IconButton(
                           key: const ValueKey('chat-find-newer'),
-                          tooltip: 'Next match (newer)',
+                          tooltip: tr('Next match (newer)'),
                           onPressed: search.active && count > 0
                               ? onNewer
                               : null,
@@ -154,7 +155,7 @@ class ChatFindBar extends StatelessWidget {
                         ),
                         IconButton(
                           key: const ValueKey('chat-find-close'),
-                          tooltip: 'Close search (Esc)',
+                          tooltip: tr('Close search (Esc)'),
                           onPressed: onClose,
                           icon: const Icon(Icons.close_rounded),
                         ),

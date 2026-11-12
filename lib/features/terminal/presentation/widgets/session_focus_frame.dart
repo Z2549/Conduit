@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/sessions/presentation/live_terminal_preview.dart';
 import 'package:conduit/features/sessions/presentation/terminal_preview.dart';
@@ -193,13 +194,13 @@ class _SharedViewCover extends StatelessWidget {
                             FilledButton(
                               key: const ValueKey('agent-view-show-here'),
                               onPressed: () => unawaited(onTakeFocus!()),
-                              child: const Text('Show here'),
+                              child: Text(tr('Show here')),
                             )
                           else
                             TextButton(
                               key: const ValueKey('shared-view-take-focus'),
                               onPressed: () => unawaited(onTakeFocus!()),
-                              child: const Text('Take focus'),
+                              child: Text(tr('Take focus')),
                             ),
                         ],
                       ),
@@ -400,12 +401,12 @@ class _FocusElsewhereBanner extends StatelessWidget {
                         key: const ValueKey('herdr-focus-composer'),
                         onPressed: () =>
                             actions.typeInComposer(session.takeHeldText()),
-                        child: const Text('Type in composer'),
+                        child: Text(tr('Type in composer')),
                       ),
                       TextButton(
                         key: const ValueKey('herdr-focus-take'),
                         onPressed: () => unawaited(actions.takeFocusOnce()),
-                        child: const Text('Take focus once'),
+                        child: Text(tr('Take focus once')),
                       ),
                       if (shown != null && shown.isNotEmpty)
                         TextButton(
@@ -418,7 +419,7 @@ class _FocusElsewhereBanner extends StatelessWidget {
                         TextButton(
                           key: const ValueKey('herdr-focus-discard'),
                           onPressed: session.discardHeldInput,
-                          child: const Text('Discard'),
+                          child: Text(tr('Discard')),
                         ),
                     ],
                   ),
@@ -494,12 +495,12 @@ class _ClosedWorkspaceBanner extends StatelessWidget {
                   TextButton(
                     key: const ValueKey('herdr-closed-keep'),
                     onPressed: () => unawaited(actions.useShownWorkspace()),
-                    child: const Text('Keep what Herdr shows'),
+                    child: Text(tr('Keep what Herdr shows')),
                   ),
                   TextButton(
                     key: const ValueKey('herdr-closed-close'),
                     onPressed: actions.closeTab,
-                    child: const Text('Close tab'),
+                    child: Text(tr('Close tab')),
                   ),
                 ],
               ),

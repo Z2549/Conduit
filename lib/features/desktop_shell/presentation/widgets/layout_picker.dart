@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/desktop_shell/domain/layout_presets.dart';
 import 'package:conduit/features/desktop_shell/domain/shell_layout.dart';
@@ -89,8 +90,7 @@ class LayoutPickerButton extends StatelessWidget {
               Icon(Icons.bookmark_add_outlined, size: 18),
               SizedBox(width: 10),
               Flexible(
-                child: Text(
-                  'Save this layout…',
+                child: Text(tr('Save this layout…'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -108,7 +108,7 @@ class LayoutPickerButton extends StatelessWidget {
     return Builder(
       builder: (context) => IconButton(
         key: const ValueKey('shell-layout-picker'),
-        tooltip: 'Layout: split into panes, saved layouts',
+        tooltip: tr('Layout: split into panes, saved layouts'),
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints.tightFor(width: 38, height: 40),
         icon: const Icon(Icons.dashboard_outlined, size: 19),
@@ -132,8 +132,7 @@ class _PresetGrid extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'LAYOUT',
+          Text(tr('LAYOUT'),
             style: TextStyle(
               color: palette.mutedForeground,
               fontSize: 11,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -241,7 +242,7 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
         children: [
           Row(
             children: [
-              Text('Add hardware key', style: theme.textTheme.headlineSmall),
+              Text(tr('Add hardware key'), style: theme.textTheme.headlineSmall),
               const Spacer(),
               const ConduitGlyph(size: 24),
             ],
@@ -261,10 +262,9 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
           const SizedBox(height: 14),
           TextField(
             controller: _stubController,
-            decoration: const InputDecoration(
-              labelText: 'OpenSSH hardware key stub',
-              helperText:
-                  'Import or paste the id_ed25519_sk or id_ecdsa_sk file.',
+            decoration: InputDecoration(
+              labelText: tr('OpenSSH hardware key stub'),
+              helperText: tr('Import or paste the id_ed25519_sk or id_ecdsa_sk file.'),
               helperMaxLines: 2,
               alignLabelWithHint: true,
               prefixIcon: Padding(
@@ -292,8 +292,8 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
             TextField(
               controller: _passphraseController,
               decoration: InputDecoration(
-                labelText: 'Stub passphrase',
-                helperText: 'This stub file is encrypted.',
+                labelText: tr('Stub passphrase'),
+                helperText: tr('This stub file is encrypted.'),
                 helperMaxLines: 2,
                 prefixIcon: const Icon(Icons.shield_outlined),
                 suffixIcon: IconButton(
@@ -315,8 +315,8 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
             TextField(
               controller: _labelController,
               onChanged: (_) => _labelEdited = true,
-              decoration: const InputDecoration(
-                labelText: 'Label',
+              decoration: InputDecoration(
+                labelText: tr('Label'),
                 helperText:
                     'Shown when Conductore asks for this key, e.g. "5C work" '
                     'or "NFC backup".',
@@ -332,7 +332,7 @@ class _AddHardwareKeySheetState extends State<_AddHardwareKeySheet> {
             child: FilledButton.icon(
               onPressed: _canAdd ? _add : null,
               icon: const Icon(Icons.check_rounded),
-              label: const Text('Add key'),
+              label: Text(tr('Add key')),
             ),
           ),
         ],

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -253,7 +254,7 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
       TerminalPillButton.ctrl => _PillButton(
         key: const ValueKey('toolbar-ctrl'),
         label: 'Ctrl',
-        tooltip: 'Ctrl. Long-press to latch',
+        tooltip: tr('Ctrl. Long-press to latch'),
         palette: _palette,
         brightness: _brightness,
         selected: keyboard.ctrl,
@@ -264,7 +265,7 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
       TerminalPillButton.esc => _PillButton(
         key: const ValueKey('toolbar-esc'),
         label: 'Esc',
-        tooltip: 'Escape. Long-press for Ctrl+C',
+        tooltip: tr('Escape. Long-press for Ctrl+C'),
         palette: _palette,
         brightness: _brightness,
         onTap: () => _sendKey(TerminalKey.escape),
@@ -272,8 +273,8 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
       ),
       TerminalPillButton.tab => _PillButton(
         key: const ValueKey('toolbar-tab'),
-        label: 'Tab',
-        tooltip: 'Tab. Long-press for Shift+Tab',
+        label: tr('Tab'),
+        tooltip: tr('Tab. Long-press for Shift+Tab'),
         palette: _palette,
         brightness: _brightness,
         onTap: () => _sendKey(TerminalKey.tab),
@@ -321,7 +322,7 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
       TerminalPillButton.paste => _PillButton(
         key: const ValueKey('toolbar-paste'),
         icon: Icons.content_paste_rounded,
-        tooltip: 'Paste',
+        tooltip: tr('Paste'),
         palette: _palette,
         brightness: _brightness,
         onTap: _paste,
@@ -346,7 +347,7 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
             : _PillButton(
                 key: const ValueKey('toolbar-dictate'),
                 icon: Icons.mic_none_rounded,
-                tooltip: 'Dictate into the chat line',
+                tooltip: tr('Dictate into the chat line'),
                 palette: _palette,
                 brightness: _brightness,
                 onTap: widget.keyRows.onDictate,
@@ -376,7 +377,7 @@ class _FloatingTerminalToolbarState extends State<FloatingTerminalToolbar>
       TerminalPillButton.snippets => _PillButton(
         key: const ValueKey('toolbar-snippets'),
         icon: Icons.bolt_rounded,
-        tooltip: 'Quick prompts and snippets',
+        tooltip: tr('Quick prompts and snippets'),
         palette: _palette,
         brightness: _brightness,
         onTap: () => unawaited(_openPalette()),

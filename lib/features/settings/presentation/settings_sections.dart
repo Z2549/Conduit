@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/l10n/l10n.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -341,8 +342,7 @@ class SettingsSectionBody extends StatelessWidget {
             key: const ValueKey('settings-keyboard-shortcuts'),
             leading: const Icon(Icons.keyboard_outlined),
             title: Text(context.l10n.settingsKeyboardShortcuts),
-            subtitle: const Text(
-              'Every desktop shortcut: tabs, panes, zoom, the quick switcher.',
+            subtitle: Text(tr('Every desktop shortcut: tabs, panes, zoom, the quick switcher.'),
             ),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => showDesktopShortcutsSheet(context),
@@ -404,7 +404,7 @@ class SettingsSectionBody extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => _openPage(
               context,
-              title: 'Voice commands',
+              title: tr('Voice commands'),
               children: () => [
                 SpeechSettingsControls(
                   controller: theme,
@@ -449,7 +449,7 @@ class SettingsSectionBody extends StatelessWidget {
         SettingsSwitchCard(
           switchKey: const ValueKey('compose-submit-enter'),
           icon: Icons.keyboard_return_rounded,
-          title: 'Press Enter after inserting',
+          title: tr('Press Enter after inserting'),
           subtitle:
               'The prompt composer inserts your text and presses Enter, so '
               'the agent gets it right away. Off: the text is only inserted.',
@@ -460,7 +460,7 @@ class SettingsSectionBody extends StatelessWidget {
         SettingsSegmentCard<ReviewOpens>(
           key: const ValueKey('chat-review-opens'),
           icon: Icons.rate_review_outlined,
-          title: 'Review changes',
+          title: tr('Review changes'),
           description: switch (voice.reviewOpens) {
             ReviewOpens.onDemand =>
               'Review opens from its button in Chat View, the Agents '
@@ -678,7 +678,7 @@ class SettingsSectionBody extends StatelessWidget {
             builder: (context, _) => SettingsSwitchCard(
               key: const ValueKey('settings-usage-alert'),
               icon: Icons.notifications_active_outlined,
-              title: 'Alert near the 5-hour limit',
+              title: tr('Alert near the 5-hour limit'),
               subtitle:
                   'Notify when 80% of the Claude 5-hour window is used, once '
                   'per window, with the time it resets. This device only.',
@@ -890,7 +890,7 @@ class SelfMachineCard extends StatelessWidget {
           key: const ValueKey('settings-self-machine'),
           switchKey: const ValueKey('settings-self-machine-switch'),
           icon: Icons.computer_rounded,
-          title: 'Show it separately here too',
+          title: tr('Show it separately here too'),
           subtitle:
               'Also shown as $name on your other devices. Here it opens as '
               'This computer; turn this on to also list $name and reach '
@@ -980,7 +980,7 @@ class SettingsSubPage extends StatelessWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        tooltip: 'Back',
+                        tooltip: tr('Back'),
                         onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.arrow_back_rounded),
                       ),
@@ -1094,7 +1094,7 @@ class _AgentMachineCard extends StatelessWidget {
               children: [
                 const Icon(Icons.notifications_none_rounded, size: 20),
                 const SizedBox(width: 16),
-                const Text('Notify'),
+                Text(tr('Notify')),
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButton<AgentNotifyLevel>(
@@ -1141,7 +1141,7 @@ class _RelockDelayTile extends StatelessWidget {
         context: context,
         builder: (context) => AlertDialog(
           key: const ValueKey('settings-relock-warning'),
-          title: const Text('Ask less often?'),
+          title: Text(tr('Ask less often?')),
           content: Text(
             "Anyone with your unlocked phone can open your machines' "
             'terminals and approve agent actions for up to '
@@ -1150,11 +1150,11 @@ class _RelockDelayTile extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Confirm'),
+              child: Text(tr('Confirm')),
             ),
           ],
         ),
@@ -1180,7 +1180,7 @@ class _RelockDelayTile extends StatelessWidget {
         // The value is the row's second line; a tap picks another.
         return PopupMenuButton<RelockDelay>(
           key: const ValueKey('settings-relock-delay'),
-          tooltip: 'Change',
+          tooltip: tr('Change'),
           initialValue: delay,
           onSelected: (delay) => unawaited(_choose(context, delay)),
           itemBuilder: (context) => [

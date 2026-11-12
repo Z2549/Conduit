@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class TagEditor extends StatelessWidget {
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
-            labelText: 'Tags',
+            labelText: tr('Tags'),
             hintText: 'production, edge, eu-west…  press enter to add',
             prefixIcon: const Icon(Icons.tag_rounded),
             suffixIcon: ValueListenableBuilder<TextEditingValue>(
@@ -37,7 +38,7 @@ class TagEditor extends StatelessWidget {
               builder: (context, value, _) {
                 if (value.text.trim().isEmpty) return const SizedBox.shrink();
                 return IconButton(
-                  tooltip: 'Add tag',
+                  tooltip: tr('Add tag'),
                   icon: Icon(
                     Icons.add_circle_rounded,
                     color: colorScheme.primary,

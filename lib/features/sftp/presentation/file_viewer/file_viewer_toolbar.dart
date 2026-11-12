@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/sftp/domain/remote_file_kind.dart';
 import 'package:flutter/material.dart';
@@ -69,14 +70,14 @@ class FileViewerToolbar extends StatelessWidget {
             ),
           if (showSave)
             IconButton(
-              tooltip: 'Save to server',
+              tooltip: tr('Save to server'),
               iconSize: 19,
               color: dirty ? palette.accent : muted,
               icon: const Icon(Icons.save_rounded),
               onPressed: onSave,
             ),
           IconButton(
-            tooltip: 'Reload from server',
+            tooltip: tr('Reload from server'),
             iconSize: 19,
             color: muted,
             icon: const Icon(Icons.refresh_rounded),

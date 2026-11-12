@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/core/telemetry/telemetry.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class PrivacySettingsControls extends StatelessWidget {
             SettingsSwitchCard(
               switchKey: const ValueKey('privacy-crash-reports'),
               icon: Icons.bug_report_outlined,
-              title: 'Send crash reports',
+              title: tr('Send crash reports'),
               subtitle: crashReportsCaption,
               value: preferences.crashReports,
               onChanged: telemetry.setCrashReports,
@@ -45,7 +46,7 @@ class PrivacySettingsControls extends StatelessWidget {
             SettingsSwitchCard(
               switchKey: const ValueKey('privacy-usage-stats'),
               icon: Icons.insights_outlined,
-              title: 'Send anonymous usage stats',
+              title: tr('Send anonymous usage stats'),
               subtitle: usageStatsCaption,
               value: preferences.usageStats,
               onChanged: telemetry.setUsageStats,

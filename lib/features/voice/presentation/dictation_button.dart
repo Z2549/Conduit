@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/voice/domain/voice_commands.dart';
 import 'package:conduit/features/voice/presentation/dictation_controller.dart';
 import 'package:conduit/features/voice/presentation/dictation_text_inserter.dart';
@@ -313,7 +314,7 @@ Future<void> showSpeechUnavailableDialog(
     builder: (dialogContext) => AlertDialog(
       key: const ValueKey('speech-unavailable-dialog'),
       icon: const Icon(Icons.mic_off_rounded),
-      title: const Text('No speech recognizer'),
+      title: Text(tr('No speech recognizer')),
       content: Text(
         android
             ? 'This device has no speech recognition service, so the mic '
@@ -331,7 +332,7 @@ Future<void> showSpeechUnavailableDialog(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(),
-          child: const Text('Close'),
+          child: Text(tr('Close')),
         ),
         if (android)
           FilledButton(
@@ -340,7 +341,7 @@ Future<void> showSpeechUnavailableDialog(
               Navigator.of(dialogContext).pop();
               unawaited(controller.openSpeechSettings());
             },
-            child: const Text('Open settings'),
+            child: Text(tr('Open settings')),
           ),
       ],
     ),

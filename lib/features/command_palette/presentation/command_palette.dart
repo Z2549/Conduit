@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -152,8 +153,7 @@ class _CommandPaletteState extends State<CommandPalette> {
                 );
                 if (_visible.isEmpty) {
                   return Center(
-                    child: Text(
-                      'Nothing matches.',
+                    child: Text(tr('Nothing matches.'),
                       style: TextStyle(color: palette.mutedForeground),
                     ),
                   );

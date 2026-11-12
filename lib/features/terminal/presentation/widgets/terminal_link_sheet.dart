@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:flutter/material.dart';
 
@@ -37,28 +38,28 @@ Future<TerminalLinkAction?> showTerminalLinkSheet(
             ),
             ListTile(
               leading: const Icon(Icons.open_in_browser_rounded),
-              title: const Text('Open in browser'),
+              title: Text(tr('Open in browser')),
               onTap: () =>
                   Navigator.of(context).pop(TerminalLinkAction.openInBrowser),
             ),
             if (previewPort != null)
               ListTile(
                 leading: const Icon(Icons.preview_rounded),
-                title: const Text('Open in in-app preview'),
+                title: Text(tr('Open in in-app preview')),
                 subtitle: Text('Forward port $previewPort from the host'),
                 onTap: () =>
                     Navigator.of(context).pop(TerminalLinkAction.openInPreview),
               ),
             ListTile(
               leading: const Icon(Icons.link_rounded),
-              title: const Text('Copy link'),
+              title: Text(tr('Copy link')),
               onTap: () =>
                   Navigator.of(context).pop(TerminalLinkAction.copyLink),
             ),
             ListTile(
               leading: const Icon(Icons.content_copy_rounded),
-              title: const Text('Copy text'),
-              subtitle: const Text('The whole line the link is on'),
+              title: Text(tr('Copy text')),
+              subtitle: Text(tr('The whole line the link is on')),
               onTap: () =>
                   Navigator.of(context).pop(TerminalLinkAction.copyText),
             ),

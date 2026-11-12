@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/approval_widgets.dart';
@@ -105,13 +106,13 @@ class ChatOutgoingBubble extends StatelessWidget {
                       TextButton(
                         key: const ValueKey('outgoing-edit'),
                         onPressed: onEdit,
-                        child: const Text('Edit'),
+                        child: Text(tr('Edit')),
                       ),
                     if (onRetry != null)
                       TextButton(
                         key: const ValueKey('outgoing-retry'),
                         onPressed: onRetry,
-                        child: const Text('Retry'),
+                        child: Text(tr('Retry')),
                       ),
                   ],
                 ),
@@ -505,7 +506,7 @@ class _ChatToolCardState extends State<ChatToolCard> {
                     ),
                 ],
                 if (expanded && item.inputTruncated)
-                  Text('Input shortened by the host.', style: small),
+                  Text(tr('Input shortened by the host.'), style: small),
               ],
             ),
           ),
@@ -695,7 +696,7 @@ class ChatPlanCard extends StatelessWidget {
     };
     return _CardShell(
       icon: Icons.map_outlined,
-      title: 'Plan',
+      title: tr('Plan'),
       trailing: Text(
         label,
         style: theme.textTheme.labelMedium?.copyWith(
@@ -829,7 +830,7 @@ class ChatQuestionCard extends StatelessWidget {
                   key: ValueKey('chat-question-open-terminal-${item.id}'),
                   onPressed: open,
                   icon: const Icon(Icons.terminal_rounded, size: 18),
-                  label: const Text('Open terminal'),
+                  label: Text(tr('Open terminal')),
                 ),
               ),
           ] else if (onPick != null && item.questions.length > 1)

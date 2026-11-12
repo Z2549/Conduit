@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/diagnostics/app_error_log.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/sync/domain/sync_setup_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,7 @@ class _SetupCodeScannerPageState extends State<_SetupCodeScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan setup code')),
+      appBar: AppBar(title: Text(tr('Scan setup code'))),
       body: Stack(
         fit: StackFit.expand,
         children: [

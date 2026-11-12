@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/sync/presentation/widgets/setup_code_scanner.dart';
@@ -139,7 +140,7 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
         context: context,
         builder: (context) => AlertDialog(
           key: const ValueKey('talkbawt-other-server'),
-          title: const Text('Another server'),
+          title: Text(tr('Another server')),
           content: Text(
             'This link is on ${link!.host}, not your configured server '
             '(${Uri.parse(configured).host}). Open it?',
@@ -147,12 +148,12 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               key: const ValueKey('talkbawt-other-server-open'),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Open'),
+              child: Text(tr('Open')),
             ),
           ],
         ),
@@ -229,7 +230,7 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Open a Talkbawt link')),
+      appBar: AppBar(title: Text(tr('Open a Talkbawt link'))),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -264,8 +265,8 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
         autocorrect: false,
         minLines: 1,
         maxLines: 3,
-        decoration: const InputDecoration(
-          labelText: 'Link',
+        decoration: InputDecoration(
+          labelText: tr('Link'),
           hintText: 'https://talkbawt.outsmartis.dev/t/g_…',
         ),
       ),
@@ -275,14 +276,14 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
             key: const ValueKey('talkbawt-paste'),
             onPressed: () => unawaited(_pasteFromClipboard()),
             icon: const Icon(Icons.content_paste_rounded),
-            label: const Text('Paste'),
+            label: Text(tr('Paste')),
           ),
           if (widget.scan != null || setupCodeScanningAvailable)
             TextButton.icon(
               key: const ValueKey('talkbawt-scan'),
               onPressed: () => unawaited(_scanQr()),
               icon: const Icon(Icons.qr_code_scanner_rounded),
-              label: const Text('Scan QR'),
+              label: Text(tr('Scan QR')),
             ),
         ],
       ),
@@ -292,10 +293,10 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
           controller: _passphrase,
           obscureText: true,
           autocorrect: false,
-          decoration: const InputDecoration(labelText: 'Passphrase'),
+          decoration: InputDecoration(labelText: tr('Passphrase')),
         ),
       const SizedBox(height: 16),
-      Text('Read it on', style: Theme.of(context).textTheme.titleSmall),
+      Text(tr('Read it on'), style: Theme.of(context).textTheme.titleSmall),
       Text(
         'Pick the machine whose agent may get it: that machine becomes the '
         'reader, and the one that can reply.',
@@ -338,7 +339,7 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
       FilledButton(
         key: const ValueKey('talkbawt-open'),
         onPressed: () => unawaited(_check()),
-        child: const Text('Open'),
+        child: Text(tr('Open')),
       ),
     ];
   }
@@ -362,11 +363,11 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
       FilledButton(
         key: const ValueKey('talkbawt-read-anyway'),
         onPressed: () => unawaited(_doRead()),
-        child: const Text('Read it'),
+        child: Text(tr('Read it')),
       ),
       TextButton(
         onPressed: () => setState(() => _phase = _Phase.input),
-        child: const Text('Not now'),
+        child: Text(tr('Not now')),
       ),
     ];
   }
@@ -394,7 +395,7 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
                     ),
                   ),
             icon: const Icon(Icons.smart_toy_outlined),
-            label: const Text('Send to agent…'),
+            label: Text(tr('Send to agent…')),
           ),
           if (read.mode == TalkbawtMode.thread)
             OutlinedButton.icon(
@@ -414,13 +415,13 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
                 ),
               ),
               icon: const Icon(Icons.reply_rounded),
-              label: const Text('Reply…'),
+              label: Text(tr('Reply…')),
             ),
           OutlinedButton.icon(
             key: const ValueKey('talkbawt-copy-text'),
             onPressed: () => unawaited(widget.copy(read.plainText)),
             icon: const Icon(Icons.copy_rounded),
-            label: const Text('Copy text'),
+            label: Text(tr('Copy text')),
           ),
         ],
       ),
@@ -497,7 +498,7 @@ class _SendToAgentPageState extends State<_SendToAgentPage> {
         (safety == AgentModeSafety.safe ||
             (safety == AgentModeSafety.unknown && _unknownConfirmed));
     return Scaffold(
-      appBar: AppBar(title: const Text('Send to agent')),
+      appBar: AppBar(title: Text(tr('Send to agent'))),
       body: SafeArea(
         child: ListView(
           key: const ValueKey('talkbawt-confirm-send'),
@@ -530,7 +531,7 @@ class _SendToAgentPageState extends State<_SendToAgentPage> {
                 ),
               ),
             const SizedBox(height: 12),
-            Text('What happens', style: Theme.of(context).textTheme.titleSmall),
+            Text(tr('What happens'), style: Theme.of(context).textTheme.titleSmall),
             Text(
               'The ${widget.read.messages.length} message(s) you saw are '
               'written to a new file on ${widget.host.name}, fenced as '
@@ -553,8 +554,7 @@ class _SendToAgentPageState extends State<_SendToAgentPage> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'The agent never gets the link, the passphrase or a key.',
+            Text(tr('The agent never gets the link, the passphrase or a key.'),
             ),
             const SizedBox(height: 16),
             FilledButton(
@@ -606,7 +606,7 @@ Future<void> replyToTalkbawt(
   if (text == null || text.trim().isEmpty) return;
   try {
     await onSend(text);
-    messenger?.showSnackBar(const SnackBar(content: Text('Reply posted')));
+    messenger?.showSnackBar(SnackBar(content: Text(tr('Reply posted'))));
   } on Object catch (error) {
     messenger?.showSnackBar(SnackBar(content: Text('Not posted: $error')));
   }
@@ -632,7 +632,7 @@ class _ReplyDialogState extends State<_ReplyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Reply'),
+      title: Text(tr('Reply')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -657,14 +657,14 @@ class _ReplyDialogState extends State<_ReplyDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           key: const ValueKey('talkbawt-reply-send'),
           onPressed: _findings.isEmpty
               ? () => Navigator.of(context).pop(_text.text)
               : null,
-          child: const Text('Post'),
+          child: Text(tr('Post')),
         ),
       ],
     );
@@ -720,7 +720,7 @@ class _LinkScannerPageState extends State<_LinkScannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan a Talkbawt link')),
+      appBar: AppBar(title: Text(tr('Scan a Talkbawt link'))),
       body: Stack(
         fit: StackFit.expand,
         children: [

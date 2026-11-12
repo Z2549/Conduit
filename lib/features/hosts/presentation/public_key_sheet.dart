@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -83,7 +84,7 @@ class _PublicKeySheet extends StatelessWidget {
             child: FilledButton.icon(
               onPressed: () => _copy(context),
               icon: const Icon(Icons.copy_rounded, size: 18),
-              label: const Text('Copy'),
+              label: Text(tr('Copy')),
             ),
           ),
           const SizedBox(width: 10),
@@ -91,7 +92,7 @@ class _PublicKeySheet extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => _save(context),
               icon: const Icon(Icons.save_alt_rounded, size: 18),
-              label: const Text('Save .pub'),
+              label: Text(tr('Save .pub')),
             ),
           ),
         ],
@@ -104,7 +105,7 @@ class _PublicKeySheet extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: FilledButton.tonal(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Done'),
+            child: Text(tr('Done')),
           ),
         ),
       ],
@@ -139,7 +140,7 @@ class _PublicKeySheet extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: details.publicKeyOpenSsh));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Public key copied to clipboard')),
+      SnackBar(content: Text(tr('Public key copied to clipboard'))),
     );
   }
 
@@ -154,10 +155,10 @@ class _PublicKeySheet extends StatelessWidget {
         bytes: bytes,
       );
       if (path == null) return;
-      messenger.showSnackBar(const SnackBar(content: Text('Public key saved')));
+      messenger.showSnackBar(SnackBar(content: Text(tr('Public key saved'))));
     } catch (_) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Could not save the public key')),
+        SnackBar(content: Text(tr('Could not save the public key'))),
       );
     }
   }

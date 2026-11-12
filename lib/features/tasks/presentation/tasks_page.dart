@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:conduit/features/tasks/presentation/start_tasks_page.dart';
 import 'package:conduit/features/tasks/presentation/task_detail_page.dart';
@@ -109,7 +110,7 @@ class _TasksPageState extends State<TasksPage> {
                 key: const ValueKey('task-start'),
                 onPressed: () => unawaited(_start(context, [task])),
                 icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('Start'),
+                label: Text(tr('Start')),
               ),
             ),
         ],
@@ -139,7 +140,7 @@ class _TasksPageState extends State<TasksPage> {
         content: Text(
           '$queued run${queued == 1 ? '' : 's'} started or queued.',
         ),
-        action: SnackBarAction(label: 'Show', onPressed: _openRuns),
+        action: SnackBarAction(label: tr('Show'), onPressed: _openRuns),
       ),
     );
   }
@@ -178,7 +179,7 @@ class _TasksPageState extends State<TasksPage> {
           ? null
           : IconButton(
               key: const ValueKey('tasks-clear-selection'),
-              tooltip: 'Clear selection',
+              tooltip: tr('Clear selection'),
               icon: const Icon(Icons.close),
               onPressed: () => setState(_selected.clear),
             ),
@@ -202,19 +203,19 @@ class _TasksPageState extends State<TasksPage> {
         if (widget.runs != null && _selected.isEmpty)
           IconButton(
             key: const ValueKey('tasks-runs'),
-            tooltip: 'Started tasks',
+            tooltip: tr('Started tasks'),
             icon: const Icon(Icons.rocket_launch_outlined),
             onPressed: _openRuns,
           ),
         IconButton(
           key: const ValueKey('tasks-refresh'),
-          tooltip: 'Refresh',
+          tooltip: tr('Refresh'),
           icon: const Icon(Icons.refresh),
           onPressed: () => unawaited(_c.refresh()),
         ),
         IconButton(
           key: const ValueKey('tasks-sources'),
-          tooltip: 'Sources',
+          tooltip: tr('Sources'),
           icon: const Icon(Icons.tune),
           onPressed: () => unawaited(_openSources()),
         ),
@@ -242,7 +243,7 @@ class _TasksPageState extends State<TasksPage> {
                   FilledButton(
                     key: const ValueKey('tasks-add-source'),
                     onPressed: () => unawaited(_openSources()),
-                    child: const Text('Add a source'),
+                    child: Text(tr('Add a source')),
                   ),
                 ],
               ),
@@ -317,9 +318,9 @@ class _TasksPageState extends State<TasksPage> {
           TextField(
             key: const ValueKey('tasks-search'),
             controller: _search,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              hintText: 'Search title or key',
+              hintText: tr('Search title or key'),
               isDense: true,
             ),
             onChanged: (v) =>
@@ -349,7 +350,7 @@ class _TasksPageState extends State<TasksPage> {
                 ),
               _FilterChip<String>(
                 key: const ValueKey('tasks-filter-status'),
-                label: 'Status',
+                label: tr('Status'),
                 value: _filter.status,
                 options: [for (final s in statuses) (s, s)],
                 onChanged: (v) =>
@@ -357,7 +358,7 @@ class _TasksPageState extends State<TasksPage> {
               ),
               _FilterChip<String>(
                 key: const ValueKey('tasks-filter-assignee'),
-                label: 'Assignee',
+                label: tr('Assignee'),
                 value: _filter.assignee,
                 options: [
                   (TaskFilter.unassigned, 'Nobody'),
@@ -370,7 +371,7 @@ class _TasksPageState extends State<TasksPage> {
               if (projects.isNotEmpty || _filter.project != null)
                 _FilterChip<String>(
                   key: const ValueKey('tasks-filter-project'),
-                  label: 'Project',
+                  label: tr('Project'),
                   value: _filter.project,
                   options: [for (final p in projects) (p, p)],
                   onChanged: (v) => setState(
@@ -380,13 +381,13 @@ class _TasksPageState extends State<TasksPage> {
               if (_c.hasDoneToggle)
                 FilterChip(
                   key: const ValueKey('tasks-show-done'),
-                  label: const Text('Show done'),
+                  label: Text(tr('Show done')),
                   selected: _c.showDone,
                   onSelected: (v) => unawaited(_c.setShowDone(v)),
                 ),
               PopupMenuButton<TaskSort>(
                 key: const ValueKey('tasks-sort'),
-                tooltip: 'Sort',
+                tooltip: tr('Sort'),
                 initialValue: _sort,
                 onSelected: (v) => setState(() => _sort = v),
                 itemBuilder: (context) => [
@@ -634,7 +635,7 @@ class _SourcesDialogState extends State<_SourcesDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Show tasks from'),
+    title: Text(tr('Show tasks from')),
     content: SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -656,14 +657,14 @@ class _SourcesDialogState extends State<_SourcesDialog> {
       TextButton(
         onPressed: () =>
             setState(() => _selected.addAll(widget.sources.map((s) => s.$1))),
-        child: const Text('All'),
+        child: Text(tr('All')),
       ),
       FilledButton(
         key: const ValueKey('tasks-sources-apply'),
         onPressed: _selected.isEmpty
             ? null
             : () => Navigator.of(context).pop(_selected),
-        child: const Text('Show'),
+        child: Text(tr('Show')),
       ),
     ],
   );

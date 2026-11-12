@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/voice/data/platform_text_to_speech.dart';
@@ -176,9 +177,8 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
           SpeechSettingsPart.dictation => card([
             ListTile(
               leading: const Icon(Icons.mic_none_rounded),
-              title: const Text('Language'),
-              subtitle: Text(
-                'Dictation in Chat mode uses on-device recognition.',
+              title: Text(tr('Language')),
+              subtitle: Text(tr('Dictation in Chat mode uses on-device recognition.'),
                 style: muted,
               ),
               trailing: _Value(
@@ -193,7 +193,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
             SwitchListTile(
               key: const ValueKey('speech-continuous'),
               secondary: const Icon(Icons.all_inclusive_rounded),
-              title: const Text('Keep listening until I tap stop'),
+              title: Text(tr('Keep listening until I tap stop')),
               subtitle: Text(
                 'Dictation carries on across pauses instead of stopping '
                 'after the first one.',
@@ -207,7 +207,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
               _SliderTile(
                 key: const ValueKey('speech-silence'),
                 icon: Icons.hourglass_bottom_rounded,
-                title: 'Pause after silence',
+                title: tr('Pause after silence'),
                 value: voice.dictationSilenceSeconds.toDouble(),
                 min: VoicePreferences.minSilenceSeconds.toDouble(),
                 max: 30,
@@ -220,7 +220,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
               _SliderTile(
                 key: const ValueKey('speech-max-session'),
                 icon: Icons.timer_outlined,
-                title: 'Longest session',
+                title: tr('Longest session'),
                 value: voice.dictationMaxMinutes.toDouble(),
                 min: VoicePreferences.minMaxMinutes.toDouble(),
                 max: 15,
@@ -250,10 +250,10 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
               ListTile(
                 key: const ValueKey('speech-send-words'),
                 leading: const Icon(Icons.send_rounded),
-                title: const Text('Send words'),
+                title: Text(tr('Send words')),
                 trailing: _Value(voice.voiceSendWords),
                 onTap: () => _editWords(
-                  title: 'Send words',
+                  title: tr('Send words'),
                   current: voice.voiceSendWords,
                   fallback: VoiceCommandWords.defaultSend,
                   save: (words) =>
@@ -263,10 +263,10 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
               ListTile(
                 key: const ValueKey('speech-cancel-words'),
                 leading: const Icon(Icons.cancel_outlined),
-                title: const Text('Cancel words'),
+                title: Text(tr('Cancel words')),
                 trailing: _Value(voice.voiceCancelWords),
                 onTap: () => _editWords(
-                  title: 'Cancel words',
+                  title: tr('Cancel words'),
                   current: voice.voiceCancelWords,
                   fallback: VoiceCommandWords.defaultCancel,
                   save: (words) =>
@@ -283,7 +283,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                 card([
                   SwitchListTile(
                     secondary: const Icon(Icons.notifications_off_outlined),
-                    title: const Text('Silence beeps between phrases'),
+                    title: Text(tr('Silence beeps between phrases')),
                     subtitle: Text(
                       'Experimental. Mutes media, notification and system '
                       'sounds while dictating so restarts are quiet. Restored '
@@ -304,7 +304,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   SwitchListTile(
                     key: const ValueKey('speech-read-aloud-default'),
                     secondary: const Icon(Icons.record_voice_over_outlined),
-                    title: const Text('Read replies aloud by default'),
+                    title: Text(tr('Read replies aloud by default')),
                     subtitle: Text(
                       "Chat View speaks the agent's final answer of each turn, "
                       'approvals and questions, never tool output. "Read replies '
@@ -318,7 +318,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   ListTile(
                     key: const ValueKey('speech-tts-language'),
                     leading: const Icon(Icons.translate_rounded),
-                    title: const Text('Reading language'),
+                    title: Text(tr('Reading language')),
                     trailing: _Value(
                       voice.ttsLanguage.isEmpty
                           ? 'Same as dictation'
@@ -327,7 +327,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                     onTap: () => showSpeechLanguageDialog(
                       context: context,
                       current: voice.ttsLanguage,
-                      title: 'Reading language',
+                      title: tr('Reading language'),
                       defaultLabel: 'Same as dictation',
                       onChanged: (tag) => _update(
                         // A voice belongs to one language.
@@ -338,8 +338,8 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   ListTile(
                     key: const ValueKey('speech-tts-voice'),
                     leading: const Icon(Icons.graphic_eq_rounded),
-                    title: const Text('Voice'),
-                    subtitle: Text('Offline voices only.', style: muted),
+                    title: Text(tr('Voice')),
+                    subtitle: Text(tr('Offline voices only.'), style: muted),
                     trailing: _Value(
                       voice.ttsVoice.isEmpty ? 'Automatic' : voice.ttsVoice,
                     ),
@@ -348,7 +348,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   _SliderTile(
                     key: const ValueKey('speech-talk-send'),
                     icon: Icons.send_rounded,
-                    title: 'Talk: send after a pause of',
+                    title: tr('Talk: send after a pause of'),
                     value: voice.talkSendSilenceSeconds.toDouble(),
                     min: VoicePreferences.minTalkSendSeconds.toDouble(),
                     max: VoicePreferences.maxTalkSendSeconds.toDouble(),
@@ -361,7 +361,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   _SliderTile(
                     key: const ValueKey('speech-rate'),
                     icon: Icons.speed_rounded,
-                    title: 'Speed',
+                    title: tr('Speed'),
                     value: voice.ttsRate,
                     min: VoicePreferences.minRate,
                     max: VoicePreferences.maxRate,
@@ -373,7 +373,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                   _SliderTile(
                     key: const ValueKey('speech-pitch'),
                     icon: Icons.tune_rounded,
-                    title: 'Pitch',
+                    title: tr('Pitch'),
                     value: voice.ttsPitch,
                     min: VoicePreferences.minPitch,
                     max: VoicePreferences.maxPitch,
@@ -390,7 +390,7 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                         key: const ValueKey('speech-test'),
                         onPressed: _playSample,
                         icon: const Icon(Icons.play_arrow_rounded),
-                        label: const Text('Test voice'),
+                        label: Text(tr('Test voice')),
                       ),
                     ),
                   ),
@@ -445,11 +445,11 @@ class _WordsDialogState extends State<_WordsDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_controller.text),
-          child: const Text('Save'),
+          child: Text(tr('Save')),
         ),
       ],
     );
@@ -563,7 +563,7 @@ class _VoiceDialogState extends State<_VoiceDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Voice'),
+      title: Text(tr('Voice')),
       content: SizedBox(
         width: double.maxFinite,
         child: widget.voices.isEmpty
@@ -586,8 +586,8 @@ class _VoiceDialogState extends State<_VoiceDialog> {
                       children: [
                         const RadioListTile<String>(
                           value: '',
-                          title: Text('Automatic'),
-                          subtitle: Text('The best offline voice'),
+                          title: Text(tr('Automatic')),
+                          subtitle: Text(tr('The best offline voice')),
                           dense: true,
                         ),
                         for (final voice in widget.voices)
@@ -606,11 +606,11 @@ class _VoiceDialogState extends State<_VoiceDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_selection),
-          child: const Text('Use'),
+          child: Text(tr('Use')),
         ),
       ],
     );
@@ -727,7 +727,7 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
                     ),
                   const RadioListTile<String>(
                     value: _custom,
-                    title: Text('Other'),
+                    title: Text(tr('Other')),
                     dense: true,
                   ),
                 ],
@@ -742,7 +742,7 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
                   autocorrect: false,
                   enableSuggestions: false,
                   decoration: InputDecoration(
-                    labelText: 'Language tag',
+                    labelText: tr('Language tag'),
                     hintText: 'pt-PT',
                     errorText: _customError,
                     border: const OutlineInputBorder(),
@@ -761,9 +761,9 @@ class _SpeechLanguageDialogState extends State<_SpeechLanguageDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
-        FilledButton(onPressed: _apply, child: const Text('Use')),
+        FilledButton(onPressed: _apply, child: Text(tr('Use'))),
       ],
     );
   }

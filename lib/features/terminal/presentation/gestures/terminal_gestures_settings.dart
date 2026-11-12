@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/terminal/domain/terminal_gesture_preferences.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class TerminalGesturesSettings extends StatelessWidget {
         children: [
           SwitchListTile(
             secondary: const Icon(Icons.swipe_rounded),
-            title: const Text('Swipe switches window'),
+            title: Text(tr('Swipe switches window')),
             subtitle: Text(
               'Swipe left or right with one finger for the next or previous '
               'window (tmux) or tab (Herdr).',
@@ -51,7 +52,7 @@ class TerminalGesturesSettings extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Swipe target', style: theme.textTheme.bodyLarge),
+                      Text(tr('Swipe target'), style: theme.textTheme.bodyLarge),
                       Text(
                         'For plain shells. Sessions opened on a tmux or '
                         'Herdr target always use that one. Keys go through '
@@ -80,7 +81,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           const Divider(height: 1),
           SwitchListTile(
             secondary: const Icon(Icons.pinch_rounded),
-            title: const Text('Pinch to zoom'),
+            title: Text(tr('Pinch to zoom')),
             subtitle: Text(
               'Pinch to change the terminal font size, in tmux, Herdr and '
               'plain shells. Herdr can zoom the pane instead (see "Pinch in '
@@ -94,7 +95,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           const Divider(height: 1),
           SwitchListTile(
             secondary: const Icon(Icons.swap_vert_rounded),
-            title: const Text('Two-finger scrollback'),
+            title: Text(tr('Two-finger scrollback')),
             subtitle: Text(
               'Swipe down with two fingers to scroll back through history. '
               'Swipe up past the bottom to leave scrollback. In Herdr, when '
@@ -110,7 +111,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           SwitchListTile(
             key: const ValueKey('drag-scrolls-remote'),
             secondary: const Icon(Icons.mouse_rounded),
-            title: const Text('Drag scrolls the remote app (mouse wheel)'),
+            title: Text(tr('Drag scrolls the remote app (mouse wheel)')),
             subtitle: Text(
               'In full-screen programs (Claude Code, Herdr, tmux, vim, htop) '
               'a one-finger drag up or down scrolls the program itself, like '
@@ -139,7 +140,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           SwitchListTile(
             key: const ValueKey('herdr-two-finger-panes'),
             secondary: const Icon(Icons.view_column_rounded),
-            title: const Text('Two-finger swipe switches pane'),
+            title: Text(tr('Two-finger swipe switches pane')),
             subtitle: Text(
               'Swipe left or right with two fingers to focus the pane on the '
               'right or left. Also in tmux sessions.',
@@ -151,7 +152,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           ),
           _ChoiceRow<HerdrVerticalSwipe>(
             key: const ValueKey('herdr-two-finger-vertical'),
-            title: 'Two-finger up/down',
+            title: tr('Two-finger up/down'),
             caption:
                 'Workspaces: up for the next workspace, down for the previous '
                 'one. Scrollback: like tmux.',
@@ -164,7 +165,7 @@ class TerminalGesturesSettings extends StatelessWidget {
           ),
           _ChoiceRow<HerdrPinchAction>(
             key: const ValueKey('herdr-pinch'),
-            title: 'Pinch in Herdr',
+            title: tr('Pinch in Herdr'),
             caption:
                 'Font size (default): like everywhere else. Zoom pane: spread '
                 'to zoom the focused pane full-screen, pinch in to restore it.',
@@ -178,9 +179,8 @@ class TerminalGesturesSettings extends StatelessWidget {
           const Divider(height: 1),
           SwitchListTile(
             secondary: const Icon(Icons.grid_view_rounded),
-            title: const Text('Top-row swipes switch sessions'),
-            subtitle: Text(
-              'Swipe down from the top to open the quick switcher.',
+            title: Text(tr('Top-row swipes switch sessions')),
+            subtitle: Text(tr('Swipe down from the top to open the quick switcher.'),
               style: captionStyle,
             ),
             value: preferences.headerSwipeOpensSessions,
@@ -190,9 +190,8 @@ class TerminalGesturesSettings extends StatelessWidget {
           const Divider(height: 1),
           SwitchListTile(
             secondary: const Icon(Icons.smart_toy_outlined),
-            title: const Text('Edge swipe opens agents'),
-            subtitle: Text(
-              'Swipe in from the right edge to open the agent panel.',
+            title: Text(tr('Edge swipe opens agents')),
+            subtitle: Text(tr('Swipe in from the right edge to open the agent panel.'),
               style: captionStyle,
             ),
             value: preferences.edgeSwipeOpensAgents,

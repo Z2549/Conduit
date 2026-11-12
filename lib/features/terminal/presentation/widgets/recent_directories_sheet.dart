@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/terminal/domain/recent_directories.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class RecentDirectoriesSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('cd to…', style: theme.textTheme.titleLarge),
+                Text(tr('cd to…'), style: theme.textTheme.titleLarge),
                 Text(
                   'Recent directories on $hostName · tap: '
                   '${actions.first.label.toLowerCase()}',
@@ -140,7 +141,7 @@ class RecentDirectoriesSheet extends StatelessWidget {
                 trailing: actions.length < 2
                     ? null
                     : PopupMenuButton<RecentDirectoryAction>(
-                        tooltip: 'More',
+                        tooltip: tr('More'),
                         onSelected: (action) => Navigator.of(
                           context,
                         ).pop(RecentDirectoryPick(directory, action)),

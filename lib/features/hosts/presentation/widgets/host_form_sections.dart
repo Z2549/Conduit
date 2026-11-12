@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/domain/ssh_key.dart';
@@ -35,13 +36,13 @@ class HostConnectionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return HostFormSectionCard(
       icon: Icons.dns_rounded,
-      title: 'Connection',
+      title: tr('Connection'),
       caption: 'Where to reach this machine.',
       children: [
         TextFormField(
           controller: nameController,
-          decoration: const InputDecoration(
-            labelText: 'Display name',
+          decoration: InputDecoration(
+            labelText: tr('Display name'),
             hintText: 'production-edge-01',
             prefixIcon: Icon(Icons.label_important_outline_rounded),
           ),
@@ -56,8 +57,8 @@ class HostConnectionSection extends StatelessWidget {
               flex: 3,
               child: TextFormField(
                 controller: hostController,
-                decoration: const InputDecoration(
-                  labelText: 'Host or IP',
+                decoration: InputDecoration(
+                  labelText: tr('Host or IP'),
                   hintText: 'edge.example.com',
                   prefixIcon: Icon(Icons.public_rounded),
                 ),
@@ -70,7 +71,7 @@ class HostConnectionSection extends StatelessWidget {
             Expanded(
               child: TextFormField(
                 controller: portController,
-                decoration: const InputDecoration(labelText: 'Port'),
+                decoration: InputDecoration(labelText: tr('Port')),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 textInputAction: TextInputAction.next,
@@ -82,8 +83,8 @@ class HostConnectionSection extends StatelessWidget {
         const SizedBox(height: 12),
         TextFormField(
           controller: usernameController,
-          decoration: const InputDecoration(
-            labelText: 'Username',
+          decoration: InputDecoration(
+            labelText: tr('Username'),
             prefixIcon: Icon(Icons.person_outline_rounded),
           ),
           textInputAction: TextInputAction.next,
@@ -157,7 +158,7 @@ class HostAuthenticationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return HostFormSectionCard(
       icon: Icons.lock_outline_rounded,
-      title: 'Authentication',
+      title: tr('Authentication'),
       caption: 'Credentials are stored in platform secure storage.',
       children: [
         AuthMethodPicker(value: authMethod, onChanged: onAuthMethodChanged),
@@ -169,7 +170,7 @@ class HostAuthenticationSection extends StatelessWidget {
             color: Colors.transparent,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Offer temporary public key'),
+              title: Text(tr('Offer temporary public key')),
               subtitle: const Text(
                 'Helps servers that authenticate externally but still expect '
                 'a public-key login attempt.',
@@ -183,8 +184,8 @@ class HostAuthenticationSection extends StatelessWidget {
           TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
-              labelText: 'Password',
-              helperText: 'Use this for password-only SSH login.',
+              labelText: tr('Password'),
+              helperText: tr('Use this for password-only SSH login.'),
               helperMaxLines: 2,
               prefixIcon: const Icon(Icons.key_outlined),
               suffixIcon: IconButton(
@@ -226,9 +227,9 @@ class HostAuthenticationSection extends StatelessWidget {
           const SizedBox(height: 14),
           TextFormField(
             controller: privateKeyController,
-            decoration: const InputDecoration(
-              labelText: 'Private key',
-              helperText: 'Import, paste, or generate a key.',
+            decoration: InputDecoration(
+              labelText: tr('Private key'),
+              helperText: tr('Import, paste, or generate a key.'),
               helperMaxLines: 2,
               alignLabelWithHint: true,
               prefixIcon: Padding(
@@ -252,8 +253,8 @@ class HostAuthenticationSection extends StatelessWidget {
           TextFormField(
             controller: passphraseController,
             decoration: InputDecoration(
-              labelText: 'Key passphrase',
-              helperText: 'Leave empty for an unencrypted key.',
+              labelText: tr('Key passphrase'),
+              helperText: tr('Leave empty for an unencrypted key.'),
               helperMaxLines: 2,
               prefixIcon: const Icon(Icons.shield_outlined),
               suffixIcon: IconButton(
@@ -276,7 +277,7 @@ class HostAuthenticationSection extends StatelessWidget {
             color: Colors.transparent,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Forward SSH agent'),
+              title: Text(tr('Forward SSH agent')),
               subtitle: const Text(
                 'Let hosts you connect to use this key to authenticate '
                 'onward. Hardware keys prompt for a touch on each use.',
@@ -378,7 +379,7 @@ class HostAdvancedSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return HostFormSectionCard(
       icon: Icons.tune_rounded,
-      title: 'Advanced',
+      title: tr('Advanced'),
       caption: 'Optional tagging and connection timing.',
       children: [
         TagEditor(
@@ -391,8 +392,8 @@ class HostAdvancedSection extends StatelessWidget {
         const SizedBox(height: 12),
         TextFormField(
           controller: timeoutController,
-          decoration: const InputDecoration(
-            labelText: 'Connection timeout',
+          decoration: InputDecoration(
+            labelText: tr('Connection timeout'),
             suffixText: 'sec',
             prefixIcon: Icon(Icons.timer_outlined),
           ),
@@ -405,7 +406,7 @@ class HostAdvancedSection extends StatelessWidget {
           color: Colors.transparent,
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Connect with Mosh'),
+            title: Text(tr('Connect with Mosh')),
             subtitle: const Text(
               'Roaming UDP session over SSH. Requires mosh-server on the '
               'host and open UDP ports.',
@@ -418,9 +419,9 @@ class HostAdvancedSection extends StatelessWidget {
           const SizedBox(height: 16),
           TextFormField(
             controller: moshLocaleController,
-            decoration: const InputDecoration(
-              labelText: 'Mosh locale',
-              helperText: 'Must be a UTF-8 locale installed on the host.',
+            decoration: InputDecoration(
+              labelText: tr('Mosh locale'),
+              helperText: tr('Must be a UTF-8 locale installed on the host.'),
               helperMaxLines: 2,
               prefixIcon: Icon(Icons.language_outlined),
             ),
@@ -431,10 +432,9 @@ class HostAdvancedSection extends StatelessWidget {
           const SizedBox(height: 16),
           TextFormField(
             controller: moshPortsController,
-            decoration: const InputDecoration(
-              labelText: 'Mosh UDP ports',
-              helperText:
-                  'Port or range like 60000:61000. Empty uses 60001:60999.',
+            decoration: InputDecoration(
+              labelText: tr('Mosh UDP ports'),
+              helperText: tr('Port or range like 60000:61000. Empty uses 60001:60999.'),
               helperMaxLines: 2,
               errorMaxLines: 2,
               prefixIcon: Icon(Icons.settings_ethernet_rounded),
@@ -452,9 +452,8 @@ class HostAdvancedSection extends StatelessWidget {
             color: Colors.transparent,
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Predictive echo (experimental)'),
-              subtitle: const Text(
-                'Show local input previews on laggy Mosh sessions.',
+              title: Text(tr('Predictive echo (experimental)')),
+              subtitle: Text(tr('Show local input previews on laggy Mosh sessions.'),
               ),
               value: predictiveEchoEnabled,
               onChanged: onPredictiveEchoChanged,
@@ -466,9 +465,8 @@ class HostAdvancedSection extends StatelessWidget {
           color: Colors.transparent,
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Start tmux on connect'),
-            subtitle: const Text(
-              'Attach to the named tmux session, or create it if needed.',
+            title: Text(tr('Start tmux on connect')),
+            subtitle: Text(tr('Attach to the named tmux session, or create it if needed.'),
             ),
             value: startTmuxOnConnect,
             onChanged: onStartTmuxOnConnectChanged,
@@ -478,10 +476,10 @@ class HostAdvancedSection extends StatelessWidget {
           const SizedBox(height: 16),
           TextFormField(
             controller: tmuxSessionNameController,
-            decoration: const InputDecoration(
-              labelText: 'Tmux session name',
+            decoration: InputDecoration(
+              labelText: tr('Tmux session name'),
               hintText: defaultTmuxSessionName,
-              helperText: 'Conductore attaches to this session, or creates it.',
+              helperText: tr('Conductore attaches to this session, or creates it.'),
               helperMaxLines: 2,
               prefixIcon: Icon(Icons.view_stream_outlined),
             ),
@@ -492,8 +490,8 @@ class HostAdvancedSection extends StatelessWidget {
           const SizedBox(height: 16),
           TextFormField(
             controller: tmuxStartDirectoryController,
-            decoration: const InputDecoration(
-              labelText: 'Tmux start directory',
+            decoration: InputDecoration(
+              labelText: tr('Tmux start directory'),
               hintText: '~/projects',
               helperText:
                   'Used when a new tmux session is created. An existing tmux '
@@ -512,8 +510,7 @@ class HostAdvancedSection extends StatelessWidget {
           onChanged: onTmuxPrefixKeyChanged,
         ),
         const SizedBox(height: 16),
-        Text(
-          'Agents and terminals',
+        Text(tr('Agents and terminals'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         Material(
@@ -541,7 +538,7 @@ class HostAdvancedSection extends StatelessWidget {
           color: Colors.transparent,
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Monitor coding agents'),
+            title: Text(tr('Monitor coding agents')),
             subtitle: const Text(
               'Watch agents on this machine while connected and show their '
               'states in the terminal dashboard.',
@@ -565,7 +562,7 @@ class HostAdvancedSection extends StatelessWidget {
                   key: const ValueKey('agent-notify-level'),
                   initialValue: level,
                   decoration: InputDecoration(
-                    labelText: 'Agent notifications',
+                    labelText: tr('Agent notifications'),
                     helperText: level.description,
                     helperMaxLines: 3,
                     prefixIcon: const Icon(Icons.notifications_outlined),
@@ -588,8 +585,8 @@ class HostAdvancedSection extends StatelessWidget {
           const SizedBox(height: 12),
           DropdownButtonFormField<AgentMonitorKind>(
             initialValue: agentMonitor,
-            decoration: const InputDecoration(
-              labelText: 'Agent monitor',
+            decoration: InputDecoration(
+              labelText: tr('Agent monitor'),
               helperText:
                   'Auto uses the Conductore companion when conductore-hostd '
                   'is installed (permission prompts answerable from the '
@@ -615,8 +612,8 @@ class HostAdvancedSection extends StatelessWidget {
         const SizedBox(height: 16),
         TextFormField(
           controller: shareInboxDirectoryController,
-          decoration: const InputDecoration(
-            labelText: 'Share inbox directory',
+          decoration: InputDecoration(
+            labelText: tr('Share inbox directory'),
             hintText: '~/conductore-inbox',
             helperText:
                 'Files shared to Conductore are uploaded here before their '
@@ -630,7 +627,7 @@ class HostAdvancedSection extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         SnippetListEditor(
-          title: 'Host snippets',
+          title: tr('Host snippets'),
           caption:
               'Shown in the Snip palette for this machine. Hidden '
               'snippets are useful for passwords or other secrets.',

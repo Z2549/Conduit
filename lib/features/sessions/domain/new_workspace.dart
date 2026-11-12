@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
@@ -361,8 +362,7 @@ abstract final class NewWorkspaceCommands {
     }
     final message = error['message'];
     return message is String && message.isNotEmpty
-        ? message
-        : 'Herdr answered with an error.';
+        ? message: tr('Herdr answered with an error.');
   }
 
   static Map<String, Object?>? _decode(String raw) {

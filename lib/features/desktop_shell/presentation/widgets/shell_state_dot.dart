@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/desktop_shell/domain/sidebar_tree.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class ShellUnreadBadge extends StatelessWidget {
     final color = palette.foreground;
     if (count == 1) {
       return Semantics(
-        label: 'unread',
+        label: tr('unread'),
         child: Container(
           key: const ValueKey('unread-dot'),
           width: 7,

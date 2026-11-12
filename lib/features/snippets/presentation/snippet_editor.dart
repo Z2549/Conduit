@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/features/snippets/domain/terminal_snippet.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class SnippetListEditor extends StatelessWidget {
               TextButton.icon(
                 onPressed: () => _add(context),
                 icon: const Icon(Icons.add_rounded, size: 17),
-                label: const Text('Add'),
+                label: Text(tr('Add')),
               ),
             ],
           ),
@@ -58,8 +59,7 @@ class SnippetListEditor extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: colorScheme.outlineVariant),
               ),
-              child: Text(
-                'No snippets saved.',
+              child: Text(tr('No snippets saved.'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -176,12 +176,12 @@ class _SnippetTile extends StatelessWidget {
                 ),
               ),
             IconButton(
-              tooltip: 'Edit',
+              tooltip: tr('Edit'),
               onPressed: onEdit,
               icon: const Icon(Icons.edit_rounded),
             ),
             IconButton(
-              tooltip: 'Remove',
+              tooltip: tr('Remove'),
               onPressed: onRemove,
               icon: const Icon(Icons.remove_circle_outline_rounded),
             ),
@@ -275,8 +275,8 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             controller: _labelController,
             autofocus: true,
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
-            decoration: const InputDecoration(
-              labelText: 'Name',
+            decoration: InputDecoration(
+              labelText: tr('Name'),
               border: OutlineInputBorder(),
             ),
             textInputAction: TextInputAction.next,
@@ -289,8 +289,8 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             // A hidden snippet is one line: Enter saves it on desktop.
             onSubmitted: desktop && _hidden ? (_) => _submitSnippet() : null,
             scrollPadding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
-            decoration: const InputDecoration(
-              labelText: 'Command or text',
+            decoration: InputDecoration(
+              labelText: tr('Command or text'),
               border: OutlineInputBorder(),
             ),
             obscureText: _hidden,
@@ -301,21 +301,21 @@ class _SnippetDialogState extends State<_SnippetDialog> {
             contentPadding: EdgeInsets.zero,
             value: _submit,
             onChanged: (value) => setState(() => _submit = value ?? true),
-            title: const Text('Send Enter after snippet'),
+            title: Text(tr('Send Enter after snippet')),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: _hidden,
             onChanged: (value) => setState(() => _hidden = value),
-            title: const Text('Hidden snippet'),
-            subtitle: const Text('Use for passwords or other secrets.'),
+            title: Text(tr('Hidden snippet')),
+            subtitle: Text(tr('Use for passwords or other secrets.')),
           ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           key: const ValueKey('snippet-dialog-save'),

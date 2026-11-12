@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/tasks/domain/task_run.dart';
 import 'package:conduit/features/tasks/presentation/task_runs_controller.dart';
@@ -66,8 +67,7 @@ class _TaskBatchesPanelState extends State<TaskBatchesPanel> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
-            child: Text(
-              'Started tasks',
+            child: Text(tr('Started tasks'),
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
@@ -243,7 +243,7 @@ class _RunTile extends StatelessWidget {
       ),
       subtitle: Text(details, maxLines: 2, overflow: TextOverflow.ellipsis),
       trailing: PopupMenuButton<String>(
-        tooltip: 'Run actions',
+        tooltip: tr('Run actions'),
         onSelected: (action) => unawaited(switch (action) {
           'copy' => Clipboard.setData(ClipboardData(text: run.command ?? '')),
           'cancel' => controller.cancel(hostId, run.id),
@@ -253,9 +253,9 @@ class _RunTile extends StatelessWidget {
         }),
         itemBuilder: (context) => [
           if (run.command != null)
-            const PopupMenuItem(value: 'copy', child: Text('Copy command')),
+            PopupMenuItem(value: 'copy', child: Text(tr('Copy command'))),
           if (run.active || run.status == TaskRunStatus.queued)
-            const PopupMenuItem(value: 'cancel', child: Text('Stop following'))
+            PopupMenuItem(value: 'cancel', child: Text(tr('Stop following')))
           else ...[
             if (run.agentOpen)
               PopupMenuItem(
@@ -264,14 +264,14 @@ class _RunTile extends StatelessWidget {
                   run.keep ? "Don't keep agent open" : 'Keep agent open',
                 ),
               ),
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'forget',
-              child: Text('Remove and clean up'),
+              child: Text(tr('Remove and clean up')),
             ),
             if (run.branch != null)
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'forget-branch',
-                child: Text('Remove and delete branch'),
+                child: Text(tr('Remove and delete branch')),
               ),
           ],
         ],
@@ -295,7 +295,7 @@ class TaskRunsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Started tasks')),
+    appBar: AppBar(title: Text(tr('Started tasks'))),
     body: RefreshIndicator(
       onRefresh: () => controller.refreshAll(hostIds()),
       child: ListenableBuilder(
@@ -305,9 +305,9 @@ class TaskRunsPage extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           children: [
             if (controller.batches.isEmpty)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(24),
-                child: Center(child: Text('No tasks started yet.')),
+                child: Center(child: Text(tr('No tasks started yet.'))),
               ),
             TaskBatchesPanel(
               controller: controller,

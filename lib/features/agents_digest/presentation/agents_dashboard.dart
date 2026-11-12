@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -138,7 +139,7 @@ class AgentsDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agents'),
+        title: Text(tr('Agents')),
         actions: [DigestWindowMenu(controller: controller)],
       ),
       body: SafeArea(
@@ -171,7 +172,7 @@ class DigestWindowMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<Object>(
       key: const ValueKey('digest-window-menu'),
-      tooltip: 'Time window',
+      tooltip: tr('Time window'),
       icon: const Icon(Icons.schedule_rounded),
       onSelected: (value) {
         if (value is DigestWindow) {
@@ -192,7 +193,7 @@ class DigestWindowMenu extends StatelessWidget {
         const PopupMenuItem<Object>(
           key: ValueKey('digest-mark-seen'),
           value: 'seen',
-          child: Text('Mark all seen'),
+          child: Text(tr('Mark all seen')),
         ),
       ],
     );
@@ -802,10 +803,10 @@ class _AgentsDashboardViewState extends State<AgentsDashboardView>
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: const Text('Agent monitoring is off'),
+            subtitle: Text(tr('Agent monitoring is off')),
             trailing: TextButton(
               onPressed: () => attention.enableMonitoring(host),
-              child: const Text('Turn on'),
+              child: Text(tr('Turn on')),
             ),
           ),
         ),
@@ -962,7 +963,7 @@ class _AgentsDashboardViewState extends State<AgentsDashboardView>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Agents'),
+                  Text(tr('Agents')),
                   if (attention.attentionCount case final count
                       when count > 0) ...[
                     const SizedBox(width: 6),
@@ -1103,8 +1104,7 @@ class _Header extends StatelessWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    'Summarizing what changed…',
+                  Text(tr('Summarizing what changed…'),
                     style: TextStyle(
                       color: palette.mutedForeground,
                       fontSize: 12,
@@ -1116,8 +1116,7 @@ class _Header extends StatelessWidget {
           if (!controller.preferences.summariesEnabled)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                'Summaries are off: facts only (Settings › Agents).',
+              child: Text(tr('Summaries are off: facts only (Settings › Agents).'),
                 key: const ValueKey('digest-summaries-off'),
                 style: TextStyle(color: palette.mutedForeground, fontSize: 12),
               ),
@@ -1248,7 +1247,7 @@ class _UpdateHint extends StatelessWidget {
           if (host != null)
             TextButton(
               onPressed: () => showCompanionSetup(context, host),
-              child: const Text('Update agent hooks'),
+              child: Text(tr('Update agent hooks')),
             ),
         ],
       ),
@@ -1338,16 +1337,16 @@ class DigestAgentCard extends StatelessWidget {
 
   ({String label, Color color}) _chip(AppPalette palette) {
     if (agent.attention == DigestAttention.permission) {
-      return (label: 'Needs approval', color: palette.attention);
+      return (label: tr('Needs approval'), color: palette.attention);
     }
     if (agent.attention == DigestAttention.question) {
-      return (label: 'Asks you', color: palette.attention);
+      return (label: tr('Asks you'), color: palette.attention);
     }
-    if (agent.stuck.isNotEmpty) return (label: 'Stuck', color: palette.danger);
+    if (agent.stuck.isNotEmpty) return (label: tr('Stuck'), color: palette.danger);
     return switch (agent.state) {
-      'working' => (label: 'Working', color: palette.accent),
-      'ended' => (label: 'Ended', color: palette.mutedForeground),
-      _ => (label: 'Done', color: palette.success),
+      'working' => (label: tr('Working'), color: palette.accent),
+      'ended' => (label: tr('Ended'), color: palette.mutedForeground),
+      _ => (label: tr('Done'), color: palette.success),
     };
   }
 
@@ -1424,7 +1423,7 @@ class DigestAgentCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 6),
                       child: Tooltip(
-                        message: 'Muted',
+                        message: tr('Muted'),
                         child: Icon(
                           Icons.notifications_off_outlined,
                           key: ValueKey('digest-muted-${agent.sessionId}'),
@@ -1473,8 +1472,7 @@ class DigestAgentCard extends StatelessWidget {
                 style: theme.textTheme.bodyMedium,
               ),
               if (summarizing)
-                Text(
-                  'Updating the summary…',
+                Text(tr('Updating the summary…'),
                   style: TextStyle(
                     color: palette.mutedForeground,
                     fontSize: 11.5,
@@ -1552,7 +1550,7 @@ class DigestAgentCard extends StatelessWidget {
         style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
         onPressed: () => onTell(true),
         icon: const Icon(Icons.reply_rounded, size: 18),
-        label: const Text('Answer'),
+        label: Text(tr('Answer')),
       );
     }
     if (onReview case final review?) {
@@ -1561,7 +1559,7 @@ class DigestAgentCard extends StatelessWidget {
         style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
         onPressed: review,
         icon: const Icon(Icons.rate_review_outlined, size: 18),
-        label: const Text('Review'),
+        label: Text(tr('Review')),
       );
     }
     return null;
@@ -1698,7 +1696,7 @@ class _TellDialogState extends State<_TellDialog> {
     final send = FilledButton(
       key: const ValueKey('digest-tell-send'),
       onPressed: _send,
-      child: const Text('Send'),
+      child: Text(tr('Send')),
     );
     final dialog = AlertDialog(
       title: Text(
@@ -1720,14 +1718,14 @@ class _TellDialogState extends State<_TellDialog> {
             autofocus: true,
             minLines: 1,
             maxLines: 5,
-            decoration: const InputDecoration(hintText: 'Message'),
+            decoration: InputDecoration(hintText: tr('Message')),
           ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         if (desktop)
           Tooltip(message: '${_mac ? 'Cmd' : 'Ctrl'}+Enter', child: send)

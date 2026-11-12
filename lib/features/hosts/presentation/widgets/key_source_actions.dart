@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:flutter/material.dart';
 
 class KeySourceActions extends StatelessWidget {
@@ -19,7 +20,7 @@ class KeySourceActions extends StatelessWidget {
         Expanded(
           child: _SourceButton(
             icon: Icons.upload_file_rounded,
-            label: 'Import',
+            label: tr('Import'),
             onPressed: onImportFile,
           ),
         ),
@@ -27,7 +28,7 @@ class KeySourceActions extends StatelessWidget {
         Expanded(
           child: _SourceButton(
             icon: Icons.content_paste_rounded,
-            label: 'Paste',
+            label: tr('Paste'),
             onPressed: onPaste,
           ),
         ),
@@ -36,7 +37,7 @@ class KeySourceActions extends StatelessWidget {
           Expanded(
             child: _SourceButton(
               icon: Icons.auto_awesome_rounded,
-              label: 'Generate',
+              label: tr('Generate'),
               onPressed: onGenerate!,
             ),
           ),

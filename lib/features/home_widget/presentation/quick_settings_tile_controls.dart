@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/home_widget/domain/agent_status_widget_channel.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,7 @@ class _QuickSettingsTileControlsState extends State<QuickSettingsTileControls> {
       clipBehavior: Clip.antiAlias,
       child: ListTile(
         leading: const Icon(Icons.dashboard_customize_rounded),
-        title: const Text('Add quick-settings tile'),
+        title: Text(tr('Add quick-settings tile')),
         subtitle: Text(
           'Shows how many agents need you or are stuck; tap it to open the '
           'dashboard. '

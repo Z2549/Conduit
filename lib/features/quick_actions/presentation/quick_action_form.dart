@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/quick_actions/domain/quick_action.dart';
 import 'package:conduit/features/quick_actions/domain/quick_action_plan.dart';
@@ -183,21 +184,21 @@ class _QuickActionFormState extends State<QuickActionForm> {
             const SizedBox(height: 14),
             SegmentedButton<QuickActionKind>(
               key: const ValueKey('quick-action-kind'),
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: QuickActionKind.shell,
                   icon: Icon(Icons.terminal_rounded, size: 16),
-                  label: Text('Command'),
+                  label: Text(tr('Command')),
                 ),
                 ButtonSegment(
                   value: QuickActionKind.prompt,
                   icon: Icon(Icons.smart_toy_outlined, size: 16),
-                  label: Text('Prompt'),
+                  label: Text(tr('Prompt')),
                 ),
                 ButtonSegment(
                   value: QuickActionKind.url,
                   icon: Icon(Icons.public_rounded, size: 16),
-                  label: Text('Link'),
+                  label: Text(tr('Link')),
                 ),
               ],
               selected: {_kind},
@@ -210,9 +211,9 @@ class _QuickActionFormState extends State<QuickActionForm> {
               controller: _label,
               autofocus: true,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'Dev server, Tests, Deploy…',
+              decoration: InputDecoration(
+                labelText: tr('Name'),
+                hintText: tr('Dev server, Tests, Deploy…'),
               ),
             ),
             const SizedBox(height: 10),
@@ -250,9 +251,9 @@ class _QuickActionFormState extends State<QuickActionForm> {
                       key: const ValueKey('quick-action-terminal'),
                       controller: _terminal,
                       onSubmitted: (_) => _save(),
-                      decoration: const InputDecoration(
-                        labelText: 'Terminal name (optional)',
-                        hintText: 'Reuses it when open',
+                      decoration: InputDecoration(
+                        labelText: tr('Terminal name (optional)'),
+                        hintText: tr('Reuses it when open'),
                       ),
                     ),
                   ),
@@ -262,8 +263,8 @@ class _QuickActionFormState extends State<QuickActionForm> {
                       key: const ValueKey('quick-action-cwd'),
                       controller: _cwd,
                       onSubmitted: (_) => _save(),
-                      decoration: const InputDecoration(
-                        labelText: 'Folder (optional)',
+                      decoration: InputDecoration(
+                        labelText: tr('Folder (optional)'),
                         hintText: 'src, relative to the repo',
                       ),
                     ),
@@ -279,8 +280,8 @@ class _QuickActionFormState extends State<QuickActionForm> {
                     key: const ValueKey('quick-action-keys'),
                     controller: _keys,
                     onSubmitted: (_) => _save(),
-                    decoration: const InputDecoration(
-                      labelText: 'Keys (optional)',
+                    decoration: InputDecoration(
+                      labelText: tr('Keys (optional)'),
                       hintText: 'ctrl+alt+t',
                     ),
                   ),
@@ -289,10 +290,10 @@ class _QuickActionFormState extends State<QuickActionForm> {
                 DropdownButton<String?>(
                   key: const ValueKey('quick-action-icon'),
                   value: _icon,
-                  hint: const Text('Icon'),
+                  hint: Text(tr('Icon')),
                   onChanged: (value) => setState(() => _icon = value),
                   items: [
-                    const DropdownMenuItem(child: Text('Default')),
+                    DropdownMenuItem(child: Text(tr('Default'))),
                     for (final name in QuickAction.iconNames)
                       DropdownMenuItem(
                         value: name,
@@ -325,10 +326,10 @@ class _QuickActionFormState extends State<QuickActionForm> {
               dense: true,
               value: _confirm,
               onChanged: (value) => setState(() => _confirm = value ?? false),
-              title: const Text('Ask before running'),
+              title: Text(tr('Ask before running')),
             ),
             const Divider(),
-            Text('Keep it in', style: theme.textTheme.labelLarge),
+            Text(tr('Keep it in'), style: theme.textTheme.labelLarge),
             RadioGroup<QuickActionHome>(
               groupValue: _home,
               onChanged: (value) {
@@ -342,7 +343,7 @@ class _QuickActionFormState extends State<QuickActionForm> {
                     dense: true,
                     enabled: repoFile != null,
                     value: QuickActionHome.repo,
-                    title: const Text('The repo, for everyone'),
+                    title: Text(tr('The repo, for everyone')),
                     subtitle: Text(
                       repoFile == null
                           ? 'The repo folder is not known yet.'
@@ -354,8 +355,8 @@ class _QuickActionFormState extends State<QuickActionForm> {
                     contentPadding: EdgeInsets.zero,
                     dense: true,
                     value: QuickActionHome.personal,
-                    title: Text('My actions'),
-                    subtitle: Text('Settings, synced to your devices'),
+                    title: Text(tr('My actions')),
+                    subtitle: Text(tr('Settings, synced to your devices')),
                   ),
                 ],
               ),
@@ -386,12 +387,12 @@ class _QuickActionFormState extends State<QuickActionForm> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+                  child: Text(tr('Cancel')),
                 ),
                 FilledButton(
                   key: const ValueKey('quick-action-save'),
                   onPressed: _save,
-                  child: const Text('Save'),
+                  child: Text(tr('Save')),
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/hosts/presentation/widgets/home_session_grid.dart';
@@ -115,8 +116,7 @@ class _TitleRow extends StatelessWidget {
         children: [
           Icon(Icons.space_dashboard_outlined, size: 18, color: palette.accent),
           const SizedBox(width: 8),
-          Text(
-            'Home',
+          Text(tr('Home'),
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w800,
             ),
@@ -126,7 +126,7 @@ class _TitleRow extends StatelessWidget {
             key: const ValueKey('dashboard-new-session'),
             onPressed: dashboard.onNewSession,
             icon: const Icon(Icons.add_rounded, size: 18),
-            label: const Text('New session'),
+            label: Text(tr('New session')),
           ),
           ...dashboard.actions,
         ],

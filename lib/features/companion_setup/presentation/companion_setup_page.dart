@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -143,7 +144,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Uninstall agent hooks?'),
+        title: Text(tr('Uninstall agent hooks?')),
         content: const Text(
           'Removes the Conductore hook entries from ~/.claude/settings.json '
           '(other hooks stay), stops the daemon, and deletes '
@@ -153,12 +154,12 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('companion-uninstall-confirm'),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Uninstall'),
+            child: Text(tr('Uninstall')),
           ),
         ],
       ),
@@ -205,7 +206,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Agent hooks'),
+            Text(tr('Agent hooks')),
             Text(
               _host.name,
               style: Theme.of(context).textTheme.bodySmall,
@@ -216,7 +217,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         ),
         actions: [
           IconButton(
-            tooltip: 'Check again',
+            tooltip: tr('Check again'),
             icon: const Icon(Icons.refresh_rounded),
             onPressed: _busy == null ? _refresh : null,
           ),
@@ -256,7 +257,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
                           await attention.enableMonitoring(_host);
                           if (mounted) setState(() {});
                         },
-                        child: const Text('Turn on'),
+                        child: Text(tr('Turn on')),
                       ),
                     ],
                   ),
@@ -305,13 +306,13 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         key: const ValueKey('companion-install'),
         onPressed: idle ? () => _install(update: false) : null,
         icon: const Icon(Icons.download_rounded),
-        label: const Text('Install agent hooks'),
+        label: Text(tr('Install agent hooks')),
       ),
       CompanionState.hooksMissing => FilledButton.icon(
         key: const ValueKey('companion-install'),
         onPressed: idle ? () => _install(update: false) : null,
         icon: const Icon(Icons.link_rounded),
-        label: const Text('Reinstall and register hooks'),
+        label: Text(tr('Reinstall and register hooks')),
       ),
       CompanionState.outdated => FilledButton.icon(
         key: const ValueKey('companion-install'),
@@ -324,12 +325,12 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         key: const ValueKey('companion-test-event'),
         onPressed: idle ? _sendTestEvent : null,
         icon: const Icon(Icons.send_rounded),
-        label: const Text('Send test event'),
+        label: Text(tr('Send test event')),
       ),
       CompanionState.error => FilledButton.icon(
         onPressed: idle ? _refresh : null,
         icon: const Icon(Icons.refresh_rounded),
-        label: const Text('Check again'),
+        label: Text(tr('Check again')),
       ),
     };
 
@@ -348,21 +349,21 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
           key: const ValueKey('companion-install'),
           onPressed: idle ? () => _install(update: false) : null,
           icon: const Icon(Icons.download_rounded),
-          label: const Text('Install anyway'),
+          label: Text(tr('Install anyway')),
         ),
       if (installed && status.daemonRunning)
         OutlinedButton.icon(
           key: const ValueKey('companion-stop'),
           onPressed: idle ? _stopDaemon : null,
           icon: const Icon(Icons.stop_circle_outlined),
-          label: const Text('Stop daemon'),
+          label: Text(tr('Stop daemon')),
         ),
       if (installed)
         OutlinedButton.icon(
           key: const ValueKey('companion-uninstall'),
           onPressed: idle ? _uninstall : null,
           icon: const Icon(Icons.delete_outline_rounded),
-          label: const Text('Uninstall'),
+          label: Text(tr('Uninstall')),
         ),
     ];
 
@@ -575,7 +576,7 @@ class _ChecksSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Doctor checks', style: theme.textTheme.titleSmall),
+            Text(tr('Doctor checks'), style: theme.textTheme.titleSmall),
             const SizedBox(height: 4),
             for (final check in checks)
               Padding(
@@ -684,8 +685,8 @@ class _ManualInstructions extends StatelessWidget {
       child: ExpansionTile(
         key: const ValueKey('companion-manual'),
         leading: const Icon(Icons.terminal_rounded),
-        title: const Text('Install manually'),
-        subtitle: const Text('From the git repository, in a shell'),
+        title: Text(tr('Install manually')),
+        subtitle: Text(tr('From the git repository, in a shell')),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -697,8 +698,7 @@ class _ManualInstructions extends StatelessWidget {
           for (final command in companionManualInstallCommands)
             _CopyableCommand(command: command),
           const SizedBox(height: 8),
-          Text(
-            'To remove it later: Conduit/host/install.sh --uninstall',
+          Text(tr('To remove it later: Conduit/host/install.sh --uninstall'),
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 12),
@@ -734,7 +734,7 @@ class _CopyableCommand extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Copy',
+              tooltip: tr('Copy'),
               icon: const Icon(Icons.copy_rounded, size: 18),
               onPressed: () async {
                 await Clipboard.setData(ClipboardData(text: command));
@@ -742,7 +742,7 @@ class _CopyableCommand extends StatelessWidget {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
-                    const SnackBar(content: Text('Command copied')),
+                    SnackBar(content: Text(tr('Command copied'))),
                   );
               },
             ),

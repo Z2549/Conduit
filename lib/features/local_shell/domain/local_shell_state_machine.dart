@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_event.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_state.dart';
 
@@ -29,16 +30,16 @@ class LocalShellStateMachine {
 
       case DownloadFinished():
         if (state.stage != LocalShellStage.downloading) return state;
-        return const LocalShellState(
+        return LocalShellState(
           stage: LocalShellStage.extracting,
-          message: 'Unpacking root filesystem… (this can take a few minutes)',
+          message: tr('Unpacking root filesystem… (this can take a few minutes)'),
         );
 
       case ExtractFinished():
         if (state.stage != LocalShellStage.extracting) return state;
-        return const LocalShellState(
+        return LocalShellState(
           stage: LocalShellStage.configuring,
-          message: 'Running first-time setup…',
+          message: tr('Running first-time setup…'),
         );
 
       case ConfigureStarted():

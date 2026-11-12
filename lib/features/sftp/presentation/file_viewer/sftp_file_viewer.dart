@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/sftp/domain/remote_file_kind.dart';
@@ -278,7 +279,7 @@ class SftpFileViewerState extends State<SftpFileViewer> {
       case _ViewerStatus.failed:
         return CenterMessage(
           icon: Icons.error_outline_rounded,
-          title: 'Could not open file',
+          title: tr('Could not open file'),
           message: _error,
           actionLabel: 'Retry',
           onAction: _load,
@@ -290,9 +291,9 @@ class SftpFileViewerState extends State<SftpFileViewer> {
 
   Widget _buildReadyBody() {
     if (_binary) {
-      return const CenterMessage(
+      return CenterMessage(
         icon: Icons.raw_on_rounded,
-        title: 'Binary file',
+        title: tr('Binary file'),
         message:
             'This file does not look like text. Download it from the file '
             'browser to open it in another app.',

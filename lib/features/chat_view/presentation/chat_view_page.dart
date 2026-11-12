@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/telemetry/telemetry.dart';
 import 'package:conduit/core/telemetry/telemetry_events.dart';
@@ -1009,7 +1010,7 @@ class _ChatViewPageState extends State<ChatViewPage>
             '${error is AppFailure ? error.userMessage : error}',
           ),
           action: SnackBarAction(
-            label: 'Open terminal',
+            label: tr('Open terminal'),
             onPressed: widget.onOpenTerminal,
           ),
         ),
@@ -1046,8 +1047,8 @@ class _ChatViewPageState extends State<ChatViewPage>
     try {
       final path = await ClipboardImagePaster.fromAttacher(attacher).paste(
         onUploading: () => messenger?.showSnackBar(
-          const SnackBar(
-            content: Text('Uploading image…'),
+          SnackBar(
+            content: Text(tr('Uploading image…')),
             duration: Duration(minutes: 1),
           ),
         ),
@@ -1056,7 +1057,7 @@ class _ChatViewPageState extends State<ChatViewPage>
       if (!mounted) return;
       if (path == null) {
         messenger?.showSnackBar(
-          const SnackBar(content: Text('There is no image on the clipboard.')),
+          SnackBar(content: Text(tr('There is no image on the clipboard.'))),
         );
         return;
       }
@@ -1110,8 +1111,8 @@ class _ChatViewPageState extends State<ChatViewPage>
         if (!mounted) return;
         if (image == null) {
           ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            const SnackBar(
-              content: Text('The keyboard sent no image to attach.'),
+            SnackBar(
+              content: Text(tr('The keyboard sent no image to attach.')),
             ),
           );
           return;
@@ -1127,8 +1128,8 @@ class _ChatViewPageState extends State<ChatViewPage>
     final attacher = widget.imageAttacher!;
     final messenger = ScaffoldMessenger.maybeOf(context);
     messenger?.showSnackBar(
-      const SnackBar(
-        content: Text('Uploading image…'),
+      SnackBar(
+        content: Text(tr('Uploading image…')),
         duration: Duration(minutes: 1),
       ),
     );
@@ -1246,14 +1247,14 @@ class _ChatViewPageState extends State<ChatViewPage>
               if (_canReview)
                 IconButton(
                   key: const ValueKey('chat-review'),
-                  tooltip: 'Review changes',
+                  tooltip: tr('Review changes'),
                   onPressed: _openReview,
                   icon: const Icon(Icons.rate_review_outlined),
                 ),
               // Narrow phones: the icon alone keeps room for the title.
               if (MediaQuery.sizeOf(context).width < 400)
                 IconButton(
-                  tooltip: 'Terminal',
+                  tooltip: tr('Terminal'),
                   onPressed: widget.onOpenTerminal,
                   icon: const Icon(Icons.terminal_rounded),
                 )
@@ -1261,7 +1262,7 @@ class _ChatViewPageState extends State<ChatViewPage>
                 TextButton.icon(
                   onPressed: widget.onOpenTerminal,
                   icon: const Icon(Icons.terminal_rounded),
-                  label: const Text('Terminal'),
+                  label: Text(tr('Terminal')),
                 ),
               _ChatMenu(
                 onSearch: openSearch,
@@ -1288,7 +1289,7 @@ class _ChatViewPageState extends State<ChatViewPage>
                     actions: [
                       TextButton(
                         onPressed: _chat.refresh,
-                        child: const Text('Retry'),
+                        child: Text(tr('Retry')),
                       ),
                     ],
                   ),
@@ -1303,7 +1304,7 @@ class _ChatViewPageState extends State<ChatViewPage>
                     actions: [
                       TextButton(
                         onPressed: _enableMonitoring,
-                        child: const Text('Turn on'),
+                        child: Text(tr('Turn on')),
                       ),
                     ],
                   ),
@@ -1600,7 +1601,7 @@ class _ChatViewPageState extends State<ChatViewPage>
                   ? const CircularProgressIndicator()
                   : TextButton(
                       onPressed: _chat.loadOlder,
-                      child: const Text('Load earlier messages'),
+                      child: Text(tr('Load earlier messages')),
                     ),
             ),
           ),
@@ -1611,8 +1612,7 @@ class _ChatViewPageState extends State<ChatViewPage>
           () => Padding(
             padding: const EdgeInsets.all(12),
             child: Center(
-              child: Text(
-                'Earlier messages are in the terminal.',
+              child: Text(tr('Earlier messages are in the terminal.'),
                 style: theme.textTheme.bodySmall,
               ),
             ),
@@ -1671,7 +1671,7 @@ class _ChatViewPageState extends State<ChatViewPage>
             bottom: 12,
             child: FloatingActionButton.small(
               heroTag: null,
-              tooltip: 'Latest',
+              tooltip: tr('Latest'),
               backgroundColor: theme.colorScheme.secondaryContainer,
               onPressed: _jumpToLatest,
               child: const Icon(Icons.keyboard_double_arrow_down_rounded),
@@ -1885,7 +1885,7 @@ class _ChatMenu extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             leading: Icon(Icons.search_rounded),
-            title: Text('Find in conversation'),
+            title: Text(tr('Find in conversation')),
           ),
         ),
         if (onHandOff != null)
@@ -1895,7 +1895,7 @@ class _ChatMenu extends StatelessWidget {
             child: ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.outbox_outlined),
-              title: Text('Hand off…'),
+              title: Text(tr('Hand off…')),
             ),
           ),
         const PopupMenuDivider(),
@@ -1903,7 +1903,7 @@ class _ChatMenu extends StatelessWidget {
           const PopupMenuItem<Object>(
             enabled: false,
             height: 32,
-            child: Text('Read aloud'),
+            child: Text(tr('Read aloud')),
           ),
           CheckedPopupMenuItem<Object>(
             key: const ValueKey('chat-read-aloud'),
@@ -1928,7 +1928,7 @@ class _ChatMenu extends StatelessWidget {
         const PopupMenuItem<Object>(
           enabled: false,
           height: 32,
-          child: Text('Tool activity'),
+          child: Text(tr('Tool activity')),
         ),
         for (final option in ToolActivity.values)
           CheckedPopupMenuItem<Object>(

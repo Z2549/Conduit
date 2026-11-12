@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/features/agent_attention/domain/approval_rules.dart';
@@ -128,11 +129,11 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
                 key: const ValueKey('rules-add'),
                 onPressed: _busy.contains('add') ? null : _edit,
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Add rule'),
+                label: Text(tr('Add rule')),
               ),
             ),
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: tr('Refresh'),
             icon: const Icon(Icons.refresh_rounded),
             onPressed: _load,
           ),
@@ -144,7 +145,7 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
               key: const ValueKey('rules-add'),
               onPressed: _busy.contains('add') ? null : _edit,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Add rule'),
+              label: Text(tr('Add rule')),
             ),
       body: ListenableBuilder(
         listenable: _controller,
@@ -216,7 +217,7 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
                     ),
                     trailing: IconButton(
                       key: ValueKey('rule-revoke-${rule.id}'),
-                      tooltip: 'Revoke',
+                      tooltip: tr('Revoke'),
                       icon: const Icon(Icons.delete_outline_rounded),
                       onPressed: _busy.contains(rule.id)
                           ? null
@@ -376,7 +377,7 @@ class _RuleEditorState extends State<_RuleEditor> {
                   ? (_) => save?.call()
                   : null,
               decoration: InputDecoration(
-                labelText: 'Rule',
+                labelText: tr('Rule'),
                 border: const OutlineInputBorder(),
                 helperText:
                     'Bash(npm test *), Edit(src/**), Read, '
@@ -385,21 +386,21 @@ class _RuleEditorState extends State<_RuleEditor> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Where', style: theme.textTheme.labelLarge),
+            Text(tr('Where'), style: theme.textTheme.labelLarge),
             const SizedBox(height: 6),
             if (session)
               Text('In session ${existing!.scope.describe()}')
             else ...[
               SegmentedButton<ApprovalScopeKind>(
                 showSelectedIcon: false,
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: ApprovalScopeKind.repo,
-                    label: Text('One repo'),
+                    label: Text(tr('One repo')),
                   ),
                   ButtonSegment(
                     value: ApprovalScopeKind.any,
-                    label: Text('All repos'),
+                    label: Text(tr('All repos')),
                   ),
                 ],
                 selected: {_kind},
@@ -417,7 +418,7 @@ class _RuleEditorState extends State<_RuleEditor> {
                       ? (_) => save?.call()
                       : null,
                   decoration: InputDecoration(
-                    labelText: 'Repo path on the machine',
+                    labelText: tr('Repo path on the machine'),
                     border: const OutlineInputBorder(),
                     errorText: scope == null ? 'An absolute path' : null,
                   ),
@@ -436,7 +437,7 @@ class _RuleEditorState extends State<_RuleEditor> {
               ],
             ],
             const SizedBox(height: 16),
-            Text('For how long', style: theme.textTheme.labelLarge),
+            Text(tr('For how long'), style: theme.textTheme.labelLarge),
             const SizedBox(height: 6),
             Wrap(
               spacing: 6,
@@ -462,13 +463,13 @@ class _RuleEditorState extends State<_RuleEditor> {
               cancel: useDesktopModals(context)
                   ? OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                      child: Text(tr('Cancel')),
                     )
                   : null,
               confirm: FilledButton(
                 key: const ValueKey('rule-editor-save'),
                 onPressed: save,
-                child: const Text('Save'),
+                child: Text(tr('Save')),
               ),
             ),
           ],

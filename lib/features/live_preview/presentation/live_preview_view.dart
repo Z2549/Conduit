@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/live_preview/data/preview_screen_capture.dart';
@@ -283,7 +284,7 @@ class _LivePreviewViewState extends State<LivePreviewView> {
     final opened = await widget.openExternal(url);
     if (!opened && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No browser could open the preview.')),
+        SnackBar(content: Text(tr('No browser could open the preview.'))),
       );
     }
   }
@@ -355,7 +356,7 @@ class _LivePreviewViewState extends State<LivePreviewView> {
             child: Row(
               children: [
                 Tooltip(
-                  message: 'Change port',
+                  message: tr('Change port'),
                   child: TextButton.icon(
                     style: TextButton.styleFrom(
                       foregroundColor: muted,
@@ -431,7 +432,7 @@ class _LivePreviewViewState extends State<LivePreviewView> {
                 // Without an embedded web view there is no page to capture.
                 if (widget.onScreenshot != null && _embedded)
                   IconButton(
-                    tooltip: 'Screenshot to the agent',
+                    tooltip: tr('Screenshot to the agent'),
                     iconSize: 19,
                     color: muted,
                     icon: _capturing
@@ -446,14 +447,14 @@ class _LivePreviewViewState extends State<LivePreviewView> {
                         : null,
                   ),
                 IconButton(
-                  tooltip: 'Reload',
+                  tooltip: tr('Reload'),
                   iconSize: 19,
                   color: muted,
                   icon: const Icon(Icons.refresh_rounded),
                   onPressed: ready ? _reload : null,
                 ),
                 PopupMenuButton<VoidCallback>(
-                  tooltip: 'More',
+                  tooltip: tr('More'),
                   iconSize: 19,
                   iconColor: muted,
                   enabled: ready,
@@ -461,11 +462,11 @@ class _LivePreviewViewState extends State<LivePreviewView> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: () => unawaited(_openInBrowser()),
-                      child: const ListTile(
+                      child: ListTile(
                         dense: true,
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(Icons.open_in_browser_rounded),
-                        title: Text('Open in browser'),
+                        title: Text(tr('Open in browser')),
                       ),
                     ),
                   ],
@@ -494,10 +495,10 @@ class _LivePreviewViewState extends State<LivePreviewView> {
                 ),
               ),
               actions: [
-                TextButton(onPressed: _reload, child: const Text('Reload')),
+                TextButton(onPressed: _reload, child: Text(tr('Reload'))),
                 TextButton(
                   onPressed: controller.clearConnectionError,
-                  child: const Text('Dismiss'),
+                  child: Text(tr('Dismiss')),
                 ),
               ],
             ),
@@ -539,32 +540,32 @@ class _LivePreviewViewState extends State<LivePreviewView> {
       case LivePreviewPhase.failed:
         return _Notice(
           icon: Icons.error_outline_rounded,
-          title: 'Could not open the preview',
+          title: tr('Could not open the preview'),
           message: controller.error ?? '',
           palette: palette,
           brightness: brightness,
           actions: [
             TextButton(
               onPressed: widget.onChangePort,
-              child: const Text('Change port'),
+              child: Text(tr('Change port')),
             ),
             FilledButton(
               onPressed: controller.restart,
-              child: const Text('Retry'),
+              child: Text(tr('Retry')),
             ),
           ],
         );
       case LivePreviewPhase.closed:
         return _Notice(
           icon: Icons.link_off_rounded,
-          title: 'Preview closed',
+          title: tr('Preview closed'),
           message: controller.error ?? '',
           palette: palette,
           brightness: brightness,
           actions: [
             FilledButton(
               onPressed: controller.restart,
-              child: const Text('Reconnect'),
+              child: Text(tr('Reconnect')),
             ),
           ],
         );
@@ -582,7 +583,7 @@ class _LivePreviewViewState extends State<LivePreviewView> {
               FilledButton.icon(
                 onPressed: _openInBrowser,
                 icon: const Icon(Icons.open_in_browser_rounded),
-                label: const Text('Open in browser'),
+                label: Text(tr('Open in browser')),
               ),
             ],
           );
@@ -595,12 +596,12 @@ class _LivePreviewViewState extends State<LivePreviewView> {
         if (pageError != null) {
           return _Notice(
             icon: Icons.web_asset_off_rounded,
-            title: 'The page did not load',
+            title: tr('The page did not load'),
             message: pageError,
             palette: palette,
             brightness: brightness,
             actions: [
-              FilledButton(onPressed: _reload, child: const Text('Reload')),
+              FilledButton(onPressed: _reload, child: Text(tr('Reload'))),
             ],
           );
         }

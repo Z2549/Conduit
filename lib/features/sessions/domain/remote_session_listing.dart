@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/data/herdr_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
@@ -600,7 +601,7 @@ abstract final class RemoteSessionListing {
       if (decoded['error'] is Map) {
         final message = (decoded['error'] as Map)['message'];
         throw FormatException(
-          message is String ? message : 'Herdr reported an error.',
+          message is String ? message: tr('Herdr reported an error.'),
         );
       }
       return const [];

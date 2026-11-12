@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:conduit/features/tasks/presentation/task_sources_controller.dart';
 import 'package:flutter/material.dart';
@@ -83,12 +84,12 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('task-source-remove-confirm'),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
+            child: Text(tr('Remove')),
           ),
         ],
       ),
@@ -98,12 +99,12 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Task sources')),
+    appBar: AppBar(title: Text(tr('Task sources'))),
     floatingActionButton: FloatingActionButton.extended(
       key: const ValueKey('task-source-add'),
       onPressed: () => unawaited(_add()),
       icon: const Icon(Icons.add),
-      label: const Text('Add source'),
+      label: Text(tr('Add source')),
     ),
     body: ListenableBuilder(
       listenable: widget.controller,
@@ -121,9 +122,9 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
             ),
             const SizedBox(height: 12),
             if (widget.controller.loaded && sources.isEmpty)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
-                child: Center(child: Text('No sources yet.')),
+                child: Center(child: Text(tr('No sources yet.'))),
               ),
             for (final s in sources)
               Card(
@@ -133,7 +134,7 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
                   subtitle: Text(_describe(s)),
                   onTap: () => unawaited(_edit(s)),
                   trailing: IconButton(
-                    tooltip: 'Remove',
+                    tooltip: tr('Remove'),
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () => unawaited(_remove(s)),
                   ),
@@ -303,7 +304,7 @@ class _TaskSourceFormPageState extends State<TaskSourceFormPage> {
           TextField(
             key: const ValueKey('task-source-name'),
             controller: _name,
-            decoration: const InputDecoration(labelText: 'Name'),
+            decoration: InputDecoration(labelText: tr('Name')),
           ),
           for (final f in _kind.fields) ...[
             const SizedBox(height: 12),
@@ -383,13 +384,13 @@ class _TaskSourceFormPageState extends State<TaskSourceFormPage> {
                         dimension: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Test'),
+                    : Text(tr('Test')),
               ),
               const SizedBox(width: 8),
               FilledButton(
                 key: const ValueKey('task-source-save'),
                 onPressed: _busy ? null : () => unawaited(_save()),
-                child: const Text('Save'),
+                child: Text(tr('Save')),
               ),
             ],
           ),

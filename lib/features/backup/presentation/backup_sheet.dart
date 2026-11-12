@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/backup/data/app_backup_service.dart';
 import 'package:file_picker/file_picker.dart';
@@ -43,10 +44,10 @@ class _BackupSheet extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('Backup and restore', style: theme.textTheme.titleLarge),
+                Text(tr('Backup and restore'), style: theme.textTheme.titleLarge),
                 const Spacer(),
                 IconButton(
-                  tooltip: 'Close',
+                  tooltip: tr('Close'),
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close_rounded),
                 ),
@@ -91,7 +92,7 @@ class _BackupActionsState extends State<BackupActions> {
         _BackupActionTile(
           key: const ValueKey('backup-export'),
           icon: Icons.ios_share_rounded,
-          title: 'Export backup',
+          title: tr('Export backup'),
           subtitle:
               'Machines, snippets and all settings. Passwords and private '
               'keys are left out.',
@@ -101,7 +102,7 @@ class _BackupActionsState extends State<BackupActions> {
         _BackupActionTile(
           key: const ValueKey('backup-export-credentials'),
           icon: Icons.enhanced_encryption_rounded,
-          title: 'Export backup with credentials',
+          title: tr('Export backup with credentials'),
           subtitle:
               'Also passwords, private keys and hardware-key stubs. Keep '
               'this file safe.',
@@ -111,7 +112,7 @@ class _BackupActionsState extends State<BackupActions> {
         _BackupActionTile(
           key: const ValueKey('backup-import'),
           icon: Icons.restore_rounded,
-          title: 'Import backup',
+          title: tr('Import backup'),
           subtitle:
               'Merges machines, keys, snippets and settings from a backup '
               'file or sync bundle into this device. Nothing else is removed.',
@@ -309,7 +310,7 @@ class _BackupPasswordDialogState extends State<_BackupPasswordDialog> {
             obscureText: _obscure,
             autofocus: true,
             decoration: InputDecoration(
-              labelText: 'Password',
+              labelText: tr('Password'),
               errorText: _error,
               suffixIcon: IconButton(
                 tooltip: _obscure ? 'Show password' : 'Hide password',
@@ -328,12 +329,11 @@ class _BackupPasswordDialogState extends State<_BackupPasswordDialog> {
             TextField(
               controller: _confirmationController,
               obscureText: _obscure,
-              decoration: const InputDecoration(labelText: 'Confirm password'),
+              decoration: InputDecoration(labelText: tr('Confirm password')),
               onSubmitted: (_) => _submit(),
             ),
             const SizedBox(height: 10),
-            Text(
-              'Use at least 12 characters and at least three of lowercase, uppercase, numbers, and symbols.',
+            Text(tr('Use at least 12 characters and at least three of lowercase, uppercase, numbers, and symbols.'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -342,9 +342,9 @@ class _BackupPasswordDialogState extends State<_BackupPasswordDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
-        FilledButton(onPressed: _submit, child: const Text('Continue')),
+        FilledButton(onPressed: _submit, child: Text(tr('Continue'))),
       ],
     );
   }

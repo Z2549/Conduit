@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -38,7 +39,7 @@ class _TrustedKeysPageState extends State<TrustedKeysPage> {
     final removed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Forget trusted key?'),
+        title: Text(tr('Forget trusted key?')),
         content: Text(
           'Conductore will prompt again the next time you connect to '
           '${record.host}:${record.port}.',
@@ -46,14 +47,14 @@ class _TrustedKeysPageState extends State<TrustedKeysPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Forget'),
+            child: Text(tr('Forget')),
           ),
         ],
       ),
@@ -132,9 +133,8 @@ class _Header extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Trusted host keys', style: theme.textTheme.headlineSmall),
-                Text(
-                  'Servers Conductore has connected to before.',
+                Text(tr('Trusted host keys'), style: theme.textTheme.headlineSmall),
+                Text(tr('Servers Conductore has connected to before.'),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -226,7 +226,7 @@ class _TrustedKeyTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Forget',
+            tooltip: tr('Forget'),
             icon: const Icon(Icons.delete_outline_rounded),
             color: colorScheme.error,
             onPressed: onRemove,
@@ -268,7 +268,7 @@ class _EmptyState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text('No trusted keys yet', style: theme.textTheme.titleLarge),
+            Text(tr('No trusted keys yet'), style: theme.textTheme.titleLarge),
             const SizedBox(height: 6),
             Text(
               'Connect to a host and you’ll be asked to trust its key - the '

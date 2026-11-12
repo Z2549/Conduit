@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -247,7 +248,7 @@ class _ShellTabState extends State<_ShellTab> {
             child: focused || _hovered
                 ? IconButton(
                     key: ValueKey('shell-tab-close-${tab.viewId}'),
-                    tooltip: 'Close',
+                    tooltip: tr('Close'),
                     iconSize: 14,
                     padding: EdgeInsets.zero,
                     color: muted,

@@ -1,4 +1,5 @@
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -584,7 +585,7 @@ class TransportBadge extends StatelessWidget {
   factory TransportBadge.forSession(TerminalSessionController session) {
     final host = session.host;
     if (host.isLocal) {
-      return const TransportBadge(label: 'Local');
+      return TransportBadge(label: tr('Local'));
     }
     return TransportBadge(label: host.useMosh ? 'Mosh' : 'SSH');
   }
@@ -851,8 +852,7 @@ class DormantTmuxTile extends StatelessWidget {
               if (session.isAttached)
                 const AttachedChip()
               else
-                Text(
-                  'tmux session',
+                Text(tr('tmux session'),
                   style: TextStyle(color: muted, fontSize: 11.5),
                 ),
             ],
@@ -905,8 +905,7 @@ class AttachedChip extends StatelessWidget {
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(AppTheme.radius),
       ),
-      child: Text(
-        'Attached elsewhere',
+      child: Text(tr('Attached elsewhere'),
         style: TextStyle(
           color: colorScheme.onSurfaceVariant,
           fontSize: 10.5,
@@ -1314,18 +1313,18 @@ class HomeBoardNotice {
         return null;
       case HomeBoardPhase.awaitingRequest:
         return requestReason == HomeBoardRequestReason.hardwareKey
-            ? const HomeBoardNotice(
+            ? HomeBoardNotice(
                 icon: Icons.usb_rounded,
-                title: 'Hardware-key login',
+                title: tr('Hardware-key login'),
                 message:
                     'Listing tmux sessions and Herdr workspaces opens a '
                     'connection and asks for a key touch.',
                 actionLabel: 'List workspaces',
                 action: HomeBoardNoticeAction.request,
               )
-            : const HomeBoardNotice(
+            : HomeBoardNotice(
                 icon: Icons.verified_user_outlined,
-                title: 'Not connected yet',
+                title: tr('Not connected yet'),
                 message:
                     'Listing tmux sessions and Herdr workspaces connects to '
                     'this machine and may ask you to trust its host key.',
@@ -1333,17 +1332,17 @@ class HomeBoardNotice {
                 action: HomeBoardNoticeAction.request,
               );
       case HomeBoardPhase.loading:
-        return const HomeBoardNotice(
+        return HomeBoardNotice(
           icon: Icons.sync_rounded,
-          title: 'Listing workspaces…',
-          message: 'Connecting to the machine.',
+          title: tr('Listing workspaces…'),
+          message: tr('Connecting to the machine.'),
           busy: true,
         );
       case HomeBoardPhase.notInstalled when state.onHc:
         if (state.tmux == HomeTmuxStatus.available) return null;
         return HomeBoardNotice(
           icon: Icons.extension_off_outlined,
-          title: 'The Herdr app is not installed',
+          title: tr('The Herdr app is not installed'),
           message:
               state.message ??
               'hc (herdr-core) is not installed on this machine.',
@@ -1353,9 +1352,9 @@ class HomeBoardNotice {
       case HomeBoardPhase.notInstalled:
         return switch (state.tmux) {
           HomeTmuxStatus.available => null,
-          HomeTmuxStatus.notInstalled => const HomeBoardNotice(
+          HomeTmuxStatus.notInstalled => HomeBoardNotice(
             icon: Icons.extension_off_outlined,
-            title: 'No tmux or Herdr here',
+            title: tr('No tmux or Herdr here'),
             message:
                 'Install tmux or Herdr to keep sessions running on this '
                 'machine.',
@@ -1364,7 +1363,7 @@ class HomeBoardNotice {
           ),
           HomeTmuxStatus.unknown || HomeTmuxStatus.failed => HomeBoardNotice(
             icon: Icons.extension_off_outlined,
-            title: 'Herdr is not installed',
+            title: tr('Herdr is not installed'),
             message:
                 state.message ?? 'Install Herdr to see its workspaces here.',
             actionLabel: 'Open a shell',
@@ -1376,17 +1375,17 @@ class HomeBoardNotice {
         if (state.tmuxSessions.isNotEmpty) return null;
         return HomeBoardNotice(
           icon: Icons.history_rounded,
-          title: 'Could not list the Herdr app terminals',
+          title: tr('Could not list the Herdr app terminals'),
           message: state.message ?? 'hc did not answer.',
           actionLabel: 'Retry',
           action: HomeBoardNoticeAction.retry,
         );
       case HomeBoardPhase.notRunning:
         if (state.tmuxSessions.isNotEmpty) return null;
-        return const HomeBoardNotice(
+        return HomeBoardNotice(
           icon: Icons.pause_circle_outline_rounded,
-          title: 'Herdr is not running',
-          message: 'Start Herdr to run agents on this machine.',
+          title: tr('Herdr is not running'),
+          message: tr('Start Herdr to run agents on this machine.'),
           actionLabel: 'Start Herdr',
           action: HomeBoardNoticeAction.startHerdr,
         );
@@ -1416,7 +1415,7 @@ class HomeBoardNotice {
         if (state.onHc) {
           return HomeBoardNotice(
             icon: Icons.history_rounded,
-            title: 'Could not list the Herdr app terminals',
+            title: tr('Could not list the Herdr app terminals'),
             message: reason,
             actionLabel: 'Retry',
             action: HomeBoardNoticeAction.retry,
@@ -1427,7 +1426,7 @@ class HomeBoardNotice {
           // tmux answered: only Herdr is broken; say so briefly.
           return HomeBoardNotice(
             icon: Icons.history_rounded,
-            title: 'Could not list Herdr workspaces',
+            title: tr('Could not list Herdr workspaces'),
             message: reason,
             actionLabel: 'Retry',
             action: HomeBoardNoticeAction.retry,
@@ -1445,7 +1444,7 @@ class HomeBoardNotice {
               )
             : HomeBoardNotice(
                 icon: Icons.history_rounded,
-                title: 'Showing the last list',
+                title: tr('Showing the last list'),
                 message: reason,
                 actionLabel: 'Retry',
                 action: HomeBoardNoticeAction.retry,
@@ -1475,10 +1474,10 @@ class HomeBoardNotice {
             state.tmuxSessions.isNotEmpty) {
           return null;
         }
-        return const HomeBoardNotice(
+        return HomeBoardNotice(
           icon: Icons.space_dashboard_outlined,
-          title: 'No Herdr workspaces',
-          message: 'Herdr is running but has no workspaces yet.',
+          title: tr('No Herdr workspaces'),
+          message: tr('Herdr is running but has no workspaces yet.'),
           actionLabel: 'Open Herdr',
           action: HomeBoardNoticeAction.startHerdr,
         );

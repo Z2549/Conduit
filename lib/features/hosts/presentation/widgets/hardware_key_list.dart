@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/domain/ssh_key.dart';
@@ -74,7 +75,7 @@ class HardwareKeyList extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onAdd,
             icon: const Icon(Icons.add_rounded, size: 18),
-            label: const Text('Add hardware key'),
+            label: Text(tr('Add hardware key')),
           ),
         ),
       ],
@@ -161,7 +162,7 @@ class _HardwareKeyCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 child: PopupMenuButton<_HardwareKeyAction>(
-                  tooltip: 'Key options',
+                  tooltip: tr('Key options'),
                   padding: EdgeInsets.zero,
                   icon: Icon(
                     Icons.more_vert_rounded,
@@ -173,13 +174,13 @@ class _HardwareKeyCard extends StatelessWidget {
                     _HardwareKeyAction.remove => onRemove(),
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: _HardwareKeyAction.rename,
-                      child: Text('Rename'),
+                      child: Text(tr('Rename')),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: _HardwareKeyAction.remove,
-                      child: Text('Remove'),
+                      child: Text(tr('Remove')),
                     ),
                   ],
                 ),
@@ -207,7 +208,7 @@ class _HardwareKeyCard extends StatelessWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               icon: const Icon(Icons.key_rounded, size: 16),
-              label: const Text('View public key'),
+              label: Text(tr('View public key')),
             ),
           ),
         ],

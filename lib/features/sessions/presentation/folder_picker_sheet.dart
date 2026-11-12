@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/sessions/domain/new_workspace.dart';
 import 'package:flutter/material.dart';
 
@@ -134,7 +135,7 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                   if (_path.isNotEmpty)
                     IconButton(
                       key: const ValueKey('folder-picker-up'),
-                      tooltip: 'Up',
+                      tooltip: tr('Up'),
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () =>
                           _step(_path.sublist(0, _path.length - 1)),
@@ -154,7 +155,7 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                     TextButton(
                       key: const ValueKey('folder-picker-use-current'),
                       onPressed: () => Navigator.of(context).pop(current),
-                      child: const Text('Use this folder'),
+                      child: Text(tr('Use this folder')),
                     ),
                 ],
               ),
@@ -168,9 +169,9 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                 autocorrect: false,
                 enableSuggestions: false,
                 onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
-                  hintText: 'Search, or type a path',
+                  hintText: tr('Search, or type a path'),
                 ),
               ),
             ),
@@ -217,16 +218,15 @@ class _FolderPickerSheetState extends State<FolderPickerSheet> {
                           ? null
                           : IconButton(
                               key: ValueKey('folder-picker-open-$folder'),
-                              tooltip: 'Open',
+                              tooltip: tr('Open'),
                               icon: const Icon(Icons.chevron_right),
                               onPressed: () => _step([..._path, folder]),
                             ),
                     ),
                   if (!loading && rows.isEmpty && typed.isEmpty)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.all(16),
-                      child: Text(
-                        'No folders found.',
+                      child: Text(tr('No folders found.'),
                         key: ValueKey('folder-picker-empty'),
                       ),
                     ),

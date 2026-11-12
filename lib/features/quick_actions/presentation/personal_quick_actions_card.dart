@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/quick_actions/domain/quick_action.dart';
 import 'package:conduit/features/quick_actions/presentation/quick_action_form.dart';
@@ -40,13 +41,13 @@ class PersonalQuickActionsCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('Quick actions', style: textTheme.titleSmall),
+                child: Text(tr('Quick actions'), style: textTheme.titleSmall),
               ),
               TextButton.icon(
                 key: const ValueKey('settings-quick-actions-add'),
                 onPressed: () => unawaited(_add(context)),
                 icon: const Icon(Icons.add_rounded, size: 18),
-                label: const Text('Add'),
+                label: Text(tr('Add')),
               ),
             ],
           ),

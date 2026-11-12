@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/features/agent_attention/domain/agent_notifications.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
@@ -44,10 +45,10 @@ class AgentNotifyChoiceCard extends StatelessWidget {
                 ),
               ),
               if (choice == null)
-                const ListTile(
+                ListTile(
                   key: ValueKey('agent-notify-choice-custom'),
                   leading: Icon(Icons.tune_rounded),
-                  title: Text('Custom'),
+                  title: Text(tr('Custom')),
                   subtitle: Text(
                     'Your own mix, kept under Advanced › Notification '
                     'details. Pick one above to replace it.',
@@ -69,7 +70,7 @@ class AgentNotifyChoiceCard extends StatelessWidget {
                     key: const ValueKey('agent-notify-unmute-all'),
                     onPressed: () =>
                         set(preferences.copyWith(mutedAgents: const {})),
-                    child: const Text('Unmute all'),
+                    child: Text(tr('Unmute all')),
                   ),
                 ),
               ],
@@ -124,7 +125,7 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 SwitchListTile(
                   key: const ValueKey('agent-notify-ongoing'),
                   secondary: const Icon(Icons.view_agenda_outlined),
-                  title: const Text('Ongoing notification'),
+                  title: Text(tr('Ongoing notification')),
                   subtitle: const Text(
                     'One silent notification with every agent\'s progress, '
                     'beside the alerts.',
@@ -143,16 +144,16 @@ class AgentNotificationDetailsCard extends StatelessWidget {
               tile(
                 id: 'approvals',
                 icon: Icons.verified_user_outlined,
-                title: 'Approvals',
-                subtitle: 'An agent asks to run a tool.',
+                title: tr('Approvals'),
+                subtitle: tr('An agent asks to run a tool.'),
                 value: preferences.approvals,
                 change: (value) => preferences.copyWith(approvals: value),
               ),
               tile(
                 id: 'questions',
                 icon: Icons.help_outline_rounded,
-                title: 'Questions',
-                subtitle: 'An agent waits for your answer.',
+                title: tr('Questions'),
+                subtitle: tr('An agent waits for your answer.'),
                 value: preferences.questions,
                 change: (value) => preferences.copyWith(questions: value),
               ),
@@ -160,7 +161,7 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 tile(
                   id: 'finished-alerts',
                   icon: Icons.task_alt_rounded,
-                  title: 'Also alert when an agent finishes',
+                  title: tr('Also alert when an agent finishes'),
                   subtitle:
                       'Off: a finished turn only updates the ongoing '
                       'notification.',
@@ -172,17 +173,16 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 tile(
                   id: 'finished',
                   icon: Icons.task_alt_rounded,
-                  title: 'Notify when an agent finishes',
-                  subtitle:
-                      'Its turn ended. Replaces its earlier notification.',
+                  title: tr('Notify when an agent finishes'),
+                  subtitle: tr('Its turn ended. Replaces its earlier notification.'),
                   value: preferences.finished,
                   change: (value) => preferences.copyWith(finished: value),
                 ),
               tile(
                 id: 'errors',
                 icon: Icons.error_outline_rounded,
-                title: 'Errors',
-                subtitle: 'An agent stopped on something else.',
+                title: tr('Errors'),
+                subtitle: tr('An agent stopped on something else.'),
                 value: preferences.errors,
                 change: (value) => preferences.copyWith(errors: value),
               ),
@@ -190,7 +190,7 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 tile(
                   id: 'stuck',
                   icon: Icons.sync_problem_rounded,
-                  title: 'Stuck or looping',
+                  title: tr('Stuck or looping'),
                   subtitle:
                       'The agents dashboard sees no progress, the same '
                       'failure again and again, or a repeated command.',
@@ -201,7 +201,7 @@ class AgentNotificationDetailsCard extends StatelessWidget {
               tile(
                 id: 'summary-only',
                 icon: Icons.notes_rounded,
-                title: 'Summary only',
+                title: tr('Summary only'),
                 subtitle:
                     'No Allow, Deny, answer or Reply buttons. Tap the '
                     'notification to answer in the app.',
@@ -211,7 +211,7 @@ class AgentNotificationDetailsCard extends StatelessWidget {
               tile(
                 id: 'quiet-updates',
                 icon: Icons.notifications_paused_outlined,
-                title: 'Quiet updates',
+                title: tr('Quiet updates'),
                 subtitle:
                     'More requests from an agent that already needs you '
                     'update its notification silently. Off: each new '

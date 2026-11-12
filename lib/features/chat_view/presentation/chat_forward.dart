@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
@@ -58,11 +59,10 @@ Future<ChatForwardTarget?> pickChatForwardTarget(
     child: ListView(
       shrinkWrap: true,
       children: [
-        const ListTile(
+        ListTile(
           key: ValueKey('chat-forward-title'),
-          title: Text('Send to another agent'),
-          subtitle: Text(
-            'It arrives as a prompt, quoted, with where it is from.',
+          title: Text(tr('Send to another agent')),
+          subtitle: Text(tr('It arrives as a prompt, quoted, with where it is from.'),
           ),
         ),
         for (final target in targets)

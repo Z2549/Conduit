@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agent_inbox_widgets.dart';
@@ -226,7 +227,7 @@ class _AgentMessageSheetState extends State<AgentMessageSheet> {
           contentPadding: EdgeInsets.zero,
           value: _wait && _canWait,
           onChanged: _canWait ? (on) => setState(() => _wait = on) : null,
-          title: const Text('Ask and wait for the answer'),
+          title: Text(tr('Ask and wait for the answer')),
           subtitle: Text(
             _canWait
                 ? 'Up to ${_timeout.inMinutes} min. A timeout is never '
@@ -329,13 +330,13 @@ class _AgentMessageSheetState extends State<AgentMessageSheet> {
                   onPressed: () =>
                       unawaited(Clipboard.setData(ClipboardData(text: answer))),
                   icon: const Icon(Icons.copy_rounded, size: 18),
-                  label: const Text('Copy'),
+                  label: Text(tr('Copy')),
                 ),
                 TextButton.icon(
                   key: ValueKey('agent-message-relay-${result.target}'),
                   onPressed: () => unawaited(_relay(result)),
                   icon: const Icon(Icons.forward_rounded, size: 18),
-                  label: const Text('Relay the answer…'),
+                  label: Text(tr('Relay the answer…')),
                 ),
               ],
             ),

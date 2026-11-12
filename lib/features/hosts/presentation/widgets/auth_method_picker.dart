@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:flutter/material.dart';
@@ -21,33 +22,32 @@ class AuthMethodPicker extends StatelessWidget {
           value: SshAuthMethod.password,
           groupValue: value,
           icon: Icons.password_rounded,
-          title: 'Password',
-          subtitle: 'Use the account password for SSH login.',
+          title: tr('Password'),
+          subtitle: tr('Use the account password for SSH login.'),
           onChanged: onChanged,
         ),
         _AuthMethodTile(
           value: SshAuthMethod.privateKey,
           groupValue: value,
           icon: Icons.vpn_key_rounded,
-          title: 'Private key',
-          subtitle: 'Use a PEM or OpenSSH private key.',
+          title: tr('Private key'),
+          subtitle: tr('Use a PEM or OpenSSH private key.'),
           onChanged: onChanged,
         ),
         _AuthMethodTile(
           value: SshAuthMethod.hardwareKey,
           groupValue: value,
           icon: Icons.usb_rounded,
-          title: 'Hardware key',
-          subtitle: 'Use one or more security keys over USB or NFC.',
+          title: tr('Hardware key'),
+          subtitle: tr('Use one or more security keys over USB or NFC.'),
           onChanged: onChanged,
         ),
         _AuthMethodTile(
           value: SshAuthMethod.external,
           groupValue: value,
           icon: Icons.link_rounded,
-          title: 'External',
-          subtitle:
-              'Let the SSH server authenticate without saved credentials.',
+          title: tr('External'),
+          subtitle: tr('Let the SSH server authenticate without saved credentials.'),
           onChanged: onChanged,
         ),
       ],

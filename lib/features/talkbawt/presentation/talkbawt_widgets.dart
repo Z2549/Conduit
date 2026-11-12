@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_models.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_safety.dart';
@@ -57,8 +58,7 @@ class InjectionWarnings extends StatelessWidget {
       key: const ValueKey('talkbawt-injection-flags'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Looks like it tries to steer an agent:',
+        Text(tr('Looks like it tries to steer an agent:'),
           style: TextStyle(color: palette.danger, fontWeight: FontWeight.w700),
         ),
         for (final flag in flags)
@@ -165,7 +165,7 @@ class TalkbawtPreview extends StatelessWidget {
           InertMessage(message: message),
           const SizedBox(height: 8),
         ],
-        if (read.messages.isEmpty) const Text('No messages.'),
+        if (read.messages.isEmpty) Text(tr('No messages.')),
       ],
     );
   }
@@ -221,7 +221,7 @@ class SecretFindingsPanel extends StatelessWidget {
               key: const ValueKey('talkbawt-remove-secrets'),
               onPressed: onRemove,
               icon: const Icon(Icons.cleaning_services_outlined, size: 18),
-              label: const Text('Remove those lines'),
+              label: Text(tr('Remove those lines')),
             ),
           ),
         ],
@@ -238,7 +238,7 @@ class AccessLogList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (entries.isEmpty) return const Text('Nobody has opened it yet.');
+    if (entries.isEmpty) return Text(tr('Nobody has opened it yet.'));
     return Column(
       key: const ValueKey('talkbawt-access-log'),
       children: [

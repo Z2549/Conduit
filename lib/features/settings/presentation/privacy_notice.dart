@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/telemetry/telemetry.dart';
 import 'package:conduit/features/settings/presentation/privacy_settings.dart';
@@ -36,13 +37,13 @@ class PrivacyNotice extends StatelessWidget {
           TextButton(
             key: const ValueKey('privacy-notice-settings'),
             onPressed: settings,
-            child: const Text('Settings'),
+            child: Text(tr('Settings')),
           ),
           const SizedBox(width: 4),
           FilledButton.tonal(
             key: const ValueKey('privacy-notice-ok'),
             onPressed: ok,
-            child: const Text('OK'),
+            child: Text(tr('OK')),
           ),
         ];
         final text = Text(privacyNoticeText, style: theme.textTheme.bodyMedium);

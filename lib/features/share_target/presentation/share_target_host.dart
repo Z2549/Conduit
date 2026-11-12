@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/terminal_route.dart';
 import 'package:conduit/features/share_target/presentation/share_target_controller.dart';
@@ -164,7 +165,7 @@ class _ShareTargetHostState extends State<ShareTargetHost> {
                         '${progress.count})';
               return AlertDialog(
                 key: const ValueKey('share-progress'),
-                title: const Text('Sending to agent'),
+                title: Text(tr('Sending to agent')),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,7 +186,7 @@ class _ShareTargetHostState extends State<ShareTargetHost> {
                 actions: [
                   TextButton(
                     onPressed: controller.cancel,
-                    child: const Text('Cancel'),
+                    child: Text(tr('Cancel')),
                   ),
                 ],
               );
@@ -222,17 +223,17 @@ class _ShareTargetHostState extends State<ShareTargetHost> {
       final retry = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Could not send the shared content'),
+          title: Text(tr('Could not send the shared content')),
           content: Text(widget.controller.error ?? 'Upload failed.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Discard'),
+              child: Text(tr('Discard')),
             ),
             if (canRetry)
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Retry'),
+                child: Text(tr('Retry')),
               ),
           ],
         ),
@@ -300,8 +301,7 @@ class _WaitingBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Shared content waiting',
+                  Text(tr('Shared content waiting'),
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: colorScheme.onPrimaryContainer,
                     ),
@@ -318,7 +318,7 @@ class _WaitingBanner extends StatelessWidget {
                 ],
               ),
             ),
-            TextButton(onPressed: onDiscard, child: const Text('Discard')),
+            TextButton(onPressed: onDiscard, child: Text(tr('Discard'))),
           ],
         ),
       ),

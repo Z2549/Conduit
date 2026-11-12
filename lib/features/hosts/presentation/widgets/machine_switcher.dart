@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -370,14 +371,12 @@ class _MachineSheetState extends State<MachineSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Machines',
+                        Text(tr('Machines'),
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        Text(
-                          'Sessions and workspaces of the checked machines',
+                        Text(tr('Sessions and workspaces of the checked machines'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: muted,
                           ),
@@ -410,7 +409,7 @@ class _MachineSheetState extends State<MachineSheet> {
               _CheckRow(
                 key: const ValueKey('machine-filter-all'),
                 checked: _filter.isAll,
-                title: 'All machines',
+                title: tr('All machines'),
                 bold: true,
                 onToggle: () => _set(const {}),
               ),
@@ -429,7 +428,7 @@ class _MachineSheetState extends State<MachineSheet> {
                 onOnly: () => _set({host.id}),
                 trailing: PopupMenuButton<MachineMenuChoice>(
                   key: ValueKey('machine-menu-${host.id}'),
-                  tooltip: 'Machine actions',
+                  tooltip: tr('Machine actions'),
                   icon: const Icon(Icons.more_vert_rounded),
                   onSelected: (choice) =>
                       widget.onResult(MachineMenuRequested(host, choice)),
@@ -453,7 +452,7 @@ class _MachineSheetState extends State<MachineSheet> {
               child: OutlinedButton.icon(
                 onPressed: () => widget.onResult(const MachineAddRequested()),
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Add machine'),
+                label: Text(tr('Add machine')),
               ),
             ),
             if (local != null) ...[
@@ -464,8 +463,8 @@ class _MachineSheetState extends State<MachineSheet> {
               _CheckRow(
                 key: const ValueKey('machine-filter-local'),
                 checked: _filter.keys.contains(localMachineFilterKey),
-                title: 'This device',
-                subtitle: 'Local shell sessions',
+                title: tr('This device'),
+                subtitle: tr('Local shell sessions'),
                 live: widget.liveKeys.contains(localMachineFilterKey),
                 onToggle: () => _toggle(localMachineFilterKey),
                 onOnly: () => _set({localMachineFilterKey}),
@@ -548,7 +547,7 @@ class _CheckRow extends StatelessWidget {
                         if (live) ...[
                           const SizedBox(width: 8),
                           Tooltip(
-                            message: 'Open sessions',
+                            message: tr('Open sessions'),
                             child: Container(
                               width: 8,
                               height: 8,
@@ -592,7 +591,7 @@ class HostSortMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<HostListSortMode>(
-      tooltip: 'Sort machines',
+      tooltip: tr('Sort machines'),
       initialValue: value,
       onSelected: onChanged,
       icon: const Icon(Icons.sort_rounded),

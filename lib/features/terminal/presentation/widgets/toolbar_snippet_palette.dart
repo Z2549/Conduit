@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/snippets/domain/terminal_snippet.dart';
@@ -108,8 +109,7 @@ class ToolbarSnippetPalette extends StatelessWidget {
         shrinkWrap: true,
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
         children: [
-          Text(
-            'Quick prompts',
+          Text(tr('Quick prompts'),
             style: theme.textTheme.titleSmall?.copyWith(color: foreground),
           ),
           const SizedBox(height: 10),
@@ -134,8 +134,7 @@ class ToolbarSnippetPalette extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          Text(
-            'Snippets',
+          Text(tr('Snippets'),
             style: theme.textTheme.titleSmall?.copyWith(color: foreground),
           ),
           const SizedBox(height: 4),
@@ -173,9 +172,8 @@ class ToolbarSnippetPalette extends StatelessWidget {
               dense: true,
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.visibility_off_rounded, color: muted),
-              title: Text('Password', style: TextStyle(color: foreground)),
-              subtitle: Text(
-                'Types the saved host password',
+              title: Text(tr('Password'), style: TextStyle(color: foreground)),
+              subtitle: Text(tr('Types the saved host password'),
                 style: TextStyle(color: muted),
               ),
               onTap: () => onPassword!(hostPassword),
@@ -343,7 +341,7 @@ class _DesktopSnippetPaletteState extends State<_DesktopSnippetPalette> {
         ),
       if (hasPassword)
         _PaletteEntry(
-          label: 'Password',
+          label: tr('Password'),
           detail: 'Types the saved host password',
           icon: Icons.visibility_off_rounded,
           onSelect: () => p.onPassword!(p.hostPassword),
@@ -406,10 +404,10 @@ class _DesktopSnippetPaletteState extends State<_DesktopSnippetPalette> {
               key: const ValueKey('snippet-palette-filter'),
               controller: _query,
               autofocus: true,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 isDense: true,
                 prefixIcon: Icon(Icons.search_rounded),
-                hintText: 'Filter prompts and snippets',
+                hintText: tr('Filter prompts and snippets'),
               ),
               onChanged: (_) => setState(() => _highlighted = 0),
             ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/tasks/domain/task_source.dart';
 import 'package:conduit/features/tasks/presentation/task_sources_controller.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +141,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         actions: [
           if (task.url case final url?)
             IconButton(
-              tooltip: 'Open in browser',
+              tooltip: tr('Open in browser'),
               icon: const Icon(Icons.open_in_new),
               onPressed: () => unawaited(
                 launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
@@ -210,7 +211,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
           if (caps.comments) ...[
             const Divider(height: 24),
-            Text('Comments', style: theme.textTheme.titleSmall),
+            Text(tr('Comments'), style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             for (final c in task.comments ?? const <TaskComment>[])
               Padding(
@@ -230,7 +231,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
               ),
             if (!_loading && (task.comments ?? const []).isEmpty)
-              Text('No comments.', style: theme.textTheme.bodySmall),
+              Text(tr('No comments.'), style: theme.textTheme.bodySmall),
             const SizedBox(height: 8),
             TextField(
               key: const ValueKey('task-comment-field'),
@@ -238,10 +239,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               minLines: 1,
               maxLines: 6,
               decoration: InputDecoration(
-                hintText: 'Add a comment',
+                hintText: tr('Add a comment'),
                 suffixIcon: IconButton(
                   key: const ValueKey('task-comment-send'),
-                  tooltip: 'Send',
+                  tooltip: tr('Send'),
                   icon: const Icon(Icons.send),
                   onPressed: _busy ? null : () => unawaited(_sendComment()),
                 ),

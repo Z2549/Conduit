@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
@@ -257,14 +258,14 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
       case SftpBrowserStatus.connecting:
         return CenterMessage(
           icon: Icons.folder_open_rounded,
-          title: 'Opening files…',
+          title: tr('Opening files…'),
           message: _controller.securityKeyMessage,
           showSpinner: true,
         );
       case SftpBrowserStatus.failed:
         return CenterMessage(
           icon: Icons.error_outline_rounded,
-          title: 'Could not open files',
+          title: tr('Could not open files'),
           message: _controller.errorMessage,
           actionLabel: 'Retry',
           onAction: _controller.connect,
@@ -272,16 +273,16 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
       case SftpBrowserStatus.ready:
         final entries = _controller.visibleEntries;
         if (_controller.entries.isEmpty) {
-          return const CenterMessage(
+          return CenterMessage(
             icon: Icons.inbox_rounded,
-            title: 'Empty folder',
-            message: 'Upload a file or create a folder to get started.',
+            title: tr('Empty folder'),
+            message: tr('Upload a file or create a folder to get started.'),
           );
         }
         if (entries.isEmpty) {
           return CenterMessage(
             icon: Icons.search_off_rounded,
-            title: 'No matches',
+            title: tr('No matches'),
             message:
                 'Nothing in this folder matches “${_controller.searchQuery}”.',
             actionLabel: 'Clear search',
@@ -389,7 +390,7 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
             if (!entry.isDirectory)
               ListTile(
                 leading: const Icon(Icons.open_in_new_rounded),
-                title: const Text('Open'),
+                title: Text(tr('Open')),
                 onTap: () => Navigator.of(context).pop(EntryAction.open),
               ),
             ListTile(
@@ -399,12 +400,12 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
             ),
             ListTile(
               leading: const Icon(Icons.copy_rounded),
-              title: const Text('Copy path'),
+              title: Text(tr('Copy path')),
               onTap: () => Navigator.of(context).pop(EntryAction.copyPath),
             ),
             ListTile(
               leading: const Icon(Icons.drive_file_rename_outline_rounded),
-              title: const Text('Rename'),
+              title: Text(tr('Rename')),
               onTap: () => Navigator.of(context).pop(EntryAction.rename),
             ),
             ListTile(
@@ -412,7 +413,7 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
                 Icons.delete_outline_rounded,
                 color: Theme.of(context).colorScheme.error,
               ),
-              title: const Text('Delete'),
+              title: Text(tr('Delete')),
               onTap: () => Navigator.of(context).pop(EntryAction.delete),
             ),
           ],
@@ -439,8 +440,8 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
 
   Future<void> _promptNewFolder() async {
     final name = await _promptName(
-      title: 'New folder',
-      label: 'Folder name',
+      title: tr('New folder'),
+      label: tr('Folder name'),
       action: 'Create',
     );
     if (name == null || name.isEmpty) return;
@@ -453,8 +454,8 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
 
   Future<void> _promptRename(SftpEntry entry) async {
     final name = await _promptName(
-      title: 'Rename',
-      label: 'New name',
+      title: tr('Rename'),
+      label: tr('New name'),
       action: 'Rename',
       initial: entry.name,
     );
@@ -475,14 +476,14 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete'),
+            child: Text(tr('Delete')),
           ),
         ],
       ),
@@ -566,7 +567,7 @@ class _SftpBrowserPageState extends State<SftpBrowserPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(controller.text.trim()),

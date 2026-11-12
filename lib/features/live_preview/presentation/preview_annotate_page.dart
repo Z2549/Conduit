@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/features/live_preview/domain/preview_screenshot.dart';
@@ -137,28 +138,28 @@ class _PreviewAnnotatePageState extends State<PreviewAnnotatePage> {
     final image = _image;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Screenshot'),
+        title: Text(tr('Screenshot')),
         actions: [
           SegmentedButton<PreviewAnnotationKind>(
             showSelectedIcon: false,
             style: const ButtonStyle(visualDensity: VisualDensity.compact),
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: PreviewAnnotationKind.rectangle,
                 icon: Icon(Icons.crop_square_rounded, size: 18),
-                tooltip: 'Rectangle',
+                tooltip: tr('Rectangle'),
               ),
               ButtonSegment(
                 value: PreviewAnnotationKind.arrow,
                 icon: Icon(Icons.north_east_rounded, size: 18),
-                tooltip: 'Arrow',
+                tooltip: tr('Arrow'),
               ),
             ],
             selected: {_tool},
             onSelectionChanged: (value) => setState(() => _tool = value.first),
           ),
           IconButton(
-            tooltip: 'Undo',
+            tooltip: tr('Undo'),
             icon: const Icon(Icons.undo_rounded),
             onPressed: _shapes.isEmpty ? null : _undo,
           ),
@@ -232,9 +233,9 @@ class _PreviewAnnotatePageState extends State<PreviewAnnotatePage> {
                       minLines: 1,
                       maxLines: 3,
                       textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
-                        hintText: 'Note for the agent (optional)',
+                        hintText: tr('Note for the agent (optional)'),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -250,7 +251,7 @@ class _PreviewAnnotatePageState extends State<PreviewAnnotatePage> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.send_rounded, size: 18),
-                    label: const Text('To the agent'),
+                    label: Text(tr('To the agent')),
                   ),
                 ],
               ),

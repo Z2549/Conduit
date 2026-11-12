@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -356,7 +357,7 @@ class HomeProjectsList extends StatelessWidget {
             ? null
             : IconButton(
                 key: ValueKey('home-project-menu-${project.key}'),
-                tooltip: 'Quick actions and more',
+                tooltip: tr('Quick actions and more'),
                 iconSize: 18,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints.tightFor(
@@ -729,8 +730,7 @@ class _OpenMark extends StatelessWidget {
         children: [
           Icon(Icons.tab_rounded, size: 12, color: palette.accent),
           const SizedBox(width: 3),
-          Text(
-            'open',
+          Text(tr('open'),
             style: TextStyle(
               color: palette.accent,
               fontSize: 11,

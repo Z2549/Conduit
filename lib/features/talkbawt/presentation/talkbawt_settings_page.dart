@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_link.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_settings.dart';
 import 'package:conduit/features/talkbawt/presentation/talkbawt_controller.dart';
@@ -64,13 +65,13 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
         if (!didPop) Navigator.of(context).pop(_saved);
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Talkbawt server and relay')),
+        appBar: AppBar(title: Text(tr('Talkbawt server and relay'))),
         body: ListenableBuilder(
           listenable: controller,
           builder: (context, _) => ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text('Server', style: Theme.of(context).textTheme.titleSmall),
+              Text(tr('Server'), style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 6),
               TextField(
                 key: const ValueKey('talkbawt-server-field'),
@@ -95,12 +96,12 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
                     key: const ValueKey('talkbawt-server-default'),
                     onPressed: () =>
                         unawaited(_saveServer(defaultTalkbawtServer)),
-                    child: const Text('Use the default'),
+                    child: Text(tr('Use the default')),
                   ),
                   FilledButton(
                     key: const ValueKey('talkbawt-server-save'),
                     onPressed: () => unawaited(_saveServer()),
-                    child: const Text('Save'),
+                    child: Text(tr('Save')),
                   ),
                 ],
               ),
@@ -114,8 +115,7 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const Divider(height: 32),
-              Text(
-                'Send to another machine\'s agent',
+              Text(tr('Send to another machine\'s agent'),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               RadioGroup<TalkbawtRelayMode>(
@@ -140,9 +140,9 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
               TextField(
                 key: const ValueKey('talkbawt-from-field'),
                 controller: _from,
-                decoration: const InputDecoration(
-                  labelText: 'From',
-                  hintText: '<agent> via Conductore',
+                decoration: InputDecoration(
+                  labelText: tr('From'),
+                  hintText: tr('<agent> via Conductore'),
                   helperText:
                       'How your handoffs are signed. The other side sees it '
                       'as unverified.',

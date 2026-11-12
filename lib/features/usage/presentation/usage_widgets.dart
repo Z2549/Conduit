@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/usage/domain/usage_report.dart';
@@ -533,13 +534,13 @@ class _UsageDetails extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Text('Usage', style: theme.textTheme.titleMedium),
+                    child: Text(tr('Usage'), style: theme.textTheme.titleMedium),
                   ),
                   TextButton.icon(
                     key: const ValueKey('usage-details-explore'),
                     onPressed: onExplore,
                     icon: const Icon(Icons.insights_rounded, size: 18),
-                    label: const Text('Explore'),
+                    label: Text(tr('Explore')),
                   ),
                 ],
               ),
@@ -616,7 +617,7 @@ class _SummaryBar extends StatelessWidget {
         children: [
           _LabeledRing(label: '5h', limit: summary.fiveHour, now: now),
           const SizedBox(width: 10),
-          _LabeledRing(label: 'Week', limit: summary.weekly, now: now),
+          _LabeledRing(label: tr('Week'), limit: summary.weekly, now: now),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -701,7 +702,7 @@ class _SummaryCompact extends StatelessWidget {
               percent: five,
               size: 20,
               showPercent: false,
-              semanticLabel: '5h limit',
+              semanticLabel: tr('5h limit'),
             ),
           ),
           const SizedBox(width: 6),
@@ -713,7 +714,7 @@ class _SummaryCompact extends StatelessWidget {
               percent: week,
               size: 20,
               showPercent: false,
-              semanticLabel: 'Weekly limit',
+              semanticLabel: tr('Weekly limit'),
             ),
           ),
           const SizedBox(width: 8),
@@ -967,7 +968,7 @@ class _UsageBreakdownState extends State<UsageBreakdown>
               )
             else
               IconButton(
-                tooltip: 'Refresh usage',
+                tooltip: tr('Refresh usage'),
                 visualDensity: VisualDensity.compact,
                 icon: const Icon(Icons.refresh_rounded, size: 20),
                 onPressed: controller.refresh,
@@ -983,7 +984,7 @@ class _UsageBreakdownState extends State<UsageBreakdown>
                     onUpdateCompanion: widget.onUpdateCompanion,
                   ),
                 ),
-                child: const Text('Explore'),
+                child: Text(tr('Explore')),
               ),
           ],
         ),
@@ -1010,7 +1011,7 @@ class _UsageBreakdownState extends State<UsageBreakdown>
         if (others.isNotEmpty)
           UsageFold(
             id: 'agents',
-            title: 'Other agents',
+            title: tr('Other agents'),
             summary: _otherAgentsLine(others, now),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1026,7 +1027,7 @@ class _UsageBreakdownState extends State<UsageBreakdown>
           ),
         if (hasReport) ...[
           const SizedBox(height: 10),
-          Text('Per day', style: theme.textTheme.labelLarge),
+          Text(tr('Per day'), style: theme.textTheme.labelLarge),
           const SizedBox(height: 6),
           UsageDayChart(
             days: days,
@@ -1069,7 +1070,7 @@ class _UsageBreakdownState extends State<UsageBreakdown>
                 ),
                 const SizedBox(height: 8),
                 if (groups.isEmpty)
-                  Text('Nothing in this period.', style: muted)
+                  Text(tr('Nothing in this period.'), style: muted)
                 else
                   for (final group in groups.take(12))
                     _GroupRow(group: group, max: groups.first.totals),
@@ -1154,7 +1155,7 @@ class _MachineLimits extends StatelessWidget {
               if (onUpdateCompanion case final update?)
                 TextButton(
                   onPressed: () => update(machine.hostId),
-                  child: const Text('Update agent hooks'),
+                  child: Text(tr('Update agent hooks')),
                 ),
             ],
           )
@@ -1163,7 +1164,7 @@ class _MachineLimits extends StatelessWidget {
         for (final limit in machine.claudeLimits)
           UsageLimitBar(agent: 'Claude', limit: limit, now: now),
         if (report != null && report.partial)
-          Text('Still counting older transcripts…', style: muted),
+          Text(tr('Still counting older transcripts…'), style: muted),
       ],
     );
   }
@@ -1202,7 +1203,7 @@ class _OtherAgents extends StatelessWidget {
           ),
         if (codexPresent)
           if (machine.codexLimits.isEmpty)
-            Text('Codex: no rate limits reported yet', style: muted)
+            Text(tr('Codex: no rate limits reported yet'), style: muted)
           else
             for (final limit in machine.codexLimits)
               UsageLimitBar(agent: 'Codex', limit: limit, now: now),
@@ -1378,7 +1379,7 @@ class UsageAccountsSection extends StatelessWidget {
               controller,
               machines: [for (final m in switchable) (m.hostId, m.hostName)],
             ),
-            child: const Text('Switch to best'),
+            child: Text(tr('Switch to best')),
           )
         : null;
     final rows = [
@@ -1405,7 +1406,7 @@ class UsageAccountsSection extends StatelessWidget {
         key: const ValueKey('usage-accounts'),
         child: UsageFold(
           id: 'accounts',
-          title: 'Accounts',
+          title: tr('Accounts'),
           summary: usageAccountsLine(summary, now),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1425,7 +1426,7 @@ class UsageAccountsSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text('Accounts', style: theme.textTheme.labelLarge),
+              child: Text(tr('Accounts'), style: theme.textTheme.labelLarge),
             ),
             ?switchBest,
           ],
@@ -1492,7 +1493,7 @@ class _AccountRow extends StatelessWidget {
       children: [
         _LabeledRing(label: '5h', limit: account.fiveHour, now: now),
         const SizedBox(width: 8),
-        _LabeledRing(label: 'Week', limit: account.weekly, now: now),
+        _LabeledRing(label: tr('Week'), limit: account.weekly, now: now),
       ],
     );
     final rings = account.needsLogin
@@ -1561,7 +1562,7 @@ class _AccountRow extends StatelessWidget {
               key: ValueKey('usage-account-switch-${account.label}'),
               style: const ButtonStyle(visualDensity: VisualDensity.compact),
               onPressed: onSwitch,
-              child: const Text('Switch'),
+              child: Text(tr('Switch')),
             ),
         ],
       ),
@@ -1656,7 +1657,7 @@ class _AccountSwitchDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         for (final (hostId, name) in machines)
           FilledButton(

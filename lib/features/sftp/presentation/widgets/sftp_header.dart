@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/sftp/presentation/sftp_browser_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,7 @@ class SftpHeader extends StatelessWidget {
       child: busy
           ? const Center(child: CircularProgressIndicator(strokeWidth: 2))
           : IconButton(
-              tooltip: 'Refresh',
+              tooltip: tr('Refresh'),
               icon: const Icon(Icons.refresh_rounded, size: 20),
               onPressed: onRefresh,
             ),
@@ -81,7 +82,7 @@ class SftpHeader extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                tooltip: 'Back',
+                tooltip: tr('Back'),
                 onPressed: onBack,
                 icon: const Icon(Icons.arrow_back_rounded),
               ),
@@ -90,7 +91,7 @@ class SftpHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Files', style: theme.textTheme.headlineSmall),
+                    Text(tr('Files'), style: theme.textTheme.headlineSmall),
                     Text(
                       hostName,
                       maxLines: 1,
@@ -103,14 +104,14 @@ class SftpHeader extends StatelessWidget {
                 ),
               ),
               PopupMenuButton<String>(
-                tooltip: 'Bookmarked folders',
+                tooltip: tr('Bookmarked folders'),
                 icon: const Icon(Icons.bookmarks_rounded, size: 20),
                 onSelected: onOpenBookmark,
                 itemBuilder: (context) => bookmarks.isEmpty
-                    ? const [
+                    ? [
                         PopupMenuItem(
                           enabled: false,
-                          child: Text('No bookmarks yet'),
+                          child: Text(tr('No bookmarks yet')),
                         ),
                       ]
                     : [
@@ -138,13 +139,13 @@ class SftpHeader extends StatelessWidget {
               ),
               if (onNewFolder != null)
                 IconButton(
-                  tooltip: 'New folder',
+                  tooltip: tr('New folder'),
                   icon: const Icon(Icons.create_new_folder_outlined, size: 20),
                   onPressed: onNewFolder,
                 ),
               if (onUpload != null)
                 IconButton(
-                  tooltip: 'Upload files',
+                  tooltip: tr('Upload files'),
                   icon: const Icon(Icons.upload_rounded, size: 20),
                   onPressed: onUpload,
                 ),
@@ -241,11 +242,11 @@ class _FileToolbar extends StatelessWidget {
                 onChanged: onSearchChanged,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  hintText: 'Search folder',
+                  hintText: tr('Search folder'),
                   prefixIcon: const Icon(Icons.search_rounded),
                   suffixIcon: hasQuery
                       ? IconButton(
-                          tooltip: 'Clear search',
+                          tooltip: tr('Clear search'),
                           icon: const Icon(Icons.close_rounded),
                           onPressed: onClearSearch,
                         )
@@ -255,7 +256,7 @@ class _FileToolbar extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             PopupMenuButton<SftpSortMode>(
-              tooltip: 'Sort files',
+              tooltip: tr('Sort files'),
               initialValue: sortMode,
               onSelected: onSortChanged,
               itemBuilder: (context) => [

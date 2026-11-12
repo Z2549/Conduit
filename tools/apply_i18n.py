@@ -52,6 +52,9 @@ def eligible(body: str, table: dict[str, str]) -> bool:
 
 def wrap_file(path: str, table: dict[str, str]) -> tuple[str, int]:
     src = open(path, encoding="utf-8").read()
+    # A `part of` file cannot carry its own imports; it inherits the owner's.
+    if re.search(r"^\s*part of\b", src, re.M):
+        return src, 0
     count = 0
 
     def repl_text(m: re.Match[str]) -> str:
@@ -116,7 +119,7 @@ def drop_dead_const(src: str) -> str:
                 start += 1
             # Skip `const` on declarations (`const foo = ...`).
             name = re.match(r"[A-Za-z_][A-Za-z0-9_]*", out[start:])
-            if name and not out[start + name.end() : start + name.end() + 1].strip().startswith(("(", "[")):
+            if name and not out[start + name.end() : start + name.end() + 1].strip().startswith(("(", "[", "<")):
                 continue
             end = _expression_end(out, start)
             if "tr(" in out[start:end]:
@@ -132,16 +135,24 @@ def ensure_import(src: str) -> str:
         return src
     lines = src.split("\n")
     target = "package:conduit/core/l10n/legacy_tr.dart"
+    # A `library` directive must stay first: the import goes right after it.
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped == "library;" or stripped.startswith("library "):
+            lines.insert(i + 1, "")
+            lines.insert(i + 2, IMPORT)
+            return "\n".join(lines)
     last_package = None
     for i, line in enumerate(lines):
         if not line.startswith("import '"):
             continue
         path = line[len("import '") :].split("'")[0]
-        if path.startswith("package:conduit/"):
-            last_package = i
-            if path > target:
-                lines.insert(i, IMPORT)
-                return "\n".join(lines)
+        if not path.startswith("package:"):
+            continue
+        last_package = i
+        if path > target:
+            lines.insert(i, IMPORT)
+            return "\n".join(lines)
     if last_package is not None:
         lines.insert(last_package + 1, IMPORT)
         return "\n".join(lines)

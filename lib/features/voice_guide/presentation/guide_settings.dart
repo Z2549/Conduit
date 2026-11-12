@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/core/theme/theme_controller.dart';
 import 'package:conduit/features/hosts/presentation/hosts_controller.dart';
@@ -34,7 +35,7 @@ class GuideSettingsControls extends StatelessWidget {
         SettingsSwitchCard(
           switchKey: const ValueKey('guide-enabled'),
           icon: Icons.headset_mic_outlined,
-          title: 'Voice guide',
+          title: tr('Voice guide'),
           subtitle:
               'Talk to all your agents hands-free: "what\'s waiting", "open '
               'api", "approve", "tell web to run the tests". Start it with '
@@ -50,7 +51,7 @@ class GuideSettingsControls extends StatelessWidget {
               child: ListTile(
                 key: const ValueKey('guide-brain'),
                 leading: const Icon(Icons.psychology_outlined),
-                title: const Text('Brain machine'),
+                title: Text(tr('Brain machine')),
                 subtitle: Text(_brainLabel(hosts)),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => unawaited(_pickBrain(context, hosts)),
@@ -60,7 +61,7 @@ class GuideSettingsControls extends StatelessWidget {
           SettingsSegmentCard<GuideConfirm>(
             key: const ValueKey('guide-confirm'),
             icon: Icons.verified_user_outlined,
-            title: 'Say yes before acting',
+            title: tr('Say yes before acting'),
             description: switch (prefs.confirm) {
               GuideConfirm.always =>
                 'The guide asks "Say yes" before it approves, denies, sends '
@@ -80,7 +81,7 @@ class GuideSettingsControls extends StatelessWidget {
             child: ListTile(
               key: const ValueKey('guide-language'),
               leading: const Icon(Icons.translate_rounded),
-              title: const Text('Guide language'),
+              title: Text(tr('Guide language')),
               subtitle: Text(
                 prefs.language.isEmpty
                     ? 'Same as dictation'
@@ -96,7 +97,7 @@ class GuideSettingsControls extends StatelessWidget {
             SettingsSwitchCard(
               switchKey: const ValueKey('guide-headset'),
               icon: Icons.headphones_outlined,
-              title: 'Wake with headset button',
+              title: tr('Wake with headset button'),
               subtitle:
                   'Long-press the headset\'s play button, or its assistant '
                   'button (Android asks once which app to use), to start the '
@@ -129,7 +130,7 @@ class GuideSettingsControls extends StatelessWidget {
     final picked = await showDialog<String>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text('Brain machine'),
+        title: Text(tr('Brain machine')),
         children: [
           RadioGroup<String>(
             groupValue: _prefs.brainHostId,
@@ -138,7 +139,7 @@ class GuideSettingsControls extends StatelessWidget {
               children: [
                 const RadioListTile<String>(
                   value: '',
-                  title: Text('Automatic'),
+                  title: Text(tr('Automatic')),
                 ),
                 for (final host in machines)
                   RadioListTile<String>(value: host.id, title: Text(host.name)),
@@ -155,7 +156,7 @@ class GuideSettingsControls extends StatelessWidget {
     final picked = await showDialog<String>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text('Guide language'),
+        title: Text(tr('Guide language')),
         children: [
           RadioGroup<String>(
             groupValue: _prefs.language,
@@ -164,7 +165,7 @@ class GuideSettingsControls extends StatelessWidget {
               children: [
                 const RadioListTile<String>(
                   value: '',
-                  title: Text('Same as dictation'),
+                  title: Text(tr('Same as dictation')),
                 ),
                 for (final language in speechLanguages)
                   if (!language.isDeviceDefault)

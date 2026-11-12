@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_instance.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_state.dart';
 import 'package:conduit/features/local_shell/presentation/local_shell_controller.dart';
@@ -54,7 +55,7 @@ class _LocalShellInstancePageState extends State<LocalShellInstancePage> {
             title: Text(instance.name),
             actions: [
               IconButton(
-                tooltip: 'Rename',
+                tooltip: tr('Rename'),
                 onPressed: state.isBusy ? null : () => _rename(instance),
                 icon: const Icon(Icons.edit_outlined),
               ),
@@ -150,11 +151,11 @@ class _LocalShellInstancePageState extends State<LocalShellInstancePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reinstall'),
+            child: Text(tr('Reinstall')),
           ),
         ],
       ),
@@ -178,11 +179,11 @@ class _LocalShellInstancePageState extends State<LocalShellInstancePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
+            child: Text(tr('Remove')),
           ),
         ],
       ),
@@ -218,22 +219,22 @@ class _RenameDialogState extends State<_RenameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Rename shell'),
+      title: Text(tr('Rename shell')),
       content: TextField(
         controller: _controller,
         autofocus: true,
         textCapitalization: TextCapitalization.words,
-        decoration: const InputDecoration(labelText: 'Name'),
+        decoration: InputDecoration(labelText: tr('Name')),
         onSubmitted: (value) => Navigator.of(context).pop(value),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_controller.text),
-          child: const Text('Rename'),
+          child: Text(tr('Rename')),
         ),
       ],
     );
@@ -287,16 +288,16 @@ class _Ready extends StatelessWidget {
         FilledButton.icon(
           onPressed: onOpen,
           icon: const Icon(Icons.terminal_rounded),
-          label: const Text('New session'),
+          label: Text(tr('New session')),
         ),
         const SizedBox(height: 24),
-        _InfoRow(label: 'Distribution', value: distroName),
-        _InfoRow(label: 'Version', value: state.installedVersion ?? 'unknown'),
+        _InfoRow(label: tr('Distribution'), value: distroName),
+        _InfoRow(label: tr('Version'), value: state.installedVersion ?? 'unknown'),
         _InfoRow(
-          label: 'Disk usage',
+          label: tr('Disk usage'),
           value: formatLocalShellBytes(state.diskUsageBytes),
         ),
-        _InfoRow(label: 'Android files', value: storageStatus),
+        _InfoRow(label: tr('Android files'), value: storageStatus),
         const SizedBox(height: 16),
         Text(
           '$updateHint$storageHint',
@@ -308,14 +309,14 @@ class _Ready extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: onReinstall,
           icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Reinstall'),
+          label: Text(tr('Reinstall')),
         ),
         const SizedBox(height: 8),
         TextButton.icon(
           onPressed: onRemove,
           style: TextButton.styleFrom(foregroundColor: theme.colorScheme.error),
           icon: const Icon(Icons.delete_outline_rounded),
-          label: const Text('Remove'),
+          label: Text(tr('Remove')),
         ),
       ],
     );
@@ -378,7 +379,7 @@ class _Failed extends StatelessWidget {
         FilledButton.icon(
           onPressed: onRetry,
           icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Try again'),
+          label: Text(tr('Try again')),
         ),
         const SizedBox(height: 8),
         TextButton.icon(
@@ -387,7 +388,7 @@ class _Failed extends StatelessWidget {
             foregroundColor: Theme.of(context).colorScheme.error,
           ),
           icon: const Icon(Icons.delete_outline_rounded),
-          label: const Text('Remove'),
+          label: Text(tr('Remove')),
         ),
       ],
     );
@@ -417,9 +418,9 @@ class _Incomplete extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _Hero(
+        _Hero(
           icon: Icons.downloading_rounded,
-          title: 'Setup is incomplete',
+          title: tr('Setup is incomplete'),
           body:
               'This shell was added but its image never finished installing. '
               'Resume to pick up where it left off, or remove it.',
@@ -428,7 +429,7 @@ class _Incomplete extends StatelessWidget {
         FilledButton.icon(
           onPressed: onResume,
           icon: const Icon(Icons.download_rounded),
-          label: const Text('Resume install'),
+          label: Text(tr('Resume install')),
         ),
         const SizedBox(height: 8),
         TextButton.icon(
@@ -437,7 +438,7 @@ class _Incomplete extends StatelessWidget {
             foregroundColor: Theme.of(context).colorScheme.error,
           ),
           icon: const Icon(Icons.delete_outline_rounded),
-          label: const Text('Remove'),
+          label: Text(tr('Remove')),
         ),
       ],
     );
@@ -535,7 +536,7 @@ class _CreditFooter extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4),
             ),
             icon: const Icon(Icons.description_outlined, size: 16),
-            label: const Text('Open-source licenses'),
+            label: Text(tr('Open-source licenses')),
           ),
         ),
       ],

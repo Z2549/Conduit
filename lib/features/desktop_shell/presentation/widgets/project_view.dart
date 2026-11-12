@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/features/desktop_shell/domain/project_layout.dart';
 import 'package:conduit/features/desktop_shell/domain/project_tree.dart';
@@ -158,7 +159,7 @@ class ProjectViewBar extends StatelessWidget {
               if (controller.markNotice != null)
                 IconButton(
                   key: const ValueKey('project-mark-notice-close'),
-                  tooltip: 'Dismiss',
+                  tooltip: tr('Dismiss'),
                   iconSize: 14,
                   visualDensity: VisualDensity.compact,
                   onPressed: controller.clearMarkNotice,
@@ -180,7 +181,7 @@ class SheprdPendingMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Tooltip(
-    message: 'Waiting for sheprd to apply this',
+    message: tr('Waiting for sheprd to apply this'),
     child: SizedBox(
       key: const ValueKey('sheprd-mark-pending'),
       width: size,
@@ -206,7 +207,7 @@ class _ViewMenu extends StatelessWidget {
     final errors = controller.machineErrors.values.toList();
     return PopupMenuButton<_ViewChoice>(
       key: const ValueKey('project-view-menu'),
-      tooltip: 'Project view',
+      tooltip: tr('Project view'),
       padding: EdgeInsets.zero,
       child: const Padding(
         padding: EdgeInsets.fromLTRB(4, 4, 2, 4),
@@ -224,7 +225,7 @@ class _ViewMenu extends StatelessWidget {
             await controller.setShowHidden(!controller.showHidden);
           case _ViewChoice.add:
             if (!context.mounted) return;
-            final name = await askProjectName(context, title: 'New project');
+            final name = await askProjectName(context, title: tr('New project'));
             if (name != null && name.isNotEmpty) {
               await controller.addProject(name, rules: [name]);
             }
@@ -244,9 +245,9 @@ class _ViewMenu extends StatelessWidget {
             child: Text('Show hidden ($hiddenCount)'),
           ),
         if (controller.canEditLayout)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: _ViewChoice.add,
-            child: Text('New project…'),
+            child: Text(tr('New project…')),
           ),
         if (controller.sheprdSync)
           PopupMenuItem(
@@ -651,7 +652,7 @@ Future<void> showProjectEntrySheet(
           if (more != null)
             ListTile(
               leading: const Icon(Icons.more_horiz_rounded),
-              title: const Text('More actions'),
+              title: Text(tr('More actions')),
               onTap: () {
                 Navigator.pop(context);
                 more();
@@ -859,7 +860,7 @@ class _MoveDialogState extends State<_MoveDialog> {
                     key: const ValueKey('move-to-other'),
                     dense: true,
                     leading: const Icon(Icons.move_down_rounded),
-                    title: const Text('Other'),
+                    title: Text(tr('Other')),
                     enabled: widget.current != null,
                     onTap: () => Navigator.pop(context, ''),
                   ),
@@ -871,8 +872,8 @@ class _MoveDialogState extends State<_MoveDialog> {
               key: const ValueKey('move-to-new'),
               controller: _text,
               autofocus: widget.names.isEmpty,
-              decoration: const InputDecoration(
-                labelText: 'New project',
+              decoration: InputDecoration(
+                labelText: tr('New project'),
                 isDense: true,
               ),
               onSubmitted: (value) {
@@ -887,7 +888,7 @@ class _MoveDialogState extends State<_MoveDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           key: const ValueKey('move-to-create'),
@@ -895,7 +896,7 @@ class _MoveDialogState extends State<_MoveDialog> {
             final value = _text.text.trim();
             if (value.isNotEmpty) Navigator.pop(context, value);
           },
-          child: const Text('Move'),
+          child: Text(tr('Move')),
         ),
       ],
     );
@@ -918,7 +919,7 @@ Future<String?> askProjectName(
 Future<int?> _askRecentHours(BuildContext context, int current) async {
   final text = await askProjectName(
     context,
-    title: 'Active view',
+    title: tr('Active view'),
     initial: '$current',
     hint: '24',
     help:
@@ -978,12 +979,12 @@ class _TextDialogState extends State<_TextDialog> {
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
+        child: Text(tr('Cancel')),
       ),
       FilledButton(
         key: const ValueKey('project-text-ok'),
         onPressed: () => Navigator.pop(context, _text.text.trim()),
-        child: const Text('OK'),
+        child: Text(tr('OK')),
       ),
     ],
   );

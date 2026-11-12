@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -1369,12 +1370,12 @@ class _TerminalPageState extends State<TerminalPage>
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               autofocus: true,
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Close'),
+              child: Text(tr('Close')),
             ),
           ],
         ),
@@ -1405,7 +1406,7 @@ class _TerminalPageState extends State<TerminalPage>
           content: Text(path, maxLines: 1, overflow: TextOverflow.ellipsis),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: 'Open',
+            label: tr('Open'),
             onPressed: () => _fileTabs.open(session.host, path),
           ),
         ),
@@ -1432,7 +1433,7 @@ class _TerminalPageState extends State<TerminalPage>
                   messenger.hideCurrentSnackBar();
                   _copyToClipboard(url, 'Link copied');
                 },
-                child: const Text('Copy'),
+                child: Text(tr('Copy')),
               ),
             ],
           ),
@@ -1541,7 +1542,7 @@ class _TerminalPageState extends State<TerminalPage>
     if (!opened && mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(const SnackBar(content: Text('No app can open it')));
+        ..showSnackBar(SnackBar(content: Text(tr('No app can open it'))));
     }
   }
 
@@ -2180,8 +2181,8 @@ class _TerminalPageState extends State<TerminalPage>
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
-          content: Text('Uploading screenshot…'),
+        SnackBar(
+          content: Text(tr('Uploading screenshot…')),
           duration: Duration(minutes: 1),
         ),
       );
@@ -3249,10 +3250,10 @@ class _ComposeInputBarState extends State<_ComposeInputBar> {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: const Text('Line cleared'),
+              content: Text(tr('Line cleared')),
               duration: const Duration(seconds: 5),
               action: SnackBarAction(
-                label: 'Undo',
+                label: tr('Undo'),
                 onPressed: () {
                   if (mounted && _controller.text.isEmpty) {
                     _controller.value = previous;
@@ -3282,7 +3283,7 @@ class _ComposeInputBarState extends State<_ComposeInputBar> {
           children: [
             PopupMenuButton<String>(
               icon: const Icon(Icons.history_rounded),
-              tooltip: 'Recall a sent line',
+              tooltip: tr('Recall a sent line'),
               color: widget.palette.panelFor(widget.brightness),
               enabled: widget.history.isNotEmpty,
               onSelected: _recall,
@@ -3336,9 +3337,9 @@ class _ComposeInputBarState extends State<_ComposeInputBar> {
                     return newValue;
                   }),
                 ],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isDense: true,
-                  hintText: 'Chat: type a line, Enter to send …',
+                  hintText: tr('Chat: type a line, Enter to send …'),
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 10,
@@ -3363,12 +3364,12 @@ class _ComposeInputBarState extends State<_ComposeInputBar> {
             if (widget.onExpand != null)
               IconButton(
                 icon: const Icon(Icons.open_in_full_rounded),
-                tooltip: 'Open chat mode',
+                tooltip: tr('Open chat mode'),
                 onPressed: widget.onExpand,
               ),
             IconButton(
               icon: const Icon(Icons.close_rounded),
-              tooltip: 'Close chat mode',
+              tooltip: tr('Close chat mode'),
               onPressed: () => widget.onClose(_controller.text),
             ),
           ],
@@ -3486,7 +3487,7 @@ class _ShellExitedBar extends StatelessWidget {
               key: const ValueKey('shell-restart'),
               onPressed: onRestart,
               icon: const Icon(Icons.restart_alt_rounded, size: 18),
-              label: const Text('Restart'),
+              label: Text(tr('Restart')),
             ),
           ],
         ),

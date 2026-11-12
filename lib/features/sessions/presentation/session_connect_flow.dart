@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -366,17 +367,17 @@ class _HostChooserState extends State<HostChooser> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-              child: Text('New session', style: theme.textTheme.titleMedium),
+              child: Text(tr('New session'), style: theme.textTheme.titleMedium),
             ),
             if (desktop && machines.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                 child: TextField(
                   key: const ValueKey('host-chooser-filter'),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     isDense: true,
                     prefixIcon: Icon(Icons.search_rounded, size: 18),
-                    hintText: 'Filter machines',
+                    hintText: tr('Filter machines'),
                   ),
                   textInputAction: TextInputAction.go,
                   onChanged: (value) => setState(() => _query = value),
@@ -389,8 +390,7 @@ class _HostChooserState extends State<HostChooser> {
             if (machines.isEmpty)
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: Text(
-                  'No saved machines yet. Add one on the home page first.',
+                child: Text(tr('No saved machines yet. Add one on the home page first.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,

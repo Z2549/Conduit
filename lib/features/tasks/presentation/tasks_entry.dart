@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 import 'package:conduit/features/agent_attention/presentation/agent_attention_controller.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -203,7 +204,7 @@ class TasksSettingsTile extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
     key: const ValueKey('settings-tasks'),
     leading: const Icon(Icons.task_alt_outlined),
-    title: const Text('Tasks'),
+    title: Text(tr('Tasks')),
     subtitle: const Text(
       'Tasks from a markdown folder, GitHub, GitLab, Jira, Linear or '
       'Azure Boards: list, open, move, comment.',

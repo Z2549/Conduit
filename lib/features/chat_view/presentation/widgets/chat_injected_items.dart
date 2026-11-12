@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/chat_view/domain/chat_items.dart';
 import 'package:conduit/features/chat_view/presentation/widgets/chat_search_highlight.dart';
@@ -297,8 +298,7 @@ class _ChatShellCommandCardState extends State<ChatShellCommandCard> {
                       color: scheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'You ran',
+                    Text(tr('You ran'),
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),

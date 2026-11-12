@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/features/companion_setup/data/companion_installer.dart';
@@ -124,7 +125,7 @@ class CompanionInstallSheet extends StatelessWidget {
               builder: (context) {
                 final cancel = OutlinedButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
+                  child: Text(tr('Cancel')),
                 );
                 final confirm = FilledButton.icon(
                   key: const ValueKey('companion-install-confirm'),

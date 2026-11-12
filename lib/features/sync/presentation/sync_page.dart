@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -74,7 +75,7 @@ class _SyncPageState extends State<SyncPage> {
         ? MediaQuery.viewPaddingOf(context).bottom
         : 0.0;
     return Scaffold(
-      appBar: AppBar(title: const Text('Sync')),
+      appBar: AppBar(title: Text(tr('Sync'))),
       body: ListenableBuilder(
         listenable: _sync.changes,
         builder: (context, _) {
@@ -105,14 +106,13 @@ class _SyncPageState extends State<SyncPage> {
       FilledButton.icon(
         key: const ValueKey('sync-set-up'),
         icon: const Icon(Icons.dns_rounded),
-        label: const Text('Set up sync with one of my machines'),
+        label: Text(tr('Set up sync with one of my machines')),
         onPressed: _busy != null || _sync.machines.isEmpty ? null : _setUp,
       ),
       if (_sync.machines.isEmpty)
         Padding(
           padding: const EdgeInsets.only(top: 6),
-          child: Text(
-            'Save a machine first, or join with a setup code.',
+          child: Text(tr('Save a machine first, or join with a setup code.'),
             style: theme.textTheme.bodySmall,
           ),
         ),
@@ -120,7 +120,7 @@ class _SyncPageState extends State<SyncPage> {
       OutlinedButton.icon(
         key: const ValueKey('sync-join'),
         icon: const Icon(Icons.qr_code_scanner_rounded),
-        label: const Text('Join with a setup code'),
+        label: Text(tr('Join with a setup code')),
         onPressed: _busy != null ? null : _join,
       ),
       if (_sync.activity.isNotEmpty) ...[
@@ -173,7 +173,7 @@ class _SyncPageState extends State<SyncPage> {
       ListTile(
         contentPadding: EdgeInsets.zero,
         leading: const Icon(Icons.smartphone_rounded),
-        title: const Text('This device'),
+        title: Text(tr('This device')),
         subtitle: Text(config.deviceName),
         trailing: const Icon(Icons.edit_rounded),
         onTap: _rename,
@@ -202,7 +202,7 @@ class _SyncPageState extends State<SyncPage> {
       _SectionTitle(
         'Devices',
         trailing: IconButton(
-          tooltip: 'Refresh devices',
+          tooltip: tr('Refresh devices'),
           icon: const Icon(Icons.refresh_rounded),
           onPressed: _busy != null
               ? null
@@ -210,9 +210,9 @@ class _SyncPageState extends State<SyncPage> {
         ),
       ),
       if (_sync.devices.isEmpty)
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
-          child: Text('Tap refresh to read the device list from the hub.'),
+          child: Text(tr('Tap refresh to read the device list from the hub.')),
         ),
       for (final device in _sync.devices)
         _DeviceTile(
@@ -225,15 +225,15 @@ class _SyncPageState extends State<SyncPage> {
       FilledButton.tonalIcon(
         key: const ValueKey('sync-add-device'),
         icon: const Icon(Icons.qr_code_2_rounded),
-        label: const Text('Add a device'),
+        label: Text(tr('Add a device')),
         onPressed: _busy != null ? null : _addDevice,
       ),
       const SizedBox(height: 24),
       const _SectionTitle('Sync activity'),
       if (_sync.activity.isEmpty)
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
-          child: Text('Nothing yet.'),
+          child: Text(tr('Nothing yet.')),
         ),
       for (final entry in _sync.activity)
         _ActivityTile(
@@ -246,7 +246,7 @@ class _SyncPageState extends State<SyncPage> {
       OutlinedButton.icon(
         key: const ValueKey('sync-turn-off'),
         icon: const Icon(Icons.sync_disabled_rounded),
-        label: const Text('Turn off sync'),
+        label: Text(tr('Turn off sync')),
         onPressed: _busy != null ? null : _turnOff,
       ),
     ];
@@ -254,9 +254,9 @@ class _SyncPageState extends State<SyncPage> {
 
   Future<void> _rename() async {
     final name = await _askText(
-      title: 'Device name',
+      title: tr('Device name'),
       initial: _sync.config?.deviceName ?? '',
-      label: 'Shown in the device list of your other devices',
+      label: tr('Shown in the device list of your other devices'),
     );
     if (name == null) return;
     await _sync.setDeviceName(name);
@@ -269,7 +269,7 @@ class _SyncPageState extends State<SyncPage> {
         context: context,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning_amber_rounded),
-          title: const Text('Sync SSH keys and passwords?'),
+          title: Text(tr('Sync SSH keys and passwords?')),
           content: const Text(
             'Private keys, their passphrases, saved passwords and hidden '
             'snippets will be copied to every device in this sync group. '
@@ -283,12 +283,12 @@ class _SyncPageState extends State<SyncPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               key: const ValueKey('sync-credentials-confirm'),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Sync them'),
+              child: Text(tr('Sync them')),
             ),
           ],
         ),
@@ -322,11 +322,11 @@ class _SyncPageState extends State<SyncPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
+            child: Text(tr('Remove')),
           ),
         ],
       ),
@@ -351,7 +351,7 @@ class _SyncPageState extends State<SyncPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Turn off sync?'),
+          title: Text(tr('Turn off sync?')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,19 +368,19 @@ class _SyncPageState extends State<SyncPage> {
                 onChanged: (value) =>
                     setState(() => deleteHubData = value ?? false),
                 title: Text('Also delete the sync data on $hubName'),
-                subtitle: const Text('Other devices then stop syncing too.'),
+                subtitle: Text(tr('Other devices then stop syncing too.')),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(tr('Cancel')),
             ),
             FilledButton(
               key: const ValueKey('sync-turn-off-confirm'),
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Turn off'),
+              child: Text(tr('Turn off')),
             ),
           ],
         ),
@@ -412,11 +412,11 @@ class _SyncPageState extends State<SyncPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
-            child: const Text('Save'),
+            child: Text(tr('Save')),
           ),
         ],
       ),
@@ -447,8 +447,7 @@ class _Explainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Sync through your own machine',
+            Text(tr('Sync through your own machine'),
               style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -557,7 +556,7 @@ class _StatusCard extends StatelessWidget {
             FilledButton.icon(
               key: const ValueKey('sync-now'),
               icon: const Icon(Icons.sync_rounded),
-              label: const Text('Sync now'),
+              label: Text(tr('Sync now')),
               onPressed: controller.syncing ? null : onSyncNow,
             ),
           ],
@@ -645,7 +644,7 @@ class _ActivityTile extends StatelessWidget {
       subtitle: Text(describeSyncTime(entry.at)),
       trailing: onKeepMine == null
           ? null
-          : TextButton(onPressed: onKeepMine, child: const Text('Keep mine')),
+          : TextButton(onPressed: onKeepMine, child: Text(tr('Keep mine'))),
     );
   }
 }
@@ -738,15 +737,15 @@ class _SetUpPageState extends State<_SetUpPage> {
     final theme = Theme.of(context);
     final machines = widget.controller.machines;
     return Scaffold(
-      appBar: AppBar(title: const Text('Set up sync')),
+      appBar: AppBar(title: Text(tr('Set up sync'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           DropdownButtonFormField<SavedHost>(
             key: const ValueKey('sync-hub-picker'),
             initialValue: _hub,
-            decoration: const InputDecoration(
-              labelText: 'Hub machine',
+            decoration: InputDecoration(
+              labelText: tr('Hub machine'),
               helperText:
                   'A machine you can reach from every device. Its sync '
                   'data lives in ~/.conductore/sync.',
@@ -778,7 +777,7 @@ class _SetUpPageState extends State<_SetUpPage> {
           TextField(
             controller: _name,
             decoration: InputDecoration(
-              labelText: 'This device\'s name',
+              labelText: tr('This device\'s name'),
               hintText: widget.controller.defaultDeviceName,
             ),
             onSubmitted: _desktop
@@ -794,7 +793,7 @@ class _SetUpPageState extends State<_SetUpPage> {
             FilledButton(
               key: const ValueKey('sync-check-hub'),
               onPressed: _hub == null || _busy ? null : _check,
-              child: const Text('Continue'),
+              child: Text(tr('Continue')),
             )
           else ...[
             Text(
@@ -822,7 +821,7 @@ class _SetUpPageState extends State<_SetUpPage> {
                     }
                   : null,
               decoration: InputDecoration(
-                labelText: 'Sync passphrase',
+                labelText: tr('Sync passphrase'),
                 suffixIcon: IconButton(
                   tooltip: _obscure ? 'Show passphrase' : 'Hide passphrase',
                   onPressed: () => setState(() => _obscure = !_obscure),
@@ -845,8 +844,8 @@ class _SetUpPageState extends State<_SetUpPage> {
                         if (!_busy) _submit();
                       }
                     : null,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm passphrase',
+                decoration: InputDecoration(
+                  labelText: tr('Confirm passphrase'),
                   helperText:
                       'At least 12 characters and three of lowercase, '
                       'uppercase, numbers and symbols.',
@@ -928,7 +927,7 @@ class _JoinPageState extends State<_JoinPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Join sync')),
+      appBar: AppBar(title: Text(tr('Join sync'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -941,7 +940,7 @@ class _JoinPageState extends State<_JoinPage> {
             FilledButton.icon(
               key: const ValueKey('sync-scan'),
               icon: const Icon(Icons.qr_code_scanner_rounded),
-              label: const Text('Scan the QR code'),
+              label: Text(tr('Scan the QR code')),
               onPressed: _busy ? null : _scan,
             ),
             const SizedBox(height: 12),
@@ -951,10 +950,10 @@ class _JoinPageState extends State<_JoinPage> {
             controller: _code,
             minLines: 2,
             maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Setup code',
+            decoration: InputDecoration(
+              labelText: tr('Setup code'),
               hintText: 'conductore-sync:1:…',
-              helperText: 'Paste the code copied on the other device.',
+              helperText: tr('Paste the code copied on the other device.'),
             ),
           ),
           const SizedBox(height: 12),
@@ -964,9 +963,9 @@ class _JoinPageState extends State<_JoinPage> {
             autocorrect: false,
             enableSuggestions: false,
             textInputAction: _desktop ? TextInputAction.next : null,
-            decoration: const InputDecoration(
-              labelText: 'The six words',
-              helperText: 'Type them as shown, separated by spaces.',
+            decoration: InputDecoration(
+              labelText: tr('The six words'),
+              helperText: tr('Type them as shown, separated by spaces.'),
             ),
           ),
           const SizedBox(height: 12),
@@ -977,16 +976,16 @@ class _JoinPageState extends State<_JoinPage> {
                     if (!_busy) _submit();
                   }
                 : null,
-            decoration: const InputDecoration(
-              labelText: 'This device\'s name (optional)',
-              helperText: 'Leave empty for the name given on the other device.',
+            decoration: InputDecoration(
+              labelText: tr('This device\'s name (optional)'),
+              helperText: tr('Leave empty for the name given on the other device.'),
             ),
           ),
           const SizedBox(height: 16),
           FilledButton(
             key: const ValueKey('sync-join-confirm'),
             onPressed: _busy ? null : _submit,
-            child: const Text('Join'),
+            child: Text(tr('Join')),
           ),
           if (_busy) ...[
             const SizedBox(height: 16),
@@ -1032,7 +1031,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add a login key to the hub?'),
+        title: Text(tr('Add a login key to the hub?')),
         content: Text(
           'This adds a new SSH key for "$name" to '
           '${hub.username}@${hub.host}:~/.ssh/authorized_keys, marked '
@@ -1043,12 +1042,12 @@ class _AddDevicePageState extends State<_AddDevicePage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             key: const ValueKey('sync-add-device-confirm'),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Add key'),
+            child: Text(tr('Add key')),
           ),
         ],
       ),
@@ -1093,7 +1092,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
     final theme = Theme.of(context);
     final offer = _offer;
     return Scaffold(
-      appBar: AppBar(title: const Text('Add a device')),
+      appBar: AppBar(title: Text(tr('Add a device'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -1108,7 +1107,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
             TextField(
               key: const ValueKey('sync-new-device-name'),
               controller: _name,
-              decoration: const InputDecoration(labelText: 'New device name'),
+              decoration: InputDecoration(labelText: tr('New device name')),
               onSubmitted: _desktop
                   ? (_) {
                       if (!_busy) _create();
@@ -1119,7 +1118,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
             FilledButton(
               key: const ValueKey('sync-create-pairing'),
               onPressed: _busy ? null : _create,
-              child: const Text('Create setup code'),
+              child: Text(tr('Create setup code')),
             ),
           ] else ...[
             Text(
@@ -1148,7 +1147,7 @@ class _AddDevicePageState extends State<_AddDevicePage> {
             OutlinedButton.icon(
               key: const ValueKey('sync-copy-setup-code'),
               icon: const Icon(Icons.copy_rounded),
-              label: const Text('Copy setup code'),
+              label: Text(tr('Copy setup code')),
               onPressed: () async {
                 await Clipboard.setData(ClipboardData(text: offer.setupCode));
                 if (!context.mounted) return;
@@ -1166,13 +1165,13 @@ class _AddDevicePageState extends State<_AddDevicePage> {
             FilledButton(
               key: const ValueKey('sync-pairing-done'),
               onPressed: _busy ? null : () => Navigator.of(context).pop(),
-              child: const Text('Done'),
+              child: Text(tr('Done')),
             ),
             const SizedBox(height: 8),
             TextButton(
               key: const ValueKey('sync-pairing-cancel'),
               onPressed: _busy ? null : _cancel,
-              child: const Text('Cancel and remove the key'),
+              child: Text(tr('Cancel and remove the key')),
             ),
           ],
           if (_busy) ...[

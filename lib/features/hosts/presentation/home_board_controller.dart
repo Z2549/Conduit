@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:conduit/core/app_failure.dart';
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/data/hc_attention_provider.dart';
 import 'package:conduit/features/agent_attention/data/herdr_attention_provider.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
@@ -836,7 +837,7 @@ class HomeBoardController extends ChangeNotifier {
           phase: HomeBoardPhase.notInstalled,
           tmux: tmuxStatus,
           tmuxSessions: tmuxSessions,
-          message: 'Herdr is not installed on this machine.',
+          message: tr('Herdr is not installed on this machine.'),
           updatedAt: now,
         );
       case LiveServerState.none || LiveServerState.down:
@@ -844,7 +845,7 @@ class HomeBoardController extends ChangeNotifier {
           phase: HomeBoardPhase.notRunning,
           tmux: tmuxStatus,
           tmuxSessions: tmuxSessions,
-          message: 'Herdr is not running on this machine.',
+          message: tr('Herdr is not running on this machine.'),
           updatedAt: now,
         );
       case LiveServerState.unknown || LiveServerState.off:
@@ -1043,7 +1044,7 @@ class HomeBoardController extends ChangeNotifier {
           phase: HomeBoardPhase.notInstalled,
           tmux: tmux,
           tmuxSessions: tmuxSessions,
-          message: 'Herdr is not installed on this machine.',
+          message: tr('Herdr is not installed on this machine.'),
           updatedAt: DateTime.now(),
         );
       case RemoteListingNotRunning<HerdrWorkspaceInfo>(:final message):
@@ -1164,7 +1165,7 @@ class HomeBoardController extends ChangeNotifier {
       case RemoteListingNotInstalled<HcTerminalInfo>():
         return base.copyWith(
           phase: HomeBoardPhase.notInstalled,
-          message: 'hc (herdr-core) is not installed on this machine.',
+          message: tr('hc (herdr-core) is not installed on this machine.'),
         );
       case RemoteListingNotRunning<HcTerminalInfo>(:final message) ||
           RemoteListingFailed<HcTerminalInfo>(:final message):

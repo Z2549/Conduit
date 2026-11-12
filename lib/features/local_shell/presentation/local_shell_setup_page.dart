@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/local_shell/domain/local_shell_distro.dart';
 import 'package:conduit/features/local_shell/presentation/local_shell_controller.dart';
 import 'package:flutter/material.dart';
@@ -74,15 +75,14 @@ class _LocalShellSetupPageState extends State<LocalShellSetupPage> {
     final theme = Theme.of(context);
     final selected = widget.controller.distroById(_distroId);
     return Scaffold(
-      appBar: AppBar(title: const Text('New local shell')),
+      appBar: AppBar(title: Text(tr('New local shell'))),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Run Linux on this phone',
+              Text(tr('Run Linux on this phone'),
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
@@ -111,9 +111,9 @@ class _LocalShellSetupPageState extends State<LocalShellSetupPage> {
                 controller: _nameController,
                 onChanged: (_) => _nameEdited = true,
                 textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  helperText: 'Shown on the home screen and terminal tabs.',
+                decoration: InputDecoration(
+                  labelText: tr('Name'),
+                  helperText: tr('Shown on the home screen and terminal tabs.'),
                 ),
               ),
               const SizedBox(height: 24),

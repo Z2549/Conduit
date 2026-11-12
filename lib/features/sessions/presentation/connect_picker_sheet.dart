@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:conduit/core/connection_problem.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/connection_details.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
@@ -289,19 +290,18 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
-                      'Choose what to attach to',
+                    Text(tr('Choose what to attach to'),
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
               ),
               Tooltip(
-                message: 'Skip the picker next time and reuse this choice',
+                message: tr('Skip the picker next time and reuse this choice'),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Remember', style: theme.textTheme.labelMedium),
+                    Text(tr('Remember'), style: theme.textTheme.labelMedium),
                     Switch(
                       value: _remember,
                       onChanged: (value) => setState(() => _remember = value),
@@ -364,11 +364,11 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                             label: _tabs.length > 3 ? 'App' : 'Herdr app',
                           ),
                         ),
-                        ConnectPickerTab.recent => const ButtonSegment(
+                        ConnectPickerTab.recent => ButtonSegment(
                           value: ConnectPickerTab.recent,
                           label: _TabLabel(
                             icon: Icon(Icons.history_rounded, size: 16),
-                            label: 'Recent',
+                            label: tr('Recent'),
                           ),
                         ),
                       },
@@ -387,9 +387,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                 ),
                 onPressed: () => _pick(const ConnectTarget.shell()),
-                child: const _TabLabel(
+                child: _TabLabel(
                   icon: Icon(Icons.skip_next_rounded, size: 16),
-                  label: 'Skip',
+                  label: tr('Skip'),
                 ),
               ),
             ],
@@ -400,10 +400,10 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: TextField(
               key: const ValueKey('connect-picker-filter'),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 isDense: true,
                 prefixIcon: Icon(Icons.search_rounded, size: 18),
-                hintText: 'Filter',
+                hintText: tr('Filter'),
               ),
               onChanged: (value) => setState(() => _query = value),
             ),
@@ -432,8 +432,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     return [
       ListTile(
         leading: const Icon(Icons.add_circle_outline_rounded),
-        title: const Text('New session'),
-        subtitle: const Text('A named tmux session, in a folder you pick'),
+        title: Text(tr('New session')),
+        subtitle: Text(tr('A named tmux session, in a folder you pick')),
         onTap: () => unawaited(_create(MultiplexerKind.tmux)),
       ),
       if (pending == null)
@@ -447,9 +447,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
               return const _Loading();
             }
             return switch (listing) {
-              RemoteListingNotInstalled() => const _Message(
+              RemoteListingNotInstalled() => _Message(
                 icon: Icons.extension_off_outlined,
-                message: 'tmux is not installed on this machine.',
+                message: tr('tmux is not installed on this machine.'),
               ),
               RemoteListingNotRunning(:final message) => _Message(
                 icon: Icons.power_settings_new_rounded,
@@ -461,9 +461,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
               ),
               RemoteListingAvailable(:final items) =>
                 items.isEmpty
-                    ? const _Message(
+                    ? _Message(
                         icon: Icons.inbox_outlined,
-                        message: 'No tmux sessions are running.',
+                        message: tr('No tmux sessions are running.'),
                       )
                     : Column(
                         children: [
@@ -560,16 +560,15 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
                 ListTile(
                   key: const ValueKey('herdr-new-workspace'),
                   leading: const Icon(Icons.add_circle_outline_rounded),
-                  title: const Text('New workspace'),
-                  subtitle: const Text(
-                    'A Herdr workspace in a folder you pick',
+                  title: Text(tr('New workspace')),
+                  subtitle: Text(tr('A Herdr workspace in a folder you pick'),
                   ),
                   onTap: () => unawaited(_create(MultiplexerKind.herdr)),
                 ),
                 if (items.isEmpty)
-                  const _Message(
+                  _Message(
                     icon: Icons.inbox_outlined,
-                    message: 'Herdr has no workspaces yet.',
+                    message: tr('Herdr has no workspaces yet.'),
                   )
                 else
                   Column(
@@ -670,9 +669,8 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
     final create = ListTile(
       key: const ValueKey('hc-new-agent'),
       leading: const Icon(Icons.add_circle_outline_rounded),
-      title: const Text('New agent'),
-      subtitle: const Text(
-        'A new space in the Herdr app, in a folder you pick',
+      title: Text(tr('New agent')),
+      subtitle: Text(tr('A new space in the Herdr app, in a folder you pick'),
       ),
       onTap: () => unawaited(_create(MultiplexerKind.herdr, herdrApp: true)),
     );
@@ -714,9 +712,9 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
 
   Widget _hcList(List<HcTerminalInfo> terminals) {
     if (terminals.isEmpty) {
-      return const _Message(
+      return _Message(
         icon: Icons.inbox_outlined,
-        message: 'No hc terminals are running.',
+        message: tr('No hc terminals are running.'),
       );
     }
     return FutureBuilder<HcSheprdDocuments>(
@@ -916,8 +914,7 @@ class _ConnectPickerSheetState extends State<ConnectPickerSheet> {
       if (directories.isNotEmpty) ...[
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-          child: Text(
-            'RECENT DIRS',
+          child: Text(tr('RECENT DIRS'),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
               letterSpacing: 1.1,
@@ -1008,7 +1005,7 @@ class _TargetTile extends StatelessWidget {
         children: [
           if (focused) ...[
             Tooltip(
-              message: 'Focused in Herdr',
+              message: tr('Focused in Herdr'),
               child: Container(
                 key: const ValueKey('herdr-focused-dot'),
                 width: 8,
@@ -1033,7 +1030,7 @@ class _TargetTile extends StatelessWidget {
           ),
           if (active) ...[
             const SizedBox(width: 8),
-            const _Badge(label: 'Active', tone: _BadgeTone.success),
+            _Badge(label: tr('Active'), tone: _BadgeTone.success),
           ],
         ],
       ),
@@ -1053,7 +1050,7 @@ class _TargetTile extends StatelessWidget {
                 if (onMore case final onMore?)
                   IconButton(
                     key: const ValueKey('target-tile-more'),
-                    tooltip: 'Read, send, keys',
+                    tooltip: tr('Read, send, keys'),
                     icon: const Icon(Icons.more_vert_rounded),
                     onPressed: onMore,
                   ),
@@ -1186,7 +1183,7 @@ class _Message extends StatelessWidget {
             ConnectionDetails(detail: detail, textAlign: TextAlign.center),
           if (onRetry != null) ...[
             const SizedBox(height: 8),
-            TextButton(onPressed: onRetry, child: const Text('Retry')),
+            TextButton(onPressed: onRetry, child: Text(tr('Retry'))),
           ],
           if (onAction != null && actionLabel != null) ...[
             const SizedBox(height: 8),

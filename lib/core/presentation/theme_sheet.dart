@@ -1,4 +1,5 @@
 import 'package:conduit/core/diagnostics/app_error_log.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -58,7 +59,7 @@ class _ThemeSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text('Appearance', style: theme.textTheme.headlineSmall),
+                      Text(tr('Appearance'), style: theme.textTheme.headlineSmall),
                       const Spacer(),
                       const ConduitGlyph(size: 24),
                     ],
@@ -251,7 +252,7 @@ class TerminalFontControls extends StatelessWidget {
                 children: [
                   const Icon(Icons.format_size_rounded, size: 18),
                   const SizedBox(width: 8),
-                  Text('Font size', style: theme.textTheme.labelLarge),
+                  Text(tr('Font size'), style: theme.textTheme.labelLarge),
                   const Spacer(),
                   Text(
                     controller.terminalFontSize.toStringAsFixed(1),
@@ -321,7 +322,7 @@ class KeyRowsTile extends StatelessWidget {
         children: [
           const Icon(Icons.keyboard_command_key_rounded, size: 18),
           const SizedBox(width: 8),
-          Expanded(child: Text('Key rows', style: theme.textTheme.labelLarge)),
+          Expanded(child: Text(tr('Key rows'), style: theme.textTheme.labelLarge)),
           Text(
             '${controller.terminalKeyboardRows.length}',
             style: theme.textTheme.labelLarge?.copyWith(
@@ -334,7 +335,7 @@ class KeyRowsTile extends StatelessWidget {
             key: const ValueKey('key-rows-edit'),
             onPressed: () => showKeyboardRowsEditor(context, controller),
             icon: const Icon(Icons.tune_rounded, size: 17),
-            label: const Text('Edit'),
+            label: Text(tr('Edit')),
           ),
         ],
       ),
@@ -397,9 +398,9 @@ class _KeyboardRowsEditorState extends State<_KeyboardRowsEditor> {
                     style: theme.textTheme.titleLarge,
                   ),
                   const Spacer(),
-                  TextButton(onPressed: _reset, child: const Text('Reset')),
+                  TextButton(onPressed: _reset, child: Text(tr('Reset'))),
                   IconButton(
-                    tooltip: 'Close',
+                    tooltip: tr('Close'),
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close_rounded),
                   ),
@@ -423,7 +424,7 @@ class _KeyboardRowsEditorState extends State<_KeyboardRowsEditor> {
                     child: OutlinedButton.icon(
                       onPressed: _addRow,
                       icon: const Icon(Icons.add_rounded, size: 17),
-                      label: const Text('Add row'),
+                      label: Text(tr('Add row')),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -431,7 +432,7 @@ class _KeyboardRowsEditorState extends State<_KeyboardRowsEditor> {
                     child: FilledButton.icon(
                       onPressed: () => Navigator.of(context).pop(),
                       icon: const Icon(Icons.check_rounded),
-                      label: const Text('Done'),
+                      label: Text(tr('Done')),
                     ),
                   ),
                 ],
@@ -477,12 +478,12 @@ class _KeyboardRowsEditorState extends State<_KeyboardRowsEditor> {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Edit keys',
+                  tooltip: tr('Edit keys'),
                   onPressed: () => _editRowKeys(index),
                   icon: const Icon(Icons.tune_rounded),
                 ),
                 IconButton(
-                  tooltip: 'Remove row',
+                  tooltip: tr('Remove row'),
                   onPressed: _rows.length == 1 ? null : () => _removeRow(index),
                   icon: const Icon(Icons.remove_circle_outline),
                 ),
@@ -658,7 +659,7 @@ class _KeyboardActionsEditorState extends State<_KeyboardActionsEditor> {
                   const Spacer(),
                   TextButton(onPressed: _addTmux, child: const Text('Tmux')),
                   IconButton(
-                    tooltip: 'Close',
+                    tooltip: tr('Close'),
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.close_rounded),
                   ),
@@ -689,7 +690,7 @@ class _KeyboardActionsEditorState extends State<_KeyboardActionsEditor> {
                     ),
                   ActionChip(
                     avatar: const Icon(Icons.add_rounded, size: 16),
-                    label: const Text('Custom'),
+                    label: Text(tr('Custom')),
                     onPressed: _addCustom,
                   ),
                 ],
@@ -700,7 +701,7 @@ class _KeyboardActionsEditorState extends State<_KeyboardActionsEditor> {
               child: FilledButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.check_rounded),
-                label: const Text('Done'),
+                label: Text(tr('Done')),
               ),
             ),
             Container(height: 1, color: colorScheme.outlineVariant),
@@ -723,7 +724,7 @@ class _KeyboardActionsEditorState extends State<_KeyboardActionsEditor> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              tooltip: 'Remove',
+              tooltip: tr('Remove'),
               onPressed: _selected.length == 1 ? null : () => _remove(index),
               icon: const Icon(Icons.remove_circle_outline),
             ),
@@ -849,16 +850,16 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
     final textMode = _kind == TerminalKeyboardItemKind.customText;
     final controlMode = _kind == TerminalKeyboardItemKind.customControl;
     return AlertDialog(
-      title: const Text('Custom key'),
+      title: Text(tr('Custom key')),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SegmentedButton<TerminalKeyboardItemKind>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: TerminalKeyboardItemKind.customText,
-                  label: Text('Text'),
+                  label: Text(tr('Text')),
                 ),
                 ButtonSegment(
                   value: TerminalKeyboardItemKind.customControl,
@@ -873,8 +874,8 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
             const SizedBox(height: 14),
             TextField(
               controller: _labelController,
-              decoration: const InputDecoration(
-                labelText: 'Label',
+              decoration: InputDecoration(
+                labelText: tr('Label'),
                 border: OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.next,
@@ -887,8 +888,8 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
             if (textMode) ...[
               TextField(
                 controller: _textController,
-                decoration: const InputDecoration(
-                  labelText: 'Text',
+                decoration: InputDecoration(
+                  labelText: tr('Text'),
                   border: OutlineInputBorder(),
                 ),
                 minLines: 1,
@@ -908,13 +909,13 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
                 onChanged: (value) {
                   setState(() => _submit = value ?? false);
                 },
-                title: const Text('Send Enter after text'),
+                title: Text(tr('Send Enter after text')),
               ),
             ] else if (controlMode)
               DropdownButtonFormField<String>(
                 initialValue: _controlKey,
-                decoration: const InputDecoration(
-                  labelText: 'Control key',
+                decoration: InputDecoration(
+                  labelText: tr('Control key'),
                   border: OutlineInputBorder(),
                 ),
                 items: [
@@ -933,9 +934,9 @@ class _CustomKeyboardItemDialogState extends State<_CustomKeyboardItemDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
-        FilledButton(onPressed: _submitItem, child: const Text('Add')),
+        FilledButton(onPressed: _submitItem, child: Text(tr('Add'))),
       ],
     );
   }
@@ -1069,8 +1070,7 @@ class ThemeGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (following) ...[
-          Text(
-            'Picking a theme below stops following the machine.',
+          Text(tr('Picking a theme below stops following the machine.'),
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 10),
@@ -1082,11 +1082,11 @@ class ThemeGrid extends StatelessWidget {
           ),
           const SizedBox(height: 14),
         ],
-        Text('Dark', style: theme.textTheme.labelMedium),
+        Text(tr('Dark'), style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         grid(dark),
         const SizedBox(height: 14),
-        Text('Light', style: theme.textTheme.labelMedium),
+        Text(tr('Light'), style: theme.textTheme.labelMedium),
         const SizedBox(height: 8),
         grid(light),
       ],
@@ -1250,8 +1250,7 @@ class _OmarchySyncControlsState extends State<OmarchySyncControls> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Follow Omarchy theme from machine',
+                  Text(tr('Follow Omarchy theme from machine'),
                     style: theme.textTheme.labelLarge,
                   ),
                   const SizedBox(height: 8),
@@ -1260,7 +1259,7 @@ class _OmarchySyncControlsState extends State<OmarchySyncControls> {
                     initialValue: known ? hostId : null,
                     isExpanded: true,
                     items: [
-                      const DropdownMenuItem<String?>(child: Text('None')),
+                      DropdownMenuItem<String?>(child: Text(tr('None'))),
                       for (final host in machines)
                         DropdownMenuItem<String?>(
                           value: host.id,
@@ -1292,7 +1291,7 @@ class _OmarchySyncControlsState extends State<OmarchySyncControls> {
                               ? null
                               : () => sync.refresh(explicit: true),
                           icon: const Icon(Icons.sync_rounded, size: 18),
-                          label: const Text('Sync now'),
+                          label: Text(tr('Sync now')),
                         ),
                       ],
                     ),
@@ -1381,8 +1380,7 @@ class AboutControls extends StatelessWidget {
           },
         ),
         const SizedBox(height: 4),
-        Text(
-          'Based on Conduit by gwitko (Apache-2.0)',
+        Text(tr('Based on Conduit by gwitko (Apache-2.0)'),
           key: const ValueKey('about-upstream-credit'),
           style: muted,
         ),
@@ -1396,7 +1394,7 @@ class AboutControls extends StatelessWidget {
               applicationLegalese: 'Based on Conduit by gwitko (Apache-2.0)',
             ),
             icon: const Icon(Icons.description_outlined, size: 18),
-            label: const Text('Open-source licenses'),
+            label: Text(tr('Open-source licenses')),
           ),
         ),
         const _ErrorLogButton(),
@@ -1444,11 +1442,11 @@ Future<void> showRecentErrors(BuildContext context, AppErrorLog log) {
       final entries = log.entries.reversed.toList();
       return AlertDialog(
         key: const ValueKey('recent-errors'),
-        title: const Text('Recent errors'),
+        title: Text(tr('Recent errors')),
         content: SizedBox(
           width: double.maxFinite,
           child: entries.isEmpty
-              ? const Text('No errors since the app started.')
+              ? Text(tr('No errors since the app started.'))
               : ListView(
                   shrinkWrap: true,
                   children: [
@@ -1483,7 +1481,7 @@ Future<void> showRecentErrors(BuildContext context, AppErrorLog log) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
+            child: Text(tr('Close')),
           ),
           if (entries.isNotEmpty)
             FilledButton(
@@ -1493,9 +1491,9 @@ Future<void> showRecentErrors(BuildContext context, AppErrorLog log) {
                 if (!dialogContext.mounted) return;
                 ScaffoldMessenger.maybeOf(
                   dialogContext,
-                )?.showSnackBar(const SnackBar(content: Text('Errors copied')));
+                )?.showSnackBar(SnackBar(content: Text(tr('Errors copied'))));
               },
-              child: const Text('Copy all'),
+              child: Text(tr('Copy all')),
             ),
         ],
       );

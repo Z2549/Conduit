@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -32,8 +33,8 @@ class MultiplexerPrefixField extends StatelessWidget {
         }
       },
       child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Multiplexer prefix (tmux/Herdr)',
+        decoration: InputDecoration(
+          labelText: tr('Multiplexer prefix (tmux/Herdr)'),
           helperText:
               'Sent before every tmux and Herdr shortcut: the Tmux, Tmux+ and '
               'Herdr keys, the Herdr navigator and swipe window switching.',
@@ -93,13 +94,12 @@ class _MultiplexerPrefixPickerSheetState
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    'Multiplexer prefix',
+                  child: Text(tr('Multiplexer prefix'),
                     style: theme.textTheme.titleLarge,
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Close',
+                  tooltip: tr('Close'),
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.close_rounded),
                 ),
@@ -144,8 +144,7 @@ class _MultiplexerPrefixPickerSheetState
                         ),
                       ),
                       if (!_value.hasModifier)
-                        Text(
-                          'no modifier',
+                        Text(tr('no modifier'),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -154,7 +153,7 @@ class _MultiplexerPrefixPickerSheetState
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('Presets', style: theme.textTheme.labelLarge),
+                Text(tr('Presets'), style: theme.textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -170,7 +169,7 @@ class _MultiplexerPrefixPickerSheetState
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text('Modifiers', style: theme.textTheme.labelLarge),
+                Text(tr('Modifiers'), style: theme.textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -203,7 +202,7 @@ class _MultiplexerPrefixPickerSheetState
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text('Key', style: theme.textTheme.labelLarge),
+                Text(tr('Key'), style: theme.textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 6,
@@ -234,7 +233,7 @@ class _MultiplexerPrefixPickerSheetState
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
+                    child: Text(tr('Cancel')),
                   ),
                 ),
                 const SizedBox(width: 12),

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agents_icon.dart';
 import 'package:conduit/features/hosts/presentation/widgets/home_session_grid.dart';
@@ -53,7 +54,7 @@ class HomeTopBar extends StatelessWidget {
           if (onAgents != null)
             IconButton(
               key: const ValueKey('home-agents-dashboard'),
-              tooltip: 'Agents',
+              tooltip: tr('Agents'),
               iconSize: 24,
               color: colorScheme.onSurface,
               icon: AgentsIcon(count: agentsBadge),
@@ -62,14 +63,14 @@ class HomeTopBar extends StatelessWidget {
           if (onSearch != null)
             IconButton(
               key: const ValueKey('home-search'),
-              tooltip: 'Switch to…',
+              tooltip: tr('Switch to…'),
               iconSize: 24,
               color: colorScheme.onSurface,
               icon: const Icon(Icons.search_rounded),
               onPressed: onSearch,
             ),
           IconButton(
-            tooltip: 'Settings',
+            tooltip: tr('Settings'),
             iconSize: 26,
             color: colorScheme.onSurface,
             icon: const Icon(Icons.settings_outlined),

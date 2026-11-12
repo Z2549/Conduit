@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
@@ -27,8 +28,7 @@ class ImageFileView extends StatelessWidget {
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) => Padding(
             padding: const EdgeInsets.all(24),
-            child: Text(
-              'Could not decode this image.',
+            child: Text(tr('Could not decode this image.'),
               style: TextStyle(color: palette.mutedForegroundFor(brightness)),
             ),
           ),

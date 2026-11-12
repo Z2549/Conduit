@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -410,7 +411,7 @@ class _CodeBlock extends StatelessWidget {
             right: 2,
             child: IconButton(
               key: const ValueKey('markdown-code-copy'),
-              tooltip: 'Copy code',
+              tooltip: tr('Copy code'),
               visualDensity: VisualDensity.compact,
               iconSize: 16,
               color: scheme.onSurfaceVariant,
@@ -418,7 +419,7 @@ class _CodeBlock extends StatelessWidget {
                 unawaited(Clipboard.setData(ClipboardData(text: code)));
                 ScaffoldMessenger.maybeOf(context)
                   ?..hideCurrentSnackBar()
-                  ..showSnackBar(const SnackBar(content: Text('Code copied')));
+                  ..showSnackBar(SnackBar(content: Text(tr('Code copied'))));
               },
               icon: const Icon(Icons.copy_rounded),
             ),
@@ -575,7 +576,7 @@ class MarkdownTableView extends StatelessWidget {
                   textStyle: theme.textTheme.labelSmall,
                 ),
                 icon: const Icon(Icons.open_in_full_rounded, size: 14),
-                label: const Text('Open table'),
+                label: Text(tr('Open table')),
               ),
             ),
           ],

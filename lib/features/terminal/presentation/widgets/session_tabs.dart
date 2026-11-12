@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -366,7 +367,7 @@ class _Tab extends StatelessWidget {
                     width: 26,
                     height: 26,
                     child: IconButton(
-                      tooltip: 'Close',
+                      tooltip: tr('Close'),
                       iconSize: 14,
                       padding: EdgeInsets.zero,
                       color: muted,

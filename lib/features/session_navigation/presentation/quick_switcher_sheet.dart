@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -228,8 +229,7 @@ class _QuickSwitcherSheetState extends State<QuickSwitcherSheet> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            'Switch to',
+                          child: Text(tr('Switch to'),
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w800,
                             ),
@@ -237,20 +237,20 @@ class _QuickSwitcherSheetState extends State<QuickSwitcherSheet> {
                         ),
                         if (widget.canShowGrid)
                           IconButton(
-                            tooltip: 'Session grid',
+                            tooltip: tr('Session grid'),
                             icon: const Icon(Icons.grid_view_rounded),
                             onPressed: () =>
                                 _choose(const QuickSwitcherShowGrid()),
                           ),
                         if (widget.canCreate)
                           IconButton(
-                            tooltip: 'New session',
+                            tooltip: tr('New session'),
                             icon: const Icon(Icons.add_rounded),
                             onPressed: () =>
                                 _choose(const QuickSwitcherNewSession()),
                           ),
                         IconButton(
-                          tooltip: 'Close',
+                          tooltip: tr('Close'),
                           icon: const Icon(Icons.close_rounded),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
@@ -270,7 +270,7 @@ class _QuickSwitcherSheetState extends State<QuickSwitcherSheet> {
                       decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: const Icon(Icons.search_rounded),
-                        hintText: 'Workspace, folder, agent, machine, project…',
+                        hintText: tr('Workspace, folder, agent, machine, project…'),
                         border: OutlineInputBorder(
                           borderRadius: AppTheme.borderRadius,
                         ),

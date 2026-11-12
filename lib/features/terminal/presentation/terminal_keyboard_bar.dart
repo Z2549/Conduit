@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
 import 'package:conduit/core/theme/app_palette.dart';
 import 'package:conduit/core/theme/app_theme.dart';
@@ -238,7 +239,7 @@ class TerminalKeyboardBar extends StatelessWidget {
       ),
       TerminalKeyboardAction.functionKeys => _MenuKey<TerminalKey>(
         label: 'Fn',
-        tooltip: 'Function keys',
+        tooltip: tr('Function keys'),
         palette: palette,
         brightness: brightness,
         onSelected: _sendKey,
@@ -262,7 +263,7 @@ class TerminalKeyboardBar extends StatelessWidget {
       ),
       TerminalKeyboardAction.tmuxMenu => _MenuKey<_TmuxAction>(
         label: 'Tmux+',
-        tooltip: 'Tmux actions',
+        tooltip: tr('Tmux actions'),
         palette: palette,
         brightness: brightness,
         onSelected: _triggerTmuxAction,
@@ -283,7 +284,7 @@ class TerminalKeyboardBar extends StatelessWidget {
       ),
       TerminalKeyboardAction.herdrMenu => _MenuKey<HerdrShortcut>(
         label: 'Herdr',
-        tooltip: 'Herdr actions',
+        tooltip: tr('Herdr actions'),
         palette: palette,
         brightness: brightness,
         onSelected: _triggerHerdrAction,
@@ -1101,7 +1102,7 @@ class _TouchModeKeyState extends State<_TouchModeKey> {
           label: semanticsLabel,
           button: true,
           child: PopupMenuButton<_TouchModeMenuAction>(
-            tooltip: 'Touch mode',
+            tooltip: tr('Touch mode'),
             onSelected: _handleMenuAction,
             itemBuilder: _buildMenuItems,
             child: Container(
@@ -1197,7 +1198,7 @@ class _TouchModeKeyState extends State<_TouchModeKey> {
       toggleItem(
         value: _TouchModeMenuAction.toggleMouseInput,
         checked: widget.mouseInputEnabled,
-        title: 'Send mouse taps',
+        title: tr('Send mouse taps'),
         subtitle:
             'Taps become terminal mouse clicks when the remote app tracks '
             'the mouse. Applies to all sessions.',
@@ -1205,7 +1206,7 @@ class _TouchModeKeyState extends State<_TouchModeKey> {
       toggleItem(
         value: _TouchModeMenuAction.toggleScrollMode,
         checked: widget.tmuxScrollMode,
-        title: 'Scrollback mode',
+        title: tr('Scrollback mode'),
         subtitle:
             'Drag gestures scroll tmux or terminal history. This session '
             'only.',
@@ -1213,8 +1214,7 @@ class _TouchModeKeyState extends State<_TouchModeKey> {
       const PopupMenuDivider(height: 8),
       PopupMenuItem(
         enabled: false,
-        child: Text(
-          'Drag or long press always selects terminal text.',
+        child: Text(tr('Drag or long press always selects terminal text.'),
           style: subtitleStyle,
         ),
       ),

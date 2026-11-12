@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/live_preview/domain/listening_ports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,7 +68,7 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: const Text('Live preview'),
+      title: Text(tr('Live preview')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +88,8 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
             textInputAction: TextInputAction.go,
             onChanged: (_) => setState(() {}),
             onSubmitted: (_) => _submit(),
-            decoration: const InputDecoration(
-              labelText: 'Remote port',
+            decoration: InputDecoration(
+              labelText: tr('Remote port'),
               border: OutlineInputBorder(),
             ),
           ),
@@ -105,8 +106,7 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Looking for listening ports…',
+                    Text(tr('Looking for listening ports…'),
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
@@ -114,15 +114,14 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
               }
               final ports = snapshot.data ?? const <ListeningPort>[];
               if (ports.isEmpty) {
-                return Text(
-                  'No listening ports detected.',
+                return Text(tr('No listening ports detected.'),
                   style: theme.textTheme.bodySmall,
                 );
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Listening now', style: theme.textTheme.labelMedium),
+                  Text(tr('Listening now'), style: theme.textTheme.labelMedium),
                   const SizedBox(height: 6),
                   Wrap(
                     spacing: 6,
@@ -147,11 +146,11 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(tr('Cancel')),
         ),
         FilledButton(
           onPressed: _parsedPort == null ? null : _submit,
-          child: const Text('Open'),
+          child: Text(tr('Open')),
         ),
       ],
     );

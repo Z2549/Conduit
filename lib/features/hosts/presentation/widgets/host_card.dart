@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +141,7 @@ class HostCard extends StatelessWidget {
                     width: 36,
                     height: 36,
                     child: PopupMenuButton<HostAction>(
-                      tooltip: 'Machine options',
+                      tooltip: tr('Machine options'),
                       padding: EdgeInsets.zero,
                       iconSize: 18,
                       onSelected: onAction,
@@ -148,12 +149,12 @@ class HostCard extends StatelessWidget {
                         Icons.more_vert_rounded,
                         color: colorScheme.onSurfaceVariant,
                       ),
-                      itemBuilder: (context) => const [
+                      itemBuilder: (context) => [
                         PopupMenuItem(
                           value: HostAction.connectTo,
                           child: ListTile(
                             leading: Icon(Icons.login_rounded),
-                            title: Text('Connect to…'),
+                            title: Text(tr('Connect to…')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),
@@ -162,7 +163,7 @@ class HostCard extends StatelessWidget {
                           value: HostAction.files,
                           child: ListTile(
                             leading: Icon(Icons.folder_open_outlined),
-                            title: Text('Files'),
+                            title: Text(tr('Files')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),
@@ -171,7 +172,7 @@ class HostCard extends StatelessWidget {
                           value: HostAction.edit,
                           child: ListTile(
                             leading: Icon(Icons.edit_outlined),
-                            title: Text('Edit'),
+                            title: Text(tr('Edit')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),
@@ -180,7 +181,7 @@ class HostCard extends StatelessWidget {
                           value: HostAction.duplicate,
                           child: ListTile(
                             leading: Icon(Icons.copy_rounded),
-                            title: Text('Duplicate'),
+                            title: Text(tr('Duplicate')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),
@@ -189,7 +190,7 @@ class HostCard extends StatelessWidget {
                           value: HostAction.copyAddress,
                           child: ListTile(
                             leading: Icon(Icons.content_copy_rounded),
-                            title: Text('Copy address'),
+                            title: Text(tr('Copy address')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),
@@ -198,7 +199,7 @@ class HostCard extends StatelessWidget {
                           value: HostAction.delete,
                           child: ListTile(
                             leading: Icon(Icons.delete_outline_rounded),
-                            title: Text('Delete'),
+                            title: Text(tr('Delete')),
                             contentPadding: EdgeInsets.zero,
                             minLeadingWidth: 24,
                           ),

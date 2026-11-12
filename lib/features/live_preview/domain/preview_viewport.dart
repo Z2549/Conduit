@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// The device class Live preview emulates.
 ///
 /// The WebView is laid out at [cssWidth] logical pixels and scaled down to
@@ -6,16 +8,16 @@
 /// a layout from it. [phone] is the WebView as it is: the phone's own width
 /// and user agent.
 enum PreviewViewport {
-  phone(label: 'Phone', cssWidth: null, userAgent: null),
+  phone(label: tr('Phone'), cssWidth: null, userAgent: null),
   tablet(
-    label: 'Tablet',
+    label: tr('Tablet'),
     cssWidth: 820,
     userAgent:
         'Mozilla/5.0 (Linux; Android 14; SM-X710) AppleWebKit/537.36 '
         '(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
   ),
   desktop(
-    label: 'Desktop',
+    label: tr('Desktop'),
     cssWidth: 1280,
     userAgent:
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '

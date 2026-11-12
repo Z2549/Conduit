@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/companion_setup/domain/companion_status.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -88,7 +89,7 @@ class CodexTrustCard extends StatelessWidget {
                   ),
                 ),
                 icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                label: const Text('Codex hooks documentation'),
+                label: Text(tr('Codex hooks documentation')),
               ),
             ),
           ],

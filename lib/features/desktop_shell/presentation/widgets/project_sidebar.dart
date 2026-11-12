@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/theme/app_palette.dart';
@@ -307,7 +308,7 @@ class _ProjectSidebarState extends State<ProjectSidebar> {
                 style: const TextStyle(fontSize: 13),
                 decoration: InputDecoration(
                   isDense: true,
-                  hintText: 'Filter projects',
+                  hintText: tr('Filter projects'),
                   prefixIcon: const Icon(Icons.search_rounded, size: 17),
                   prefixIconConstraints: const BoxConstraints(minWidth: 32),
                   contentPadding: const EdgeInsets.symmetric(vertical: 6),
@@ -477,7 +478,7 @@ class _ProjectSidebarState extends State<ProjectSidebar> {
             ? null
             : IconButton(
                 key: ValueKey('project-menu-${project.key}'),
-                tooltip: 'Quick actions and more',
+                tooltip: tr('Quick actions and more'),
                 iconSize: 16,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints.tightFor(
@@ -602,7 +603,7 @@ class _ProjectRow extends StatelessWidget {
               ProjectCounts(project: project),
               IconButton(
                 key: ValueKey('project-menu-${project.key}'),
-                tooltip: 'Quick actions and more',
+                tooltip: tr('Quick actions and more'),
                 iconSize: 16,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints.tightFor(
@@ -731,7 +732,7 @@ class _MemberRow extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Tooltip(
-                      message: 'Kept in active (sheprd)',
+                      message: tr('Kept in active (sheprd)'),
                       child: Icon(
                         Icons.push_pin_rounded,
                         size: 11,

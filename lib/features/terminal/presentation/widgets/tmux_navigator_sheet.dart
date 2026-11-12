@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/adaptive_modal.dart';
 import 'package:conduit/core/presentation/multiplexer_icon.dart';
 import 'package:conduit/core/presentation/system_navigation_insets.dart';
@@ -233,7 +234,7 @@ class _TmuxNavigatorSheetState extends State<TmuxNavigatorSheet> {
               else if (widget.load != null)
                 IconButton(
                   key: const ValueKey('tmux-refresh'),
-                  tooltip: 'Refresh panes',
+                  tooltip: tr('Refresh panes'),
                   visualDensity: VisualDensity.compact,
                   onPressed: _refresh,
                   icon: const Icon(Icons.refresh_rounded),
@@ -248,7 +249,7 @@ class _TmuxNavigatorSheetState extends State<TmuxNavigatorSheet> {
                 child: ActionChip(
                   key: const ValueKey('tmux-cd-to'),
                   avatar: const Icon(Icons.folder_open_rounded, size: 16),
-                  label: const Text('cd to…'),
+                  label: Text(tr('cd to…')),
                   onPressed: () => _pick(const TmuxCdToPick()),
                 ),
               ),
@@ -530,8 +531,7 @@ class _TmuxNavigatorSheetState extends State<TmuxNavigatorSheet> {
                       color: accent.withValues(alpha: 0.16),
                       borderRadius: BorderRadius.circular(AppTheme.radius),
                     ),
-                    child: Text(
-                      'Current',
+                    child: Text(tr('Current'),
                       style: TextStyle(
                         color: accent,
                         fontSize: 11,

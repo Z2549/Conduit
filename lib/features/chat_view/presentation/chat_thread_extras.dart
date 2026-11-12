@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_messaging/data/agent_messenger.dart';
 import 'package:conduit/features/agent_messaging/presentation/agent_message_sheet.dart';
 import 'package:conduit/features/chat_view/domain/chat_items.dart';
@@ -393,8 +394,8 @@ mixin ChatThreadExtras on State<ChatViewPage> {
     final targets = _targets();
     if (targets.isEmpty) {
       messenger?.showSnackBar(
-        const SnackBar(
-          content: Text('No other agent is running on a monitored machine.'),
+        SnackBar(
+          content: Text(tr('No other agent is running on a monitored machine.')),
         ),
       );
       return;

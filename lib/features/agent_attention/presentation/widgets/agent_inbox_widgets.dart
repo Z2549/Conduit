@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/theme/app_theme.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/approval_widgets.dart';
@@ -218,19 +219,19 @@ class _RingPainter extends CustomPainter {
   ColorScheme scheme,
 ) {
   if (agent.pendingRequests.isNotEmpty) {
-    return (label: 'Approval', color: scheme.error);
+    return (label: tr('Approval'), color: scheme.error);
   }
   return switch (agent.state) {
-    AgentAttentionState.working => (label: 'Working', color: scheme.primary),
+    AgentAttentionState.working => (label: tr('Working'), color: scheme.primary),
     AgentAttentionState.needsInput => (
-      label: 'Needs input',
+      label: tr('Needs input'),
       color: scheme.error,
     ),
-    AgentAttentionState.blocked => (label: 'Blocked', color: scheme.error),
-    AgentAttentionState.finished => (label: 'Done', color: scheme.tertiary),
-    AgentAttentionState.idle => (label: 'Idle', color: scheme.onSurfaceVariant),
+    AgentAttentionState.blocked => (label: tr('Blocked'), color: scheme.error),
+    AgentAttentionState.finished => (label: tr('Done'), color: scheme.tertiary),
+    AgentAttentionState.idle => (label: tr('Idle'), color: scheme.onSurfaceVariant),
     AgentAttentionState.unknown => (
-      label: 'Unknown',
+      label: tr('Unknown'),
       color: scheme.onSurfaceVariant,
     ),
   };

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/presentation/theme_sheet.dart';
 import 'package:conduit/features/agent_attention/presentation/widgets/agent_inbox_widgets.dart';
 import 'package:conduit/features/agents_digest/data/digest_preferences.dart';
@@ -34,7 +35,7 @@ class DigestSettingsCards extends StatelessWidget {
               key: const ValueKey('settings-digest-summaries'),
               switchKey: const ValueKey('settings-digest-summaries-switch'),
               icon: Icons.auto_awesome_outlined,
-              title: 'Summaries by an agent',
+              title: tr('Summaries by an agent'),
               subtitle:
                   'A one- or two-sentence summary per agent, written by a '
                   'coding agent on the machine (Claude Haiku, Codex or '
@@ -49,7 +50,7 @@ class DigestSettingsCards extends StatelessWidget {
               child: ListTile(
                 key: const ValueKey('settings-digest-only-changed'),
                 leading: const Icon(Icons.filter_alt_outlined),
-                title: const Text('Only for agents that changed'),
+                title: Text(tr('Only for agents that changed')),
                 subtitle: Text(
                   'Always on. An agent is summarised again only when it did '
                   'something since its last summary; the others keep their '
@@ -65,7 +66,7 @@ class DigestSettingsCards extends StatelessWidget {
                 children: [
                   _ThresholdTile(
                     key: const ValueKey('settings-digest-working'),
-                    title: 'Working without edits',
+                    title: tr('Working without edits'),
                     unit: 'min',
                     value: thresholds.workingMinutes,
                     fallback: defaults.workingMinutes,
@@ -76,7 +77,7 @@ class DigestSettingsCards extends StatelessWidget {
                   ),
                   _ThresholdTile(
                     key: const ValueKey('settings-digest-failures'),
-                    title: 'Same failure',
+                    title: tr('Same failure'),
                     unit: 'times',
                     value: thresholds.sameFailures,
                     fallback: defaults.sameFailures,
@@ -87,7 +88,7 @@ class DigestSettingsCards extends StatelessWidget {
                   ),
                   _ThresholdTile(
                     key: const ValueKey('settings-digest-repeats'),
-                    title: 'Same command',
+                    title: tr('Same command'),
                     unit: 'times',
                     value: thresholds.sameCommands,
                     fallback: defaults.sameCommands,
@@ -98,7 +99,7 @@ class DigestSettingsCards extends StatelessWidget {
                   ),
                   _ThresholdTile(
                     key: const ValueKey('settings-digest-approval'),
-                    title: 'Approval waiting',
+                    title: tr('Approval waiting'),
                     unit: 'min',
                     value: thresholds.approvalMinutes,
                     fallback: defaults.approvalMinutes,

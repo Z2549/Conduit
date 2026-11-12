@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/platform_features.dart';
 import 'package:conduit/core/presentation/adaptive_page.dart';
 import 'package:conduit/core/presentation/conduit_brand.dart';
@@ -385,8 +386,7 @@ class _HostFormPageState extends State<HostFormPage> {
           const SizedBox(height: 12),
         ],
         Center(
-          child: Text(
-            'Stored on-device only • never synced to the cloud',
+          child: Text(tr('Stored on-device only • never synced to the cloud'),
             style: theme.textTheme.labelSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -436,7 +436,7 @@ class _HostFormPageState extends State<HostFormPage> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.of(context).maybePop(),
-                        child: const Text('Cancel'),
+                        child: Text(tr('Cancel')),
                       ),
                       Tooltip(
                         message: PlatformFeatures.isDesktop
@@ -539,22 +539,22 @@ class _HostFormPageState extends State<HostFormPage> {
     final label = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Rename hardware key'),
+        title: Text(tr('Rename hardware key')),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(labelText: 'Label'),
+          decoration: InputDecoration(labelText: tr('Label')),
           textInputAction: TextInputAction.done,
           onSubmitted: (value) => Navigator.of(context).pop(value),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
-            child: const Text('Rename'),
+            child: Text(tr('Rename')),
           ),
         ],
       ),
@@ -587,11 +587,11 @@ class _HostFormPageState extends State<HostFormPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
+            child: Text(tr('Remove')),
           ),
         ],
       ),
@@ -695,18 +695,17 @@ class _HostFormPageState extends State<HostFormPage> {
     final replace = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Replace key?'),
-        content: const Text(
-          'The private key field already has content. Replace it?',
+        title: Text(tr('Replace key?')),
+        content: Text(tr('The private key field already has content. Replace it?'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Replace'),
+            child: Text(tr('Replace')),
           ),
         ],
       ),
@@ -728,7 +727,7 @@ class _HostFormPageState extends State<HostFormPage> {
     return showDialog<({String comment, String passphrase})>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Generate Ed25519 key'),
+        title: Text(tr('Generate Ed25519 key')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -741,9 +740,9 @@ class _HostFormPageState extends State<HostFormPage> {
             TextField(
               controller: commentController,
               autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Label',
-                helperText: 'Shown as the key comment.',
+              decoration: InputDecoration(
+                labelText: tr('Label'),
+                helperText: tr('Shown as the key comment.'),
                 helperMaxLines: 2,
               ),
               textInputAction: TextInputAction.next,
@@ -754,9 +753,9 @@ class _HostFormPageState extends State<HostFormPage> {
               controller: passphraseController,
               obscureText: true,
               onSubmitted: (_) => submit(context),
-              decoration: const InputDecoration(
-                labelText: 'Passphrase (optional)',
-                helperText: 'Encrypts the private key. Leave empty for none.',
+              decoration: InputDecoration(
+                labelText: tr('Passphrase (optional)'),
+                helperText: tr('Encrypts the private key. Leave empty for none.'),
                 helperMaxLines: 2,
               ),
               textInputAction: TextInputAction.done,
@@ -766,12 +765,12 @@ class _HostFormPageState extends State<HostFormPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(tr('Cancel')),
           ),
           FilledButton.icon(
             onPressed: () => submit(context),
             icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-            label: const Text('Generate'),
+            label: Text(tr('Generate')),
           ),
         ],
       ),
