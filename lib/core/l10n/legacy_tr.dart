@@ -17,3 +17,15 @@ String tr(String english) {
   }
   return legacyZh[english] ?? english;
 }
+
+/// [tr] for a sentence with values in it: `{name}` is replaced by the value.
+///
+/// The English template is the key, so a translated sentence keeps the
+/// placeholder wherever Chinese puts it.
+String trf(String english, Map<String, String> values) {
+  var out = tr(english);
+  for (final entry in values.entries) {
+    out = out.replaceAll('{${entry.key}}', entry.value);
+  }
+  return out;
+}

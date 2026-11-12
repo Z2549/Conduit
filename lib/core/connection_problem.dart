@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:dartssh2/dartssh2.dart';
 import 'package:fido2/fido2_client.dart';
 import 'package:flutter/foundation.dart';
@@ -201,22 +202,32 @@ ConnectionProblem? connectionProblemOfKind(
     case ConnectionProblemKind.unreachable:
       return ConnectionProblem(
         kind: kind,
-        title: "Can't reach $name",
+        title: trf("Can't reach {name}", {'name': name}),
         message: isTailscaleAddress(address)
-            ? 'This machine is on your Tailscale network. Check that '
-                  'Tailscale is on, then '
-                  '${retryLabel == null ? 'try again' : 'tap $retryLabel'}.'
-            : "Your device couldn't connect to ${address.trim()}. "
-                  'Check your network.',
+            ? trf(
+                'This machine is on your Tailscale network. Check that '
+                'Tailscale is on, then {action}.',
+                {
+                  'action': retryLabel == null
+                      ? tr('try again')
+                      : trf('tap {label}', {'label': retryLabel}),
+                },
+              )
+            : trf(
+                "Your device couldn't connect to {address}. "
+                'Check your network.',
+                {'address': address.trim()},
+              ),
         detail: shownDetail,
       );
     case ConnectionProblemKind.authentication:
       return ConnectionProblem(
         kind: kind,
-        title: 'Sign-in to $name failed',
-        message:
-            'The machine answered but did not accept the saved sign-in. '
-            'Check the user name and the key or password saved for it.',
+        title: trf('Sign-in to {name} failed', {'name': name}),
+        message: tr(
+          'The machine answered but did not accept the saved sign-in. '
+          'Check the user name and the key or password saved for it.',
+        ),
         detail: shownDetail,
       );
     case ConnectionProblemKind.hostKey:
