@@ -52,9 +52,9 @@ class PersonalQuickActionsCard extends StatelessWidget {
             ],
           ),
           Text(
-            'Your own commands, prompts and links, shown with each '
-            "project's actions (the repo's .code-workspace ones). Synced "
-            'to your devices.',
+            tr('Your own commands, prompts and links, shown with each '
+                "project's actions (the repo's .code-workspace ones). Synced "
+                'to your devices.'),
             style: textTheme.bodySmall,
           ),
           for (final action in actions)

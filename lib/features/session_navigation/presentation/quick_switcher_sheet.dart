@@ -294,8 +294,10 @@ class _QuickSwitcherSheetState extends State<QuickSwitcherSheet> {
                               padding: const EdgeInsets.all(24),
                               child: Text(
                                 _search.text.trim().isEmpty
-                                    ? 'Nothing open yet.'
-                                    : 'Nothing matches "${_search.text.trim()}".',
+                                    ? tr('Nothing open yet.')
+                                    : trf('Nothing matches "{query}".', {
+                                        'query': _search.text.trim(),
+                                      }),
                                 style: TextStyle(color: muted),
                               ),
                             ),

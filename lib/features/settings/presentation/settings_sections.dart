@@ -320,7 +320,7 @@ class SettingsSectionBody extends StatelessWidget {
         child: ListTile(
           key: const ValueKey('settings-customize-keys'),
           leading: const Icon(Icons.view_week_outlined),
-          title: const Text(customizeKeysTitle),
+          title: Text(customizeKeysTitle),
           subtitle: Text(
             pill
                 ? '${theme.terminalPillItems.length} buttons on the floating '
@@ -420,7 +420,7 @@ class SettingsSectionBody extends StatelessWidget {
             child: ListTile(
               key: const ValueKey('settings-voice-guide'),
               leading: const Icon(Icons.headset_mic_outlined),
-              title: const Text(voiceGuideTitle),
+              title: Text(voiceGuideTitle),
               subtitle: Text(
                 voice.guide.enabled
                     ? tr('On. Talk to all your agents hands-free.')
@@ -937,7 +937,7 @@ class _SettingsAdvancedState extends State<SettingsAdvanced>
       collapsedShape: const Border(),
       leading: const Icon(Icons.tune_rounded),
       title: Text(
-        settingsAdvanced,
+        tr(settingsAdvanced),
         style: theme.textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.w800,
         ),
@@ -1190,7 +1190,7 @@ class _RelockDelayTile extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-relock'),
             leading: const Icon(Icons.timer_outlined),
-            title: const Text(relockDelayTitle),
+            title: Text(relockDelayTitle),
             subtitle: Text.rich(
               TextSpan(
                 children: [

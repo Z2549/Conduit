@@ -29,31 +29,35 @@ import 'package:flutter/services.dart';
 /// * macOS uses Cmd, which never reaches the shell (iTerm2's Cmd+D /
 ///   Cmd+Shift+D split, Cmd+Option+arrows move).
 enum DesktopAction {
-  zoomIn(tr('Zoom in')),
-  zoomOut(tr('Zoom out')),
-  zoomReset(tr('Reset zoom')),
-  newSession(tr('New session on this machine')),
-  closeSession(tr('Close session')),
-  nextSession(tr('Next session')),
-  previousSession(tr('Previous session')),
-  goToSession(tr('Go to session 1 to 9')),
-  toggleFullscreen(tr('Fullscreen terminal')),
-  showShortcuts(tr('Keyboard shortcuts')),
-  splitRight(tr('Split right')),
-  splitDown(tr('Split down')),
+  zoomIn('Zoom in'),
+  zoomOut('Zoom out'),
+  zoomReset('Reset zoom'),
+  newSession('New session on this machine'),
+  closeSession('Close session'),
+  nextSession('Next session'),
+  previousSession('Previous session'),
+  goToSession('Go to session 1 to 9'),
+  toggleFullscreen('Fullscreen terminal'),
+  showShortcuts('Keyboard shortcuts'),
+  splitRight('Split right'),
+  splitDown('Split down'),
 
   /// [DesktopShortcutMatch.index]: 0 left, 1 right, 2 up, 3 down.
-  focusPane(tr('Move between splits')),
-  nextUnread(tr('Next unread')),
+  focusPane('Move between splits'),
+  nextUnread('Next unread'),
 
   /// The desktop shell's command palette (every action, session, agent).
-  commandPalette(tr('Command palette')),
-  openSettings(tr('Settings')),
-  toggleSidebar(tr('Show or hide the sidebar'));
+  commandPalette('Command palette'),
+  openSettings('Settings'),
+  toggleSidebar('Show or hide the sidebar');
 
-  const DesktopAction(this.label);
+  const DesktopAction(this._label);
 
-  final String label;
+  final String _label;
+
+  /// The English stored in the enum is the lookup key: an enum value is a
+  /// compile-time constant, so the translation happens when it is read.
+  String get label => tr(_label);
 }
 
 /// A matched shortcut; [index] is the zero-based session for

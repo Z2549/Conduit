@@ -1298,8 +1298,8 @@ class _OmarchySyncControlsState extends State<OmarchySyncControls> {
                   ] else ...[
                     const SizedBox(height: 6),
                     Text(
-                      'Reads the theme and font of an Omarchy PC over SSH '
-                      'when the app starts or comes back.',
+                      tr('Reads the theme and font of an Omarchy PC over SSH '
+                          'when the app starts or comes back.'),
                       style: theme.textTheme.bodySmall,
                     ),
                   ],

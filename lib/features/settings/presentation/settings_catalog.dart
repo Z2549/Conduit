@@ -66,11 +66,11 @@ enum SettingsSection {
 const settingsAdvanced = 'Advanced';
 
 /// The Chat & Voice row that opens the voice guide's page.
-const voiceGuideTitle = 'Voice guide';
+String get voiceGuideTitle => tr('Voice guide');
 
 /// Settings › Input: the editor of the toolbar in use (the pill's buttons
 /// by default, else the key rows).
-const customizeKeysTitle = 'Customize keys';
+String get customizeKeysTitle => tr('Customize keys');
 
 /// One setting as Settings search finds it: the [title] shown on its
 /// section page, and extra words people may type for it.
@@ -132,21 +132,21 @@ const _herdrFocusKeywords = [
 ];
 
 /// The app lock's timer, under App lock (CON-120).
-const relockDelayTitle = 'Ask again after';
+String get relockDelayTitle => tr('Ask again after');
 
 /// The wakelock setting (CON-089).
-const keepScreenOnTitle = 'Keep screen on while a terminal is open';
+String get keepScreenOnTitle => tr('Keep screen on while a terminal is open');
 
 /// The SSH keep-alive setting (CON-089).
-const sshKeepaliveTitle = 'SSH keepalive';
+String get sshKeepaliveTitle => tr('SSH keepalive');
 
 /// The "Sync with sheprd" setting (CON-077).
-const sheprdSyncTitle = 'Sync with sheprd';
+String get sheprdSyncTitle => tr('Sync with sheprd');
 
 /// The Herdr focus setting's title on this build.
 String get herdrMayMoveFocusTitle => PlatformFeatures.isDesktop
-    ? 'This device may move Herdr focus'
-    : 'Phone may move Herdr focus';
+    ? tr('This device may move Herdr focus')
+    : tr('Phone may move Herdr focus');
 bool _speech(SettingsServices _) =>
     PlatformFeatures.dictation || PlatformFeatures.textToSpeech;
 bool _tts(SettingsServices _) => PlatformFeatures.textToSpeech;

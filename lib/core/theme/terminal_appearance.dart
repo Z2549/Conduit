@@ -41,9 +41,9 @@ enum MultiplexerTabsMode {
   off;
 
   String get label => switch (this) {
-    MultiplexerTabsMode.compact => 'Compact',
-    MultiplexerTabsMode.strip => 'Strip',
-    MultiplexerTabsMode.off => 'Off',
+    MultiplexerTabsMode.compact => tr('Compact'),
+    MultiplexerTabsMode.strip => tr('Strip'),
+    MultiplexerTabsMode.off => tr('Off'),
   };
 }
 
