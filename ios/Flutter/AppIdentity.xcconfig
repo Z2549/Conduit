@@ -3,4 +3,4 @@
 //   xcodebuild ... APP_BUNDLE_ID=com.example.conductore
 // (the release workflow passes the IOS_BUNDLE_ID repository variable).
 APP_BUNDLE_ID = com.outsmartis.conductore
-APP_DISPLAY_NAME = Conductore
+APP_DISPLAY_NAME = Conduit

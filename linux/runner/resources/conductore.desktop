@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Conductore
+Name=Conduit
 Comment=Terminal workspace for Claude Code, Herdr and tmux over SSH and Mosh
 # Edit both paths to where the bundle lives, then copy this file to
 # ~/.local/share/applications/ (see docs/desktop.md).

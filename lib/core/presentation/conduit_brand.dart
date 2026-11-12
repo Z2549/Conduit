@@ -27,7 +27,7 @@ class ConduitWordmark extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Conductore',
+              'Conduit',
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontSize: size * 0.72,
                 height: 1,
