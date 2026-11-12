@@ -159,7 +159,9 @@ void main() {
     // trusted keys read twice.
     // Guards against falling back to one read after another (180 ms in
     // this model), not an exact budget: every new setting adds a read.
-    expect(themeAt, lessThan(180));
+    // The app language is one more startup setting (+6 ms in this model),
+    // so the guard sits one read above the theme's chain.
+    expect(themeAt, lessThan(200));
     expect(homeAt, lessThanOrEqualTo(20));
     expect(duplicates, 0);
 
