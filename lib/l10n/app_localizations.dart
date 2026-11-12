@@ -62,7 +62,8 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,17 +84,18 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('zh')
+    Locale('zh'),
   ];
 
   /// No description provided for @actionCancel.
@@ -3214,9 +3217,178 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'NFC read was interrupted. Keep the key still near the phone; retrying...'**
   String get securityKeyNfcRetrying;
+
+  /// No description provided for @settingsThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'Themes'**
+  String get settingsThemes;
+
+  /// No description provided for @settingsTerminalFont.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal font'**
+  String get settingsTerminalFont;
+
+  /// No description provided for @settingsGestures.
+  ///
+  /// In en, this message translates to:
+  /// **'Gestures'**
+  String get settingsGestures;
+
+  /// No description provided for @settingsThisComputerShell.
+  ///
+  /// In en, this message translates to:
+  /// **'This computer: shell'**
+  String get settingsThisComputerShell;
+
+  /// No description provided for @settingsGlobalSnippets.
+  ///
+  /// In en, this message translates to:
+  /// **'Global snippets'**
+  String get settingsGlobalSnippets;
+
+  /// No description provided for @settingsSendMouseTaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Send mouse taps'**
+  String get settingsSendMouseTaps;
+
+  /// No description provided for @settingsRemoteClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote clipboard'**
+  String get settingsRemoteClipboard;
+
+  /// No description provided for @settingsMenuButtons.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu buttons'**
+  String get settingsMenuButtons;
+
+  /// No description provided for @settingsPasteImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste images as uploaded files'**
+  String get settingsPasteImages;
+
+  /// No description provided for @settingsRestoreSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore sessions on launch'**
+  String get settingsRestoreSessions;
+
+  /// No description provided for @settingsMultiplexerTabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplexer tabs on phone'**
+  String get settingsMultiplexerTabs;
+
+  /// No description provided for @settingsKeyboardShortcuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard shortcuts'**
+  String get settingsKeyboardShortcuts;
+
+  /// No description provided for @settingsKeyboardShortcutsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every desktop shortcut: tabs, panes, zoom, the quick switcher.'**
+  String get settingsKeyboardShortcutsBody;
+
+  /// No description provided for @settingsToolbarStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Toolbar style'**
+  String get settingsToolbarStyle;
+
+  /// No description provided for @settingsAgentHooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent hooks'**
+  String get settingsAgentHooks;
+
+  /// No description provided for @settingsApprovalRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval rules'**
+  String get settingsApprovalRules;
+
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsNotifications;
+
+  /// No description provided for @settingsDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get settingsDashboard;
+
+  /// No description provided for @settingsUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage'**
+  String get settingsUsage;
+
+  /// No description provided for @settingsDeviceSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Device sync'**
+  String get settingsDeviceSync;
+
+  /// No description provided for @settingsBackupFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file'**
+  String get settingsBackupFile;
+
+  /// No description provided for @settingsAppLock.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get settingsAppLock;
+
+  /// No description provided for @settingsLockNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock now'**
+  String get settingsLockNow;
+
+  /// No description provided for @settingsLockNowBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Closes every session until you unlock.'**
+  String get settingsLockNowBody;
+
+  /// No description provided for @settingsTrustedKeysBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Servers Conductore has connected to before.'**
+  String get settingsTrustedKeysBody;
+
+  /// No description provided for @settingsAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings most people never change'**
+  String get settingsAdvanced;
+
+  /// No description provided for @settingsShowLocalShell.
+  ///
+  /// In en, this message translates to:
+  /// **'Show local shell'**
+  String get settingsShowLocalShell;
+
+  /// No description provided for @settingsShowLocalShellBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the local terminal shortcut on the home screen.'**
+  String get settingsShowLocalShellBody;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -3225,25 +3397,26 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'zh': return AppLocalizationsZh();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

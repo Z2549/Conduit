@@ -85,7 +85,7 @@ class SettingsSectionBody extends StatelessWidget {
     final theme = services.theme;
     return switch (section) {
       SettingsSection.appearance => _appearance(context, theme),
-      SettingsSection.terminal => _terminal(theme),
+      SettingsSection.terminal => _terminal(context, theme),
       SettingsSection.input => _input(context, theme),
       SettingsSection.chatVoice => _chatVoice(context, theme),
       SettingsSection.agents => _agents(context),
@@ -99,7 +99,7 @@ class SettingsSectionBody extends StatelessWidget {
   }
 
   /// Advanced, folded, after the rest; nothing when [children] is empty.
-  List<Widget> _advanced(List<Widget> children) => [
+  List<Widget> _advanced(BuildContext context, List<Widget> children) => [
     if (children.isNotEmpty) ...[
       _gap,
       SettingsAdvanced(
@@ -140,25 +140,25 @@ class SettingsSectionBody extends StatelessWidget {
       ),
       _gap,
     ],
-    const SettingsHeading('Themes'),
+    SettingsHeading(context.l10n.settingsThemes),
     ThemeGrid(controller: theme),
     _gap,
-    const SettingsHeading('Terminal font'),
+    SettingsHeading(context.l10n.settingsTerminalFont),
     TerminalFontControls(controller: theme),
-    ..._advanced([
+    ..._advanced(context, [
       // The proot local shell is Android's; desktops have This computer.
       if (PlatformFeatures.prootLocalShell)
         SettingsSwitchCard(
           icon: Icons.terminal_rounded,
-          title: 'Show local shell',
-          subtitle: 'Show the local terminal shortcut on the home screen.',
+          title: context.l10n.settingsShowLocalShell,
+          subtitle: context.l10n.settingsShowLocalShellBody,
           value: theme.showLocalShell,
           onChanged: theme.setShowLocalShell,
         ),
     ]),
   ];
 
-  List<Widget> _terminal(ThemeController theme) => [
+  List<Widget> _terminal(BuildContext context, ThemeController theme) => [
     if (services.hostsController case final hosts?
         when showsWindowsShellSetting(hosts)) ...[
       ListenableBuilder(
@@ -166,7 +166,7 @@ class SettingsSectionBody extends StatelessWidget {
         builder: (context, _) => SettingsSegmentCard<WindowsShellKind>(
           key: const ValueKey('settings-windows-shell'),
           icon: Icons.computer_rounded,
-          title: 'This computer: shell',
+          title: context.l10n.settingsThisComputerShell,
           description:
               'What a local session on this PC opens. Kept on this device, '
               'never synced.',
@@ -196,7 +196,7 @@ class SettingsSectionBody extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
         child: SnippetListEditor(
-          title: 'Global snippets',
+          title: context.l10n.settingsGlobalSnippets,
           caption: 'Shown in the Snip palette on every machine.',
           snippets: theme.terminalSnippets,
           onChanged: theme.setTerminalSnippets,
@@ -205,10 +205,10 @@ class SettingsSectionBody extends StatelessWidget {
     ),
     _gap,
     SettingsCard(child: PersonalQuickActionsCard(theme: theme)),
-    ..._advanced([
+    ..._advanced(context, [
       SettingsSegmentCard<TerminalEnterSequence>(
         icon: Icons.keyboard_return_rounded,
-        title: 'Enter sends',
+        title: context.l10n.appearanceEnterSends,
         description: theme.terminalEnterSequence.description,
         values: TerminalEnterSequence.values,
         label: (value) => value.label,
@@ -218,7 +218,7 @@ class SettingsSectionBody extends StatelessWidget {
       _gap,
       SettingsSwitchCard(
         icon: Icons.mouse_rounded,
-        title: 'Send mouse taps',
+        title: context.l10n.settingsSendMouseTaps,
         subtitle:
             'Forward terminal taps as mouse clicks when apps enable mouse '
             'tracking.',
@@ -228,7 +228,7 @@ class SettingsSectionBody extends StatelessWidget {
       _gap,
       SettingsSwitchCard(
         icon: Icons.content_paste_go_rounded,
-        title: 'Remote clipboard',
+        title: context.l10n.settingsRemoteClipboard,
         subtitle:
             'Let programs on the host copy to this device (OSC 52: vim, '
             'tmux with set-clipboard on). The host can never read it.',
@@ -238,7 +238,7 @@ class SettingsSectionBody extends StatelessWidget {
       _gap,
       SettingsSwitchCard(
         icon: Icons.smart_button_rounded,
-        title: 'Menu buttons',
+        title: context.l10n.settingsMenuButtons,
         subtitle:
             'Answer numbered menus and y/n prompts (Claude Code, installers) '
             'with buttons above the keyboard bar.',
@@ -249,7 +249,7 @@ class SettingsSectionBody extends StatelessWidget {
       SettingsSwitchCard(
         switchKey: const ValueKey('paste-images-as-files'),
         icon: Icons.image_outlined,
-        title: 'Paste images as uploaded files',
+        title: context.l10n.settingsPasteImages,
         subtitle:
             "Pasting an image uploads it to the machine's share inbox and "
             'pastes its path, which Claude Code reads as an image. Off: '
@@ -261,7 +261,7 @@ class SettingsSectionBody extends StatelessWidget {
       SettingsSwitchCard(
         switchKey: const ValueKey('restore-sessions-switch'),
         icon: Icons.restore_page_rounded,
-        title: 'Restore sessions on launch',
+        title: context.l10n.settingsRestoreSessions,
         subtitle:
             'Bring back the open sessions after the app restarts. tmux and '
             'Herdr sessions reattach; plain shells start fresh.',
@@ -298,7 +298,7 @@ class SettingsSectionBody extends StatelessWidget {
       SettingsSegmentCard<MultiplexerTabsMode>(
         key: const ValueKey('multiplexer-tabs-setting'),
         icon: Icons.tab_rounded,
-        title: 'Multiplexer tabs on phone',
+        title: context.l10n.settingsMultiplexerTabs,
         description:
             'Herdr tabs and tmux windows. Compact names the current one in the '
             'session tab (tap it for the list) and costs no screen space; '
@@ -319,7 +319,7 @@ class SettingsSectionBody extends StatelessWidget {
         child: ListTile(
           key: const ValueKey('settings-customize-keys'),
           leading: const Icon(Icons.view_week_outlined),
-          title: const Text(customizeKeysTitle),
+          title: Text(customizeKeysTitle),
           subtitle: Text(
             pill
                 ? '${theme.terminalPillItems.length} buttons on the floating '
@@ -340,7 +340,7 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-keyboard-shortcuts'),
             leading: const Icon(Icons.keyboard_outlined),
-            title: const Text('Keyboard shortcuts'),
+            title: Text(context.l10n.settingsKeyboardShortcuts),
             subtitle: const Text(
               'Every desktop shortcut: tabs, panes, zoom, the quick switcher.',
             ),
@@ -349,10 +349,10 @@ class SettingsSectionBody extends StatelessWidget {
           ),
         ),
       ],
-      ..._advanced([
+      ..._advanced(context, [
         SettingsSegmentCard<TerminalToolbarStyle>(
           icon: Icons.space_bar_rounded,
-          title: 'Toolbar style',
+          title: context.l10n.settingsToolbarStyle,
           description: theme.terminalToolbarStyle.description,
           values: TerminalToolbarStyle.values,
           label: (value) => value.label,
@@ -362,7 +362,7 @@ class SettingsSectionBody extends StatelessWidget {
         _gap,
         KeyRowsTile(controller: theme),
         _gap,
-        const SettingsHeading('Gestures'),
+        SettingsHeading(context.l10n.settingsGestures),
         TerminalGesturesSettings(controller: theme),
       ]),
     ];
@@ -445,7 +445,7 @@ class SettingsSectionBody extends StatelessWidget {
           'Dictation, read aloud and Talk use the phone\'s speech services, '
           'so they are not available on this device.',
         ),
-      ..._advanced([
+      ..._advanced(context, [
         SettingsSwitchCard(
           switchKey: const ValueKey('compose-submit-enter'),
           icon: Icons.keyboard_return_rounded,
@@ -547,7 +547,7 @@ class SettingsSectionBody extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SettingsHeading('Agent hooks'),
+                SettingsHeading(context.l10n.settingsAgentHooks),
                 const SettingsNote(
                   'The Conductore companion reports coding agent sessions '
                   '(Claude Code, Codex, OpenCode), approvals and usage from '
@@ -566,7 +566,7 @@ class SettingsSectionBody extends StatelessWidget {
                   const SizedBox(height: 10),
                 ],
                 if (attention != null) ...[
-                  const SettingsHeading('Approval rules'),
+                  SettingsHeading(context.l10n.settingsApprovalRules),
                   const SettingsNote(
                     'Rules and time-boxed trust the companion answers by '
                     'itself, per machine. High-risk requests always ask.',
@@ -601,7 +601,7 @@ class SettingsSectionBody extends StatelessWidget {
                     ),
                   const SizedBox(height: 10),
                 ],
-                const SettingsHeading('Notifications'),
+                SettingsHeading(context.l10n.settingsNotifications),
                 SettingsNote(
                   [
                     for (final level in AgentNotifyLevel.values)
@@ -621,7 +621,7 @@ class SettingsSectionBody extends StatelessWidget {
         ),
       if (services.digest case final digest?) ...[
         _gap,
-        const SettingsHeading('Dashboard'),
+        SettingsHeading(context.l10n.settingsDashboard),
         const SettingsNote(
           'The Agents dashboard (home bar) shows what every agent did '
           'since you last looked: files, tests, failures, waiting time, '
@@ -689,7 +689,7 @@ class SettingsSectionBody extends StatelessWidget {
         ],
       if (attention != null) ...[
         _gap,
-        const SettingsHeading('Usage'),
+        SettingsHeading(context.l10n.settingsUsage),
         ListenableBuilder(
           listenable: attention,
           builder: (context, _) => Column(
@@ -711,7 +711,7 @@ class SettingsSectionBody extends StatelessWidget {
           channel: PlatformAgentStatusWidgetChannel.instance,
         ),
       ],
-      ..._advanced([
+      ..._advanced(context, [
         if (hosts != null &&
             attention != null &&
             PlatformFeatures.agentNotifications) ...[
@@ -752,7 +752,7 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-device-sync'),
             leading: const Icon(Icons.devices_rounded),
-            title: const Text('Device sync'),
+            title: Text(context.l10n.settingsDeviceSync),
             subtitle: const Text(
               'Keep machines and settings the same on every device, end-to-'
               'end encrypted through one of your machines. Devices and '
@@ -779,7 +779,7 @@ class SettingsSectionBody extends StatelessWidget {
       ),
       if (backup != null) ...[
         _gap,
-        const SettingsHeading('Backup file'),
+        SettingsHeading(context.l10n.settingsBackupFile),
         const SettingsNote(backupCoverage),
         const SizedBox(height: 10),
         BackupActions(backupService: backup),
@@ -796,8 +796,8 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-lock-now'),
             leading: const Icon(Icons.lock_outline_rounded),
-            title: const Text('Lock now'),
-            subtitle: const Text('Closes every session until you unlock.'),
+            title: Text(context.l10n.settingsLockNow),
+            subtitle: Text(context.l10n.settingsLockNowBody),
             onTap: () async {
               Navigator.of(context).popUntil((route) => route.isFirst);
               await lockNow();
@@ -811,7 +811,7 @@ class SettingsSectionBody extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.fingerprint_rounded),
-              title: const Text('App lock'),
+              title: Text(context.l10n.settingsAppLock),
               subtitle: Text(
                 PlatformFeatures.appLock
                     ? 'On. Conductore asks for your fingerprint, face or '
@@ -832,8 +832,8 @@ class SettingsSectionBody extends StatelessWidget {
           child: ListTile(
             key: const ValueKey('settings-trusted-keys'),
             leading: const Icon(Icons.key_rounded),
-            title: const Text('Trusted host keys'),
-            subtitle: const Text('Servers Conductore has connected to before.'),
+            title: Text(context.l10n.trustedKeysTitle),
+            subtitle: Text(context.l10n.settingsTrustedKeysBody),
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => pushAdaptivePage<void>(
               context,
@@ -942,7 +942,7 @@ class _SettingsAdvancedState extends State<SettingsAdvanced>
           fontWeight: FontWeight.w800,
         ),
       ),
-      subtitle: const Text('Settings most people never change'),
+      subtitle: Text(context.l10n.settingsAdvanced),
       expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
       children: widget.children,
     );

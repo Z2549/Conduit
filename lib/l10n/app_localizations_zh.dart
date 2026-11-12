@@ -530,7 +530,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostFormConnectWithMosh => '使用 Mosh 连接';
 
   @override
-  String get hostFormConnectWithMoshHint => '基于 SSH 的漫游 UDP 会话。需要主机安装 mosh-server 并开放 UDP 端口。';
+  String get hostFormConnectWithMoshHint =>
+      '基于 SSH 的漫游 UDP 会话。需要主机安装 mosh-server 并开放 UDP 端口。';
 
   @override
   String get hostFormMoshLocale => 'Mosh 语言环境';
@@ -542,7 +543,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hostFormMoshPorts => 'Mosh UDP 端口';
 
   @override
-  String get hostFormMoshPortsHint => '端口或端口范围，例如 60000:61000。留空则用 60001:60999。';
+  String get hostFormMoshPortsHint =>
+      '端口或端口范围，例如 60000:61000。留空则用 60001:60999。';
 
   @override
   String get hostFormPredictiveEcho => '预测回显（实验性）';
@@ -593,13 +595,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get authExternalHint => '认证由 Conduit 之外处理时使用，不在应用内存放密码或私钥。';
 
   @override
-  String get authHardwareKeyDetail => '为你持有的每个安全密钥添加 OpenSSH *_sk 存根。连接时，Conduit 会要求你用当前接入的密钥通过 USB 或 NFC 进行签名。';
+  String get authHardwareKeyDetail =>
+      '为你持有的每个安全密钥添加 OpenSSH *_sk 存根。连接时，Conduit 会要求你用当前接入的密钥通过 USB 或 NFC 进行签名。';
 
   @override
   String get hardwareKeysTitle => '硬件密钥';
 
   @override
-  String get hardwareKeysEmpty => '还没有硬件密钥。为该主机要使用的每个安全密钥添加 OpenSSH *_sk 存根，任意一个都能解锁连接。';
+  String get hardwareKeysEmpty =>
+      '还没有硬件密钥。为该主机要使用的每个安全密钥添加 OpenSSH *_sk 存根，任意一个都能解锁连接。';
 
   @override
   String hardwareKeysCount(int count) {
@@ -660,7 +664,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyTitle => '添加硬件密钥';
 
   @override
-  String get addHardwareKeyBody => '导入或粘贴 ssh-keygen 为该安全密钥生成的 OpenSSH *_sk 存根。存根只指向密钥本身，私钥部分始终留在硬件中。';
+  String get addHardwareKeyBody =>
+      '导入或粘贴 ssh-keygen 为该安全密钥生成的 OpenSSH *_sk 存根。存根只指向密钥本身，私钥部分始终留在硬件中。';
 
   @override
   String get addHardwareKeyStubLabel => 'OpenSSH 硬件密钥存根';
@@ -675,7 +680,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyPassphraseHint => '该存根文件已加密。';
 
   @override
-  String get addHardwareKeyLabelHint => '当 Conduit 请求该密钥时显示，例如“5C work”或“NFC backup”。';
+  String get addHardwareKeyLabelHint =>
+      '当 Conduit 请求该密钥时显示，例如“5C work”或“NFC backup”。';
 
   @override
   String get addHardwareKeySubmit => '添加密钥';
@@ -1012,7 +1018,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get localShellSetupTitle => '在手机上运行 Linux';
 
   @override
-  String get localShellSetupBody => '通过 proot 在本机运行的完整 Linux 用户空间——无需服务器，也不需要 root。选择发行版即可，可创建任意多个 Shell，包括同一发行版的多个实例。';
+  String get localShellSetupBody =>
+      '通过 proot 在本机运行的完整 Linux 用户空间——无需服务器，也不需要 root。选择发行版即可，可创建任意多个 Shell，包括同一发行版的多个实例。';
 
   @override
   String get localShellSetupCaption => 'Arch、Debian、Ubuntu、Alpine 等';
@@ -1021,7 +1028,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get localShellInstallHint => '镜像只需下载一次并解压到本机，建议使用 Wi-Fi。';
 
   @override
-  String get localShellLicensesBody => '本地 Shell 基于 proot 与经 Termux 打包的根文件系统镜像，由各上游发行版维护。Conduit 按其各自的开源许可再分发这些内置工具。';
+  String get localShellLicensesBody =>
+      '本地 Shell 基于 proot 与经 Termux 打包的根文件系统镜像，由各上游发行版维护。Conduit 按其各自的开源许可再分发这些内置工具。';
 
   @override
   String get localShellStageUnpacking => '正在解压根文件系统…（可能需要几分钟）';
@@ -1163,7 +1171,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get addHardwareKeyNormalKey => '这是普通私钥，请改用「私钥」方式。';
 
   @override
-  String get addHardwareKeyNotStub => '无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。';
+  String get addHardwareKeyNotStub =>
+      '无法识别为 OpenSSH 安全密钥存根（id_ed25519_sk 或 id_ecdsa_sk）。';
 
   @override
   String get addHardwareKeyDuplicate => '该密钥已添加到此主机。';
@@ -1755,4 +1764,88 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get securityKeyNfcRetrying => 'NFC 读取被中断。请保持密钥贴近手机不动，正在重试…';
+
+  @override
+  String get settingsThemes => '主题';
+
+  @override
+  String get settingsTerminalFont => '终端字体';
+
+  @override
+  String get settingsGestures => '手势';
+
+  @override
+  String get settingsThisComputerShell => '本机：终端';
+
+  @override
+  String get settingsGlobalSnippets => '全局片段';
+
+  @override
+  String get settingsSendMouseTaps => '发送鼠标点击';
+
+  @override
+  String get settingsRemoteClipboard => '远程剪贴板';
+
+  @override
+  String get settingsMenuButtons => '菜单按钮';
+
+  @override
+  String get settingsPasteImages => '粘贴图片时作为文件上传';
+
+  @override
+  String get settingsRestoreSessions => '启动时恢复会话';
+
+  @override
+  String get settingsMultiplexerTabs => '手机上的复用器标签页';
+
+  @override
+  String get settingsKeyboardShortcuts => '键盘快捷键';
+
+  @override
+  String get settingsKeyboardShortcutsBody => '所有桌面快捷键：标签、分屏、缩放、快速切换。';
+
+  @override
+  String get settingsToolbarStyle => '工具栏样式';
+
+  @override
+  String get settingsAgentHooks => 'Agent 钩子';
+
+  @override
+  String get settingsApprovalRules => '审批规则';
+
+  @override
+  String get settingsNotifications => '通知';
+
+  @override
+  String get settingsDashboard => '仪表盘';
+
+  @override
+  String get settingsUsage => '用量';
+
+  @override
+  String get settingsDeviceSync => '设备同步';
+
+  @override
+  String get settingsBackupFile => '备份文件';
+
+  @override
+  String get settingsAppLock => '应用锁';
+
+  @override
+  String get settingsLockNow => '立即锁定';
+
+  @override
+  String get settingsLockNowBody => '锁定后关闭所有会话，解锁后恢复。';
+
+  @override
+  String get settingsTrustedKeysBody => 'Conductore 曾连接过的服务器。';
+
+  @override
+  String get settingsAdvanced => '大多数人不会改的设置';
+
+  @override
+  String get settingsShowLocalShell => '显示本地终端';
+
+  @override
+  String get settingsShowLocalShellBody => '在主屏显示本地终端入口。';
 }
