@@ -319,7 +319,7 @@ class SettingsSectionBody extends StatelessWidget {
         child: ListTile(
           key: const ValueKey('settings-customize-keys'),
           leading: const Icon(Icons.view_week_outlined),
-          title: Text(customizeKeysTitle),
+          title: const Text(customizeKeysTitle),
           subtitle: Text(
             pill
                 ? '${theme.terminalPillItems.length} buttons on the floating '
