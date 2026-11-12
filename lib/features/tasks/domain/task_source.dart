@@ -10,14 +10,16 @@ import 'package:flutter/foundation.dart';
 
 /// Where a status sits in a task's life, whatever the tracker calls it.
 enum TaskStatusCategory {
-  todo(tr('To do')),
-  inProgress(tr('In progress')),
+  todo(('To do')),
+  inProgress(('In progress')),
   done('Done'),
   unknown('Other');
 
-  const TaskStatusCategory(this.label);
+  const TaskStatusCategory(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 
   /// A best guess from a status name (the markdown folder has no
   /// categories of its own).
@@ -230,18 +232,22 @@ abstract interface class WindowedTaskSource implements TaskSource {
 class TaskSourceField {
   const TaskSourceField(
     this.key,
-    this.label, {
+    String label, {
     this.hint = '',
-    this.help,
+    String? help,
     this.required = true,
     this.kind = TaskSourceFieldKind.text,
     this.initial,
-  });
+  })  : _label = label,
+        _help = help;
 
   final String key;
-  final String label;
+  final String _label;
   final String hint;
-  final String? help;
+  final String? _help;
+
+  String get label => tr(_label);
+  String? get help => _help == null ? null : tr(_help!);
   final bool required;
   final TaskSourceFieldKind kind;
   final String? initial;
@@ -253,8 +259,8 @@ enum TaskSourceFieldKind { text, url, email, machine }
 enum TaskSourceKind {
   markdownFolder(
     'markdown',
-    tr('Markdown folder'),
-    tr('One .md file per task (YAML frontmatter) in a folder on a machine, '
+    ('Markdown folder'),
+    ('One .md file per task (YAML frontmatter) in a folder on a machine, '
         'read and written through its companion.'),
     TaskSourceCapabilities(),
     null,
@@ -263,71 +269,71 @@ enum TaskSourceKind {
         'host',
         'Machine',
         kind: TaskSourceFieldKind.machine,
-        help: tr('A machine with the Conductore companion.'),
+        help: ('A machine with the Conductore companion.'),
       ),
       TaskSourceField(
         'folder',
         'Folder',
         hint: '~/tasks/my-project',
-        help: tr('An absolute path (or ~/...). Only this folder is touched.'),
+        help: ('An absolute path (or ~/...). Only this folder is touched.'),
       ),
     ],
   ),
   github(
     'github',
-    tr('GitHub Issues'),
-    tr('Issues of one repository.'),
+    ('GitHub Issues'),
+    ('Issues of one repository.'),
     TaskSourceCapabilities(),
-    tr('Personal access token (Issues: read and write)'),
+    ('Personal access token (Issues: read and write)'),
     [
       TaskSourceField('repo', 'Repository', hint: 'owner/name'),
       TaskSourceField(
         'apiBase',
-        tr('API URL'),
+        ('API URL'),
         hint: 'https://api.github.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: tr('Only for GitHub Enterprise Server (https://host/api/v3).'),
+        help: ('Only for GitHub Enterprise Server (https://host/api/v3).'),
       ),
     ],
   ),
   githubProjects(
     'github-projects',
-    tr('GitHub Projects'),
-    tr('Items of a GitHub project (v2) board and their status field.'),
+    ('GitHub Projects'),
+    ('Items of a GitHub project (v2) board and their status field.'),
     TaskSourceCapabilities(),
-    tr('Personal access token (classic: project, repo; or fine-grained)'),
+    ('Personal access token (classic: project, repo; or fine-grained)'),
     [
       TaskSourceField('owner', 'Owner', hint: 'my-org or my-user'),
-      TaskSourceField('number', tr('Project number'), hint: '3'),
+      TaskSourceField('number', ('Project number'), hint: '3'),
       TaskSourceField(
         'statusField',
-        tr('Status field'),
+        ('Status field'),
         hint: 'Status',
         required: false,
-        help: tr('A single-select field of the project.'),
+        help: ('A single-select field of the project.'),
       ),
       TaskSourceField(
         'apiBase',
-        tr('API URL'),
+        ('API URL'),
         hint: 'https://api.github.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: tr('Only for GitHub Enterprise Server (https://host/api/v3).'),
+        help: ('Only for GitHub Enterprise Server (https://host/api/v3).'),
       ),
     ],
   ),
   gitlab(
     'gitlab',
-    tr('GitLab Issues'),
-    tr('Issues of one project on gitlab.com or your own GitLab.'),
+    ('GitLab Issues'),
+    ('Issues of one project on gitlab.com or your own GitLab.'),
     TaskSourceCapabilities(),
-    tr('Personal access token (scope: api)'),
+    ('Personal access token (scope: api)'),
     [
       TaskSourceField('project', 'Project', hint: 'group/project'),
       TaskSourceField(
         'baseUrl',
-        tr('GitLab URL'),
+        ('GitLab URL'),
         hint: 'https://gitlab.com',
         required: false,
         kind: TaskSourceFieldKind.url,
@@ -336,10 +342,10 @@ enum TaskSourceKind {
   ),
   jira(
     'jira',
-    tr('Jira Cloud'),
-    tr('Issues of a Jira Cloud project (or any JQL).'),
+    ('Jira Cloud'),
+    ('Issues of a Jira Cloud project (or any JQL).'),
     TaskSourceCapabilities(),
-    tr('API token (id.atlassian.com › Security)'),
+    ('API token (id.atlassian.com › Security)'),
     [
       TaskSourceField(
         'site',
@@ -349,64 +355,64 @@ enum TaskSourceKind {
       ),
       TaskSourceField(
         'email',
-        tr('Account email'),
+        ('Account email'),
         kind: TaskSourceFieldKind.email,
       ),
-      TaskSourceField('project', tr('Project key'), hint: 'PROJ', required: false),
+      TaskSourceField('project', ('Project key'), hint: 'PROJ', required: false),
       TaskSourceField(
         'jql',
         'JQL',
-        hint: tr('assignee = currentUser() ORDER BY updated DESC'),
+        hint: ('assignee = currentUser() ORDER BY updated DESC'),
         required: false,
-        help: tr('Overrides the project key.'),
+        help: ('Overrides the project key.'),
       ),
     ],
   ),
   jiraServer(
     'jira-server',
-    tr('Jira Server / Data Center'),
-    tr('Issues of a self-hosted Jira project (or any JQL).'),
+    ('Jira Server / Data Center'),
+    ('Issues of a self-hosted Jira project (or any JQL).'),
     TaskSourceCapabilities(),
-    tr('Personal access token (Profile › Personal Access Tokens)'),
+    ('Personal access token (Profile › Personal Access Tokens)'),
     [
       TaskSourceField(
         'site',
-        tr('Server URL'),
+        ('Server URL'),
         hint: 'https://jira.example.com',
         kind: TaskSourceFieldKind.url,
       ),
-      TaskSourceField('project', tr('Project key'), hint: 'PROJ', required: false),
+      TaskSourceField('project', ('Project key'), hint: 'PROJ', required: false),
       TaskSourceField(
         'jql',
         'JQL',
-        hint: tr('assignee = currentUser() ORDER BY updated DESC'),
+        hint: ('assignee = currentUser() ORDER BY updated DESC'),
         required: false,
-        help: tr('Overrides the project key.'),
+        help: ('Overrides the project key.'),
       ),
     ],
   ),
   linear(
     'linear',
     'Linear',
-    tr('Issues of a Linear team (or every team).'),
+    ('Issues of a Linear team (or every team).'),
     TaskSourceCapabilities(),
-    tr('Personal API key (Settings › Security & access)'),
+    ('Personal API key (Settings › Security & access)'),
     [
       TaskSourceField(
         'team',
-        tr('Team key'),
+        ('Team key'),
         hint: 'ENG',
         required: false,
-        help: tr('Empty: issues of every team you can see.'),
+        help: ('Empty: issues of every team you can see.'),
       ),
     ],
   ),
   trello(
     'trello',
     'Trello',
-    tr("Cards of a Trello board; a card's list is its status."),
+    ("Cards of a Trello board; a card's list is its status."),
     TaskSourceCapabilities(),
-    tr('Token (authorize your API key at trello.com/1/authorize)'),
+    ('Token (authorize your API key at trello.com/1/authorize)'),
     [
       TaskSourceField(
         'board',
@@ -415,9 +421,9 @@ enum TaskSourceKind {
       ),
       TaskSourceField(
         'apiKey',
-        tr('API key'),
+        ('API key'),
         help:
-            tr('From trello.com/power-ups/admin. The key identifies the app; '
+            ('From trello.com/power-ups/admin. The key identifies the app; '
             'the token below is the secret.'),
       ),
     ],
@@ -425,75 +431,79 @@ enum TaskSourceKind {
   clickup(
     'clickup',
     'ClickUp',
-    tr('Tasks of a ClickUp list, with its statuses.'),
+    ('Tasks of a ClickUp list, with its statuses.'),
     TaskSourceCapabilities(),
-    tr('Personal API token (Settings › Apps, starts with pk_)'),
-    [TaskSourceField('list', tr('List id'), hint: 'the number in …/li/<id>')],
+    ('Personal API token (Settings › Apps, starts with pk_)'),
+    [TaskSourceField('list', ('List id'), hint: 'the number in …/li/<id>')],
   ),
   asana(
     'asana',
     'Asana',
-    tr('Tasks of an Asana project; sections are statuses, plus Completed.'),
+    ('Tasks of an Asana project; sections are statuses, plus Completed.'),
     TaskSourceCapabilities(),
-    tr('Personal access token (My settings › Apps › Developer apps)'),
+    ('Personal access token (My settings › Apps › Developer apps)'),
     [
       TaskSourceField(
         'project',
-        tr('Project id'),
+        ('Project id'),
         hint: 'the number in app.asana.com/0/<id>/…',
       ),
     ],
   ),
   notion(
     'notion',
-    tr('Notion database'),
-    tr('Pages of a Notion database, with a status or select property.'),
+    ('Notion database'),
+    ('Pages of a Notion database, with a status or select property.'),
     TaskSourceCapabilities(),
-    tr('Internal integration secret (share the database with the integration)'),
+    ('Internal integration secret (share the database with the integration)'),
     [
-      TaskSourceField('database', 'Database', hint: tr('its id, or its URL')),
+      TaskSourceField('database', 'Database', hint: ('its id, or its URL')),
       TaskSourceField(
         'statusProperty',
-        tr('Status property'),
+        ('Status property'),
         hint: 'Status',
         required: false,
-        help: tr('A status or select property of the database.'),
+        help: ('A status or select property of the database.'),
       ),
     ],
   ),
   azureBoards(
     'azure-boards',
-    tr('Azure Boards'),
-    tr('Work items of an Azure DevOps project.'),
+    ('Azure Boards'),
+    ('Work items of an Azure DevOps project.'),
     TaskSourceCapabilities(),
-    tr('Personal access token (Work Items: read and write)'),
+    ('Personal access token (Work Items: read and write)'),
     [
       TaskSourceField('organization', 'Organization', hint: 'my-org'),
-      TaskSourceField('project', 'Project', hint: tr('My Project')),
+      TaskSourceField('project', 'Project', hint: ('My Project')),
       TaskSourceField(
         'baseUrl',
-        tr('Server URL'),
+        ('Server URL'),
         hint: 'https://dev.azure.com',
         required: false,
         kind: TaskSourceFieldKind.url,
-        help: tr('Only for Azure DevOps Server.'),
+        help: ('Only for Azure DevOps Server.'),
       ),
     ],
   );
 
   const TaskSourceKind(
     this.wire,
-    this.label,
-    this.description,
+    String label,
+    String description,
     this.capabilities,
-    this.tokenLabel,
+    String? tokenLabel,
     this.fields,
-  );
+  )  : _label = label,
+        _description = description;
 
   /// As stored.
   final String wire;
-  final String label;
-  final String description;
+  final String _label;
+  final String _description;
+
+  String get label => tr(_label);
+  String get description => tr(_description);
   final TaskSourceCapabilities capabilities;
 
   /// Null when the source needs no token (the markdown folder).
@@ -540,7 +550,7 @@ class TaskSourceConfig {
     if ((kind == TaskSourceKind.jira || kind == TaskSourceKind.jiraServer) &&
         this['project'] == null &&
         this['jql'] == null) {
-      return tr('Project key or JQL');
+      return ('Project key or JQL');
     }
     return null;
   }
