@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 import 'dart:convert';
 
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
@@ -39,9 +41,11 @@ enum DigestWindow {
   twoHours('Last 2 hours'),
   today('Today');
 
-  const DigestWindow(this.label);
+  const DigestWindow(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 
   static DigestWindow parse(Object? raw) => DigestWindow.values.firstWhere(
     (window) => window.name == raw,

@@ -126,9 +126,9 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                   key: const ValueKey('agent-notify-ongoing'),
                   secondary: const Icon(Icons.view_agenda_outlined),
                   title: Text(tr('Ongoing notification')),
-                  subtitle: const Text(
-                    'One silent notification with every agent\'s progress, '
-                    'beside the alerts.',
+                  subtitle: Text(
+                    tr('One silent notification with every agent\'s '
+                        'progress, beside the alerts.'),
                   ),
                   value: preferences.mode.showsOngoing,
                   onChanged: (on) => set(

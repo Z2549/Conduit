@@ -63,9 +63,9 @@ class _QuickSettingsTileControlsState extends State<QuickSettingsTileControls> {
         leading: const Icon(Icons.dashboard_customize_rounded),
         title: Text(tr('Add quick-settings tile')),
         subtitle: Text(
-          'Shows how many agents need you or are stuck; tap it to open the '
-          'dashboard. '
-          'A resizable home-screen widget is in the launcher\'s widget picker.',
+          tr('Shows how many agents need you or are stuck; tap it to open '
+              'the dashboard. A resizable home-screen widget is in the '
+              "launcher's widget picker."),
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),

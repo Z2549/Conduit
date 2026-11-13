@@ -43,7 +43,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
   static String _label(WorktreeLocationKind kind) => switch (kind) {
     WorktreeLocationKind.nextToRepo => tr('Next to the repo'),
     WorktreeLocationKind.herdr => tr("Herdr's default"),
-    WorktreeLocationKind.custom => 'Custom',
+    WorktreeLocationKind.custom => tr('Custom'),
   };
 
   @override
@@ -87,9 +87,11 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
               key: const ValueKey('worktree-location-setting'),
               icon: Icons.account_tree_outlined,
               title: tr('Worktree location for new tasks'),
-              description:
-                  'Where a task started from here gets its git worktree: '
-                  '${worktree.describe()}.',
+              description: trf(
+                'Where a task started from here gets its git worktree: '
+                '{path}.',
+                {'path': worktree.describe()},
+              ),
               values: WorktreeLocationKind.values,
               label: _label,
               selected: worktree.kind,

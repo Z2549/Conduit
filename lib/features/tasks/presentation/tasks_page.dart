@@ -174,7 +174,11 @@ class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: Text(_selected.isEmpty ? 'Tasks' : '${_selected.length} selected'),
+      title: Text(
+        _selected.isEmpty
+            ? tr('Tasks')
+            : trf('{count} selected', {'count': '${_selected.length}'}),
+      ),
       leading: _selected.isEmpty
           ? null
           : IconButton(

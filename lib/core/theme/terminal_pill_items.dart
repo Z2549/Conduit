@@ -1,3 +1,5 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// The buttons the floating pill toolbar can show, in the configurator's
 /// catalogue order.
 enum TerminalPillButton {
@@ -16,10 +18,17 @@ enum TerminalPillButton {
   snippets('Snippets', 'Quick prompts and saved snippets.'),
   fullscreen('Fullscreen', 'Hide the header and tabs.');
 
-  const TerminalPillButton(this.label, this.description);
+  const TerminalPillButton(String label, String description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final String _label;
+  final String _description;
+
+  String get label => tr(_label);
+  String get description => tr(_description);
+
+  String get description => tr(_description);
 }
 
 /// One slot on the pill: a built-in [button], or a custom key from the key

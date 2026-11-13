@@ -269,20 +269,22 @@ class _Ready extends StatelessWidget {
         ? 'Full build only'
         : sharedStorageAccessGranted
         ? '/mnt/android'
-        : 'Permission needed';
+        : tr('Permission needed');
     final storageHint = sharedStorageFeatureEnabled
-        ? 'Grant file access to mount phone storage at /mnt/android.'
-        : 'Phone storage mounting is available in the full build.';
+        ? tr('Grant file access to mount phone storage at /mnt/android.')
+        : tr('Phone storage mounting is available in the full build.');
     final updateHint = updateCommand == null
         ? ''
-        : 'Update packages from inside the shell with  $updateCommand . ';
+        : trf('Update packages from inside the shell with {command}. ', {
+              'command': '$updateCommand',
+            });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _Hero(
           icon: Icons.check_circle_outline_rounded,
-          title: '$distroName is ready',
-          body: 'Open a shell, or run several sessions side by side.',
+          title: trf('{name} is ready', {'name': distroName}),
+          body: tr('Open a shell, or run several sessions side by side.'),
         ),
         const SizedBox(height: 24),
         FilledButton.icon(
@@ -517,10 +519,10 @@ class _CreditFooter extends StatelessWidget {
         Divider(color: theme.colorScheme.outlineVariant),
         const SizedBox(height: 8),
         Text(
-          'The local shell uses proot and root filesystem images packaged '
-          'through Termux, maintained by their upstream distributions. '
-          'Conductore redistributes the bundled tools under their own '
-          'open-source licenses.',
+          tr('The local shell uses proot and root filesystem images '
+              'packaged through Termux, maintained by their upstream '
+              'distributions. Conductore redistributes the bundled tools '
+              'under their own open-source licenses.'),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),

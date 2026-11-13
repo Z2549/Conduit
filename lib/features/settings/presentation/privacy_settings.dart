@@ -8,15 +8,15 @@ const privacyNoticeText =
     'Conductore sends crash reports and anonymous usage counts to help fix '
     'bugs. Nothing from your machines or terminals is included.';
 
-const crashReportsCaption =
-    "When something breaks, the error and the app's own code lines go to "
-    "Outsmartis' GlitchTip server. Machine names, addresses, users, "
-    'commands and terminal text are removed first.';
+String get crashReportsCaption =>
+    tr("When something breaks, the error and the app's own code lines go "
+        "to Outsmartis' GlitchTip server. Machine names, addresses, users, "
+        'commands and terminal text are removed first.');
 
-const usageStatsCaption =
-    'Counts of screens opened and connections made (SSH or Mosh, worked or '
-    "failed) go to Outsmartis' Plausible server. No identifiers, nothing "
-    'from your machines or terminals.';
+String get usageStatsCaption =>
+    tr('Counts of screens opened and connections made (SSH or Mosh, '
+        'worked or failed) go to Outsmartis\' Plausible server. No '
+        'identifiers, nothing from your machines or terminals.');
 
 /// Settings › Privacy: the two switches, stored on this device and applied
 /// at once.

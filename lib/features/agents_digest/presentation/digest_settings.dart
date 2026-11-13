@@ -177,7 +177,10 @@ class _ThresholdTile extends StatelessWidget {
               value: option,
               child: Text(
                 option == fallback
-                    ? '$option $unit (default)'
+                    ? trf('{option} {unit} (default)', {
+                          'option': option,
+                          'unit': unit,
+                        })
                     : '$option $unit',
               ),
             ),
