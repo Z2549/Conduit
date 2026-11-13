@@ -74,7 +74,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
               switchKey: const ValueKey('tmux-live-switch'),
               icon: Icons.bolt_outlined,
               title: tr('Live tmux updates (adds a hidden tmux client)'),
-              subtitle: tr("Off: the phone lists tmux itself. On: tmux "
+              subtitle: tr('Off: the phone lists tmux itself. On: tmux '
                   'changes arrive at once, but tmux ls shows one more '
                   "attached client and that session's activity time and "
                   'attach hooks move.'),

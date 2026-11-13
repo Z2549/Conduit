@@ -1085,7 +1085,10 @@ class DesktopHomeState extends State<DesktopHome> {
       items: [
         PopupMenuItem(
           value: 'rename',
-          child: _MenuRow(Icons.drive_file_rename_outline_rounded, 'Rename'),
+          child: _MenuRow(
+            Icons.drive_file_rename_outline_rounded,
+            tr('Rename'),
+          ),
         ),
         PopupMenuItem(
           value: 'delete',

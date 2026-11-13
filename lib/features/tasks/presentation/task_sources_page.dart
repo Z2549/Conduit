@@ -118,7 +118,7 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
                   'comment on. Tokens stay in this device\'s secure '
                   'storage and are never synced. A markdown folder (one '
                   '.md file per task, YAML frontmatter) is read through '
-                  "the machine\'s companion."),
+                  "the machine's companion."),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),

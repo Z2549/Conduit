@@ -329,7 +329,7 @@ CompanionStatus classifyCompanionStatus(
     // env's complaint on stderr: installed, but cannot start.
     final stderr = version.stderr;
     if (RegExp(
-      rtr('env:.*node|node: not found|node: No such file'),
+      r'env:.*node|node: not found|node: No such file',
     ).hasMatch(stderr)) {
       return build(
         CompanionState.error,
