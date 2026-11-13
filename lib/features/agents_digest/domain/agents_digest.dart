@@ -1,7 +1,6 @@
-import 'package:conduit/core/l10n/legacy_tr.dart';
-
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
 

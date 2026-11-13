@@ -28,7 +28,6 @@ enum TerminalPillButton {
   String get label => tr(_label);
   String get description => tr(_description);
 
-  String get description => tr(_description);
 }
 
 /// One slot on the pill: a built-in [button], or a custom key from the key
