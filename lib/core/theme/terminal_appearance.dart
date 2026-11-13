@@ -18,15 +18,15 @@ enum TerminalToolbarStyle { floatingPill, keyRows }
 
 extension TerminalToolbarStyleDetails on TerminalToolbarStyle {
   String get label => switch (this) {
-    TerminalToolbarStyle.floatingPill => 'Floating pill',
-    TerminalToolbarStyle.keyRows => 'Key rows',
+    TerminalToolbarStyle.floatingPill => tr('Floating pill'),
+    TerminalToolbarStyle.keyRows => tr('Key rows'),
   };
 
   String get description => switch (this) {
     TerminalToolbarStyle.floatingPill =>
-      'Compact pill with Ctrl, Esc, Tab, an arrow pad and quick actions. '
-          'The key rows stay one tap away behind the ⋯ button.',
-    TerminalToolbarStyle.keyRows => 'Full-width rows of every configured key.',
+      tr('Compact pill with Ctrl, Esc, Tab, an arrow pad and quick actions. '
+          'The key rows stay one tap away behind the ⋯ button.'),
+    TerminalToolbarStyle.keyRows => tr('Full-width rows of every configured key.'),
   };
 }
 
@@ -67,7 +67,7 @@ double normalizeTerminalFontSize(double size) {
 
 extension TerminalFontOptionDetails on TerminalFontOption {
   String get label => switch (this) {
-    TerminalFontOption.jetBrainsMonoNerdFont => 'JetBrains Mono',
+    TerminalFontOption.jetBrainsMonoNerdFont => tr('JetBrains Mono'),
     TerminalFontOption.atkynsonNerdFont => 'Atkynson',
     TerminalFontOption.systemMonospace => 'System',
   };

@@ -124,8 +124,8 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
     if (link == null) {
       setState(
         () => _error =
-            'Not a Talkbawt link. It looks like https://server/t/g_ and 32 '
-            'characters.',
+            tr('Not a Talkbawt link. It looks like https://server/t/g_ '
+                'and 32 characters.'),
       );
       return;
     }

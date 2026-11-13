@@ -660,13 +660,13 @@ class DesktopHomeState extends State<DesktopHome> {
     return switch (state.phase) {
       HomeBoardPhase.awaitingRequest =>
         board.requestReason == HomeBoardRequestReason.hardwareKey
-            ? 'Security key: open to list'
-            : 'Not connected yet',
+            ? tr('Security key: open to list')
+            : tr('Not connected yet'),
       HomeBoardPhase.loading => 'Listing…',
       // The phone notice's words ("Can't reach …").
       HomeBoardPhase.failed
           when state.workspaces.isEmpty && state.tmuxSessions.isEmpty =>
-        state.problem?.title ?? 'Could not list',
+        state.problem?.title ?? tr('Could not list'),
       _ => '',
     };
   }
@@ -943,9 +943,9 @@ class DesktopHomeState extends State<DesktopHome> {
           value: _NodeAction.open,
           child: _MenuRow(Icons.open_in_new_rounded, 'Open'),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: _NodeAction.openRight,
-          child: _MenuRow(Icons.vertical_split_outlined, 'Open in a split'),
+          child: _MenuRow(Icons.vertical_split_outlined, tr('Open in a split')),
         ),
         const PopupMenuDivider(),
       ],
@@ -963,7 +963,7 @@ class DesktopHomeState extends State<DesktopHome> {
         value: unread ? _NodeAction.markRead : _NodeAction.markUnread,
         child: _MenuRow(
           unread ? Icons.mark_email_read_outlined : Icons.markunread_outlined,
-          unread ? 'Mark as read' : 'Mark as unread',
+          unread ? tr('Mark as read') : tr('Mark as unread'),
         ),
       ),
       PopupMenuItem(
@@ -984,13 +984,13 @@ class DesktopHomeState extends State<DesktopHome> {
               child: _MenuRow(Icons.folder_outlined, 'Move to ${group.name}'),
             ),
         if (prefs.groupOf(node.machineId) != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: _NodeAction.ungroup,
-            child: _MenuRow(Icons.folder_off_outlined, 'Remove from group'),
+            child: _MenuRow(Icons.folder_off_outlined, tr('Remove from group')),
           ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: _NodeAction.newGroup,
-          child: _MenuRow(Icons.create_new_folder_outlined, 'New group…'),
+          child: _MenuRow(Icons.create_new_folder_outlined, tr('New group…')),
         ),
         const PopupMenuDivider(),
         for (final choice in MachineMenuChoice.forHost(host))
@@ -1082,14 +1082,14 @@ class DesktopHomeState extends State<DesktopHome> {
         position & const Size(1, 1),
         Offset.zero & overlay.size,
       ),
-      items: const [
+      items: [
         PopupMenuItem(
           value: 'rename',
           child: _MenuRow(Icons.drive_file_rename_outline_rounded, 'Rename'),
         ),
         PopupMenuItem(
           value: 'delete',
-          child: _MenuRow(Icons.folder_delete_outlined, 'Delete group'),
+          child: _MenuRow(Icons.folder_delete_outlined, tr('Delete group')),
         ),
       ],
     );
@@ -1261,7 +1261,7 @@ class DesktopHomeState extends State<DesktopHome> {
     final name = await _askName(
       context,
       title: tr('Save layout'),
-      hint: 'Morning check, VTM work…',
+      hint: tr('Morning check, VTM work…'),
     );
     if (name == null || name.isEmpty || !mounted) return;
     _controller.saveLayout(name);
@@ -1331,7 +1331,7 @@ class DesktopHomeState extends State<DesktopHome> {
     final active = _controller.rightPanel == ShellRightPanel.preview;
     return IconButton(
       key: const ValueKey('shell-toggle-preview'),
-      tooltip: active ? 'Hide the live preview panel' : 'Live preview panel',
+      tooltip: active ? tr('Hide the live preview panel') : tr('Live preview panel'),
       isSelected: active,
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints.tightFor(width: 38, height: 40),
@@ -1345,7 +1345,7 @@ class DesktopHomeState extends State<DesktopHome> {
     final count = widget.agentAttention.attentionCount;
     return IconButton(
       key: const ValueKey('shell-toggle-agents'),
-      tooltip: active ? 'Hide the agents panel' : 'Agents panel',
+      tooltip: active ? tr('Hide the agents panel') : tr('Agents panel'),
       isSelected: active,
       icon: AgentsIcon(count: count, size: 20),
       onPressed: () => _controller.toggleRightPanel(ShellRightPanel.agents),
@@ -1811,7 +1811,7 @@ class DesktopHomeState extends State<DesktopHome> {
     final palette = AppPalette.of(context);
     final title = switch (panel) {
       ShellRightPanel.agents => 'Agents',
-      ShellRightPanel.preview => 'Live preview',
+      ShellRightPanel.preview => tr('Live preview'),
       ShellRightPanel.usage => 'Usage',
       ShellRightPanel.none => '',
     };
@@ -1931,7 +1931,7 @@ class DesktopHomeState extends State<DesktopHome> {
           const SizedBox(height: 10),
           Text(
             session == null
-                ? 'Open a session to preview its web app.'
+                ? tr('Open a session to preview its web app.')
                 : 'No live preview for ${session.title} yet.',
             textAlign: TextAlign.center,
             style: TextStyle(color: muted),

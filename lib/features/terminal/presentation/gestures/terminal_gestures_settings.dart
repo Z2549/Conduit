@@ -54,10 +54,10 @@ class TerminalGesturesSettings extends StatelessWidget {
                     children: [
                       Text(tr('Swipe target'), style: theme.textTheme.bodyLarge),
                       Text(
-                        'For plain shells. Sessions opened on a tmux or '
-                        'Herdr target always use that one. Keys go through '
-                        'the host\'s multiplexer prefix (Ctrl+B unless '
-                        'changed on the machine).',
+                        tr('For plain shells. Sessions opened on a tmux or '
+                            'Herdr target always use that one. Keys go '
+                            "through the host's multiplexer prefix (Ctrl+B "
+                            'unless changed on the machine).'),
                         style: captionStyle,
                       ),
                     ],

@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/hosts/domain/multiplexer_prefix_key.dart';
 import 'package:conduit/features/sessions/domain/connect_target.dart';
 import 'package:conduit/features/terminal/domain/herdr_keymap.dart';
@@ -13,9 +14,11 @@ enum HerdrShortcutGroup {
   workspaces('Workspaces'),
   modes('Modes');
 
-  const HerdrShortcutGroup(this.label);
+  const HerdrShortcutGroup(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 }
 
 /// Herdr actions the app offers, with Herdr's documented default bindings
@@ -190,21 +193,23 @@ enum HerdrShortcut {
   );
 
   const HerdrShortcut(
-    this.label,
+    String label,
     this.icon,
     this.text,
     this.group, {
     required this.action,
     this.entersScrollMode = false,
     this.confirm = false,
-  });
+  }) : _label = label;
 
   /// The `[keys]` action in Herdr's config (`detach`, `goto`, ...): the
   /// machine's own binding is looked up by it.
   final String action;
 
-  final String label;
+  final String _label;
   final IconData icon;
+
+  String get label => tr(_label);
 
   /// Herdr's documented default key after the prefix. What is actually
   /// sent is the machine's binding for [action] (see [sendHerdrAction]).

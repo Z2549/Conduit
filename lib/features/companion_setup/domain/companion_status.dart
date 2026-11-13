@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 
 /// Oldest companion release this app talks to.
@@ -39,12 +40,12 @@ enum CompanionState {
   error;
 
   String get label => switch (this) {
-    CompanionState.notInstalled => 'Not installed',
-    CompanionState.hooksMissing => 'Hooks not registered',
-    CompanionState.waitingForFirstEvent => 'Waiting for first event',
+    CompanionState.notInstalled => tr('Not installed'),
+    CompanionState.hooksMissing => tr('Hooks not registered'),
+    CompanionState.waitingForFirstEvent => tr('Waiting for first event'),
     CompanionState.active => 'Active',
-    CompanionState.outdated => 'Update available',
-    CompanionState.error => 'Check failed',
+    CompanionState.outdated => tr('Update available'),
+    CompanionState.error => tr('Check failed'),
   };
 
   /// Whether the phone gets approvals and chat from this machine.
@@ -314,26 +315,26 @@ CompanionStatus classifyCompanionStatus(
   if (probe.connectionError != null) {
     return build(
       CompanionState.error,
-      'Could not reach the machine.',
+      tr('Could not reach the machine.'),
       errorDetail: probe.connectionError,
       connectionFailure: probe.connectionFailure,
     );
   }
   final version = probe.version;
   if (version == null) {
-    return build(CompanionState.error, 'The companion check did not run.');
+    return build(CompanionState.error, tr('The companion check did not run.'));
   }
   if (version.exitCode == 127) {
     // `#!/usr/bin/env node` also exits 127 when node is missing, with
     // env's complaint on stderr: installed, but cannot start.
     final stderr = version.stderr;
     if (RegExp(
-      r'env:.*node|node: not found|node: No such file',
+      rtr('env:.*node|node: not found|node: No such file'),
     ).hasMatch(stderr)) {
       return build(
         CompanionState.error,
-        'The companion is installed but Node.js is not on the SSH PATH, '
-        'so it cannot start from the phone.',
+        tr('The companion is installed but Node.js is not on the SSH PATH, '
+        'so it cannot start from the phone.'),
         errorDetail: stderr.trim(),
       );
     }
@@ -436,8 +437,8 @@ CompanionStatus classifyCompanionStatus(
     return build(
       CompanionState.active,
       daemonRunning
-          ? 'The daemon is running and receiving agent hook events.'
-          : 'Hook events are arriving; the daemon starts on the next one.',
+          ? tr('The daemon is running and receiving agent hook events.')
+          : tr('Hook events are arriving; the daemon starts on the next one.'),
       installedVersion: installedVersion,
       installedProtocol: installedProtocol,
       checks: checks,
@@ -452,9 +453,9 @@ CompanionStatus classifyCompanionStatus(
   return build(
     CompanionState.waitingForFirstEvent,
     everSawEvent
-        ? 'Installed and hooked; no agent activity in the last 24 hours.'
-        : 'Installed and hooked. The first agent event (starting or using '
-              'a session) starts the daemon.',
+        ? tr('Installed and hooked; no agent activity in the last 24 hours.')
+        : tr('Installed and hooked. The first agent event (starting or using '
+              'a session) starts the daemon.'),
     installedVersion: installedVersion,
     installedProtocol: installedProtocol,
     checks: checks,

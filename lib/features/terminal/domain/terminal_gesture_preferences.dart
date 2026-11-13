@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 /// Which multiplexer a horizontal swipe on the terminal drives.
 ///
 /// tmux and Herdr both switch windows with `prefix + n` / `prefix + p` using
@@ -39,15 +41,15 @@ enum HerdrVerticalSwipe {
 
 extension HerdrPinchActionDetails on HerdrPinchAction {
   String get label => switch (this) {
-    HerdrPinchAction.zoomPane => 'Zoom pane',
-    HerdrPinchAction.fontSize => 'Font size',
+    HerdrPinchAction.zoomPane => tr('Zoom pane'),
+    HerdrPinchAction.fontSize => tr('Font size'),
   };
 }
 
 extension HerdrVerticalSwipeDetails on HerdrVerticalSwipe {
   String get label => switch (this) {
-    HerdrVerticalSwipe.workspaces => 'Workspaces',
-    HerdrVerticalSwipe.scrollback => 'Scrollback',
+    HerdrVerticalSwipe.workspaces => tr('Workspaces'),
+    HerdrVerticalSwipe.scrollback => tr('Scrollback'),
   };
 }
 

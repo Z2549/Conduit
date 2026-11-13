@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/talkbawt/domain/talkbawt_link.dart';
 
 /// How "send to another machine's agent" travels (André, 2026-09-27).
@@ -17,10 +18,15 @@ enum TalkbawtRelayMode {
         'passphrase-protected handoff that expires in an hour.',
   );
 
-  const TalkbawtRelayMode(this.label, this.description);
+  const TalkbawtRelayMode(String label, String description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final String _label;
+  final String _description;
+
+  String get label => tr(_label);
+  String get description => tr(_description);
 
   static TalkbawtRelayMode parse(Object? raw) =>
       raw == 'talkbawt' ? TalkbawtRelayMode.talkbawt : TalkbawtRelayMode.phone;

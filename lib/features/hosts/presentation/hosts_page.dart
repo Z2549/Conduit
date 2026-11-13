@@ -1326,9 +1326,9 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
             icon: Icons.dns_outlined,
             title: tr('No saved machines yet'),
             message:
-                'Add an SSH or Mosh server and Conductore will keep its '
-                'credentials in your device’s secure storage.',
-            actionLabel: 'Add machine',
+                tr('Add an SSH or Mosh server and Conductore will keep its '
+                'credentials in your device’s secure storage.'),
+            actionLabel: tr('Add machine'),
             onAction: _openForm,
           ),
           if (showLocal)
@@ -1375,7 +1375,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
               widget.agentAttention.statusFor(session.host.id),
               session.host.id,
             ),
-        machineName: session.host.isLocal ? 'This device' : machine?.name ?? '',
+        machineName: session.host.isLocal ? tr('This device') : machine?.name ?? '',
         restoreNote: widget.sessionRestore?.noteFor(session),
         agentLine: _agentLineFor(session),
       );
@@ -1483,7 +1483,7 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
       session,
       workspaces: _boards?[hostId]?.state.workspaces ?? const [],
       machineName: session.host.isLocal
-          ? 'This device'
+          ? tr('This device')
           : _hostById(hostId)?.name ?? '',
     );
     final key = _sessionKey(session);
@@ -1637,8 +1637,8 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
               IconButton(
                 key: const ValueKey('workspaces-view-toggle'),
                 tooltip: view == HomeWorkspacesView.list
-                    ? 'Show as grid'
-                    : 'Show as list',
+                    ? tr('Show as grid')
+                    : tr('Show as list'),
                 icon: Icon(
                   view == HomeWorkspacesView.list
                       ? Icons.grid_view_rounded
@@ -1823,10 +1823,10 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (!replaced) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Nothing was replaced: the key or its trusted copy changed '
-            'while you were reviewing it. Check the machine again.',
+            tr('Nothing was replaced: the key or its trusted copy changed '
+            'while you were reviewing it. Check the machine again.'),
           ),
         ),
       );
@@ -2722,11 +2722,11 @@ class _HostsPageState extends State<HostsPage> with WidgetsBindingObserver {
         } catch (_) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
                 content: Text(
-                  'The machine was deleted, but its trusted host key could '
+                  tr('The machine was deleted, but its trusted host key could '
                   'not be forgotten. Remove it in Settings › Trusted host '
-                  'keys.',
+                  'keys.'),
                 ),
               ),
             );
@@ -2832,7 +2832,7 @@ class _SessionsViewMenu extends StatelessWidget {
 
   static String labelFor(HomeSessionsView view) => switch (view) {
     HomeSessionsView.grid => 'Grid',
-    HomeSessionsView.large => 'Large tiles',
+    HomeSessionsView.large => tr('Large tiles'),
     HomeSessionsView.list => 'List',
   };
 

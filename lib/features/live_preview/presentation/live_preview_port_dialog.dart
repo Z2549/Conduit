@@ -74,9 +74,12 @@ class _LivePreviewPortDialogState extends State<_LivePreviewPortDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Port of the web app running on ${widget.hostName}. It is '
-            'reached through the SSH connection, so it only needs to '
-            'listen on localhost there.',
+            trf(
+              'Port of the web app running on {name}. It is reached through '
+              'the SSH connection, so it only needs to listen on localhost '
+              'there.',
+              {'name': widget.hostName},
+            ),
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 12),

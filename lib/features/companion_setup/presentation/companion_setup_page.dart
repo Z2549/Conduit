@@ -135,7 +135,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
       _snack(
         outcome.ok
             ? 'Agent hooks installed on ${_host.name}.'
-            : 'Install failed; see the log below.',
+            : tr('Install failed; see the log below.'),
       );
     });
   }
@@ -145,11 +145,11 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(tr('Uninstall agent hooks?')),
-        content: const Text(
-          'Removes the Conductore hook entries from ~/.claude/settings.json '
+        content: Text(
+          tr('Removes the Conductore hook entries from ~/.claude/settings.json '
           '(other hooks stay), stops the daemon, and deletes '
           '~/.local/share/conductore and the ~/.local/bin links. The phone '
-          'stops getting approvals and chat from this machine.',
+          'stops getting approvals and chat from this machine.'),
         ),
         actions: [
           TextButton(
@@ -177,14 +177,14 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
         },
       );
       _snack(
-        outcome.ok ? 'Agent hooks removed.' : 'Uninstall failed; see the log.',
+        outcome.ok ? tr('Agent hooks removed.') : tr('Uninstall failed; see the log.'),
       );
     });
   }
 
   Future<void> _stopDaemon() => _guard('Stopping…', () async {
     final wasRunning = await _controller.stopDaemon(_host);
-    _snack(wasRunning ? 'Daemon stopped.' : 'The daemon was not running.');
+    _snack(wasRunning ? tr('Daemon stopped.') : tr('The daemon was not running.'));
   });
 
   Future<void> _sendTestEvent() => _guard('Sending…', () async {
@@ -247,9 +247,9 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
                   child: MaterialBanner(
                     key: const ValueKey('companion-monitoring-off'),
                     leading: const Icon(Icons.monitor_heart_outlined),
-                    content: const Text(
-                      'Agent monitoring is off for this machine, so its '
-                      'approvals and sessions do not reach the phone.',
+                    content: Text(
+                      tr('Agent monitoring is off for this machine, so its '
+                      'approvals and sessions do not reach the phone.'),
                     ),
                     actions: [
                       TextButton(
@@ -497,7 +497,7 @@ class _StatusCard extends StatelessWidget {
           'Companion',
           '${status.installedVersion} (protocol ${status.installedProtocol})',
         ),
-      if (bundledVersion != null) ('In this app', bundledVersion!),
+      if (bundledVersion != null) (tr('In this app'), bundledVersion!),
       (
         'Node.js',
         !status.nodeFound
@@ -506,12 +506,12 @@ class _StatusCard extends StatelessWidget {
             ? status.nodeVersion!
             : '${status.nodeVersion} (needs $kCompanionMinNodeMajor+)',
       ),
-      ('Claude Code', status.claudeVersion ?? 'not found on the SSH PATH'),
+      (tr('Claude Code'), status.claudeVersion ?? tr('not found on the SSH PATH')),
       if (status.user != null) ('User', status.user!),
       if (status.installedVersion != null)
         ('Daemon', status.daemonRunning ? 'running' : 'not running'),
       if (status.lastEventAt != null)
-        ('Last event', _ago(status.lastEventAt!, status.checkedAt)),
+        (tr('Last event'), _ago(status.lastEventAt!, status.checkedAt)),
       if (status.everSawEvent)
         (
           'Agents',
@@ -644,7 +644,7 @@ class _TestResultCard extends StatelessWidget {
           result.ok ? Icons.check_circle_rounded : Icons.error_outline_rounded,
           color: result.ok ? green : scheme.error,
         ),
-        title: Text(result.ok ? 'Test event received' : 'Test event failed'),
+        title: Text(result.ok ? tr('Test event received') : tr('Test event failed')),
         subtitle: Text(result.message),
       ),
     );
@@ -690,9 +690,9 @@ class _ManualInstructions extends StatelessWidget {
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'On the machine, as the user that runs your coding agents '
-            '(needs Node.js 18+ and git):',
+          Text(
+            tr('On the machine, as the user that runs your coding agents '
+            '(needs Node.js 18+ and git):'),
           ),
           const SizedBox(height: 8),
           for (final command in companionManualInstallCommands)

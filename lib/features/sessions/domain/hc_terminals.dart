@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
+
 import 'package:conduit/features/agent_attention/data/remote_tool_command.dart';
 import 'package:conduit/features/agent_attention/domain/agent_command_runner.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
@@ -472,17 +474,17 @@ enum MultiplexerAction {
   prefixKeys;
 
   String get label => switch (this) {
-    MultiplexerAction.list => 'List terminals',
-    MultiplexerAction.read => 'Read',
-    MultiplexerAction.send => 'Send',
-    MultiplexerAction.keys => 'Keys',
-    MultiplexerAction.attach => 'Open',
-    MultiplexerAction.focusPane => 'Focus in the app',
-    MultiplexerAction.splitPane => 'Split',
-    MultiplexerAction.zoomPane => 'Zoom',
-    MultiplexerAction.newTab => 'New tab',
-    MultiplexerAction.newWorkspace => 'New workspace',
-    MultiplexerAction.prefixKeys => 'Herdr keys',
+    MultiplexerAction.list => tr('List terminals'),
+    MultiplexerAction.read => tr('Read'),
+    MultiplexerAction.send => tr('Send'),
+    MultiplexerAction.keys => tr('Keys'),
+    MultiplexerAction.attach => tr('Open'),
+    MultiplexerAction.focusPane => tr('Focus in the app'),
+    MultiplexerAction.splitPane => tr('Split'),
+    MultiplexerAction.zoomPane => tr('Zoom'),
+    MultiplexerAction.newTab => tr('New tab'),
+    MultiplexerAction.newWorkspace => tr('New workspace'),
+    MultiplexerAction.prefixKeys => tr('Herdr keys'),
   };
 }
 

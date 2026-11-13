@@ -48,9 +48,11 @@ class TalkbawtHubPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               Text(
-                'Handoffs and threads between agents, through '
-                '${Uri.parse(controller.settings.server).host}. Hand off from '
-                "an agent's Chat menu or dashboard card.",
+                trf(
+                  'Handoffs and threads between agents, through {host}. '
+                  "Hand off from an agent's Chat menu or dashboard card.",
+                  {'host': Uri.parse(controller.settings.server).host},
+                ),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 12),

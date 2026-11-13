@@ -36,11 +36,11 @@ class GuideSettingsControls extends StatelessWidget {
           switchKey: const ValueKey('guide-enabled'),
           icon: Icons.headset_mic_outlined,
           title: tr('Voice guide'),
-          subtitle:
-              'Talk to all your agents hands-free: "what\'s waiting", "open '
-              'api", "approve", "tell web to run the tests". Start it with '
-              'the headset-mic button at the top of home, a long press on Talk in '
-              'Chat View, or (Android) the Voice guide quick-settings tile.',
+          subtitle: tr('Talk to all your agents hands-free: "what\'s '
+              'waiting", "open api", "approve", "tell web to run the '
+              'tests". Start it with the headset-mic button at the top of '
+              'home, a long press on Talk in Chat View, or (Android) the '
+              'Voice guide quick-settings tile.'),
           value: prefs.enabled,
           onChanged: (value) => _set(prefs.copyWith(enabled: value)),
         ),
@@ -84,7 +84,7 @@ class GuideSettingsControls extends StatelessWidget {
               title: Text(tr('Guide language')),
               subtitle: Text(
                 prefs.language.isEmpty
-                    ? 'Same as dictation'
+                    ? tr('Same as dictation')
                     : describeSpeechLanguage(prefs.language),
               ),
               trailing: const Icon(Icons.chevron_right_rounded),
@@ -163,9 +163,9 @@ class GuideSettingsControls extends StatelessWidget {
             onChanged: (value) => Navigator.of(context).pop(value),
             child: Column(
               children: [
-                const RadioListTile<String>(
+                RadioListTile<String>(
                   value: '',
-                  title: Text('Same as dictation'),
+                  title: Text(tr('Same as dictation')),
                 ),
                 for (final language in speechLanguages)
                   if (!language.isDeviceDefault)

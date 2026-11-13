@@ -114,10 +114,11 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
           children: [
             Text(
-              'Trackers whose tasks you can list, open, move and comment on. '
-              'Tokens stay in this device\'s secure storage and are never '
-              'synced. A markdown folder (one .md file per task, YAML '
-              'frontmatter) is read through the machine\'s companion.',
+              tr('Trackers whose tasks you can list, open, move and '
+                  'comment on. Tokens stay in this device\'s secure '
+                  'storage and are never synced. A markdown folder (one '
+                  '.md file per task, YAML frontmatter) is read through '
+                  "the machine\'s companion."),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),

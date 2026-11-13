@@ -456,28 +456,28 @@ class _HerdrNavigatorSheetState extends State<HerdrNavigatorSheet> {
   List<Widget> _buildPaneSection(ThemeData theme) {
     final reason = widget.paneListUnavailableReason;
     if (widget.load == null && widget.cached == null) {
-      return [_message(theme, reason ?? 'The pane list is not available.')];
+      return [_message(theme, reason ?? tr('The pane list is not available.'))];
     }
     final listing = _listing;
     switch (listing) {
       case null:
-        return [_message(theme, 'Looking for Herdr panes…')];
+        return [_message(theme, tr('Looking for Herdr panes…'))];
       case HerdrNotFound():
         return [
           _message(
             theme,
-            'Herdr not found on this machine. The shortcuts below still '
-            'work if Herdr runs inside this session.',
+            tr('Herdr not found on this machine. The shortcuts below still '
+            'work if Herdr runs inside this session.'),
             key: const ValueKey('herdr-not-found'),
           ),
         ];
       case HerdrNotRunning():
-        return [_message(theme, 'Herdr is installed but not running.')];
+        return [_message(theme, tr('Herdr is installed but not running.'))];
       case HerdrListingFailed(:final message):
         return [_message(theme, 'Could not list Herdr panes. $message')];
       case HerdrPanesAvailable(:final entries):
         if (entries.isEmpty) {
-          return [_message(theme, 'Herdr has no panes open.')];
+          return [_message(theme, tr('Herdr has no panes open.'))];
         }
         return [for (final entry in entries) _paneTile(theme, entry)];
     }

@@ -296,7 +296,7 @@ class _DiffViewState extends State<DiffView> {
         brightness: brightness,
         action: TextButton(
           onPressed: controller.path.isEmpty ? _editPath : controller.refresh,
-          child: Text(controller.path.isEmpty ? 'Choose directory' : 'Retry'),
+          child: Text(controller.path.isEmpty ? tr('Choose directory') : 'Retry'),
         ),
       );
     }
@@ -331,7 +331,7 @@ class _DiffViewState extends State<DiffView> {
       ];
       return _Notice(
         icon: Icons.check_circle_outline_rounded,
-        title: controller.showStaged ? 'Nothing staged' : 'No unstaged changes',
+        title: controller.showStaged ? tr('Nothing staged') : tr('No unstaged changes'),
         message: hints.join(' · '),
         palette: palette,
         brightness: brightness,
@@ -507,7 +507,7 @@ class _Toolbar extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Text(
-                    path.isEmpty ? 'Detecting directory…' : path,
+                    path.isEmpty ? tr('Detecting directory…') : path,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -564,7 +564,7 @@ class _ModeBar extends StatelessWidget {
       if (status?.branch != null)
         status!.branch!
       else if (status?.detached ?? false)
-        'detached HEAD',
+        tr('detached HEAD'),
       if ((status?.ahead ?? 0) > 0) '↑${status!.ahead}',
       if ((status?.behind ?? 0) > 0) '↓${status!.behind}',
     ];

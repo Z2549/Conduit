@@ -61,12 +61,11 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
               switchKey: const ValueKey('herdr-sidebar-switch'),
               icon: Icons.view_sidebar_outlined,
               title: tr("Show Conductore in Herdr's sidebar"),
-              subtitle:
-                  'Pending approvals and cost as Herdr sidebar tokens '
-                  '(\$conductore_pending, \$conductore_cost, '
+              subtitle: tr('Pending approvals and cost as Herdr sidebar '
+                  'tokens (\$conductore_pending, \$conductore_cost, '
                   '\$conductore_today) while this device watches the '
                   'machine. Add them to a sidebar row in your Herdr config '
-                  'to see them.',
+                  'to see them.'),
               value: preferences.herdrSidebar,
               onChanged: (on) => unawaited(preferences.setHerdrSidebar(on)),
             ),
@@ -75,10 +74,10 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
               switchKey: const ValueKey('tmux-live-switch'),
               icon: Icons.bolt_outlined,
               title: tr('Live tmux updates (adds a hidden tmux client)'),
-              subtitle:
-                  'Off: the phone lists tmux itself. On: tmux changes arrive '
-                  'at once, but tmux ls shows one more attached client and '
-                  'that session\'s activity time and attach hooks move.',
+              subtitle: tr("Off: the phone lists tmux itself. On: tmux "
+                  'changes arrive at once, but tmux ls shows one more '
+                  "attached client and that session's activity time and "
+                  'attach hooks move.'),
               value: preferences.liveTmux,
               onChanged: (on) => unawaited(preferences.setLiveTmux(on)),
             ),
@@ -88,8 +87,8 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
               icon: Icons.account_tree_outlined,
               title: tr('Worktree location for new tasks'),
               description: trf(
-                'Where a task started from here gets its git worktree: '
-                '{path}.',
+                tr('Where a task started from here gets its git worktree: '
+                '{path}.'),
                 {'path': worktree.describe()},
               ),
               values: WorktreeLocationKind.values,
