@@ -737,7 +737,7 @@ const Map<String, String> legacyZh = <String, String>{
   'Pasting an image uploads it to the machine\'s share inbox and pastes its path, which Claude Code reads as an image. Off: paste text only.': '粘贴图片会把它上传到机器的共享收件目录，并粘贴其路径，Claude Code 会当作图片读取。关闭：只粘贴文本。',
   'Path template': '路径模板',
   'Pause after silence': '静默后暂停',
-  'Pending approvals and cost as Herdr sidebar tokens ($conductore_pending, $conductore_cost, $conductore_today) while this device watches the machine. Add them to a sidebar row in your Herdr config to see them.': '本设备监控机器时，会把待审批数与费用作为 Herdr 侧栏变量（$conductore_pending、$conductore_cost、$conductore_today）。把它们加进 Herdr 配置的侧栏行即可显示。',
+  'Pending approvals and cost as Herdr sidebar tokens (\$conductore_pending, \$conductore_cost, \$conductore_today) while this device watches the machine. Add them to a sidebar row in your Herdr config to see them.': '本设备监控机器时，会把待审批数与费用作为 Herdr 侧栏变量（\$conductore_pending、\$conductore_cost、\$conductore_today）。把它们加进 Herdr 配置的侧栏行即可显示。',
   'Per day': '按天',
   'Permission decision failed': '权限决策失败',
   'Permission needed': '需要授权',

@@ -183,7 +183,7 @@ def ensure_import(src: str) -> str:
 
 
 def dart_string(value: str) -> str:
-    return "'" + value.replace("\\", "\\\\").replace("'", "\\'") + "'"
+    return "'" + value.replace("\\", "\\\\").replace("$", "\\$").replace("'", "\\'") + "'"
 
 
 def write_table(table: dict[str, str]) -> None:
