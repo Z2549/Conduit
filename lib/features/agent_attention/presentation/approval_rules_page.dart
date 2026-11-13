@@ -160,7 +160,7 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
             children: [
               Text(
                 trf(
-                  "The companion on {name} allows matching requests by "
+                  'The companion on {name} allows matching requests by '
                   'itself, even with this phone offline. High-risk requests '
                   '(recursive deletes, force pushes, sudo, secrets, writes '
                   "outside the repo) always ask. Rules use Claude Code's "

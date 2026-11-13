@@ -5,11 +5,13 @@ enum GuideConfirm {
   always('Always'),
 
   /// The same, except approving a request labelled low risk.
-  skipLowRisk(tr('Not for low-risk approvals'));
+  skipLowRisk('Not for low-risk approvals');
 
-  const GuideConfirm(this.label);
+  const GuideConfirm(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 }
 
 /// Settings › Chat & Voice › Voice guide. Stored inside the voice

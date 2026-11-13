@@ -46,18 +46,20 @@ enum AgentNeed {
 enum AgentNotificationMode {
   /// One ongoing, silent notification listing every agent, plus alerts for
   /// urgent things only (the default).
-  ongoingAndUrgent(tr('Ongoing + urgent')),
+  ongoingAndUrgent('Ongoing + urgent'),
 
   /// One notification per agent for every need, finished turns included
   /// (the behaviour before CON-074).
   everything('Everything'),
 
   /// Alerts for urgent things only, no ongoing notification.
-  urgentOnly(tr('Urgent only'));
+  urgentOnly('Urgent only');
 
-  const AgentNotificationMode(this.label);
+  const AgentNotificationMode(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 
   /// Whether only urgent needs notify (finished turns only when opted in).
   bool get urgentOnlyAlerts => this != AgentNotificationMode.everything;
@@ -77,21 +79,27 @@ enum AgentNotificationMode {
 /// [AgentNotificationPreferences] under Advanced; a mix none of these
 /// describes shows as Custom.
 enum AgentNotifyChoice {
-  urgentOnly(tr('Urgent only'), tr('When an agent needs you, fails or looks stuck.')),
+  urgentOnly(
+    'Urgent only',
+    'When an agent needs you, fails or looks stuck.',
+  ),
   urgentAndFinished(
-    tr('Urgent + finished'),
-    tr('Also when an agent finishes its turn.'),
+    'Urgent + finished',
+    'Also when an agent finishes its turn.',
   ),
   everything(
     'Everything',
-    tr('A notification for each agent that needs you or finishes, without '
-        'the ongoing summary.'),
+    'A notification for each agent that needs you or finishes, without '
+        'the ongoing summary.',
   );
 
-  const AgentNotifyChoice(this.label, this.description);
+  const AgentNotifyChoice(this._label, this._description);
 
-  final String label;
-  final String description;
+  final String _label;
+  final String _description;
+
+  String get label => tr(_label);
+  String get description => tr(_description);
 }
 
 /// The key a mute is kept under: the agent on its machine (any session of

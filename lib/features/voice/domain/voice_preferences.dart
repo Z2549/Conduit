@@ -14,17 +14,19 @@ enum ReadAloudLength {
 
   /// A short summary written by the machine's coding agent (the
   /// companion's `summarize`), falling back to [brief].
-  summary(tr('Agent summary'));
+  summary('Agent summary');
 
-  const ReadAloudLength(this.label);
+  const ReadAloudLength(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 }
 
 /// How Chat View shows tool calls and shell commands.
 enum ToolActivity {
   /// Every tool call as its own card.
-  all(tr('Show all')),
+  all('Show all'),
 
   /// Consecutive tool calls fold into one row that expands on tap.
   collapsed('Collapsed'),
@@ -32,9 +34,11 @@ enum ToolActivity {
   /// No tool rows (approvals, questions and errors always show).
   hidden('Hidden');
 
-  const ToolActivity(this.label);
+  const ToolActivity(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 }
 
 /// When Review mode (the changed files of an agent turn) opens from Chat
@@ -42,14 +46,16 @@ enum ToolActivity {
 enum ReviewOpens {
   /// Only from the Review buttons (Chat View, the dashboard, the inbox) or
   /// the voice guide.
-  onDemand(tr('On demand')),
+  onDemand('On demand'),
 
   /// As soon as a turn ends while its Chat View is on screen.
-  afterEachTurn(tr('After each turn'));
+  afterEachTurn('After each turn');
 
-  const ReviewOpens(this.label);
+  const ReviewOpens(this._label);
 
-  final String label;
+  final String _label;
+
+  String get label => tr(_label);
 }
 
 /// Read-aloud and continuous-dictation settings (Settings → Speech), and
