@@ -90,7 +90,7 @@ class _CompanionStatusChipState extends State<CompanionStatusChip>
         final checking = controller.isChecking(widget.host);
         final (color, icon) = companionStateVisual(context, status?.state);
         final text = status == null
-            ? (checking ? 'Checking…' : 'Unknown')
+            ? (checking ? tr('Checking…') : tr('Unknown'))
             : status.state.label;
         return ActionChip(
           key: const ValueKey('companion-status-chip'),

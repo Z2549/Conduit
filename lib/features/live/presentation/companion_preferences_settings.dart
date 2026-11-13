@@ -41,8 +41,8 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
   }
 
   static String _label(WorktreeLocationKind kind) => switch (kind) {
-    WorktreeLocationKind.nextToRepo => 'Next to the repo',
-    WorktreeLocationKind.herdr => "Herdr's default",
+    WorktreeLocationKind.nextToRepo => tr('Next to the repo'),
+    WorktreeLocationKind.herdr => tr("Herdr's default"),
     WorktreeLocationKind.custom => 'Custom',
   };
 
@@ -60,7 +60,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
             SettingsSwitchCard(
               switchKey: const ValueKey('herdr-sidebar-switch'),
               icon: Icons.view_sidebar_outlined,
-              title: "Show Conductore in Herdr's sidebar",
+              title: tr("Show Conductore in Herdr's sidebar"),
               subtitle:
                   'Pending approvals and cost as Herdr sidebar tokens '
                   '(\$conductore_pending, \$conductore_cost, '
@@ -117,7 +117,7 @@ class _CompanionPreferencesCardsState extends State<CompanionPreferencesCards> {
                   helperText: tr('Use <repo> and <branch>'),
                   errorText: _template.text.isEmpty || customValid
                       ? null
-                      : 'It must contain <branch>',
+                      : tr('It must contain <branch>'),
                 ),
                 onChanged: (_) => setState(() {}),
                 onSubmitted: (value) {

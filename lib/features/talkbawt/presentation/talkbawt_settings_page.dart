@@ -82,9 +82,9 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
                   hintText: defaultTalkbawtServer,
                   errorText: _error,
                   helperText:
-                      'https:// only; plain http:// for localhost or a '
+                      tr('https:// only; plain http:// for localhost or a '
                       'tailnet address. Links live on this server until they '
-                      'expire.',
+                      'expire.'),
                   helperMaxLines: 3,
                 ),
                 onSubmitted: (v) => unawaited(_saveServer(v)),
@@ -144,8 +144,8 @@ class _TalkbawtSettingsPageState extends State<TalkbawtSettingsPage> {
                   labelText: tr('From'),
                   hintText: tr('<agent> via Conductore'),
                   helperText:
-                      'How your handoffs are signed. The other side sees it '
-                      'as unverified.',
+                      tr('How your handoffs are signed. The other side sees it '
+                      'as unverified.'),
                 ),
                 onSubmitted: (v) => unawaited(controller.setFrom(v)),
                 onTapOutside: (_) {

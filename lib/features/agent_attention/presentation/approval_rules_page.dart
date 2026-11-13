@@ -120,7 +120,9 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
     final desktop = useDesktopPages(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Approval rules · ${widget.host.name}'),
+        title: Text(
+                  trf('Approval rules · {name}', {'name': widget.host.name}),
+                ),
         actions: [
           if (desktop && !_unsupported)
             Padding(
@@ -157,12 +159,14 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
             padding: EdgeInsets.fromLTRB(16, 8, 16, desktop ? 16 : 96),
             children: [
               Text(
-                'The companion on ${widget.host.name} allows matching '
-                'requests by itself, even with this phone offline. '
-                'High-risk requests (recursive deletes, force pushes, sudo, '
-                'secrets, writes outside the repo) always ask. Rules use '
-                "Claude Code's syntax and are never written to its "
-                'settings.',
+                trf(
+                  "The companion on {name} allows matching requests by "
+                  'itself, even with this phone offline. High-risk requests '
+                  '(recursive deletes, force pushes, sudo, secrets, writes '
+                  "outside the repo) always ask. Rules use Claude Code's "
+                  'syntax and are never written to its settings.',
+                  {'name': widget.host.name},
+                ),
                 style: theme.textTheme.bodySmall,
               ),
               const SizedBox(height: 12),
@@ -174,21 +178,21 @@ class _ApprovalRulesPageState extends State<ApprovalRulesPage> {
                   ),
                 ),
               if (_unsupported)
-                const _Note(
+                _Note(
                   icon: Icons.extension_off_outlined,
                   text:
-                      "This machine's companion does not keep approval "
+                      tr("This machine's companion does not keep approval "
                       'rules. Update it from Settings › Agents › Agent '
-                      'hooks.',
+                      'hooks.'),
                 ),
               if (_error case final error?)
                 _Note(icon: Icons.error_outline_rounded, text: error),
               if (approvals != null && rules.isEmpty)
-                const _Note(
+                _Note(
                   icon: Icons.rule_rounded,
                   text:
-                      'No rules yet. Tap Trust… or Always on an approval, '
-                      'or add one here.',
+                      tr('No rules yet. Tap Trust… or Always on an approval, '
+                      'or add one here.'),
                 ),
               for (final rule in rules)
                 Card(
@@ -295,7 +299,7 @@ class _RuleEditorState extends State<_RuleEditor> {
   ];
 
   late final _rule = TextEditingController(
-    text: widget.existing?.rule ?? 'Bash(npm test *)',
+    text: widget.existing?.rule ?? tr('Bash(npm test *)'),
   );
   late final _path = TextEditingController(
     text: widget.existing?.scope.path ?? widget.repos.firstOrNull ?? '',
@@ -363,7 +367,7 @@ class _RuleEditorState extends State<_RuleEditor> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              existing == null ? 'Add rule' : 'Edit rule',
+              existing == null ? tr('Add rule') : tr('Edit rule'),
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 12),
@@ -380,9 +384,9 @@ class _RuleEditorState extends State<_RuleEditor> {
                 labelText: tr('Rule'),
                 border: const OutlineInputBorder(),
                 helperText:
-                    'Bash(npm test *), Edit(src/**), Read, '
-                    'WebFetch(domain:docs.rs)',
-                errorText: validRule ? null : 'Tool or Tool(pattern)',
+                    tr('Bash(npm test *), Edit(src/**), Read, '
+                    'WebFetch(domain:docs.rs)'),
+                errorText: validRule ? null : tr('Tool or Tool(pattern)'),
               ),
             ),
             const SizedBox(height: 16),
@@ -420,7 +424,7 @@ class _RuleEditorState extends State<_RuleEditor> {
                   decoration: InputDecoration(
                     labelText: tr('Repo path on the machine'),
                     border: const OutlineInputBorder(),
-                    errorText: scope == null ? 'An absolute path' : null,
+                    errorText: scope == null ? tr('An absolute path') : null,
                   ),
                 ),
                 if (widget.repos.isNotEmpty)
@@ -451,7 +455,7 @@ class _RuleEditorState extends State<_RuleEditor> {
                 for (final choice in _durations)
                   ChoiceChip(
                     label: Text(
-                      choice.isForever ? 'Until revoked' : choice.label,
+                      choice.isForever ? tr('Until revoked') : choice.label,
                     ),
                     selected: _duration == choice,
                     onSelected: (_) => setState(() => _duration = choice),

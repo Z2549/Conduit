@@ -192,7 +192,7 @@ class _CompanionSetupPageState extends State<CompanionSetupPage> {
     if (mounted) setState(() => _testResult = result);
   });
 
-  Future<void> _refresh() => _guard('Checking…', () async {
+  Future<void> _refresh() => _guard(tr('Checking…'), () async {
     await _controller.refresh(_host);
   });
 
@@ -411,7 +411,7 @@ class _StatusCard extends StatelessWidget {
     final theme = Theme.of(context);
     final status = this.status;
     final (color, icon) = companionStateVisual(context, status?.state);
-    final label = status?.state.label ?? 'Checking…';
+    final label = status?.state.label ?? tr('Checking…');
     return Card(
       key: const ValueKey('companion-status-card'),
       margin: EdgeInsets.zero,
@@ -702,7 +702,7 @@ class _ManualInstructions extends StatelessWidget {
             style: theme.textTheme.bodySmall,
           ),
           const SizedBox(height: 12),
-          Text(companionHotReloadNote, style: theme.textTheme.bodySmall),
+          Text(tr(companionHotReloadNote), style: theme.textTheme.bodySmall),
         ],
       ),
     );

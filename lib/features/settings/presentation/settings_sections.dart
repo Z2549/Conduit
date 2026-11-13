@@ -644,12 +644,13 @@ class SettingsSectionBody extends StatelessWidget {
             icon: Icons.account_tree_outlined,
             title: sheprdSyncTitle,
             subtitle:
-                "For sheprd users. The project views mirror sheprd's "
-                'sidebar: its projects, order, hidden workspaces and each '
-                "agent's unread, kept or dismissed mark. Marking an agent "
-                'here marks it in sheprd too. While on, the app\'s own '
-                'project edits pause; turning it off brings them back. '
-                'Needs the companion on the machines sheprd connects to.',
+                tr("For sheprd users. The project views mirror sheprd's "
+                    'sidebar: its projects, order, hidden workspaces and '
+                    "each agent's unread, kept or dismissed mark. Marking "
+                    'an agent here marks it in sheprd too. While on, the '
+                    "app\'s own project edits pause; turning it off brings "
+                    'them back. Needs the companion on the machines sheprd '
+                    'connects to.'),
             value: projects.sheprdSync,
             onChanged: (on) => unawaited(projects.setSheprdSync(on)),
           ),
@@ -896,9 +897,13 @@ class SelfMachineCard extends StatelessWidget {
           icon: Icons.computer_rounded,
           title: tr('Show it separately here too'),
           subtitle:
-              'Also shown as $name on your other devices. Here it opens as '
-              'This computer; turn this on to also list $name and reach '
-              'this computer over SSH. Kept on this device, never synced.',
+              trf(
+                'Also shown as {name} on your other devices. Here it opens '
+                'as This computer; turn this on to also list {name} and '
+                'reach this computer over SSH. Kept on this device, never '
+                'synced.',
+                {'name': name},
+              ),
           value: showSeparately,
           onChanged: onChanged,
         ),

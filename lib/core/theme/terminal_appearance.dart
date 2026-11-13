@@ -105,9 +105,9 @@ extension TerminalEnterSequenceDetails on TerminalEnterSequence {
   };
 
   String get description => switch (this) {
-    TerminalEnterSequence.cr => 'Carriage return',
-    TerminalEnterSequence.lf => 'Line feed',
-    TerminalEnterSequence.crlf => 'Carriage return + line feed',
+    TerminalEnterSequence.cr => tr('Carriage return'),
+    TerminalEnterSequence.lf => tr('Line feed'),
+    TerminalEnterSequence.crlf => tr('Carriage return + line feed'),
   };
 
   String get value => switch (this) {

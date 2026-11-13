@@ -1,10 +1,11 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 /// When the voice guide asks "Say yes" before acting.
 enum GuideConfirm {
   /// Approvals, denials, prompts, trust and account switches.
   always('Always'),
 
   /// The same, except approving a request labelled low risk.
-  skipLowRisk('Not for low-risk approvals');
+  skipLowRisk(tr('Not for low-risk approvals'));
 
   const GuideConfirm(this.label);
 

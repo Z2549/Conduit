@@ -234,9 +234,9 @@ class _TasksPageState extends State<TasksPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Add a task source: a markdown folder on a machine, '
-                    'GitHub or GitLab Issues, Jira, Linear or Azure Boards.',
+                  Text(
+                    tr('Add a task source: a markdown folder on a machine, '
+                    'GitHub or GitLab Issues, Jira, Linear or Azure Boards.'),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -341,7 +341,7 @@ class _TasksPageState extends State<TasksPage> {
                     size: 16,
                   ),
                   label: Text(switch (_filter.sourceIds) {
-                    null => 'All sources',
+                    null => tr('All sources'),
                     final ids when ids.length == 1 =>
                       _c.sourceById(ids.first)?.name ?? '1 source',
                     final ids => '${ids.length} sources',

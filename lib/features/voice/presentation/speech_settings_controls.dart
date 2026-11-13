@@ -94,12 +94,12 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
     final language = tag.split('-').first.toLowerCase();
     return switch (language) {
       'pt' => 'É assim que as respostas do agente vão soar.',
-      'es' => 'Así sonarán las respuestas del agente.',
-      'fr' => "Voici comment les réponses de l'agent seront lues.",
-      'de' => 'So klingen die Antworten des Agenten.',
-      'it' => "Ecco come suoneranno le risposte dell'agente.",
-      'nl' => 'Zo klinken de antwoorden van de agent.',
-      _ => "This is how the agent's replies will sound.",
+      'es' => tr('Así sonarán las respuestas del agente.'),
+      'fr' => tr("Voici comment les réponses de l'agent seront lues."),
+      'de' => tr('So klingen die Antworten des Agenten.'),
+      'it' => tr("Ecco come suoneranno le risposte dell'agente."),
+      'nl' => tr('Zo klinken de antwoorden van de agent.'),
+      _ => tr("This is how the agent's replies will sound."),
     };
   }
 
@@ -285,10 +285,10 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                     secondary: const Icon(Icons.notifications_off_outlined),
                     title: Text(tr('Silence beeps between phrases')),
                     subtitle: Text(
-                      'Experimental. Mutes media, notification and system '
+                      tr('Experimental. Mutes media, notification and system '
                       'sounds while dictating so restarts are quiet. Restored '
                       'when you stop, or on the next start if the app was '
-                      'closed while muted.',
+                      'closed while muted.'),
                       style: muted,
                     ),
                     value: voice.muteRestartBeeps,
@@ -306,9 +306,9 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                     secondary: const Icon(Icons.record_voice_over_outlined),
                     title: Text(tr('Read replies aloud by default')),
                     subtitle: Text(
-                      "Chat View speaks the agent's final answer of each turn, "
+                      tr("Chat View speaks the agent's final answer of each turn, "
                       'approvals and questions, never tool output. "Read replies '
-                      'aloud" in its ⋮ changes it per session.',
+                      'aloud" in its ⋮ changes it per session.'),
                       style: muted,
                     ),
                     value: voice.readAloudByDefault,
@@ -321,14 +321,14 @@ class _SpeechSettingsControlsState extends State<SpeechSettingsControls> {
                     title: Text(tr('Reading language')),
                     trailing: _Value(
                       voice.ttsLanguage.isEmpty
-                          ? 'Same as dictation'
+                          ? tr('Same as dictation')
                           : describeSpeechLanguage(voice.ttsLanguage),
                     ),
                     onTap: () => showSpeechLanguageDialog(
                       context: context,
                       current: voice.ttsLanguage,
                       title: tr('Reading language'),
-                      defaultLabel: 'Same as dictation',
+                      defaultLabel: tr('Same as dictation'),
                       onChanged: (tag) => _update(
                         // A voice belongs to one language.
                         (v) => v.copyWith(ttsLanguage: tag, ttsVoice: ''),
@@ -435,10 +435,10 @@ class _WordsDialogState extends State<_WordsDialog> {
         key: const ValueKey('speech-words-field'),
         controller: _controller,
         autofocus: true,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           helperText:
-              'Comma-separated, in any language. Empty restores '
-              'the defaults.',
+              tr('Comma-separated, in any language. Empty restores '
+              'the defaults.'),
           helperMaxLines: 2,
         ),
         onSubmitted: (value) => Navigator.of(context).pop(value),

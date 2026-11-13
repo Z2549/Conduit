@@ -36,8 +36,8 @@ class TerminalGesturesSettings extends StatelessWidget {
             secondary: const Icon(Icons.swipe_rounded),
             title: Text(tr('Swipe switches window')),
             subtitle: Text(
-              'Swipe left or right with one finger for the next or previous '
-              'window (tmux) or tab (Herdr).',
+              tr('Swipe left or right with one finger for the next or previous '
+              'window (tmux) or tab (Herdr).'),
               style: captionStyle,
             ),
             value: preferences.swipeSwitchesWindow,
@@ -83,9 +83,9 @@ class TerminalGesturesSettings extends StatelessWidget {
             secondary: const Icon(Icons.pinch_rounded),
             title: Text(tr('Pinch to zoom')),
             subtitle: Text(
-              'Pinch to change the terminal font size, in tmux, Herdr and '
+              tr('Pinch to change the terminal font size, in tmux, Herdr and '
               'plain shells. Herdr can zoom the pane instead (see "Pinch in '
-              'Herdr" below).',
+              'Herdr" below).'),
               style: captionStyle,
             ),
             value: preferences.pinchZoom,
@@ -97,10 +97,10 @@ class TerminalGesturesSettings extends StatelessWidget {
             secondary: const Icon(Icons.swap_vert_rounded),
             title: Text(tr('Two-finger scrollback')),
             subtitle: Text(
-              'Swipe down with two fingers to scroll back through history. '
+              tr('Swipe down with two fingers to scroll back through history. '
               'Swipe up past the bottom to leave scrollback. In Herdr, when '
               'two-finger up/down switches workspaces, rest two fingers for a '
-              'moment and then drag, or start Scrollback from the toolbar.',
+              'moment and then drag, or start Scrollback from the toolbar.'),
               style: captionStyle,
             ),
             value: preferences.twoFingerScroll,
@@ -113,11 +113,11 @@ class TerminalGesturesSettings extends StatelessWidget {
             secondary: const Icon(Icons.mouse_rounded),
             title: Text(tr('Drag scrolls the remote app (mouse wheel)')),
             subtitle: Text(
-              'In full-screen programs (Claude Code, Herdr, tmux, vim, htop) '
+              tr('In full-screen programs (Claude Code, Herdr, tmux, vim, htop) '
               'a one-finger drag up or down scrolls the program itself, like '
               'a mouse wheel on a desktop. tmux without mouse support opens '
               'copy mode; tap to leave it. Off: the drag only scrolls the '
-              "app's own history.",
+              "app's own history."),
               style: captionStyle,
             ),
             value: preferences.dragScrollsRemote,
@@ -142,8 +142,8 @@ class TerminalGesturesSettings extends StatelessWidget {
             secondary: const Icon(Icons.view_column_rounded),
             title: Text(tr('Two-finger swipe switches pane')),
             subtitle: Text(
-              'Swipe left or right with two fingers to focus the pane on the '
-              'right or left. Also in tmux sessions.',
+              tr('Swipe left or right with two fingers to focus the pane on the '
+              'right or left. Also in tmux sessions.'),
               style: captionStyle,
             ),
             value: preferences.herdrTwoFingerPanes,
@@ -154,8 +154,8 @@ class TerminalGesturesSettings extends StatelessWidget {
             key: const ValueKey('herdr-two-finger-vertical'),
             title: tr('Two-finger up/down'),
             caption:
-                'Workspaces: up for the next workspace, down for the previous '
-                'one. Scrollback: like tmux.',
+                tr('Workspaces: up for the next workspace, down for the previous '
+                'one. Scrollback: like tmux.'),
             captionStyle: captionStyle,
             values: HerdrVerticalSwipe.values,
             label: (value) => value.label,
@@ -167,8 +167,8 @@ class TerminalGesturesSettings extends StatelessWidget {
             key: const ValueKey('herdr-pinch'),
             title: tr('Pinch in Herdr'),
             caption:
-                'Font size (default): like everywhere else. Zoom pane: spread '
-                'to zoom the focused pane full-screen, pinch in to restore it.',
+                tr('Font size (default): like everywhere else. Zoom pane: spread '
+                'to zoom the focused pane full-screen, pinch in to restore it.'),
             captionStyle: captionStyle,
             values: HerdrPinchAction.values,
             label: (value) => value.label,

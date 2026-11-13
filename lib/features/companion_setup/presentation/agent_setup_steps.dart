@@ -51,8 +51,8 @@ class CodexTrustCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     trusted
-                        ? 'Codex trusts the Conductore hooks'
-                        : 'Codex: trust the Conductore hooks',
+                        ? tr('Codex trusts the Conductore hooks')
+                        : tr('Codex: trust the Conductore hooks'),
                     style: theme.textTheme.titleSmall,
                   ),
                 ),
@@ -61,12 +61,12 @@ class CodexTrustCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               trusted
-                  ? 'Codex sessions on this machine report to the phone. '
+                  ? tr('Codex sessions on this machine report to the phone. '
                         'If Codex asks to review the hooks again (after an '
-                        'update of the companion), trust them again.'
-                  : 'Codex runs new hooks only after you trust them, and '
+                        'update of the companion), trust them again.')
+                  : tr('Codex runs new hooks only after you trust them, and '
                         'Conductore never does that for you. Until then, '
-                        'Codex sessions do not reach the phone.',
+                        'Codex sessions do not reach the phone.'),
             ),
             if (!trusted) ...[
               const SizedBox(height: 8),

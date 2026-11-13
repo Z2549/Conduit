@@ -11,12 +11,12 @@ class QuickSettingsTileControls extends StatefulWidget {
 
   /// The snackbar text shown for each outcome.
   static String messageFor(AddTileResult result) => switch (result) {
-    AddTileResult.added => 'Tile added to quick settings.',
-    AddTileResult.alreadyAdded => 'The tile is already in quick settings.',
-    AddTileResult.declined => 'Tile not added.',
+    AddTileResult.added => tr('Tile added to quick settings.'),
+    AddTileResult.alreadyAdded => tr('The tile is already in quick settings.'),
+    AddTileResult.declined => tr('Tile not added.'),
     AddTileResult.unsupported =>
-      'Open quick settings, tap edit, and drag the Agents tile in.',
-    AddTileResult.failed => 'Could not add the tile. Try again later.',
+      tr('Open quick settings, tap edit, and drag the Agents tile in.'),
+    AddTileResult.failed => tr('Could not add the tile. Try again later.'),
   };
 
   @override

@@ -298,16 +298,16 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
       const SizedBox(height: 16),
       Text(tr('Read it on'), style: Theme.of(context).textTheme.titleSmall),
       Text(
-        'Pick the machine whose agent may get it: that machine becomes the '
-        'reader, and the one that can reply.',
+        tr('Pick the machine whose agent may get it: that machine becomes the '
+        'reader, and the one that can reply.'),
         style: Theme.of(context).textTheme.bodySmall,
       ),
       if (hosts.isEmpty)
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 8),
           child: Text(
-            'No machine with the Conductore companion is being monitored. '
-            'Set up agent hooks on one first.',
+            tr('No machine with the Conductore companion is being monitored. '
+            'Set up agent hooks on one first.'),
           ),
         ),
       RadioGroup<String>(
@@ -563,7 +563,7 @@ class _SendToAgentPageState extends State<_SendToAgentPage> {
                   ? () => Navigator.of(context).pop((agent, _unknownConfirmed))
                   : null,
               child: Text(
-                agent == null ? 'Pick an agent' : 'Send to ${agent.name}',
+                agent == null ? tr('Pick an agent') : 'Send to ${agent.name}',
               ),
             ),
           ],

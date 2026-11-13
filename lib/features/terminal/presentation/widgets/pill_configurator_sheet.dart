@@ -58,11 +58,11 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
         return key.displayLabel;
       }
     }
-    return 'Missing key';
+    return tr('Missing key');
   }
 
   String _description(TerminalPillItem item) {
-    return item.button?.description ?? 'Custom key from the key rows.';
+    return item.button?.description ?? tr('Custom key from the key rows.');
   }
 
   /// [newIndex] is already adjusted for the removed item.
@@ -108,8 +108,8 @@ class _PillConfiguratorSheetState extends State<PillConfiguratorSheet> {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 2, 20, 8),
             child: Text(
-              'Drag to reorder. The ⋯ button always stays at the end: tap it '
-              'for the key rows, long-press it to come back here.',
+              tr('Drag to reorder. The ⋯ button always stays at the end: tap it '
+              'for the key rows, long-press it to come back here.'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

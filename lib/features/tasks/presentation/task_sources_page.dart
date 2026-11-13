@@ -77,9 +77,9 @@ class _TaskSourcesPageState extends State<TaskSourcesPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Remove ${config.name}?'),
-        content: const Text(
-          'Its settings and its token are deleted from this device. '
-          'Nothing changes in the tracker.',
+        content: Text(
+          tr('Its settings and its token are deleted from this device. '
+          'Nothing changes in the tracker.'),
         ),
         actions: [
           TextButton(
@@ -243,7 +243,7 @@ class _TaskSourceFormPageState extends State<TaskSourceFormPage> {
     final missing = _config.missingField();
     if (missing != null) return '$missing is missing.';
     if (_kind.needsToken && !_hasToken && _token.text.trim().isEmpty) {
-      return 'Add the token.';
+      return tr('Add the token.');
     }
     return null;
   }
@@ -353,7 +353,7 @@ class _TaskSourceFormPageState extends State<TaskSourceFormPage> {
               decoration: InputDecoration(
                 labelText: label,
                 helperText: _hasToken
-                    ? 'Saved on this device. Leave empty to keep it.'
+                    ? tr('Saved on this device. Leave empty to keep it.')
                     : 'Kept in this device\'s secure storage, never synced.',
                 helperMaxLines: 2,
               ),

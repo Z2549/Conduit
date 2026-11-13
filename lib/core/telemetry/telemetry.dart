@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/core/telemetry/crash_reporter.dart';
 import 'package:conduit/core/telemetry/plausible_client.dart';
 import 'package:conduit/core/telemetry/telemetry_config.dart';
@@ -64,11 +65,11 @@ class TelemetryAppInfo {
   /// client; the OS part is generic (no versions, no device model).
   String get userAgent {
     final os = switch (platform) {
-      'android' => 'Linux; Android',
-      'ios' => 'iPhone; CPU iPhone OS like Mac OS X',
-      'macos' => 'Macintosh; Intel Mac OS X',
-      'windows' => 'Windows NT 10.0; Win64; x64',
-      _ => 'X11; Linux x86_64',
+      'android' => tr('Linux; Android'),
+      'ios' => tr('iPhone; CPU iPhone OS like Mac OS X'),
+      'macos' => tr('Macintosh; Intel Mac OS X'),
+      'windows' => tr('Windows NT 10.0; Win64; x64'),
+      _ => tr('X11; Linux x86_64'),
     };
     return 'Mozilla/5.0 ($os) Conductore/$version';
   }

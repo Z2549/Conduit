@@ -108,8 +108,8 @@ class _PairedModePageState extends State<PairedModePage> {
               '${p.agent.name} on ${p.host.name}'
               '${switch (agentModeSafety(p.agent.permissionMode)) {
                 AgentModeSafety.safe => '',
-                AgentModeSafety.unsafe => ' (auto mode: not allowed)',
-                AgentModeSafety.unknown => ' (mode unknown: not allowed)',
+                AgentModeSafety.unsafe => ' (auto mode: not allowed)tr(',
+                AgentModeSafety.unknown => ') (mode unknown: not allowed)',
               }}',
               overflow: TextOverflow.ellipsis,
             ),
@@ -137,13 +137,13 @@ class _PairedModePageState extends State<PairedModePage> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              const Text(
-                'Two of your agents talk through a passphrase-protected '
+              Text(
+                tr('Two of your agents talk through a passphrase-protected '
                 'Talkbawt thread for a set time. The phone passes each reply '
                 'on without asking you each time, framed as the other '
                 "agent's output, never as your instruction. Both agents must "
                 'be in default or plan mode, so they still ask before acting. '
-                'It stops by itself, and runs only while this app is open.',
+                'It stops by itself, and runs only while this app is open.'),
               ),
               if (session?.stopped case final reason?)
                 Padding(
@@ -156,7 +156,7 @@ class _PairedModePageState extends State<PairedModePage> {
                 ),
               const SizedBox(height: 12),
               _picker(
-                'A (holds the thread)',
+                tr('A (holds the thread)'),
                 _a,
                 (p) => setState(() => _a = p),
               ),
@@ -197,7 +197,9 @@ class _PairedModePageState extends State<PairedModePage> {
               FilledButton(
                 key: const ValueKey('paired-start'),
                 onPressed: _starting ? null : () => unawaited(_start()),
-                child: Text('Pair for $_minutes minutes'),
+                child: Text(
+                  trf('Pair for {minutes} minutes', {'minutes': '$_minutes'}),
+                ),
               ),
             ],
           );

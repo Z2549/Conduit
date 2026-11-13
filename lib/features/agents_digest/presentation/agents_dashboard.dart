@@ -190,10 +190,10 @@ class DigestWindowMenu extends StatelessWidget {
             child: Text(window.label),
           ),
         const PopupMenuDivider(),
-        const PopupMenuItem<Object>(
+        PopupMenuItem<Object>(
           key: ValueKey('digest-mark-seen'),
           value: 'seen',
-          child: Text('Mark all seen'),
+          child: Text(tr('Mark all seen')),
         ),
       ],
     );
@@ -848,7 +848,7 @@ class _AgentsDashboardViewState extends State<AgentsDashboardView>
                   : Icons.folder_copy_outlined,
               size: 18,
             ),
-            label: Text(byProject ? 'Group by state' : 'Group by project'),
+            label: Text(byProject ? tr('Group by state') : tr('Group by project')),
           ),
         ),
       if (showBatch)
@@ -1067,7 +1067,9 @@ class _Header extends StatelessWidget {
     final theme = Theme.of(context);
     final palette = AppPalette.of(context);
     final parts = [
-      'Since ${digestSinceLabel(overview.since, now)}',
+      trf('Since {window}', {
+        'window': digestSinceLabel(overview.since, now),
+      }),
       '${overview.count(DigestSection.needsYou)} need you',
       '${overview.count(DigestSection.working)} working',
       '${overview.count(DigestSection.done)} done',
@@ -1202,13 +1204,13 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
     final text = !machines
-        ? 'No machine reports agents yet. Turn on agent monitoring in a '
-              "machine's settings, then connect to it."
+        ? tr('No machine reports agents yet. Turn on agent monitoring in a '
+              "machine's settings, then connect to it.")
         : loading
-        ? 'Asking your machines…'
+        ? tr('Asking your machines…')
         : hidden
-        ? 'Nothing new. Hidden agents come back when they change.'
-        : 'No agents in this window.';
+        ? tr('Nothing new. Hidden agents come back when they change.')
+        : tr('No agents in this window.');
     return Padding(
       key: const ValueKey('digest-empty'),
       padding: const EdgeInsets.symmetric(vertical: 24),
@@ -1573,16 +1575,16 @@ class DigestAgentCard extends StatelessWidget {
       if (onReview case final review?)
         ('Review', Icons.rate_review_outlined, review),
       if (onHandOff case final handOff?)
-        ('Hand off…', Icons.outbox_outlined, handOff),
+        (tr('Hand off…'), Icons.outbox_outlined, handOff),
       if (canTell && agent.state != 'needs_permission')
         (
-          question ? 'Answer…' : 'Tell it…',
+          question ? 'Answer…' : tr('Tell it…'),
           Icons.reply_rounded,
           () => onTell(question),
         ),
       if (onToggleMute case final toggle?)
         (
-          muted ? 'Unmute notifications' : 'Mute notifications',
+          muted ? tr('Unmute notifications') : tr('Mute notifications'),
           muted
               ? Icons.notifications_active_outlined
               : Icons.notifications_off_outlined,

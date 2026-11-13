@@ -1,3 +1,4 @@
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:flutter/foundation.dart';
 
@@ -21,9 +22,9 @@ enum ApprovalScopeKind {
   any;
 
   String get label => switch (this) {
-    ApprovalScopeKind.session => 'This session',
-    ApprovalScopeKind.repo => 'This repo',
-    ApprovalScopeKind.any => 'All repos',
+    ApprovalScopeKind.session => tr('This session'),
+    ApprovalScopeKind.repo => tr('This repo'),
+    ApprovalScopeKind.any => tr('All repos'),
   };
 
   static ApprovalScopeKind? parse(Object? raw) => switch (raw) {
@@ -133,7 +134,7 @@ class TrustDuration {
     if (m != null) {
       return m % 60 == 0 ? '${m ~/ 60} h' : '$m min';
     }
-    return untilSessionEnd ? 'Until session ends' : 'Always';
+    return untilSessionEnd ? tr('Until session ends') : 'Always';
   }
 
   @override

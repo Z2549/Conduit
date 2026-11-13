@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:conduit/core/app_failure.dart';
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/hosts/domain/saved_host.dart';
 import 'package:conduit/features/hosts/presentation/hosts_controller.dart';
 import 'package:conduit/features/sync/data/sync_crypto.dart';
@@ -393,9 +394,9 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
       var config = _config!;
       final hubHost = _findHost(config.hubHostId);
       if (hubHost == null) {
-        throw const AppFailure(
-          'The sync hub machine is no longer saved on this device. '
-          'Turn sync off and set it up again.',
+        throw AppFailure(
+          tr('The sync hub machine is no longer saved on this device. '
+          'Turn sync off and set it up again.'),
         );
       }
       final hub = _hubFor(hubHost, config.deviceId);
@@ -405,8 +406,8 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
         config = _config!;
         if (outcome == null || outcome == SyncPushOutcome.ok) break;
         if (attempt == 2) {
-          throw const AppFailure(
-            'Other devices kept updating the hub; trying again soon.',
+          throw AppFailure(
+            tr('Other devices kept updating the hub; trying again soon.'),
           );
         }
       }
@@ -451,8 +452,8 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     _lastMeta = meta;
     if (meta != null && meta.revoked.contains(config.deviceId)) {
       await _stopLocally(
-        'This device was removed from sync on another device. '
-        'Its data stays here.',
+        tr('This device was removed from sync on another device. '
+        'Its data stays here.'),
       );
       return null;
     }
@@ -655,9 +656,9 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
       plaintext = await _crypto.open(bytes, key: key);
     } on SyncCryptoException catch (error) {
       if (error.error == SyncCryptoError.wrongKey) {
-        throw const AppFailure(
-          'The sync data on the hub is locked with a different passphrase. '
-          'Turn sync off and set it up again with the current passphrase.',
+        throw AppFailure(
+          tr('The sync data on the hub is locked with a different passphrase. '
+          'Turn sync off and set it up again with the current passphrase.'),
         );
       }
       rethrow;
@@ -813,7 +814,7 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     String? deviceName,
     Set<SyncCategory> categories = SyncCategory.defaults,
   }) async {
-    if (enabled) throw StateError('Sync is already on.');
+    if (enabled) throw StateError(tr('Sync is already on.'));
     final deviceId = randomSyncId();
     final client = _hubFactory(hub, deviceId);
     try {
@@ -892,10 +893,10 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     required String words,
     String? deviceName,
   }) async {
-    if (enabled) throw StateError('Sync is already on.');
+    if (enabled) throw StateError(tr('Sync is already on.'));
     final offer = SyncSetupOffer.decode(setupCode);
     if (offer == null) {
-      throw const SyncSetupException('This is not a Conductore setup code.');
+      throw SyncSetupException(tr('This is not a Conductore setup code.'));
     }
     final secret = await _setupCodec.open(offer, words);
     await _hosts.firstLoad;
@@ -1027,10 +1028,10 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
   Future<SyncPairingOffer> addDevice(String deviceName) async {
     final config = _config;
     final key = _key;
-    if (config == null || key == null) throw StateError('Sync is off.');
+    if (config == null || key == null) throw StateError(tr('Sync is off.'));
     final hubHost = _findHost(config.hubHostId);
     if (hubHost == null) {
-      throw const AppFailure('The sync hub machine is not saved here.');
+      throw AppFailure(tr('The sync hub machine is not saved here.'));
     }
     final hub = _hubFor(hubHost, config.deviceId);
     var hostKey = await _hubHostKey(hubHost);
@@ -1040,8 +1041,8 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
       hostKey = await _hubHostKey(hubHost);
     }
     if (hostKey == null) {
-      throw const AppFailure(
-        "The hub's host key is not trusted on this device yet.",
+      throw AppFailure(
+        tr("The hub's host key is not trusted on this device yet."),
       );
     }
     final name = _cleanName(deviceName);
@@ -1148,7 +1149,7 @@ class SyncController extends ChangeNotifier with WidgetsBindingObserver {
     final config = _config;
     if (config == null) return;
     if (device.isThisDevice) {
-      throw StateError('Use Turn off sync for this device.');
+      throw StateError(tr('Use Turn off sync for this device.'));
     }
     final hubHost = _findHost(config.hubHostId);
     if (hubHost == null) return;

@@ -37,10 +37,10 @@ class DigestSettingsCards extends StatelessWidget {
               icon: Icons.auto_awesome_outlined,
               title: tr('Summaries by an agent'),
               subtitle:
-                  'A one- or two-sentence summary per agent, written by a '
+                  tr('A one- or two-sentence summary per agent, written by a '
                   'coding agent on the machine (Claude Haiku, Codex or '
                   'OpenCode, whichever is installed) when you open the '
-                  'dashboard. Off: facts only, no model cost.',
+                  'dashboard. Off: facts only, no model cost.'),
               value: preferences.summariesEnabled,
               onChanged: (value) =>
                   unawaited(controller.setSummariesEnabled(value)),
@@ -52,9 +52,9 @@ class DigestSettingsCards extends StatelessWidget {
                 leading: const Icon(Icons.filter_alt_outlined),
                 title: Text(tr('Only for agents that changed')),
                 subtitle: Text(
-                  'Always on. An agent is summarised again only when it did '
+                  tr('Always on. An agent is summarised again only when it did '
                   'something since its last summary; the others keep their '
-                  'text, and nothing runs in the background.',
+                  'text, and nothing runs in the background.'),
                   style: muted,
                 ),
                 trailing: const Icon(Icons.lock_outline_rounded, size: 18),
@@ -114,7 +114,7 @@ class DigestSettingsCards extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               today.tokens == 0
-                  ? 'Summaries today: none yet.'
+                  ? tr('Summaries today: none yet.')
                   : 'Summaries today: ${compactTokens(today.tokens)} tokens'
                         '${today.costUsd >= 0.01 ? ' · about \$${today.costUsd.toStringAsFixed(2)}' : ''}'
                         ' (as of the last dashboard update).',

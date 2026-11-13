@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/voice/domain/voice_commands.dart';
 import 'package:conduit/features/voice_guide/domain/guide_preferences.dart';
 
@@ -13,7 +14,7 @@ enum ReadAloudLength {
 
   /// A short summary written by the machine's coding agent (the
   /// companion's `summarize`), falling back to [brief].
-  summary('Agent summary');
+  summary(tr('Agent summary'));
 
   const ReadAloudLength(this.label);
 
@@ -23,7 +24,7 @@ enum ReadAloudLength {
 /// How Chat View shows tool calls and shell commands.
 enum ToolActivity {
   /// Every tool call as its own card.
-  all('Show all'),
+  all(tr('Show all')),
 
   /// Consecutive tool calls fold into one row that expands on tap.
   collapsed('Collapsed'),
@@ -41,10 +42,10 @@ enum ToolActivity {
 enum ReviewOpens {
   /// Only from the Review buttons (Chat View, the dashboard, the inbox) or
   /// the voice guide.
-  onDemand('On demand'),
+  onDemand(tr('On demand')),
 
   /// As soon as a turn ends while its Chat View is on screen.
-  afterEachTurn('After each turn');
+  afterEachTurn(tr('After each turn'));
 
   const ReviewOpens(this.label);
 

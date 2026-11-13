@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:conduit/core/l10n/legacy_tr.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention.dart';
 import 'package:conduit/features/agent_attention/domain/agent_attention_notifier.dart';
 import 'package:conduit/features/agent_attention/domain/agent_kinds.dart';
@@ -45,14 +46,14 @@ enum AgentNeed {
 enum AgentNotificationMode {
   /// One ongoing, silent notification listing every agent, plus alerts for
   /// urgent things only (the default).
-  ongoingAndUrgent('Ongoing + urgent'),
+  ongoingAndUrgent(tr('Ongoing + urgent')),
 
   /// One notification per agent for every need, finished turns included
   /// (the behaviour before CON-074).
   everything('Everything'),
 
   /// Alerts for urgent things only, no ongoing notification.
-  urgentOnly('Urgent only');
+  urgentOnly(tr('Urgent only'));
 
   const AgentNotificationMode(this.label);
 
@@ -76,15 +77,15 @@ enum AgentNotificationMode {
 /// [AgentNotificationPreferences] under Advanced; a mix none of these
 /// describes shows as Custom.
 enum AgentNotifyChoice {
-  urgentOnly('Urgent only', 'When an agent needs you, fails or looks stuck.'),
+  urgentOnly(tr('Urgent only'), tr('When an agent needs you, fails or looks stuck.')),
   urgentAndFinished(
-    'Urgent + finished',
-    'Also when an agent finishes its turn.',
+    tr('Urgent + finished'),
+    tr('Also when an agent finishes its turn.'),
   ),
   everything(
     'Everything',
-    'A notification for each agent that needs you or finishes, without '
-        'the ongoing summary.',
+    tr('A notification for each agent that needs you or finishes, without '
+        'the ongoing summary.'),
   );
 
   const AgentNotifyChoice(this.label, this.description);
@@ -695,12 +696,12 @@ abstract final class AgentNotificationPolicy {
       }
     } else {
       text = switch (need) {
-        AgentNeed.question => message ?? 'Waiting for your answer',
-        AgentNeed.error => message ?? 'Stopped. Open it to see why',
-        AgentNeed.stuck => message ?? 'Open it to see what it is doing',
+        AgentNeed.question => message ?? tr('Waiting for your answer'),
+        AgentNeed.error => message ?? tr('Stopped. Open it to see why'),
+        AgentNeed.stuck => message ?? tr('Open it to see what it is doing'),
         AgentNeed.finished =>
-          (extra.isEmpty ? null : extra) ?? message ?? 'Turn finished',
-        AgentNeed.approval => 'Waiting for approval',
+          (extra.isEmpty ? null : extra) ?? message ?? tr('Turn finished'),
+        AgentNeed.approval => tr('Waiting for approval'),
       };
       items.add(text);
     }

@@ -206,9 +206,9 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(tr('Revoke this link?')),
-        content: const Text(
-          'Nobody can read or reply through it any more, and its messages '
-          'are deleted. Who opened it is saved here first.',
+        content: Text(
+          tr('Nobody can read or reply through it any more, and its messages '
+          'are deleted. Who opened it is saved here first.'),
         ),
         actions: [
           TextButton(
@@ -240,7 +240,7 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
         final t = _thread;
         final messenger = ScaffoldMessenger.maybeOf(context);
         return Scaffold(
-          appBar: AppBar(title: Text(t?.title ?? 'Talkbawt link')),
+          appBar: AppBar(title: Text(t?.title ?? tr('Talkbawt link'))),
           body: t == null
               ? Center(
                   child: Text(tr('This link is no longer on this phone.')),
@@ -292,10 +292,10 @@ class _TalkbawtThreadPageState extends State<TalkbawtThreadPage> {
                               onPressed: () async {
                                 await widget.copy(pass);
                                 messenger?.showSnackBar(
-                                  const SnackBar(
+                                  SnackBar(
                                     content: Text(
-                                      'Passphrase copied. Send it over a '
-                                      'different channel.',
+                                      tr('Passphrase copied. Send it over a '
+                                      'different channel.'),
                                     ),
                                   ),
                                 );

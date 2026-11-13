@@ -49,9 +49,9 @@ class AgentNotifyChoiceCard extends StatelessWidget {
                   key: const ValueKey('agent-notify-choice-custom'),
                   leading: const Icon(Icons.tune_rounded),
                   title: Text(tr('Custom')),
-                  subtitle: const Text(
-                    'Your own mix, kept under Advanced › Notification '
-                    'details. Pick one above to replace it.',
+                  subtitle: Text(
+                    tr('Your own mix, kept under Advanced › Notification '
+                    'details. Pick one above to replace it.'),
                   ),
                 ),
               if (muted > 0) ...[
@@ -62,9 +62,9 @@ class AgentNotifyChoiceCard extends StatelessWidget {
                   title: Text(
                     muted == 1 ? '1 muted agent' : '$muted muted agents',
                   ),
-                  subtitle: const Text(
-                    'Long-press an agent in the Agents panel to mute or '
-                    'unmute it.',
+                  subtitle: Text(
+                    tr('Long-press an agent in the Agents panel to mute or '
+                    'unmute it.'),
                   ),
                   trailing: TextButton(
                     key: const ValueKey('agent-notify-unmute-all'),
@@ -163,8 +163,8 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                   icon: Icons.task_alt_rounded,
                   title: tr('Also alert when an agent finishes'),
                   subtitle:
-                      'Off: a finished turn only updates the ongoing '
-                      'notification.',
+                      tr('Off: a finished turn only updates the ongoing '
+                      'notification.'),
                   value: preferences.finishedAlerts,
                   change: (value) =>
                       preferences.copyWith(finishedAlerts: value),
@@ -192,8 +192,8 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                   icon: Icons.sync_problem_rounded,
                   title: tr('Stuck or looping'),
                   subtitle:
-                      'The agents dashboard sees no progress, the same '
-                      'failure again and again, or a repeated command.',
+                      tr('The agents dashboard sees no progress, the same '
+                      'failure again and again, or a repeated command.'),
                   value: preferences.stuck,
                   change: (value) => preferences.copyWith(stuck: value),
                 ),
@@ -203,8 +203,8 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 icon: Icons.notes_rounded,
                 title: tr('Summary only'),
                 subtitle:
-                    'No Allow, Deny, answer or Reply buttons. Tap the '
-                    'notification to answer in the app.',
+                    tr('No Allow, Deny, answer or Reply buttons. Tap the '
+                    'notification to answer in the app.'),
                 value: preferences.summaryOnly,
                 change: (value) => preferences.copyWith(summaryOnly: value),
               ),
@@ -213,9 +213,9 @@ class AgentNotificationDetailsCard extends StatelessWidget {
                 icon: Icons.notifications_paused_outlined,
                 title: tr('Quiet updates'),
                 subtitle:
-                    'More requests from an agent that already needs you '
+                    tr('More requests from an agent that already needs you '
                     'update its notification silently. Off: each new '
-                    'request alerts.',
+                    'request alerts.'),
                 value: preferences.quietUpdates,
                 change: (value) => preferences.copyWith(quietUpdates: value),
               ),

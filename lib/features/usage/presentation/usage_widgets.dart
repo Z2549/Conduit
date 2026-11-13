@@ -561,9 +561,9 @@ class _UsageDetails extends StatelessWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
                 Text(
-                  'Costs are estimates at public API list prices. On a '
-                  'subscription plan this is the API-equivalent cost, not '
-                  'what you pay.',
+                  tr('Costs are estimates at public API list prices. On a '
+                      'subscription plan this is the API-equivalent cost, '
+                      'not what you pay.'),
                   style: muted,
                 ),
               ],
@@ -924,8 +924,8 @@ class _UsageBreakdownState extends State<UsageBreakdown>
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
         child: Text(
-          'Usage comes from the Conductore companion (0.6 or newer) on '
-          'machines monitored through it.',
+          tr('Usage comes from the Conductore companion (0.6 or newer) on '
+              'machines monitored through it.'),
           style: muted,
         ),
       );
@@ -1076,10 +1076,16 @@ class _UsageBreakdownState extends State<UsageBreakdown>
                     _GroupRow(group: group, max: groups.first.totals),
                 const SizedBox(height: 10),
                 Text(
-                  'Costs are estimates at public API list prices'
-                  '${summary.pricingAsOf == null ? '' : ' (${summary.pricingAsOf})'}. '
-                  'On a subscription plan this is the API-equivalent cost, '
-                  'not what you pay.',
+                  trf(
+                    'Costs are estimates at public API list prices{asOf}. '
+                    'On a subscription plan this is the API-equivalent '
+                    'cost, not what you pay.',
+                    {
+                      'asOf': summary.pricingAsOf == null
+                          ? ''
+                          : ' (${summary.pricingAsOf})',
+                    },
+                  ),
                   style: muted,
                 ),
               ],

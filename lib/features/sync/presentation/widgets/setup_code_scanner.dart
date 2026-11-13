@@ -131,9 +131,9 @@ class _SetupCodeScannerPageState extends State<_SetupCodeScannerPage> {
                     _readiness.gettingReady
                         ? scannerGettingReadyText
                         : _hint ??
-                              'Point the camera at the QR code shown under '
+                              tr('Point the camera at the QR code shown under '
                                   'Settings › Sync › Add a device on your '
-                                  'other device.',
+                                  'other device.'),
                     style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
