@@ -648,7 +648,7 @@ class SettingsSectionBody extends StatelessWidget {
                     'sidebar: its projects, order, hidden workspaces and '
                     "each agent's unread, kept or dismissed mark. Marking "
                     'an agent here marks it in sheprd too. While on, the '
-                    "app\'s own project edits pause; turning it off brings "
+                    "app's own project edits pause; turning it off brings "
                     'them back. Needs the companion on the machines sheprd '
                     'connects to.'),
             value: projects.sheprdSync,

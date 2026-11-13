@@ -304,7 +304,7 @@ class _OpenTalkbawtLinkPageState extends State<OpenTalkbawtLinkPage> {
       ),
       if (hosts.isEmpty)
         Padding(
-          padding: EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: 8),
           child: Text(
             tr('No machine with the Conductore companion is being monitored. '
             'Set up agent hooks on one first.'),
