@@ -89,10 +89,10 @@ class _LocalShellSetupPageState extends State<LocalShellSetupPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'A full Linux userland running locally through proot - no '
+                tr('A full Linux userland running locally through proot - no '
                 'server, no root. Pick a distribution; you can set up as '
                 'many shells as you like, including several of the same '
-                'distribution.',
+                'distribution.'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -122,14 +122,18 @@ class _LocalShellSetupPageState extends State<LocalShellSetupPage> {
                 icon: const Icon(Icons.download_rounded),
                 label: Text(
                   selected == null
-                      ? 'Install'
-                      : 'Install · ${formatLocalShellBytes(selected.manifest.downloadSizeBytes)}',
+                      ? tr('Install')
+                      : trf('Install · {size}', {
+                          'size': formatLocalShellBytes(
+                            selected.manifest.downloadSizeBytes,
+                          ),
+                        }),
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                'The image downloads once and unpacks on your device. '
-                'Wi-Fi recommended.',
+                tr('The image downloads once and unpacks on your device. '
+                'Wi-Fi recommended.'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -190,8 +194,11 @@ class _DistroOption extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Download '
-                      '${formatLocalShellBytes(distro.manifest.downloadSizeBytes)}',
+                      trf('Download {size}', {
+                        'size': formatLocalShellBytes(
+                          distro.manifest.downloadSizeBytes,
+                        ),
+                      }),
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
                         fontSize: 12,

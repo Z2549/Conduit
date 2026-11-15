@@ -34,7 +34,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/android/app/src/main/jniLibs/arm64-v8a/
+# Local-shell native payload: built by tools/build-local-shell-binaries.sh and
+# pinned by third_party/source-offer/bundled-binaries.sha256. The 16 Termux
+# libraries are vendored so release builds can package them; Flutter's own
+# outputs never land here.
+/android/app/src/main/jniLibs/**/libapp.so
+/android/app/src/main/jniLibs/**/libflutter*.so
+/android/app/src/main/jniLibs/**/libdartjni.so
 /android/key.properties
 /android/*.jks
 /android/app/*.jks

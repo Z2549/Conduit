@@ -313,7 +313,9 @@ class _InstanceCard extends StatelessWidget {
       LocalShellStage.notInstalled =>
         '$distroName · setup incomplete, tap to resume',
       LocalShellStage.downloading =>
-        'Downloading… ${((state.progress ?? 0) * 100).toStringAsFixed(0)}%',
+        trf('Downloading… {percent}%', {
+          'percent': ((state.progress ?? 0) * 100).toStringAsFixed(0),
+        }),
       LocalShellStage.extracting => 'Unpacking…',
       LocalShellStage.configuring => 'Configuring…',
       LocalShellStage.failed =>

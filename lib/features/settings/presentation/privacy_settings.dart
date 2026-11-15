@@ -4,9 +4,9 @@ import 'package:conduit/core/telemetry/telemetry.dart';
 import 'package:flutter/material.dart';
 
 /// What the one-time notice and the Privacy section say, word for word.
-const privacyNoticeText =
-    'Conductore sends crash reports and anonymous usage counts to help fix '
-    'bugs. Nothing from your machines or terminals is included.';
+String get privacyNoticeText =>
+    tr('Conductore sends crash reports and anonymous usage counts to help '
+        'fix bugs. Nothing from your machines or terminals is included.');
 
 String get crashReportsCaption =>
     tr("When something breaks, the error and the app's own code lines go "

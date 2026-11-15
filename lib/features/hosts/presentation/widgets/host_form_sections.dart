@@ -37,7 +37,7 @@ class HostConnectionSection extends StatelessWidget {
     return HostFormSectionCard(
       icon: Icons.dns_rounded,
       title: tr('Connection'),
-      caption: 'Where to reach this machine.',
+      caption: tr('Where to reach this machine.'),
       children: [
         TextFormField(
           controller: nameController,
@@ -159,7 +159,7 @@ class HostAuthenticationSection extends StatelessWidget {
     return HostFormSectionCard(
       icon: Icons.lock_outline_rounded,
       title: tr('Authentication'),
-      caption: 'Credentials are stored in platform secure storage.',
+      caption: tr('Credentials are stored in platform secure storage.'),
       children: [
         AuthMethodPicker(value: authMethod, onChanged: onAuthMethodChanged),
         const SizedBox(height: 14),
@@ -171,9 +171,9 @@ class HostAuthenticationSection extends StatelessWidget {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(tr('Offer temporary public key')),
-              subtitle: const Text(
-                'Helps servers that authenticate externally but still expect '
-                'a public-key login attempt.',
+              subtitle: Text(
+                tr('Helps servers that authenticate externally but still expect '
+                'a public-key login attempt.'),
               ),
               value: externalAuthOfferKey,
               onChanged: onExternalAuthOfferKeyChanged,
@@ -278,9 +278,9 @@ class HostAuthenticationSection extends StatelessWidget {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(tr('Forward SSH agent')),
-              subtitle: const Text(
-                'Let hosts you connect to use this key to authenticate '
-                'onward. Hardware keys prompt for a touch on each use.',
+              subtitle: Text(
+                tr('Let hosts you connect to use this key to authenticate '
+                'onward. Hardware keys prompt for a touch on each use.'),
               ),
               value: forwardAgent,
               onChanged: onForwardAgentChanged,
@@ -380,7 +380,7 @@ class HostAdvancedSection extends StatelessWidget {
     return HostFormSectionCard(
       icon: Icons.tune_rounded,
       title: tr('Advanced'),
-      caption: 'Optional tagging and connection timing.',
+      caption: tr('Optional tagging and connection timing.'),
       children: [
         TagEditor(
           tags: tags,
@@ -407,9 +407,9 @@ class HostAdvancedSection extends StatelessWidget {
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(tr('Connect with Mosh')),
-            subtitle: const Text(
-              'Roaming UDP session over SSH. Requires mosh-server on the '
-              'host and open UDP ports.',
+            subtitle: Text(
+              tr('Roaming UDP session over SSH. Requires mosh-server on the '
+              'host and open UDP ports.'),
             ),
             value: useMosh,
             onChanged: onUseMoshChanged,
@@ -494,8 +494,8 @@ class HostAdvancedSection extends StatelessWidget {
               labelText: tr('Tmux start directory'),
               hintText: '~/projects',
               helperText:
-                  'Used when a new tmux session is created. An existing tmux '
-                  'session keeps its directory.',
+                  tr('Used when a new tmux session is created. An existing tmux '
+                  'session keeps its directory.'),
               helperMaxLines: 2,
               prefixIcon: const Icon(Icons.folder_outlined),
             ),
@@ -539,9 +539,9 @@ class HostAdvancedSection extends StatelessWidget {
           child: SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(tr('Monitor coding agents')),
-            subtitle: const Text(
-              'Watch agents on this machine while connected and show their '
-              'states in the terminal dashboard.',
+            subtitle: Text(
+              tr('Watch agents on this machine while connected and show their '
+              'states in the terminal dashboard.'),
             ),
             value: agentAttentionEnabled,
             onChanged: onAgentAttentionEnabledChanged,
@@ -588,9 +588,9 @@ class HostAdvancedSection extends StatelessWidget {
             decoration: InputDecoration(
               labelText: tr('Agent monitor'),
               helperText:
-                  'Auto uses the Conductore companion when conductore-hostd '
+                  tr('Auto uses the Conductore companion when conductore-hostd '
                   'is installed (permission prompts answerable from the '
-                  'phone), otherwise Herdr.',
+                  'phone), otherwise Herdr.'),
               helperMaxLines: 3,
               prefixIcon: const Icon(Icons.monitor_heart_outlined),
             ),
@@ -616,8 +616,8 @@ class HostAdvancedSection extends StatelessWidget {
             labelText: tr('Share inbox directory'),
             hintText: '~/conductore-inbox',
             helperText:
-                'Files shared to Conductore are uploaded here before their '
-                'paths go into Chat mode.',
+                tr('Files shared to Conductore are uploaded here before their '
+                'paths go into Chat mode.'),
             helperMaxLines: 2,
             prefixIcon: const Icon(Icons.move_to_inbox_outlined),
           ),
@@ -629,8 +629,8 @@ class HostAdvancedSection extends StatelessWidget {
         SnippetListEditor(
           title: tr('Host snippets'),
           caption:
-              'Shown in the Snip palette for this machine. Hidden '
-              'snippets are useful for passwords or other secrets.',
+              tr('Shown in the Snip palette for this machine. Hidden '
+              'snippets are useful for passwords or other secrets.'),
           snippets: snippets,
           onChanged: onSnippetsChanged,
           connectSnippetId: connectSnippetId,

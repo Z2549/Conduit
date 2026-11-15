@@ -170,11 +170,16 @@ class _LocalShellInstancePageState extends State<LocalShellInstancePage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Remove ${instance.name}?'),
+        title: Text(
+          trf('Remove {name}?', {'name': instance.name}),
+        ),
         content: Text(
-          'This deletes this environment and everything in it. Any open '
-          '${instance.name} tabs will be closed first. Other shells are '
-          'not affected.',
+          trf(
+            'This deletes this environment and everything in it. Any open '
+            '{name} tabs will be closed first. Other shells are not '
+            'affected.',
+            {'name': instance.name},
+          ),
         ),
         actions: [
           TextButton(
@@ -266,7 +271,7 @@ class _Ready extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final storageStatus = !sharedStorageFeatureEnabled
-        ? 'Full build only'
+        ? tr('Full build only')
         : sharedStorageAccessGranted
         ? '/mnt/android'
         : tr('Permission needed');
@@ -275,7 +280,7 @@ class _Ready extends StatelessWidget {
         : tr('Phone storage mounting is available in the full build.');
     final updateHint = updateCommand == null
         ? ''
-        : trf('Update packages from inside the shell with {command}. ', {
+        : trf(tr('Update packages from inside the shell with {command}. '), {
               'command': '$updateCommand',
             });
     return Column(
@@ -339,8 +344,8 @@ class _Installing extends StatelessWidget {
       children: [
         _Hero(
           icon: Icons.settings_suggest_outlined,
-          title: 'Setting up $distroName',
-          body: state.message ?? 'Working…',
+          title: trf('Setting up {name}', {'name': distroName}),
+          body: state.message ?? tr('Working…'),
         ),
         const SizedBox(height: 24),
         LinearProgressIndicator(value: progress),
@@ -375,7 +380,7 @@ class _Failed extends StatelessWidget {
         _Hero(
           icon: Icons.error_outline_rounded,
           title: _title(error?.kind),
-          body: error?.message ?? 'Something went wrong during setup.',
+          body: error?.message ?? tr('Something went wrong during setup.'),
         ),
         const SizedBox(height: 24),
         FilledButton.icon(
@@ -398,13 +403,13 @@ class _Failed extends StatelessWidget {
 
   String _title(LocalShellErrorKind? kind) {
     return switch (kind) {
-      LocalShellErrorKind.network => 'Download failed',
-      LocalShellErrorKind.lowDisk => 'Not enough storage',
-      LocalShellErrorKind.corruptDownload => 'Download was corrupted',
-      LocalShellErrorKind.extractionFailed => 'Could not unpack the image',
-      LocalShellErrorKind.configureFailed => 'Configuration failed',
-      LocalShellErrorKind.unsupportedDevice => 'Not available on this device',
-      LocalShellErrorKind.unknown || null => 'Setup failed',
+      LocalShellErrorKind.network => tr('Download failed'),
+      LocalShellErrorKind.lowDisk => tr('Not enough storage'),
+      LocalShellErrorKind.corruptDownload => tr('Download was corrupted'),
+      LocalShellErrorKind.extractionFailed => tr('Could not unpack the image'),
+      LocalShellErrorKind.configureFailed => tr('Configuration failed'),
+      LocalShellErrorKind.unsupportedDevice => tr('Not available on this device'),
+      LocalShellErrorKind.unknown || null => tr('Setup failed'),
     };
   }
 }
@@ -424,8 +429,8 @@ class _Incomplete extends StatelessWidget {
           icon: Icons.downloading_rounded,
           title: tr('Setup is incomplete'),
           body:
-              'This shell was added but its image never finished installing. '
-              'Resume to pick up where it left off, or remove it.',
+              tr('This shell was added but its image never finished installing. '
+              'Resume to pick up where it left off, or remove it.'),
         ),
         const SizedBox(height: 24),
         FilledButton.icon(

@@ -263,10 +263,10 @@ class _HostFormPageState extends State<HostFormPage> {
       padding: const EdgeInsets.fromLTRB(18, 10, 18, 28),
       children: [
         HostFormHeader(
-          title: _isEditing ? 'Edit machine' : 'New machine',
+          title: _isEditing ? tr('Edit machine') : tr('New machine'),
           subtitle: _isEditing
-              ? 'Update connection details and credentials.'
-              : 'Connection profile and credentials.',
+              ? tr('Update connection details and credentials.')
+              : tr('Connection profile and credentials.'),
           onBack: () => Navigator.of(context).pop(),
         ),
         const SizedBox(height: 20),
@@ -380,7 +380,7 @@ class _HostFormPageState extends State<HostFormPage> {
             child: FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.check_rounded),
-              label: Text(_isEditing ? 'Save changes' : 'Add machine'),
+              label: Text(_isEditing ? tr('Save changes') : tr('Add machine')),
             ),
           ),
           const SizedBox(height: 12),
@@ -441,14 +441,14 @@ class _HostFormPageState extends State<HostFormPage> {
                       Tooltip(
                         message: PlatformFeatures.isDesktop
                             ? (defaultTargetPlatform == TargetPlatform.macOS
-                                  ? 'Save (Cmd+S)'
-                                  : 'Save (Ctrl+S)')
+                                  ? tr('Save (Cmd+S)')
+                                  : tr('Save (Ctrl+S)'))
                             : '',
                         child: FilledButton.icon(
                           onPressed: _save,
                           icon: const Icon(Icons.check_rounded),
                           label: Text(
-                            _isEditing ? 'Save changes' : 'Add machine',
+                            _isEditing ? tr('Save changes') : tr('Add machine'),
                           ),
                         ),
                       ),
@@ -580,9 +580,9 @@ class _HostFormPageState extends State<HostFormPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Remove "$label"?'),
-        content: const Text(
-          'The stub is removed from this host. Your security key and the '
-          'server are not affected.',
+        content: Text(
+          tr('The stub is removed from this host. Your security key and the '
+          'server are not affected.'),
         ),
         actions: [
           TextButton(
@@ -627,21 +627,21 @@ class _HostFormPageState extends State<HostFormPage> {
     try {
       result = await FilePicker.pickFiles(withData: true);
     } catch (_) {
-      if (mounted) _showSnack('Could not open the file picker.');
+      if (mounted) _showSnack(tr('Could not open the file picker.'));
       return;
     }
     if (result == null || result.files.isEmpty) return;
     final file = result.files.first;
     final bytes = file.bytes;
     if (bytes == null) {
-      if (mounted) _showSnack('That file could not be read.');
+      if (mounted) _showSnack(tr('That file could not be read.'));
       return;
     }
     final String text;
     try {
       text = utf8.decode(bytes);
     } catch (_) {
-      if (mounted) _showSnack("That file isn't a text private key.");
+      if (mounted) _showSnack(tr("That file isn't a text private key."));
       return;
     }
     if (!mounted) return;
@@ -652,7 +652,7 @@ class _HostFormPageState extends State<HostFormPage> {
     if (!mounted) return;
     _showSnack(
       _cheapPreview()?.status == SshKeyStatus.invalid
-          ? "That file isn't a recognized private key."
+          ? tr("That file isn't a recognized private key.")
           : 'Imported ${file.name}',
     );
   }
@@ -671,7 +671,7 @@ class _HostFormPageState extends State<HostFormPage> {
         passphrase: options.passphrase,
       );
     } catch (_) {
-      if (mounted) _showSnack('Could not generate a key.');
+      if (mounted) _showSnack(tr('Could not generate a key.'));
       return;
     }
     setState(() => _authMethod = SshAuthMethod.privateKey);
@@ -732,9 +732,9 @@ class _HostFormPageState extends State<HostFormPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'A new key pair is created on this device. The public key is '
-              'shown next so you can add it to the server.',
+            Text(
+              tr('A new key pair is created on this device. The public key is '
+              'shown next so you can add it to the server.'),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -877,12 +877,12 @@ class _HostFormPageState extends State<HostFormPage> {
       passphrase: _passphraseController.text,
     );
     return switch (inspection.status) {
-      SshKeyStatus.needsPassphrase => 'Enter the key passphrase to unlock it.',
+      SshKeyStatus.needsPassphrase => tr('Enter the key passphrase to unlock it.'),
       SshKeyStatus.verifying => null,
-      SshKeyStatus.wrongPassphrase => 'That passphrase did not match this key.',
-      SshKeyStatus.invalid => 'Use a valid PEM or OpenSSH private key.',
+      SshKeyStatus.wrongPassphrase => tr('That passphrase did not match this key.'),
+      SshKeyStatus.invalid => tr('Use a valid PEM or OpenSSH private key.'),
       SshKeyStatus.securityKeyStub =>
-        'This is a hardware-key stub. Choose Hardware key instead.',
+        tr('This is a hardware-key stub. Choose Hardware key instead.'),
       SshKeyStatus.valid => null,
     };
   }
@@ -903,7 +903,7 @@ class _HostFormPageState extends State<HostFormPage> {
     final trimmed = value?.trim() ?? '';
     if (trimmed.isEmpty) return null;
     if (MoshPortRange.tryParse(trimmed) == null) {
-      return 'Use a port or low:high range within 1-65535.';
+      return tr('Use a port or low:high range within 1-65535.');
     }
     return null;
   }

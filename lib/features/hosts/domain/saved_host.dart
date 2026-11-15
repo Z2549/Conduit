@@ -50,10 +50,11 @@ enum HostTool {
 
   String get description => switch (this) {
     HostTool.herdrApp => tr("The app's spaces and terminals, through hc."),
-    HostTool.herdr =>
-      'Workspaces, tabs and panes, plus sheprd\'s projects when "Sync with '
-          'sheprd" is on.',
-    HostTool.tmux => 'tmux sessions and windows.',
+    HostTool.herdr => tr(
+      'Workspaces, tabs and panes, plus sheprd\'s projects when "Sync '
+      'with sheprd" is on.',
+    ),
+    HostTool.tmux => tr('tmux sessions and windows.'),
   };
 
   /// What a machine saved before this choice existed had.

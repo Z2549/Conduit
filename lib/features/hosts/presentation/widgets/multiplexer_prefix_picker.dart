@@ -36,8 +36,8 @@ class MultiplexerPrefixField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: tr('Multiplexer prefix (tmux/Herdr)'),
           helperText:
-              'Sent before every tmux and Herdr shortcut: the Tmux, Tmux+ and '
-              'Herdr keys, the Herdr navigator and swipe window switching.',
+              tr('Sent before every tmux and Herdr shortcut: the Tmux, Tmux+ and '
+              'Herdr keys, the Herdr navigator and swipe window switching.'),
           helperMaxLines: 3,
           prefixIcon: const Icon(Icons.keyboard_command_key_rounded),
           suffixIcon: const Icon(Icons.chevron_right_rounded),
@@ -109,8 +109,8 @@ class _MultiplexerPrefixPickerSheetState
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
             child: Text(
-              'The key tmux and Herdr wait for before a shortcut. Match what '
-              'the machine is configured with (`set -g prefix` in tmux).',
+              tr('The key tmux and Herdr wait for before a shortcut. Match what '
+              'the machine is configured with (`set -g prefix` in tmux).'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),

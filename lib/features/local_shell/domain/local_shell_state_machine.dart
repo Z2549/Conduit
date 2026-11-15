@@ -21,7 +21,7 @@ class LocalShellStateMachine {
         return LocalShellState(
           stage: LocalShellStage.downloading,
           progress: 0,
-          message: 'Downloading $distroName…',
+          message: trf('Downloading {name}…', {'name': distroName}),
         );
 
       case DownloadProgressed(:final progress):
